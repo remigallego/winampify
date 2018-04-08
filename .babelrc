@@ -1,0 +1,41 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "useBuiltIns": "usage",
+        "targets": {
+          "uglify": true,
+          "browsers": [
+            "last 2 Chrome versions",
+            "last 2 ChromeAndroid versions",
+            "last 2 Safari versions",
+            "last 2 Firefox versions",
+            "last 2 Edge versions",
+            "last 2 iOS versions",
+            "last 2 Opera versions"
+          ]
+        }
+      }
+    ],
+    "react"
+  ],
+  "plugins": [
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        "react"
+      ],
+      "plugins": [
+        "transform-es2015-modules-commonjs"
+      ]
+    },
+    "library": {
+      "plugins": [
+        "babel-plugin-transform-runtime"
+      ]
+    }
+  }
+}

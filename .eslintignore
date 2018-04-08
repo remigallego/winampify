@@ -1,0 +1,4 @@
+*.min.js
+built/
+coverage/
+**/node_modules/
