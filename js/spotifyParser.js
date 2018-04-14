@@ -114,6 +114,24 @@ export const parseSearchSpotify = (token, search, callback) => {
     .catch(err => callback(err));
 };
 
+export const parseArtist = (token, id, callback) => {
+  console.log("here")
+  let results = [];
+  fetch(`https://api.spotify.com/v1/artists/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => response.json())
+    .then(json => {
+      results = json;
+      callback(null, results);
+    })
+    .catch(err => callback(err));
+}
+
+
 export const fetchplaylist = (token, tracks, user, URI, offset, callback) => {
   fetch(
     `https://api.spotify.com/v1/users/${user}/playlists/${URI}/tracks?offset=${offset}`,

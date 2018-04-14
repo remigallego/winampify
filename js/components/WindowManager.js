@@ -29,19 +29,55 @@ class WindowManager extends React.Component {
     this.getRef = this.getRef.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.centerWindows = this.centerWindows.bind(this);
+    this.positionRightWindows = this.positionRightWindows.bind(this)
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.centerWindows);
-    this.centerWindows();
+    window.addEventListener("resize", this.positionRightWindows);
+    this.positionRightWindows();
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.centerWindows);
+    window.removeEventListener("resize", this.positionRightWindows);
   }
 
   centerWindows() {
     let offsetLeft = 0;
+    let offsetTop = 0;
+    // https://j11y.io/snippets/get-document-height-cross-browser/
+    let width = Math.max(
+      document.documentElement.scrollWidth,
+      document.documentElement.clientWidth,
+      document.documentElement.offsetWidth
+    );
+    let height = Math.max(
+      document.documentElement.scrollHeight,
+      document.documentElement.clientHeight,
+      document.documentElement.offsetHeight
+    );
+
+    const { container } = this.props;
+    if (container != null) {
+      offsetLeft = container.offsetLeft;
+      offsetTop = container.offsetTop;
+      width = container.scrollWidth;
+      height = container.scrollHeight;
+    }
+    const state = {};
+    const keys = this.windowKeys();
+    const totalHeight = keys.length * WINDOW_HEIGHT;
+    keys.forEach((key, i) => {
+      const offset = WINDOW_HEIGHT * i;
+      state[key] = {
+        left: offsetLeft + (width / 2 - WINDOW_WIDTH / 2),
+        top: offsetTop + (height / 2 - totalHeight / 2 + offset)
+      };
+    });
+    this.setState(state);
+  }
+
+  positionRightWindows() {
+    let offsetLeft = 300;
     let offsetTop = 0;
     // https://j11y.io/snippets/get-document-height-cross-browser/
     let width = Math.max(

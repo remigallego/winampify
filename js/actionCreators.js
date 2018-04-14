@@ -58,7 +58,8 @@ import {
   GO_PREVIOUS_VIEW,
   UNSET_FOCUS_EXPLORER,
   SET_ARTISTS_FROM_USER,
-  SET_TRACKS_FROM_PLAYLIST,SET_ARTISTS_FROM_SEARCH
+  SET_TRACKS_FROM_PLAYLIST,
+  SET_ARTISTS_FROM_SEARCH
 } from "./actionTypes";
 import LoadQueue from "./loadQueue";
 
@@ -72,7 +73,8 @@ import {
   parseMyRecentlyPlayed,
   parseTracksAlbum,
   getAlbumInfos,
-  parseSearchSpotify
+  parseSearchSpotify,
+  parseArtist
 } from "./spotifyParser";
 
 /* EXPLORER functions */
@@ -205,6 +207,17 @@ export function viewMyRecentlyPlayed() {
           type: SET_TRACKS_FROM_PLAYLIST,
           tracks: tracks
         });
+    });
+  };
+}
+
+export function getArtistFromId(id) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const token = state.media.player.access_token;
+    parseArtist(token, id, (err, result) => {
+      if (err) throw err;
+      return result;
     });
   };
 }

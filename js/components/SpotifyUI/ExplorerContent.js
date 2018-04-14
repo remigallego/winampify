@@ -7,12 +7,23 @@ import {
   viewTracksFromAlbum,
   unsetFocusExplorer,
   playTrackFromExplorer,
-  playAlbumFromExplorer
+  playAlbumFromExplorer,
+  getArtistFromId
 } from "../../actionCreators";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { getAlbumInfos } from "../../spotifyParser";
-
+import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
+import ExplorerContentToolbar from "./ExplorerContentToolbar";
+
+const { container } = ExplorerContentStyle;
+
+const widths = {
+  name: "260px",
+  genre: "120px",
+  length: "60px",
+  date: "120px"
+};
 
 class ExplorerContent extends React.Component {
   clickHandler(id) {
@@ -24,6 +35,9 @@ class ExplorerContent extends React.Component {
   }
   openAlbumFolder(albumId) {
     this.props.viewTracksFromAlbum(albumId);
+  }
+  openArtistFolder(artistId) {
+    this.props.viewAlbumsFromArtist(artistId);
   }
 
   renderAlbumsFromArtist(albums) {
@@ -41,6 +55,8 @@ class ExplorerContent extends React.Component {
           image={album.images[0].url}
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => this.openAlbumFolder(album.id)}
+          widths={widths}
+          releaseDate={album.release_date}
         >
           {album.name}
         </ExplorerItem>
@@ -49,9 +65,11 @@ class ExplorerContent extends React.Component {
   }
 
   renderTracksFromAlbum(tracks) {
-    const { explorer, playTrack } = this.props;
+    const { explorer, playTrack, getArtistInfo } = this.props;
     const renderedTracks = tracks.map((track, index) => {
+      console.log(track)
       const trackId = track.id;
+      const artistId = track.artists[0].id;
       let selected = false;
       const fileName = `${track.artists[0].name} - ${track.name}`;
       if (explorer.selected === index) selected = true;
@@ -64,6 +82,7 @@ class ExplorerContent extends React.Component {
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => playTrack(trackId)}
           infos={track}
+          widths={widths}
         >
           {fileName}.mp3
         </ExplorerItem>
@@ -91,13 +110,15 @@ class ExplorerContent extends React.Component {
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => playTrack(trackId)}
           infos={recentTrack.track}
+          widths={widths}
         >
           {fileName}.mp3
         </ExplorerItem>
       );
     });
   }
-  renderTopArtistsFromUser(artists) {
+
+  renderArtists(artists) {
     const { explorer } = this.props;
     return artists.map((artist, index) => {
       const artistId = artist.id;
@@ -108,11 +129,12 @@ class ExplorerContent extends React.Component {
       return (
         <ExplorerItem
           key={index}
+          artist={artist}
           selected={selected}
           type={"artist"}
-          image={artist.images.length > 0 ? artist.images[0].url : ""}
           onClick={() => this.clickHandler(artistId)}
           onDoubleClick={() => this.openArtistFolder(artistId)}
+          widths={widths}
         >
           {fileName}
         </ExplorerItem>
@@ -125,24 +147,25 @@ class ExplorerContent extends React.Component {
       const resultId = result.id;
       let selected = false;
       const fileName = result.name;
+      const artist = result;
+      console.log("here");
       if (explorer.selected === resultId) selected = true;
       else selected = false;
       return (
         <ExplorerItem
           key={index}
           selected={selected}
+          artist={artist}
           type={"artist"}
           image={result.images.length > 0 ? result.images[0].url : ""}
           onClick={() => this.clickHandler(resultId)}
           onDoubleClick={() => this.openArtistFolder(resultId)}
+          widths={widths}
         >
           {fileName}
         </ExplorerItem>
       );
     });
-  }
-  openArtistFolder(artistId) {
-    this.props.viewAlbumsFromArtist(artistId);
   }
 
   renderCurrentView() {
@@ -169,6 +192,7 @@ class ExplorerContent extends React.Component {
               type={"playlist"}
               onClick={() => this.clickHandler(tracks.length)}
               onDoubleClick={() => this.props.playAlbumFromExplorer(currentId)}
+              widths={widths}
             >
               {title}.m3u
             </ExplorerItem>
@@ -179,17 +203,18 @@ class ExplorerContent extends React.Component {
               image={image}
               onClick={() => this.clickHandler(tracks.length + 1)}
               onDoubleClick={() => this.props.openImage(image)}
+              widths={widths}
             >
               cover.jpg
             </ExplorerItem>
           </div>
         );
       case "user":
-        return this.renderTopArtistsFromUser(artists);
+        return this.renderArtists(artists);
       case "playlist":
         return this.renderTracksFromPlaylist(tracks);
       case "search":
-        return this.renderSearch(artists)
+        return this.renderSearch(artists);
       default:
         return null;
     }
@@ -198,20 +223,23 @@ class ExplorerContent extends React.Component {
   openImage() {
     return undefined;
   }
-  
-  handleClick(e) {
+
+  handleClickOutside(e) {
     if (
       e.target.classList[0] !== "explorer-item" &&
       e.target.parentNode.classList[0] !== "explorer-item"
     )
       this.props.unsetFocusExplorer();
   }
+
   render() {
     return (
       <div
         className="explorer-items-container"
-        onClick={e => this.handleClick(e)}
+        onClick={e => this.handleClickOutside(e)}
+        style={container}
       >
+        <ExplorerContentToolbar widths={widths} />
         {this.renderCurrentView()}
       </div>
     );
@@ -229,6 +257,9 @@ const mapDispatchToProps = dispatch => ({
   },
   playTrack: id => {
     dispatch(playTrackFromExplorer(id));
+  },
+  getArtistInfo: id => {
+    dispatch(getArtistFromId(id));
   },
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),

@@ -131,6 +131,8 @@ export default media => store => {
       case SET_EQ_ON:
         media.enableEq();
         break;
+      default:
+        break;
     }
     return next(action);
   };

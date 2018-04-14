@@ -24,10 +24,10 @@ if (!Winamp.browserIsSupported()) {
 
 let tokens;
 
-let url = window.location.search;
+const url = window.location.search;
 if (url !== "") {
-  let getQuery = url.split("?")[1];
-  let params = getQuery.split("&");
+  const getQuery = url.split("?")[1];
+  const params = getQuery.split("&");
   if (params.length === 2)
     tokens = {
       access_token: params[0].slice(2),

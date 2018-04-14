@@ -1,6 +1,6 @@
 import React from "react";
 import ExplorerWindow from "./ExplorerWindow";
-import "../../../css/spotify-ui.css";
+// import "../../../css/spotify-ui.css";
 
 const SpotifyUI = () => {
   return (

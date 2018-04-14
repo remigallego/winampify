@@ -1,16 +1,19 @@
 $widthexplorer: 500px
 $heightexplorer: 500px
-    
-    
+
 .explorer-window 
     position: absolute
     border: 2px solid #026bfe
     border-radius: 5px
+    resize: both
+    overflow: hidden
+    min-width: 300px
+    min-height: 300px
 
 .explorer-title
     background-color: #0055e5
     background: linear-gradient(#026bfe, #1a6cd0)
-    width: $widthexplorer
+    width: auto
     height: auto
     cursor: move
     p 
@@ -35,6 +38,9 @@ $heightexplorer: 500px
 .explorer-toolbar 
     background-color: #EFEBD6
     height: 40px
+    flex: 1
+    min-height: 40px
+    max-height: 40px
     display: flex
     flex-direction: row
     align-items: center
@@ -46,6 +52,7 @@ $heightexplorer: 500px
         height: 20px
     .explorer-toolbar-searchbox
         margin: 0
+        width: auto
         
         input
             padding-left: 10px
@@ -55,13 +62,18 @@ $heightexplorer: 500px
             transition: all 500ms
         input:focus
             border: 1px solid #0055e5
-        
-
+.explorer-wrapper
+    display: flex
+    flex-direction: column
+    height: 100%
 .explorer-mainview
     display: flex
+    height: 90%
+    background-color: white
     .explorer-tree
-        flex: 0.3
-        background-color: white
+        flex: 1
+        max-width: 140px
+        min-width: 140px      
         border-right: 2px solid black
         padding-left: 3px
         .explorer-tree-text
@@ -73,60 +85,54 @@ $heightexplorer: 500px
             width: 14px
             height: 14px
     .explorer-items-container 
-        height: $heightexplorer
-        background-color: white
         overflow: scroll
-        flex: 1
-        display: inline-bock
-
-.explorer-item
-    font-family: "Tahoma"
-    cursor: default
-    -webkit-touch-callout: none /* iOS Safari */
-    -webkit-user-select: none /* Safari */
-    -khtml-user-select: none /* Konqueror HTML */
-    -moz-user-select: none /* Firefox */
-    -ms-user-select: none /* Internet Explorer/Edge */
-    user-select: none
-    box-sizing: border-box
-    height: 23px    
-    white-space: nowrap
-    .explorer-item-filename
-        user-select: none
-        position: relative
-        display: inline-block
-        width: 300px
-        overflow: hidden
-        text-overflow: ellipsis
-    .explorer-item-length
-        user-select: none
-        position: relative
-        display: inline-block
-        width: 200px
-        overflow: hidden
-        
-        
-
-.explorer-item-icon--wrapper
-    position: relative
-    display: inline-block
-    margin-right: 5px
-    margin-left: 2px
-    left: 0
-    top: 0
-    width: 14px
-    height: 14px
-.explorer-item-icon--bigger
-    position: relative
-    width: 14px
-    height: 14px
-    
-.explorer-item-icon--smaller
-    position: absolute
-    width: 8px
-    height: 8px
-    left: 6px
-    top: 6px
+        background-color: white
+        flex: 1 
+        .explorer-item
+            font-family: "Tahoma"
+            cursor: default
+            -webkit-touch-callout: none /* iOS Safari */
+            -webkit-user-select: none /* Safari */
+            -khtml-user-select: none /* Konqueror HTML */
+            -moz-user-select: none /* Firefox */
+            -ms-user-select: none /* Internet Explorer/Edge */
+            user-select: none
+            box-sizing: border-box
+            height: 23px    
+            white-space: nowrap
+            .explorer-item-filename
+                user-select: none
+                position: relative
+                display: inline-block
+                width: 400px
+                overflow: hidden
+                text-overflow: ellipsis
+            .explorer-item-length
+                user-select: none
+                position: relative
+                display: inline-block
+                width: 50px
+                overflow: hidden
+        .explorer-item-icon--wrapper
+            position: relative
+            display: inline-block
+            margin-right: 5px
+            margin-left: 2px
+            left: 0
+            top: 0
+            width: 14px
+            height: 14px
+        .explorer-item-icon--bigger
+            position: relative
+            width: 14px
+            height: 14px
+            
+        .explorer-item-icon--smaller
+            position: absolute
+            width: 8px
+            height: 8px
+            left: 6px
+            top: 6px
 
 .explorer-selected
     background-color: #3064BD
@@ -134,8 +140,7 @@ $heightexplorer: 500px
     border: 1px solid white
     border-style: dotted
     box-sizing: border-box
-    
-
+    width: auto
         
 
 

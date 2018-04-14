@@ -12,14 +12,25 @@ import {
   searchOnSpotify
 } from "../../actionCreators";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
+import { ExplorerTreeStyle, ExplorerWindowStyle } from "./styles.js";
 import magnifier from "./images/magnifier.png";
 import backButton from "./images/Back.png";
 import ExplorerTree from "./ExplorerTree";
 import ExplorerContent from "./ExplorerContent";
-import HTML5Backend from "react-dnd-html5-backend";
-import { DragDropContext } from "react-dnd";
+
+const WINDOW_WIDTH = 400;
+const WINDOW_HEIGHT = 545;
 
 class ExplorerWindow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: 0,
+      height: 0,
+      x: 0,
+      y: 0
+    };
+  }
   componentDidMount() {
     $(".explorer-toolbar-backbutton")
       .attr("unselectable", "on")
@@ -34,6 +45,34 @@ class ExplorerWindow extends React.Component {
       .bind("selectstart", () => {
         return false;
       });
+
+    // width
+    window.addEventListener("resize", () => this.setWidthAndHeight());
+    this.setWidthAndHeight();
+  }
+
+  setWidthAndHeight() {
+    this.setState({ width: this.getDocWidth() / 2.8 }); // best is 2.8
+    this.setState({ height: this.getDocHeight() / 1.8 });
+  }
+
+  getDocHeight() {
+    const D = document;
+    return Math.max(
+      D.body.scrollHeight,
+      D.documentElement.scrollHeight,
+      D.body.offsetHeight,
+      D.documentElement.offsetHeight,
+      D.body.clientHeight,
+      D.documentElement.clientHeight
+    );
+  }
+  getDocWidth() {
+    return Math.max(
+      document.documentElement.scrollWidth,
+      document.documentElement.clientWidth,
+      document.documentElement.offsetWidth
+    );
   }
 
   goBack() {
@@ -41,43 +80,61 @@ class ExplorerWindow extends React.Component {
   }
 
   render() {
+    const {
+      windowStyle,
+      explorerTitle,
+      explorerTitleImg,
+      explorerTitleP,
+      explorerToolbar,
+      backButtonStyle,
+      explorerWrapper,
+      searchbox,
+      input,
+      mainView
+    } = ExplorerWindowStyle;
+
+    windowStyle.height = this.state.height;
+    windowStyle.width = this.state.width;
     return (
       <Draggable
         axis="both"
         bounds="html"
         handle=".explorer-title"
-        defaultPosition={{ x: 0, y: 0 }}
+        defaultPosition={{ x: 100, y: 200 }}
         position={null}
         onStart={this.handleStart}
         onDrag={this.handleDrag}
         onStop={this.handleStop}
       >
-        <div className="explorer-window">
-          <div className="explorer-title">
-            <img src={magnifier} />
-            <p>Winampify</p>
+        <div className="explorer-window" style={windowStyle}>
+          <div className="explorer-wrapper" style={explorerWrapper}>
+            <div className="explorer-title" style={explorerTitle}>
+              <img src={magnifier} style={explorerTitleImg} />
+              <p style={explorerTitleP}>Winampify</p>
+            </div>
+            <div className="explorer-toolbar" style={explorerToolbar}>
+              <img
+                className="explorer-toolbar-backbutton"
+                src={backButton}
+                style={backButtonStyle}
+                onClick={() => this.goBack()}
+              />
+              <form
+                className="explorer-toolbar-searchbox"
+                style={searchbox}
+                onSubmit={e => {
+                  e.preventDefault();
+                  this.props.searchOnSpotify(e.target[0].value);
+                }}
+              >
+                <input />
+              </form>
+            </div>
+            <div className="explorer-mainview" style={mainView}>
+              <ExplorerTree />
+              <ExplorerContent />
+            </div>
           </div>
-          <div className="explorer-toolbar">
-            <img
-              className="explorer-toolbar-backbutton"
-              src={backButton}
-              onClick={() => this.goBack()}
-            />
-            <form
-              className="explorer-toolbar-searchbox"
-              onSubmit={e => {
-                e.preventDefault();
-                this.props.searchOnSpotify(e.target[0].value);
-              }}
-            >
-              <input />
-            </form>
-          </div>
-          <div className="explorer-mainview">
-            <ExplorerTree />
-            <ExplorerContent />
-          </div>
-          <div className="explorer-foot" />
         </div>
       </Draggable>
     );
@@ -102,5 +159,4 @@ const mapDispatchToProps = dispatch => ({
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
   searchOnSpotify: search => dispatch(searchOnSpotify(search))
 });
-ExplorerWindow = DragDropContext(HTML5Backend)(ExplorerWindow);
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerWindow);

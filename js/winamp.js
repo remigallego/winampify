@@ -6,15 +6,7 @@ import getStore from "./store";
 import App from "./components/App";
 import Hotkeys from "./hotkeys";
 import Media from "./media";
-import {
-  setSkinFromUrl,
-  loadMediaFiles,
-  addTrackFromURI,
-  createPlayerObject,
-  addTracksFromPlaylist
-} from "./actionCreators";
-import { LOAD_STYLE } from "./constants";
-import SpotifyWebPlaybackAPI from "./components/SpotifyWebPlaybackAPI";
+import { setSkinFromUrl, createPlayerObject } from "./actionCreators";
 
 import {
   SET_AVALIABLE_SKINS,
@@ -40,8 +32,8 @@ const storeHas = (store, predicate) =>
 // The Spotify player needs to be loaded from an external script,
 //   thus we need a promise function to keep track of it
 function loadScriptAsync(src) {
-  return new Promise(function(resolve, reject) {
-    let script = document.createElement("script");
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
     script.src = src;
     script.addEventListener("load", () => resolve());
     script.addEventListener("error", e => reject(e));
@@ -100,13 +92,6 @@ class Winamp {
           player.addListener("ready", ({ device_id }) => {
             console.log("Ready with Device ID", device_id);
             this.store.dispatch(createPlayerObject(player));
-            /*
-        // Initial Track:
-        this.store.dispatch(addTrackFromURI("1ngKxzxHTfZ2l5IU3lq2V8", 0));     
-        */
-
-            // Initial Album:
-            //this.store.dispatch(addTracksFromPlaylist("spotify:album:3HNzOyPbz5vPvUie7lI97X"));
           });
 
           // Connect to the player!

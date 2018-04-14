@@ -1,6 +1,8 @@
 import React from "react";
+import { connect } from "react-redux";
+import { addTrackFromURI } from "../actionCreators";
 
-export default class DropTarget extends React.Component {
+class DropTarget extends React.Component {
   constructor(props) {
     super(props);
     this.handleDrop = this.handleDrop.bind(this);
@@ -15,15 +17,8 @@ export default class DropTarget extends React.Component {
   }
 
   handleDrop(e) {
-    console.log(e.target)
-    /*
-    this.supress(e);
-    if (!this._node) {
-      return;
-    }
-    const { x, y } = this._node.getBoundingClientRect();
-    this.props.handleDrop(e, { x, y });
-    */
+    let id = e.dataTransfer.getData("id");
+    this.props.addTrackFromURI(id);
   }
 
   _ref(node) {
@@ -50,3 +45,13 @@ export default class DropTarget extends React.Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  playlist: state.playlist,
+  explorer: state.explorer
+});
+const mapDispatchToProps = dispatch => ({
+  addTrackFromURI: id => {
+    dispatch(addTrackFromURI(id));
+  }
+});
+export default connect(mapStateToProps, mapDispatchToProps)(DropTarget);
