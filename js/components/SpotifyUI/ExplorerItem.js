@@ -6,11 +6,9 @@ import { ExplorerItemStyle } from "./styles";
 const {
   itemStyle,
   fileName,
-  length,
   iconWrapper,
   iconBig,
-  iconSmall,
-  genres
+  iconSmall
 } = ExplorerItemStyle;
 
 class ExplorerItem extends React.Component {
@@ -41,34 +39,9 @@ class ExplorerItem extends React.Component {
 
   getDate() {
     const { releaseDate } = this.props;
-    let rgx = /-/gi;
+    const rgx = /-/gi;
     const date = releaseDate.replace(rgx, "/");
     return date;
-  }
-
-  renderInfos() {
-    return (
-      <div style={{ display: "inline-block" }}>
-        <div
-          className="explorer-item-length"
-          style={{ ...length, width: this.props.widths.length }}
-        >
-          {this.props.type === "track" && this.getDuration()}
-        </div>
-        <div
-          className="explorer-item-length"
-          style={{ ...length, width: this.props.widths.genre }}
-        >
-          {this.props.type === "artist" && this.getGenre()}
-        </div>
-        <div
-          className="explorer-item-length"
-          style={{ ...length, width: this.props.widths.date }}
-        >
-          {this.props.type === "album" && this.getDate()}
-        </div>
-      </div>
-    );
   }
 
   renderIcons(icons) {
@@ -146,18 +119,10 @@ class ExplorerItem extends React.Component {
       };
       thisClass = "explorer-item selected";
     }
-    let duration = "";
-    let genre = "";
-    if (type === "track") {
-      duration = this.getDuration();
-    }
-    if (type === "artist") {
-      genre = this.getGenre();
-    }
 
     return (
       <div
-        onClick={onClick}
+        onMouseDown={onClick}
         onDoubleClick={onDoubleClick}
         style={thisStyle}
         id={this.props.key}
@@ -166,13 +131,9 @@ class ExplorerItem extends React.Component {
         onDragStart={e => this.drag(e)}
       >
         {this.renderIcons(icons)}
-        <div
-          className="explorer-item-filename"
-          style={{ ...fileName, width: this.props.widths.name }}
-        >
+        <div className="explorer-item-filename" style={fileName}>
           {children}
         </div>
-        {this.renderInfos()}
       </div>
     );
   }

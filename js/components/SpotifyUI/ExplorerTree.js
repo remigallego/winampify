@@ -21,7 +21,11 @@ class ExplorerTree extends React.Component {
       explorerTreeIcon
     } = ExplorerTreeStyle;
     return (
-      <div className="explorer-tree" style={explorerTree}>
+      <div
+        className="explorer-tree"
+        style={explorerTree}
+        onMouseDown={e => e.preventDefault()}
+      >
         <div
           className="explorer-tree-text"
           onClick={() => this.props.viewMyTopArtists()}

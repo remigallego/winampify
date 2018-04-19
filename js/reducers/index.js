@@ -41,11 +41,10 @@ import {
   ADD_TRACK_FROM_URL,
   NETWORK_CONNECTED,
   NETWORK_DISCONNECTED,
-
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
   S_PLAY_URI,
-  READY
+  OPEN_IMAGE_MODAL
 } from "../actionTypes";
 
 import playlist from "./playlist";
@@ -95,7 +94,9 @@ const defaultDisplayState = {
   skinRegion: {},
   visualizerStyle: 2,
   playlistScrollPosition: 0,
-  playlistSize: [0, 0]
+  playlistSize: [0, 0],
+  isModalOpen: false,
+  imageSource: ""
 };
 
 const display = (state = defaultDisplayState, action) => {
@@ -136,7 +137,11 @@ const display = (state = defaultDisplayState, action) => {
     case PLAYLIST_SIZE_CHANGED:
       return { ...state, playlistSize: action.size };
     case S_UPDATE_PLAYER_OBJECT:
-      return { ...state, loading: false}
+      return { ...state, loading: false };
+    case OPEN_IMAGE_MODAL:
+      return { ...state, isModalOpen: true, imageSource: action.source };
+    case "CLOSE_MODAL":
+      return { ...state, isModalOpen: false };
     default:
       return state;
   }
@@ -184,7 +189,6 @@ const equalizer = (state, action) => {
   }
 };
 
-  
 const media = (state, action) => {
   if (!state) {
     return {
@@ -211,9 +215,9 @@ const media = (state, action) => {
     // TODO: Make these constants
     case PLAY:
     case IS_PLAYING:
-    case S_PLAY_URI: 
+    case S_PLAY_URI:
     case PLAY_TRACK:
-      return { ...state, status: "PLAYING"};
+      return { ...state, status: "PLAYING" };
     case PAUSE:
       return { ...state, status: "PAUSED" };
     case STOP:
@@ -226,12 +230,12 @@ const media = (state, action) => {
       return { ...state, timeElapsed: action.elapsed };
     case ADD_TRACK_FROM_URL:
       return {
-        ...state,
+        ...state
       };
     case ADD_TRACK_FROM_URI:
-    return {
-      ...state,
-    };
+      return {
+        ...state
+      };
     case SET_MEDIA:
       return {
         ...state,
@@ -249,11 +253,18 @@ const media = (state, action) => {
     case TOGGLE_SHUFFLE:
       return { ...state, shuffle: !state.shuffle };
     case S_UPDATE_PLAYER_OBJECT:
-      return { ...state, player: action.player, id: action.id, 
-      getOAuthToken: action.getOAuthToken, 
-      volume: action.volume, name: action.name, 
-      balance: action.balance, channels: action.channels, shuffle: action.shuffle, 
-      repeat: action.repeat}
+      return {
+        ...state,
+        player: action.player,
+        id: action.id,
+        getOAuthToken: action.getOAuthToken,
+        volume: action.volume,
+        name: action.name,
+        balance: action.balance,
+        channels: action.channels,
+        shuffle: action.shuffle,
+        repeat: action.repeat
+      };
     default:
       return state;
   }

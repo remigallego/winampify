@@ -59,7 +59,8 @@ import {
   UNSET_FOCUS_EXPLORER,
   SET_ARTISTS_FROM_USER,
   SET_TRACKS_FROM_PLAYLIST,
-  SET_ARTISTS_FROM_SEARCH
+  SET_ARTISTS_FROM_SEARCH,
+  OPEN_IMAGE_MODAL
 } from "./actionTypes";
 import LoadQueue from "./loadQueue";
 
@@ -220,6 +221,16 @@ export function getArtistFromId(id) {
       return result;
     });
   };
+}
+
+/* UI FUNCTIONS */
+export function openImageModal(source) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: OPEN_IMAGE_MODAL,
+      source: source
+    })
+  }
 }
 
 /* WINAMP FUNCTIONS */

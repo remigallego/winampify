@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import * as $ from "jquery";
 
 import WindowManager from "./WindowManager";
 import MainWindow from "./MainWindow";
@@ -11,7 +12,7 @@ import Skin from "./Skin";
 import SpotifyWebPlaybackAPI from "./SpotifyWebPlaybackAPI";
 import SpotifyUI from "./SpotifyUI";
 import "../../css/winamp.css";
-
+import ImageModal from "./ImageModal";
 const genWindowMap = {
   AVS_WINDOW: AvsWindow
 };
@@ -25,11 +26,37 @@ const App = ({
   playlist,
   openWindows,
   container,
-  filePickers
+  filePickers,
+  isModalOpen,
+  imageSource,
+  closeModal
 }) => {
   if (closed) {
     return null;
   }
+
+  const componentWillMount = () => {
+    $.fn.extend({
+      disableSelection: function() {
+        this.each(function() {
+          if (typeof this.onselectstart != "undefined") {
+            this.onselectstart = function() {
+              return false;
+            };
+          } else if (typeof this.style.MozUserSelect != "undefined") {
+            this.style.MozUserSelect = "none";
+          } else {
+            this.onmousedown = function() {
+              return false;
+            };
+          }
+        });
+      }
+    });
+    $(document).ready(function() {
+      $("*").disableSelection();
+    });
+  };
   const windows = {
     main: <MainWindow mediaPlayer={media} filePickers={filePickers} />,
     equalizer: equalizer && <EqualizerWindow />,
@@ -48,6 +75,9 @@ const App = ({
       <WindowManager windows={windows} container={container} />
       <SpotifyWebPlaybackAPI />
       <SpotifyUI />
+      {isModalOpen && (
+        <ImageModal image={imageSource} onClick={() => closeModal()} />
+      )}
     </div>
   );
 };
@@ -55,12 +85,19 @@ const App = ({
 App.propTypes = {
   container: PropTypes.instanceOf(Element)
 };
+const mapDispatchToProps = dispatch => ({
+  closeModal: () => {
+    dispatch({ type: "CLOSE_MODAL" });
+  }
+});
 
 const mapStateToProps = state => ({
   closed: state.display.closed,
   equalizer: state.windows.equalizer,
   playlist: state.windows.playlist,
-  openWindows: new Set(state.windows.openGenWindows)
+  openWindows: new Set(state.windows.openGenWindows),
+  isModalOpen: state.display.isModalOpen,
+  imageSource: state.display.imageSource
 });
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

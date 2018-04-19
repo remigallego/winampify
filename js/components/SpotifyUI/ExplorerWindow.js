@@ -12,15 +12,11 @@ import {
   searchOnSpotify
 } from "../../actionCreators";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
-import { ExplorerTreeStyle, ExplorerWindowStyle } from "./styles.js";
+import { ExplorerWindowStyle } from "./styles.js";
 import magnifier from "./images/magnifier.png";
 import backButton from "./images/Back.png";
 import ExplorerTree from "./ExplorerTree";
 import ExplorerContent from "./ExplorerContent";
-
-const WINDOW_WIDTH = 400;
-const WINDOW_HEIGHT = 545;
-
 class ExplorerWindow extends React.Component {
   constructor(props) {
     super(props);
@@ -112,7 +108,11 @@ class ExplorerWindow extends React.Component {
               <img src={magnifier} style={explorerTitleImg} />
               <p style={explorerTitleP}>Winampify</p>
             </div>
-            <div className="explorer-toolbar" style={explorerToolbar}>
+            <div
+              className="explorer-toolbar"
+              style={explorerToolbar}
+              onMouseDown={e => e.preventDefault()}
+            >
               <img
                 className="explorer-toolbar-backbutton"
                 src={backButton}

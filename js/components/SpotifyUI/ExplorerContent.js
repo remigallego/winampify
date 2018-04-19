@@ -8,24 +8,19 @@ import {
   unsetFocusExplorer,
   playTrackFromExplorer,
   playAlbumFromExplorer,
-  getArtistFromId
+  getArtistFromId,
+  openImageModal
 } from "../../actionCreators";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
-import { getAlbumInfos } from "../../spotifyParser";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
-import ExplorerContentToolbar from "./ExplorerContentToolbar";
 
 const { container } = ExplorerContentStyle;
 
-const widths = {
-  name: "260px",
-  genre: "120px",
-  length: "60px",
-  date: "120px"
-};
-
 class ExplorerContent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   clickHandler(id) {
     this.props.click(id);
   }
@@ -42,11 +37,11 @@ class ExplorerContent extends React.Component {
 
   renderAlbumsFromArtist(albums) {
     const { explorer } = this.props;
+    console.log(albums);
     return albums.map((album, index) => {
       let selected;
       if (explorer.selected === index) selected = true;
       else selected = false;
-
       return (
         <ExplorerItem
           key={index}
@@ -55,7 +50,6 @@ class ExplorerContent extends React.Component {
           image={album.images[0].url}
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => this.openAlbumFolder(album.id)}
-          widths={widths}
           releaseDate={album.release_date}
         >
           {album.name}
@@ -65,11 +59,10 @@ class ExplorerContent extends React.Component {
   }
 
   renderTracksFromAlbum(tracks) {
-    const { explorer, playTrack, getArtistInfo } = this.props;
+    const { explorer, playTrack } = this.props;
     const renderedTracks = tracks.map((track, index) => {
-      console.log(track)
+      console.log(track);
       const trackId = track.id;
-      const artistId = track.artists[0].id;
       let selected = false;
       const fileName = `${track.artists[0].name} - ${track.name}`;
       if (explorer.selected === index) selected = true;
@@ -82,7 +75,6 @@ class ExplorerContent extends React.Component {
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => playTrack(trackId)}
           infos={track}
-          widths={widths}
         >
           {fileName}.mp3
         </ExplorerItem>
@@ -110,7 +102,6 @@ class ExplorerContent extends React.Component {
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => playTrack(trackId)}
           infos={recentTrack.track}
-          widths={widths}
         >
           {fileName}.mp3
         </ExplorerItem>
@@ -134,7 +125,6 @@ class ExplorerContent extends React.Component {
           type={"artist"}
           onClick={() => this.clickHandler(artistId)}
           onDoubleClick={() => this.openArtistFolder(artistId)}
-          widths={widths}
         >
           {fileName}
         </ExplorerItem>
@@ -160,7 +150,6 @@ class ExplorerContent extends React.Component {
           image={result.images.length > 0 ? result.images[0].url : ""}
           onClick={() => this.clickHandler(resultId)}
           onDoubleClick={() => this.openArtistFolder(resultId)}
-          widths={widths}
         >
           {fileName}
         </ExplorerItem>
@@ -192,7 +181,6 @@ class ExplorerContent extends React.Component {
               type={"playlist"}
               onClick={() => this.clickHandler(tracks.length)}
               onDoubleClick={() => this.props.playAlbumFromExplorer(currentId)}
-              widths={widths}
             >
               {title}.m3u
             </ExplorerItem>
@@ -203,7 +191,6 @@ class ExplorerContent extends React.Component {
               image={image}
               onClick={() => this.clickHandler(tracks.length + 1)}
               onDoubleClick={() => this.props.openImage(image)}
-              widths={widths}
             >
               cover.jpg
             </ExplorerItem>
@@ -220,11 +207,11 @@ class ExplorerContent extends React.Component {
     }
   }
 
-  openImage() {
-    return undefined;
-  }
-
   handleClickOutside(e) {
+    console.log(e.target);
+    e.target.className === "explorer-items-container"
+      ? e.preventDefault()
+      : null;
     if (
       e.target.classList[0] !== "explorer-item" &&
       e.target.parentNode.classList[0] !== "explorer-item"
@@ -236,10 +223,9 @@ class ExplorerContent extends React.Component {
     return (
       <div
         className="explorer-items-container"
-        onClick={e => this.handleClickOutside(e)}
+        onMouseDown={e => this.handleClickOutside(e)}
         style={container}
       >
-        <ExplorerContentToolbar widths={widths} />
         {this.renderCurrentView()}
       </div>
     );
@@ -265,7 +251,9 @@ const mapDispatchToProps = dispatch => ({
   viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
   goPreviousView: () => dispatch(goPreviousView()),
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
-  playAlbumFromExplorer: currentId => dispatch(playAlbumFromExplorer(currentId))
+  playAlbumFromExplorer: currentId =>
+    dispatch(playAlbumFromExplorer(currentId)),
+  openImage: source => dispatch(openImageModal(source))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerContent);

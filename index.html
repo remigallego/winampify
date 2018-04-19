@@ -6,7 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Winampify is a Web Client for Spotify using Winamp 2 skins" />
-    <link rel='stylesheet' type='text/css' href="<%= require('!file-loader?name=[path][name]-[hash].[ext]!./css/page.css') %>" />
+    <link rel='stylesheet' type='text/css' href="<%= require('!file-loader?name=[path][name]-[hash].[ext]!./css/page.css') %>"
+    />
     <link rel="shortcut icon" sizes="16x16 32x32" href="<%= require('./images/favicon.ico') %>">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
@@ -44,11 +45,12 @@
     <meta name="msapplication-tap-highlight" content="no">
     <!-- Load and register service worker that adds offline support -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js');
-        });
-      }
+        
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
     </script>
 </head>
 
@@ -66,4 +68,5 @@
     </p>
     <!-- Scripts get injected by html-webpack-plugin -->
 </body>
+
 </html>

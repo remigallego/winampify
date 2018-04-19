@@ -3,7 +3,9 @@ const ExplorerWindowStyle = {
     position: "absolute",
     border: "2px solid #026bfe",
     borderRadius: "5px",
-    overflow: "hidden"
+    overflow: "hidden",
+    resize: "both",
+    minWidth: "400px"
   },
   explorerTitle: {
     backgroundColor: "#0055e5",
@@ -75,11 +77,12 @@ const ExplorerWindowStyle = {
 
 const ExplorerTreeStyle = {
   explorerTree: {
-    width: "140px",
+    width: "150px",
+    maxWidth: "150px",
+    minWidth: "150px",
     height: "auto",
     borderRight: "2px solid #EFEBD6",
-    paddingLeft: "3px",
-    zIndex: 555
+    paddingLeft: "3px"
   },
   explorerTreeText: {
     cursor: "pointer",
@@ -95,8 +98,10 @@ const ExplorerTreeStyle = {
 const ExplorerContentStyle = {
   container: {
     overflow: "scroll",
+    overflowX: "hidden",
     backgroundColor: "white",
-    flex: 1
+    width: "100%",
+    borderBottom: "1px solid black"
   }
 };
 
@@ -107,31 +112,14 @@ const ExplorerItemStyle = {
     userSelect: "none",
     boxSizing: "border-box",
     height: "23px",
+    width: "100%",
     whiteSpace: "nowrap",
-    width: "600px",
     backgroundColor: "transparent"
   },
   fileName: {
     userSelect: "none",
     position: "relative",
-    display: "inline-block",
-    width: "580px", // @TODO: Do a handle to resize
-    overflow: "hidden",
-    textOverflow: "ellipsis"
-  },
-  length: {
-    userSelect: "none",
-    position: "relative",
-    display: "inline-block",
-    width: "50px",
-    overflow: "hidden"
-  },
-  genres: {
-    userSelect: "none",
-    position: "relative",
-    display: "inline-block",
-    width: "150px",
-    overflow: "hidden"
+    display: "inline-block"
   },
   iconWrapper: {
     position: "relative",
@@ -157,24 +145,9 @@ const ExplorerItemStyle = {
   }
 };
 
-const ExplorerContentToolbarStyle = {
-  container: {
-    backgroundColor: "#EDEADB",
-    overflow: "hidden",
-    width: "580px",
-    whiteSpace: "nowrap"
-  },
-  info: {
-    display: "inline-block",
-    width: "auto",
-    whiteSpace: "nowrap"
-  }
-};
-
 export {
   ExplorerWindowStyle,
   ExplorerTreeStyle,
   ExplorerContentStyle,
-  ExplorerItemStyle,
-  ExplorerContentToolbarStyle
+  ExplorerItemStyle
 };
