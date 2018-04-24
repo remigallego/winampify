@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import $ from "jquery";
 import {
   goPreviousView,
   viewAlbumsFromArtist,
@@ -208,15 +209,12 @@ class ExplorerContent extends React.Component {
   }
 
   handleClickOutside(e) {
-    console.log(e.target);
-    e.target.className === "explorer-items-container"
-      ? e.preventDefault()
-      : null;
-    if (
-      e.target.classList[0] !== "explorer-item" &&
-      e.target.parentNode.classList[0] !== "explorer-item"
-    )
+    console.log(e.target.className);
+
+    if (e.target.className === "explorer-items-container") {
+      e.preventDefault();
       this.props.unsetFocusExplorer();
+    }
   }
 
   render() {

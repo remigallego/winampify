@@ -5,7 +5,8 @@ const ExplorerWindowStyle = {
     borderRadius: "5px",
     overflow: "hidden",
     resize: "both",
-    minWidth: "400px"
+    minWidth: "400px",
+    minHeight: "200px"
   },
   explorerTitle: {
     backgroundColor: "#0055e5",
