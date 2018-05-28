@@ -20,6 +20,16 @@ class ExplorerItem extends React.Component {
     if (this.props.type === "track") {
       this.id = this.props.infos.id;
     }
+    document.addEventListener(
+      "dragstart",
+      e => {
+        let dragIcon = document.createElement("img");
+        dragIcon.src = "./images/winamp-mp3.png";
+        dragIcon.width = 500;
+        e.dataTransfer.setDragImage(dragIcon, 10, -10);
+      },
+      false
+    );
   }
 
   getDuration() {
@@ -129,6 +139,7 @@ class ExplorerItem extends React.Component {
         className={thisClass}
         draggable="true"
         onDragStart={e => this.drag(e)}
+        id={"explorer-item"}
       >
         {this.renderIcons(icons)}
         <div className="explorer-item-filename" style={fileName}>
