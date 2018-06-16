@@ -31,6 +31,8 @@ class DropTarget extends React.Component {
       loadFilesFromReferences,
       // eslint-disable-next-line no-shadow, no-unused-vars
       handleDrop,
+      // eslint-disable-next-line no-shadow, no-unused-vars
+      addTrackFromURI,
       ...passThroughProps
     } = this.props;
     return (

@@ -24,7 +24,6 @@ class ExplorerContent extends React.Component {
   clickHandler(id) {
     this.props.click(id);
   }
-
   doubleClickHandler(id) {
     this.props.doubleclick(id);
   }
@@ -35,124 +34,79 @@ class ExplorerContent extends React.Component {
     this.props.viewAlbumsFromArtist(artistId);
   }
 
-  renderAlbumsFromArtist(albums) {
-    const { explorer } = this.props;
-    console.log(albums);
-    return albums.map((album, index) => {
-      let selected;
-      if (explorer.selected === index) selected = true;
-      else selected = false;
-      return (
-        <ExplorerItem
-          key={index}
-          selected={selected}
-          type={"album"}
-          image={album.images ? album.images[0].url : null}
-          onClick={() => this.clickHandler(index)}
-          onDoubleClick={() => this.openAlbumFolder(album.id)}
-          releaseDate={album.release_date}
-        >
-          {album.name}
-        </ExplorerItem>
-      );
-    });
+  renderAlbums(albums) {
+    if (albums)
+      return albums.map((album, index) => {
+        return this.renderAlbum(album, index);
+      });
+    return null;
   }
 
-  renderAlbumsFromLibrary(albums) {
-    const { explorer } = this.props;
-    console.log(albums);
-    return albums.map((album, index) => {
-      let selected;
-      if (explorer.selected === index) selected = true;
-      else selected = false;
-      return (
-        <ExplorerItem
-          key={index}
-          selected={selected}
-          type={"album"}
-          image={album.images ? album.images[0].url : null}
-          onClick={() => this.clickHandler(index)}
-          onDoubleClick={() => this.openAlbumFolder(album.id)}
-          releaseDate={album.release_date}
-        >
-          {album.name}
-        </ExplorerItem>
-      );
-    });
-  }
-
-  renderTracksFromAlbum(tracks) {
-    const { explorer, playTrack } = this.props;
-    const renderedTracks = tracks.map((track, index) => {
-      console.log(track);
-      const trackId = track.id;
-      let selected = false;
-      const fileName = `${track.artists[0].name} - ${track.name}`;
-      if (explorer.selected === index) selected = true;
-      else selected = false;
-      return (
-        <ExplorerItem
-          key={index}
-          selected={selected}
-          type={"track"}
-          onClick={() => this.clickHandler(index)}
-          onDoubleClick={() => playTrack(trackId)}
-          infos={track}
-        >
-          {fileName}.mp3
-        </ExplorerItem>
-      );
-    });
-
-    return <div>{renderedTracks}</div>;
-  }
-
-  renderTracksFromPlaylist(tracks) {
-    const { explorer, playTrack } = this.props;
-    return tracks.map((recentTrack, index) => {
-      const trackId = recentTrack.track.id;
-      let selected = false;
-      const fileName = `${recentTrack.track.artists[0].name} - ${
-        recentTrack.track.name
-      }`;
-      if (explorer.selected === index) selected = true;
-      else selected = false;
-      return (
-        <ExplorerItem
-          key={index}
-          selected={selected}
-          type={"track"}
-          onClick={() => this.clickHandler(index)}
-          onDoubleClick={() => playTrack(trackId)}
-          infos={recentTrack.track}
-        >
-          {fileName}.mp3
-        </ExplorerItem>
-      );
-    });
+  renderTracks(tracks) {
+    if (tracks)
+      return tracks.map((track, index) => {
+        return this.renderTrack(track, index);
+      });
+    return null;
   }
 
   renderArtists(artists) {
-    const { explorer } = this.props;
-    return artists.map((artist, index) => {
-      const artistId = artist.id;
-      let selected = false;
-      const fileName = artist.name;
-      if (explorer.selected === artistId) selected = true;
-      else selected = false;
-      return (
-        <ExplorerItem
-          key={index}
-          artist={artist}
-          selected={selected}
-          type={"artist"}
-          onClick={() => this.clickHandler(artistId)}
-          onDoubleClick={() => this.openArtistFolder(artistId)}
-        >
-          {fileName}
-        </ExplorerItem>
-      );
-    });
+    if (artists)
+      return artists.map((artist, index) => {
+        return this.renderArtist(artist, index);
+      });
+    return null;
+  }
+
+  renderArtist(artist, index) {
+    const artistId = artist.id;
+    const selected = this.props.explorer.selected === artistId;
+    const fileName = artist.name;
+    return (
+      <ExplorerItem
+        key={index}
+        artist={artist}
+        selected={selected}
+        type={"artist"}
+        onClick={() => this.clickHandler(artistId)}
+        onDoubleClick={() => this.openArtistFolder(artistId)}
+      >
+        {fileName}
+      </ExplorerItem>
+    );
+  }
+  renderAlbum(album, index) {
+    const selected = this.props.explorer.selected === index;
+    return (
+      <ExplorerItem
+        key={index}
+        selected={selected}
+        type={"album"}
+        image={album.images ? album.images[0].url : null}
+        onClick={() => this.clickHandler(index)}
+        onDoubleClick={() => this.openAlbumFolder(album.id)}
+        releaseDate={album.release_date}
+      >
+        {album.name}
+      </ExplorerItem>
+    );
+  }
+
+  renderTrack(track, index) {
+    const selected = this.props.explorer.selected === index;
+    const fileName = ` ${track.name}`;
+    return (
+      <ExplorerItem
+        key={index}
+        selected={selected}
+        type={"track"}
+        onClick={() => this.clickHandler(index)}
+        onDoubleClick={() => this.props.playTrack(track.id)}
+        infos={track}
+      >
+        {fileName}.mp3
+      </ExplorerItem>
+    );
   }
   renderSearch(results) {
     const { explorer } = this.props;
@@ -161,7 +115,6 @@ class ExplorerContent extends React.Component {
       let selected = false;
       const fileName = result.name;
       const artist = result;
-      console.log("here");
       if (explorer.selected === resultId) selected = true;
       else selected = false;
       return (
@@ -181,23 +134,26 @@ class ExplorerContent extends React.Component {
   }
 
   renderCurrentView() {
-    const {
-      view,
-      artists,
-      albums,
-      tracks,
-      selected,
-      currentId,
-      title,
-      image
-    } = this.props.explorer;
-    switch (view) {
+    const { artists, albums, tracks, view } = this.props.explorer;
+    console.log(view);
+    if (view === "playlist") {
+      console.log("playlist");
+      return this.renderTracks(tracks.map(track => track.track));
+    }
+    return (
+      <div>
+        {this.renderAlbums(albums)}
+        {this.renderTracks(tracks)}
+        {this.renderArtists(artists)}
+      </div>
+    );
+    /*switch (view) {
       case "artist":
-        return this.renderAlbumsFromArtist(albums);
+        return this.renderAlbums(albums);
       case "album":
         return (
           <div>
-            {this.renderTracksFromAlbum(tracks)}
+            {this.renderTracks(tracks)}
             <ExplorerItem
               key={tracks.length}
               selected={selected === tracks.length}
@@ -222,17 +178,15 @@ class ExplorerContent extends React.Component {
       case "user":
         return this.renderArtists(artists);
       case "playlist":
-        return this.renderTracksFromPlaylist(tracks);
+        return this.renderTracks(tracks.map(track => track.track));
       case "search":
         return this.renderSearch(artists);
       default:
         return null;
-    }
+    }*/
   }
 
   handleClickOutside(e) {
-    console.log(e.target.className);
-
     if (e.target.className === "explorer-items-container") {
       e.preventDefault();
       this.props.unsetFocusExplorer();

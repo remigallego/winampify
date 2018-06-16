@@ -1,26 +1,22 @@
 import {
   SET_SELECTED_EXPLORER,
-  SET_ALBUMS_FROM_ARTIST,
-  SET_TRACKS_FROM_ALBUM,
+  SET_ALBUMS,
+  SET_TRACKS,
   SET_CURRENT_ID,
   GO_PREVIOUS_VIEW,
   UNSET_FOCUS_EXPLORER,
-  SET_ARTISTS_FROM_USER,
-  SET_TRACKS_FROM_PLAYLIST,
-  SET_ARTISTS_FROM_SEARCH,
-  SET_ALBUMS_FROM_LIBRARY
+  SET_ARTISTS_FROM_USER
 } from "../actionTypes";
 
 const defaultExplorerState = {
   selected: null,
-  view: null, // ['home', 'playlist', 'artist', 'album', 'search']
   currentId: null,
   title: null,
   image: null,
-  artists: {},
-  albums: {},
-  tracks: {},
-  playlists: {},
+  artists: null,
+  albums: null,
+  tracks: null,
+  playlists: null,
   previous: [] /* view: null, id: null  */
 };
 
@@ -47,43 +43,27 @@ const explorer = (state = defaultExplorerState, action) => {
         previous: previous
       };
     }
-    case SET_ALBUMS_FROM_ARTIST: {
+    case SET_ALBUMS: {
       const previous = state.previous;
       previous.unshift({ view: "artist", id: state.currentId });
       return {
         ...state,
-        view: "artist",
+        tracks: null,
+        playlists: null,
+        artists: null,
         albums: action.albums,
         previous: previous
       };
     }
-    case SET_TRACKS_FROM_ALBUM: {
+    case SET_TRACKS: {
       const previous = state.previous;
       previous.unshift({ view: "album", id: state.currentId });
       return {
         ...state,
-        view: "album",
+        albums: null,
+        playlists: null,
+        artists: null,
         tracks: action.tracks,
-        previous: previous
-      };
-    }
-    case SET_TRACKS_FROM_PLAYLIST: {
-      const previous = state.previous;
-      previous.unshift({ view: "album", id: state.currentId });
-      return {
-        ...state,
-        view: "playlist",
-        tracks: action.tracks,
-        previous: previous
-      };
-    }
-    case SET_ARTISTS_FROM_SEARCH: {
-      const previous = state.previous;
-      previous.unshift({ view: "search", id: state.currentId });
-      return {
-        ...state,
-        view: "search",
-        artists: action.artists,
         previous: previous
       };
     }
@@ -92,18 +72,10 @@ const explorer = (state = defaultExplorerState, action) => {
       previous.unshift({ view: "user", id: state.currentId });
       return {
         ...state,
-        view: "user",
+        albums: null,
+        playlists: null,
+        tracks: null,
         artists: action.artists,
-        previous: previous
-      };
-    }
-    case SET_ALBUMS_FROM_LIBRARY: {
-      const previous = state.previous;
-      previous.unshift({ view: "artist", id: state.currentId });
-      return {
-        ...state,
-        view: "artist",
-        albums: action.albums,
         previous: previous
       };
     }

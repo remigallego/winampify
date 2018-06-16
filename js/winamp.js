@@ -53,12 +53,7 @@ class Winamp {
 
   constructor(options) {
     this.options = options;
-    const {
-      initialTracks,
-      tokens,
-      avaliableSkins,
-      enableHotkeys = false
-    } = this.options;
+    const { avaliableSkins, enableHotkeys = false } = this.options;
 
     loadScriptAsync("https://sdk.scdn.co/spotify-player.js")
       .then(() => {
@@ -69,13 +64,12 @@ class Winamp {
               cb(this.options.tokens.access_token);
             }
           });
+          player.access_token = this.options.tokens.access_token;
+          player.refresh_token = this.options.tokens.refresh_token;
 
-          (player.access_token = this.options.tokens.access_token),
-            (player.refresh_token = this.options.tokens.refresh_token),
-            // Error handling
-            player.addListener("initialization_error", ({ message }) => {
-              console.error(message);
-            });
+          player.addListener("initialization_error", ({ message }) => {
+            console.error(message);
+          });
           player.addListener("account_error", ({ message }) => {
             console.error(message);
           });
@@ -84,9 +78,7 @@ class Winamp {
           });
 
           // Playback status updates
-          player.addListener("player_state_changed", state => {
-            console.log(state);
-          });
+          player.addListener("player_state_changed", state => {});
 
           // Ready
           player.addListener("ready", ({ device_id }) => {

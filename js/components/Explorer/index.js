@@ -2,7 +2,7 @@ import React from "react";
 import ExplorerWindow from "./ExplorerWindow";
 // import "../../../css/spotify-ui.css";
 
-const SpotifyUI = () => {
+const Explorer = () => {
   return (
     <div>
       <ExplorerWindow />
@@ -10,4 +10,4 @@ const SpotifyUI = () => {
   );
 };
 
-export default SpotifyUI;
+export default Explorer;

@@ -52,14 +52,12 @@ import {
   PLAYLIST_SIZE_CHANGED,
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
-  SET_ALBUMS_FROM_ARTIST,
-  SET_TRACKS_FROM_ALBUM,
+  SET_ALBUMS,
+  SET_TRACKS,
   SET_CURRENT_ID,
   GO_PREVIOUS_VIEW,
   UNSET_FOCUS_EXPLORER,
   SET_ARTISTS_FROM_USER,
-  SET_TRACKS_FROM_PLAYLIST,
-  SET_ARTISTS_FROM_SEARCH,
   OPEN_IMAGE_MODAL,
   SET_ALBUMS_FROM_LIBRARY
 } from "./actionTypes";
@@ -89,7 +87,7 @@ export function viewAlbumsFromArtist(artist) {
         currentId: artist
       });
       dispatch({
-        type: SET_ALBUMS_FROM_ARTIST,
+        type: SET_ALBUMS,
         albums: albums
       });
     });
@@ -112,7 +110,7 @@ export function viewTracksFromAlbum(album) {
           image: image
         });
         dispatch({
-          type: SET_TRACKS_FROM_ALBUM,
+          type: SET_TRACKS,
           tracks: tracks
         });
       });
@@ -152,7 +150,7 @@ export function searchOnSpotify(search) {
         const { artists } = results;
         /* @TODO different dispatch based on user filter */
         dispatch({
-          type: SET_ARTISTS_FROM_SEARCH,
+          type: SET_ALBUMS,
           artists: artists.items
         });
       })
@@ -205,7 +203,7 @@ export function viewMyRecentlyPlayed() {
       if (err) throw err;
       for (let i = 0; i < tracks.length; i++)
         dispatch({
-          type: SET_TRACKS_FROM_PLAYLIST,
+          type: SET_TRACKS,
           tracks: tracks
         });
     });

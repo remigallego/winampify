@@ -92,7 +92,7 @@ export const parseMyRecentlyPlayed = (token, callback) => {
     .then(response => response.json())
     .then(json => {
       tracks = json.items;
-      callback(null, tracks);
+      callback(null, tracks.map(obj => obj.track));
     })
     .catch(err => callback(err));
 };
@@ -147,7 +147,6 @@ export const parseSearchSpotify = (token, search, callback) => {
 };
 
 export const parseArtist = (token, id, callback) => {
-  console.log("here");
   let results = [];
   fetch(`https://api.spotify.com/v1/artists/${id}`, {
     method: "GET",
@@ -175,7 +174,7 @@ export const fetchplaylist = (token, tracks, user, URI, offset, callback) => {
   )
     .then(response => response.json())
     .then(json => {
-      let items = json.items;
+      const items = json.items;
       if (items[0].track.id !== null) {
         for (let i = 0; i < items.length; i++) {
           if (items[i].track !== null)
@@ -197,37 +196,6 @@ export const fetchplaylist = (token, tracks, user, URI, offset, callback) => {
     .catch(err => {
       console.log(err);
     });
-};
-export const parseTracksPlaylist = (token, playlist, callback) => {
-  let offset = 0;
-  let user;
-  let URI;
-  let tracks = [];
-  let p = playlist.split(":");
-  if (p.length === 5) {
-    user = p[2];
-    URI = p[4];
-  }
-  if (p.length === 4) {
-    user = p[1];
-    URI = p[3];
-  }
-  if (p.length === 3) {
-    tracks = [];
-    URI = p[2];
-    fetchAlbum(token, tracks, URI, (err, res) => callback(err, res));
-  } else
-    fetchplaylist(token, tracks, user, URI, offset, (err, res) =>
-      callback(err, res)
-    );
-};
-
-export const parseTracksAlbum = (token, album, callback) => {
-  let offset = 0;
-  let user;
-  let URI;
-  let tracks = [];
-  fetchAlbum(token, tracks, album, (err, res) => callback(err, res));
 };
 
 export const fetchAlbum = (token, tracks, album, callback) => {
@@ -257,6 +225,38 @@ export const fetchAlbum = (token, tracks, album, callback) => {
     .catch(err => {
       callback(err);
     });
+};
+
+export const parseTracksPlaylist = (token, playlist, callback) => {
+  const offset = 0;
+  let user;
+  let URI;
+  let tracks = [];
+  const p = playlist.split(":");
+  if (p.length === 5) {
+    user = p[2];
+    URI = p[4];
+  }
+  if (p.length === 4) {
+    user = p[1];
+    URI = p[3];
+  }
+  if (p.length === 3) {
+    tracks = [];
+    URI = p[2];
+    fetchAlbum(token, tracks, URI, (err, res) => callback(err, res));
+  } else
+    fetchplaylist(token, tracks, user, URI, offset, (err, res) =>
+      callback(err, res)
+    );
+};
+
+export const parseTracksAlbum = (token, album, callback) => {
+  let offset = 0;
+  let user;
+  let URI;
+  let tracks = [];
+  fetchAlbum(token, tracks, album, (err, res) => callback(err, res));
 };
 
 export const getAlbumInfos = (token, id, callback) => {

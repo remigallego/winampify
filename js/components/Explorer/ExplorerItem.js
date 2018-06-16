@@ -23,7 +23,7 @@ class ExplorerItem extends React.Component {
     document.addEventListener(
       "dragstart",
       e => {
-        let dragIcon = document.createElement("img");
+        const dragIcon = document.createElement("img");
         dragIcon.src = "./images/winamp-mp3.png";
         dragIcon.width = 500;
         e.dataTransfer.setDragImage(dragIcon, 10, -10);
@@ -135,7 +135,6 @@ class ExplorerItem extends React.Component {
         onMouseDown={onClick}
         onDoubleClick={onDoubleClick}
         style={thisStyle}
-        id={this.props.key}
         className={thisClass}
         draggable="true"
         onDragStart={e => this.drag(e)}
