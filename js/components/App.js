@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import * as $ from "jquery";
 
 import WindowManager from "./WindowManager";
 import MainWindow from "./MainWindow";
@@ -10,7 +9,7 @@ import EqualizerWindow from "./EqualizerWindow";
 import AvsWindow from "./AvsWindow";
 import Skin from "./Skin";
 import SpotifyWebPlaybackAPI from "./SpotifyWebPlaybackAPI";
-import SpotifyUI from "./SpotifyUI";
+import Explorer from "./Explorer";
 import "../../css/winamp.css";
 import ImageModal from "./ImageModal";
 const genWindowMap = {
@@ -35,28 +34,6 @@ const App = ({
     return null;
   }
 
-  const componentWillMount = () => {
-    $.fn.extend({
-      disableSelection: function() {
-        this.each(function() {
-          if (typeof this.onselectstart != "undefined") {
-            this.onselectstart = function() {
-              return false;
-            };
-          } else if (typeof this.style.MozUserSelect != "undefined") {
-            this.style.MozUserSelect = "none";
-          } else {
-            this.onmousedown = function() {
-              return false;
-            };
-          }
-        });
-      }
-    });
-    $(document).ready(function() {
-      $("*").disableSelection();
-    });
-  };
   const windows = {
     main: <MainWindow mediaPlayer={media} filePickers={filePickers} />,
     equalizer: equalizer && <EqualizerWindow />,
@@ -74,7 +51,7 @@ const App = ({
       <Skin />
       <WindowManager windows={windows} container={container} />
       <SpotifyWebPlaybackAPI />
-      <SpotifyUI />
+      <Explorer />
       {isModalOpen && (
         <ImageModal image={imageSource} onClick={() => closeModal()} />
       )}

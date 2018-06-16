@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import {
   viewMyTopArtists,
   viewMyFollowedArtists,
-  viewMyRecentlyPlayed
+  viewMyRecentlyPlayed,
+  viewMyLibraryAlbums
 } from "../../actionCreators";
 import hearts from "./images/hearts.ico";
 import recentdocuments from "./images/recentdocuments.png";
@@ -60,6 +61,18 @@ class ExplorerTree extends React.Component {
           />
           Recently Played
         </div>
+        <div
+          className="explorer-tree-text"
+          onClick={() => this.props.viewMyLibraryAlbums()}
+          style={explorerTreeText}
+        >
+          <img
+            className="explorer-tree-icon"
+            style={explorerTreeIcon}
+            src={recentdocuments}
+          />
+          My Library (albums)
+        </div>
       </div>
     );
   }
@@ -72,7 +85,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   viewMyTopArtists: () => dispatch(viewMyTopArtists()),
   viewMyFollowedArtists: () => dispatch(viewMyFollowedArtists()),
-  viewMyRecentlyPlayed: () => dispatch(viewMyRecentlyPlayed())
+  viewMyRecentlyPlayed: () => dispatch(viewMyRecentlyPlayed()),
+  viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerTree);

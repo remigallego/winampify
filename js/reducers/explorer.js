@@ -7,7 +7,8 @@ import {
   UNSET_FOCUS_EXPLORER,
   SET_ARTISTS_FROM_USER,
   SET_TRACKS_FROM_PLAYLIST,
-  SET_ARTISTS_FROM_SEARCH
+  SET_ARTISTS_FROM_SEARCH,
+  SET_ALBUMS_FROM_LIBRARY
 } from "../actionTypes";
 
 const defaultExplorerState = {
@@ -93,6 +94,16 @@ const explorer = (state = defaultExplorerState, action) => {
         ...state,
         view: "user",
         artists: action.artists,
+        previous: previous
+      };
+    }
+    case SET_ALBUMS_FROM_LIBRARY: {
+      const previous = state.previous;
+      previous.unshift({ view: "artist", id: state.currentId });
+      return {
+        ...state,
+        view: "artist",
+        albums: action.albums,
         previous: previous
       };
     }

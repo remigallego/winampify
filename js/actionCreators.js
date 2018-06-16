@@ -60,7 +60,8 @@ import {
   SET_ARTISTS_FROM_USER,
   SET_TRACKS_FROM_PLAYLIST,
   SET_ARTISTS_FROM_SEARCH,
-  OPEN_IMAGE_MODAL
+  OPEN_IMAGE_MODAL,
+  SET_ALBUMS_FROM_LIBRARY
 } from "./actionTypes";
 
 import {
@@ -206,6 +207,21 @@ export function viewMyRecentlyPlayed() {
         dispatch({
           type: SET_TRACKS_FROM_PLAYLIST,
           tracks: tracks
+        });
+    });
+  };
+}
+
+export function viewMyLibraryAlbums() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const token = state.media.player.access_token;
+    parseMyRecentlyPlayed(token, (err, albums) => {
+      if (err) throw err;
+      for (let i = 0; i < albums.length; i++)
+        dispatch({
+          type: SET_ALBUMS_FROM_LIBRARY,
+          albums: albums
         });
     });
   };

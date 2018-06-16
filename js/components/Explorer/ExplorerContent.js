@@ -47,7 +47,30 @@ class ExplorerContent extends React.Component {
           key={index}
           selected={selected}
           type={"album"}
-          image={album.images[0].url}
+          image={album.images ? album.images[0].url : null}
+          onClick={() => this.clickHandler(index)}
+          onDoubleClick={() => this.openAlbumFolder(album.id)}
+          releaseDate={album.release_date}
+        >
+          {album.name}
+        </ExplorerItem>
+      );
+    });
+  }
+
+  renderAlbumsFromLibrary(albums) {
+    const { explorer } = this.props;
+    console.log(albums);
+    return albums.map((album, index) => {
+      let selected;
+      if (explorer.selected === index) selected = true;
+      else selected = false;
+      return (
+        <ExplorerItem
+          key={index}
+          selected={selected}
+          type={"album"}
+          image={album.images ? album.images[0].url : null}
           onClick={() => this.clickHandler(index)}
           onDoubleClick={() => this.openAlbumFolder(album.id)}
           releaseDate={album.release_date}

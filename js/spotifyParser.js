@@ -97,6 +97,38 @@ export const parseMyRecentlyPlayed = (token, callback) => {
     .catch(err => callback(err));
 };
 
+export const parseMyLibraryAlbums = (token, callback) => {
+  let albums = [];
+  fetch(`https://api.spotify.com/v1/me/albums`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => response.json())
+    .then(json => {
+      albums = json.items;
+      callback(null, albums);
+    })
+    .catch(err => callback(err));
+};
+
+export const parseMyLibraryTracks = (token, callback) => {
+  let tracks = [];
+  fetch(`https://api.spotify.com/v1/me/tracks`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => response.json())
+    .then(json => {
+      tracks = json.items;
+      callback(null, tracks);
+    })
+    .catch(err => callback(err));
+};
+
 export const parseSearchSpotify = (token, search, callback) => {
   let results = [];
   const scope = "album,artist,playlist,track";
@@ -115,7 +147,7 @@ export const parseSearchSpotify = (token, search, callback) => {
 };
 
 export const parseArtist = (token, id, callback) => {
-  console.log("here")
+  console.log("here");
   let results = [];
   fetch(`https://api.spotify.com/v1/artists/${id}`, {
     method: "GET",
@@ -129,8 +161,7 @@ export const parseArtist = (token, id, callback) => {
       callback(null, results);
     })
     .catch(err => callback(err));
-}
-
+};
 
 export const fetchplaylist = (token, tracks, user, URI, offset, callback) => {
   fetch(
