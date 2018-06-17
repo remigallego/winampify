@@ -55,11 +55,9 @@ import {
   SET_ALBUMS,
   SET_TRACKS,
   SET_CURRENT_ID,
-  GO_PREVIOUS_VIEW,
   UNSET_FOCUS_EXPLORER,
   SET_ARTISTS_FROM_USER,
-  OPEN_IMAGE_MODAL,
-  SET_ALBUMS_FROM_LIBRARY
+  OPEN_IMAGE_MODAL
 } from "./actionTypes";
 
 import {
@@ -73,7 +71,8 @@ import {
   parseTracksAlbum,
   getAlbumInfos,
   parseSearchSpotify,
-  parseArtist
+  parseArtist,
+  parseMyLibraryAlbums
 } from "./spotifyParser";
 
 /* EXPLORER functions */
@@ -114,14 +113,6 @@ export function viewTracksFromAlbum(album) {
           tracks: tracks
         });
       });
-    });
-  };
-}
-
-export function goPreviousView() {
-  return dispatch => {
-    dispatch({
-      type: GO_PREVIOUS_VIEW
     });
   };
 }
@@ -171,11 +162,10 @@ export function viewMyTopArtists() {
     const token = state.media.player.access_token;
     parseTopArtistsFromMe(token, (err, artists) => {
       if (err) throw err;
-      for (let i = 0; i < artists.length; i++)
-        dispatch({
-          type: SET_ARTISTS_FROM_USER,
-          artists: artists
-        });
+      dispatch({
+        type: SET_ARTISTS_FROM_USER,
+        artists: artists
+      });
     });
   };
 }
@@ -186,11 +176,10 @@ export function viewMyFollowedArtists() {
     const token = state.media.player.access_token;
     parseFollowedArtistsFromMe(token, (err, artists) => {
       if (err) throw err;
-      for (let i = 0; i < artists.length; i++)
-        dispatch({
-          type: SET_ARTISTS_FROM_USER,
-          artists: artists
-        });
+      dispatch({
+        type: SET_ARTISTS_FROM_USER,
+        artists: artists
+      });
     });
   };
 }
@@ -201,11 +190,10 @@ export function viewMyRecentlyPlayed() {
     const token = state.media.player.access_token;
     parseMyRecentlyPlayed(token, (err, tracks) => {
       if (err) throw err;
-      for (let i = 0; i < tracks.length; i++)
-        dispatch({
-          type: SET_TRACKS,
-          tracks: tracks
-        });
+      dispatch({
+        type: SET_TRACKS,
+        tracks: tracks
+      });
     });
   };
 }
@@ -214,13 +202,12 @@ export function viewMyLibraryAlbums() {
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
-    parseMyRecentlyPlayed(token, (err, albums) => {
+    parseMyLibraryAlbums(token, (err, albums) => {
       if (err) throw err;
-      for (let i = 0; i < albums.length; i++)
-        dispatch({
-          type: SET_ALBUMS_FROM_LIBRARY,
-          albums: albums
-        });
+      dispatch({
+        type: SET_ALBUMS,
+        albums: albums.map(obj => obj.album)
+      });
     });
   };
 }

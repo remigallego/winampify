@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 
 import {
-  goPreviousView,
   viewAlbumsFromArtist,
   viewTracksFromAlbum,
   unsetFocusExplorer,
@@ -77,6 +76,7 @@ class ExplorerContent extends React.Component {
   }
   renderAlbum(album, index) {
     const selected = this.props.explorer.selected === index;
+    const artist = album.artists.length > 0 ? album.artists[0].name : "unknown";
     return (
       <ExplorerItem
         key={index}
@@ -87,14 +87,14 @@ class ExplorerContent extends React.Component {
         onDoubleClick={() => this.openAlbumFolder(album.id)}
         releaseDate={album.release_date}
       >
-        {album.name}
+        {artist} - {album.name}
       </ExplorerItem>
     );
   }
 
   renderTrack(track, index) {
     const selected = this.props.explorer.selected === index;
-    const fileName = ` ${track.name}`;
+    const fileName = `${track.artists[0].name} - ${track.name}`;
     return (
       <ExplorerItem
         key={index}
@@ -135,7 +135,6 @@ class ExplorerContent extends React.Component {
 
   renderCurrentView() {
     const { artists, albums, tracks, view } = this.props.explorer;
-    console.log(view);
     if (view === "playlist") {
       console.log("playlist");
       return this.renderTracks(tracks.map(track => track.track));
@@ -147,43 +146,6 @@ class ExplorerContent extends React.Component {
         {this.renderArtists(artists)}
       </div>
     );
-    /*switch (view) {
-      case "artist":
-        return this.renderAlbums(albums);
-      case "album":
-        return (
-          <div>
-            {this.renderTracks(tracks)}
-            <ExplorerItem
-              key={tracks.length}
-              selected={selected === tracks.length}
-              type={"playlist"}
-              onClick={() => this.clickHandler(tracks.length)}
-              onDoubleClick={() => this.props.playAlbumFromExplorer(currentId)}
-            >
-              {title}.m3u
-            </ExplorerItem>
-            <ExplorerItem
-              key={tracks.length + 1}
-              selected={selected === tracks.length + 1}
-              type={"image"}
-              image={image}
-              onClick={() => this.clickHandler(tracks.length + 1)}
-              onDoubleClick={() => this.props.openImage(image)}
-            >
-              cover.jpg
-            </ExplorerItem>
-          </div>
-        );
-      case "user":
-        return this.renderArtists(artists);
-      case "playlist":
-        return this.renderTracks(tracks.map(track => track.track));
-      case "search":
-        return this.renderSearch(artists);
-      default:
-        return null;
-    }*/
   }
 
   handleClickOutside(e) {
@@ -223,7 +185,6 @@ const mapDispatchToProps = dispatch => ({
   },
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
-  goPreviousView: () => dispatch(goPreviousView()),
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
   playAlbumFromExplorer: currentId =>
     dispatch(playAlbumFromExplorer(currentId)),

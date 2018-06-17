@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import $ from "jquery";
 
 import {
-  goPreviousView,
   viewAlbumsFromArtist,
   viewTracksFromAlbum,
   unsetFocusExplorer,
@@ -72,7 +71,7 @@ class ExplorerWindow extends React.Component {
   }
 
   goBack() {
-    this.props.goPreviousView();
+    // TODO
   }
 
   render() {
@@ -155,7 +154,6 @@ const mapDispatchToProps = dispatch => ({
   },
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
-  goPreviousView: () => dispatch(goPreviousView()),
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
   searchOnSpotify: search => dispatch(searchOnSpotify(search))
 });
