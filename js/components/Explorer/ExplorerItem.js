@@ -1,3 +1,4 @@
+import { isArray } from "util";
 import React from "react";
 import winampmp3 from "./images/winamp-mp3.png";
 import folderclosed from "./images/folder-closed.ico";
@@ -17,7 +18,7 @@ class ExplorerItem extends React.Component {
     this.id = null;
   }
   componentDidMount() {
-    if (this.props.type === "track") {
+    if (this.props.infos) {
       this.id = this.props.infos.id;
     }
     document.addEventListener(
@@ -84,6 +85,11 @@ class ExplorerItem extends React.Component {
 
   drag(e) {
     e.dataTransfer.setData("id", this.id);
+    e.dataTransfer.setData("type", this.props.type);
+    const children = isArray(this.props.children)
+      ? this.props.children.join("")
+      : this.props.children;
+    e.dataTransfer.setData("title", children);
   }
   render() {
     const {
@@ -94,6 +100,8 @@ class ExplorerItem extends React.Component {
       onDoubleClick,
       children
     } = this.props;
+    console.log(children);
+
     let thisStyle = { ...itemStyle };
     let thisClass = "explorer-item";
     const icons = [];

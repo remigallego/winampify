@@ -5,9 +5,11 @@ import {
   viewMyTopArtists,
   viewMyFollowedArtists,
   viewMyRecentlyPlayed,
-  viewMyLibraryAlbums
+  viewMyLibraryAlbums,
+  viewMyLibraryTracks
 } from "../../actionCreators";
 import hearts from "./images/hearts.ico";
+import harddrive from "./images/7.ico";
 import recentdocuments from "./images/recentdocuments.png";
 import star from "./images/star.ico";
 import { ExplorerTreeStyle } from "./styles.js";
@@ -69,9 +71,21 @@ class ExplorerTree extends React.Component {
           <img
             className="explorer-tree-icon"
             style={explorerTreeIcon}
-            src={recentdocuments}
+            src={harddrive}
           />
-          My Library (albums)
+          My Saved Albums
+        </div>
+        <div
+          className="explorer-tree-text"
+          onClick={() => this.props.viewMyLibraryTracks()}
+          style={explorerTreeText}
+        >
+          <img
+            className="explorer-tree-icon"
+            style={explorerTreeIcon}
+            src={harddrive}
+          />
+          My Saved Tracks
         </div>
       </div>
     );
@@ -86,7 +100,8 @@ const mapDispatchToProps = dispatch => ({
   viewMyTopArtists: () => dispatch(viewMyTopArtists()),
   viewMyFollowedArtists: () => dispatch(viewMyFollowedArtists()),
   viewMyRecentlyPlayed: () => dispatch(viewMyRecentlyPlayed()),
-  viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums())
+  viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums()),
+  viewMyLibraryTracks: () => dispatch(viewMyLibraryTracks())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerTree);

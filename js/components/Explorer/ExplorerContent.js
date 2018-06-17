@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Loader from "react-loaders";
 
 import {
   viewAlbumsFromArtist,
@@ -8,7 +9,8 @@ import {
   playTrackFromExplorer,
   playAlbumFromExplorer,
   getArtistFromId,
-  openImageModal
+  openImageModal,
+  searchOnSpotify
 } from "../../actionCreators";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerContentStyle } from "./styles";
@@ -19,6 +21,7 @@ const { container } = ExplorerContentStyle;
 class ExplorerContent extends React.Component {
   constructor(props) {
     super(props);
+    this.timer = null;
   }
   clickHandler(id) {
     this.props.click(id);
@@ -36,7 +39,7 @@ class ExplorerContent extends React.Component {
   renderAlbums(albums) {
     if (albums)
       return albums.map((album, index) => {
-        return this.renderAlbum(album, index);
+        return this.renderAlbum(album, "al" + index);
       });
     return null;
   }
@@ -44,7 +47,7 @@ class ExplorerContent extends React.Component {
   renderTracks(tracks) {
     if (tracks)
       return tracks.map((track, index) => {
-        return this.renderTrack(track, index);
+        return this.renderTrack(track, "tr" + index);
       });
     return null;
   }
@@ -52,7 +55,7 @@ class ExplorerContent extends React.Component {
   renderArtists(artists) {
     if (artists)
       return artists.map((artist, index) => {
-        return this.renderArtist(artist, index);
+        return this.renderArtist(artist, "ar" + index);
       });
     return null;
   }
@@ -69,6 +72,7 @@ class ExplorerContent extends React.Component {
         type={"artist"}
         onClick={() => this.clickHandler(artistId)}
         onDoubleClick={() => this.openArtistFolder(artistId)}
+        infos={artist}
       >
         {fileName}
       </ExplorerItem>
@@ -86,6 +90,7 @@ class ExplorerContent extends React.Component {
         onClick={() => this.clickHandler(index)}
         onDoubleClick={() => this.openAlbumFolder(album.id)}
         releaseDate={album.release_date}
+        infos={album}
       >
         {artist} - {album.name}
       </ExplorerItem>
@@ -108,43 +113,37 @@ class ExplorerContent extends React.Component {
       </ExplorerItem>
     );
   }
-  renderSearch(results) {
-    const { explorer } = this.props;
-    return results.map((result, index) => {
-      const resultId = result.id;
-      let selected = false;
-      const fileName = result.name;
-      const artist = result;
-      if (explorer.selected === resultId) selected = true;
-      else selected = false;
-      return (
-        <ExplorerItem
-          key={index}
-          selected={selected}
-          artist={artist}
-          type={"artist"}
-          image={result.images.length > 0 ? result.images[0].url : ""}
-          onClick={() => this.clickHandler(resultId)}
-          onDoubleClick={() => this.openArtistFolder(resultId)}
-        >
-          {fileName}
-        </ExplorerItem>
-      );
-    });
+
+  renderImage(image) {
+    const selected = this.props.explorer.selected === -1;
+    const title = this.props.explorer.title;
+    return (
+      <ExplorerItem
+        selected={selected}
+        type={"image"}
+        image={image}
+        onClick={() => this.clickHandler(-1)}
+        onDoubleClick={() => this.props.openImage(image)}
+      >
+        {title}.jpg
+      </ExplorerItem>
+    );
   }
 
-  renderCurrentView() {
-    const { artists, albums, tracks, view } = this.props.explorer;
-    if (view === "playlist") {
-      console.log("playlist");
-      return this.renderTracks(tracks.map(track => track.track));
-    }
+  renderPlaylistFile() {
+    const selected = this.props.explorer.selected === -2;
     return (
-      <div>
-        {this.renderAlbums(albums)}
-        {this.renderTracks(tracks)}
-        {this.renderArtists(artists)}
-      </div>
+      <ExplorerItem
+        key={-2}
+        selected={selected}
+        type={"playlist"}
+        onClick={() => this.clickHandler(-2)}
+        onDoubleClick={() =>
+          this.props.playAlbumFromExplorer(this.props.explorer.currentId)
+        }
+      >
+        {this.props.explorer.title}.m3u
+      </ExplorerItem>
     );
   }
 
@@ -155,6 +154,102 @@ class ExplorerContent extends React.Component {
     }
   }
 
+  renderCategory(text) {
+    if (this.props.explorer.currentId === "search") {
+      const count = () => {
+        switch (text) {
+          case "Artists": {
+            if (this.props.explorer.artists)
+              return this.props.explorer.artists.length;
+            return 0;
+          }
+          case "Albums": {
+            if (this.props.explorer.albums)
+              return this.props.explorer.albums.length;
+            return 0;
+          }
+          case "Tracks": {
+            if (this.props.explorer.tracks)
+              return this.props.explorer.tracks.length;
+            return 0;
+          }
+          default:
+            return 0;
+        }
+      };
+      return (
+        <div style={ExplorerContentStyle.resultCategories}>
+          {text} ({count()})
+        </div>
+      );
+    }
+    return null;
+  }
+
+  renderMore(type) {
+    return (
+      <div
+        style={ExplorerContentStyle.moreButton}
+        onClick={() =>
+          this.props.searchOnSpotify(
+            this.props.explorer.title,
+            type,
+            this.props.explorer.tracks.length.toString()
+          )
+        }
+      >
+        More...
+      </div>
+    );
+  }
+
+  renderLoadedItems() {
+    const { artists, albums, tracks, image } = this.props.explorer;
+    return (
+      <div>
+        {this.renderCategory("Artists")}
+        {this.renderArtists(artists)}
+        {this.props.explorer.artists &&
+          this.props.explorer.currentId === "search" &&
+          !(this.props.explorer.artists.length % 20) &&
+          this.renderMore("artist")}
+        {this.renderCategory("Albums")}
+        {this.renderAlbums(albums)}
+        {this.props.explorer.albums &&
+          this.props.explorer.currentId === "search" &&
+          !(this.props.explorer.albums.length % 20) &&
+          this.renderMore("album")}
+        {this.renderCategory("Tracks")}
+        {this.renderTracks(tracks)}
+        {this.props.explorer.tracks &&
+          this.props.explorer.currentId === "search" &&
+          !(this.props.explorer.tracks.length % 20) &&
+          this.renderMore("track")}
+        {this.props.explorer.image && this.renderImage(image)}
+        {this.props.explorer.playlistable && this.renderPlaylistFile()}
+      </div>
+    );
+  }
+
+  renderLoader() {
+    return (
+      <div
+        style={{
+          color: "rgba(21, 108, 217, 0.5)",
+          margin: "0 auto",
+          paddingTop: "100px"
+        }}
+        className="la-line-scale la-2x"
+      >
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
+    );
+  }
+
   render() {
     return (
       <div
@@ -162,7 +257,9 @@ class ExplorerContent extends React.Component {
         onMouseDown={e => this.handleClickOutside(e)}
         style={container}
       >
-        {this.renderCurrentView()}
+        {this.props.explorer.loading
+          ? this.renderLoader()
+          : this.renderLoadedItems()}
       </div>
     );
   }
@@ -188,7 +285,9 @@ const mapDispatchToProps = dispatch => ({
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
   playAlbumFromExplorer: currentId =>
     dispatch(playAlbumFromExplorer(currentId)),
-  openImage: source => dispatch(openImageModal(source))
+  openImage: source => dispatch(openImageModal(source)),
+  searchOnSpotify: (search, type, offset) =>
+    dispatch(searchOnSpotify(search, type, offset))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerContent);

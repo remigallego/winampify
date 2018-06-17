@@ -1,4 +1,4 @@
-import { parser, creator } from "winamp-eqf";
+import { creator } from "winamp-eqf";
 import {
   genArrayBufferFromFileReference,
   genArrayBufferFromUrl,
@@ -15,13 +15,7 @@ import {
   getSelectedTrackObjects
 } from "./selectors";
 
-import {
-  clamp,
-  base64FromArrayBuffer,
-  downloadURI,
-  normalize,
-  sort
-} from "./utils";
+import { clamp, base64FromArrayBuffer, downloadURI, sort } from "./utils";
 import {
   CLOSE_WINAMP,
   SEEK_TO_PERCENT_COMPLETE,
@@ -52,12 +46,14 @@ import {
   PLAYLIST_SIZE_CHANGED,
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
-  SET_ALBUMS,
-  SET_TRACKS,
-  SET_CURRENT_ID,
+  SET_EXPLORER_METADATA,
   UNSET_FOCUS_EXPLORER,
-  SET_ARTISTS_FROM_USER,
-  OPEN_IMAGE_MODAL
+  OPEN_IMAGE_MODAL,
+  SET_ITEMS,
+  GO_PREVIOUS_STATE,
+  SAVE_PREVIOUS_STATE,
+  LOADING,
+  CREATE_FILE
 } from "./actionTypes";
 
 import {
@@ -72,51 +68,12 @@ import {
   getAlbumInfos,
   parseSearchSpotify,
   parseArtist,
-  parseMyLibraryAlbums
+  parseMyLibraryAlbums,
+  parseMyLibraryTracks,
+  getArtistName
 } from "./spotifyParser";
 
 /* EXPLORER functions */
-export function viewAlbumsFromArtist(artist) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.access_token;
-    parseAlbumsFromArtist(token, artist, (err, albums) => {
-      dispatch({
-        type: SET_CURRENT_ID,
-        currentId: artist
-      });
-      dispatch({
-        type: SET_ALBUMS,
-        albums: albums
-      });
-    });
-  };
-}
-
-export function viewTracksFromAlbum(album) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.access_token;
-    parseTracksFromAlbum(token, album, (err, tracks) => {
-      if (err) console.log(err);
-      getAlbumInfos(token, album, (_err, _album) => {
-        const title = _album.name;
-        const image = _album.images[0].url;
-        dispatch({
-          type: SET_CURRENT_ID,
-          currentId: album,
-          title: title,
-          image: image
-        });
-        dispatch({
-          type: SET_TRACKS,
-          tracks: tracks
-        });
-      });
-    });
-  };
-}
-
 export function unsetFocusExplorer() {
   return dispatch => {
     dispatch({
@@ -132,27 +89,124 @@ export function playTrackFromExplorer(trackId) {
   };
 }
 
-export function searchOnSpotify(search) {
+export function searchOnSpotify(search, type, offset) {
+  console.log("offset ==========", offset);
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
-    dispatch(
-      parseSearchSpotify(token, search, (err, results) => {
-        const { artists } = results;
-        /* @TODO different dispatch based on user filter */
-        dispatch({
-          type: SET_ALBUMS,
-          artists: artists.items
-        });
-      })
-    );
+    dispatch({ type: "SEARCH" });
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      currentId: "search",
+      title: search,
+      image: null,
+      playlistable: false
+    });
+    if (offset === "0") dispatch({ type: LOADING });
+    parseSearchSpotify(token, search, type, offset, (err, results) => {
+      console.log(offset, results);
+      let albums = getState().explorer.albums;
+      let artists = getState().explorer.artists;
+      let playlists = getState().explorer.playlists;
+      let tracks = getState().explorer.tracks;
+      if (results.artists) {
+        artists = results.artists.items;
+        const stateArtists = getState().explorer.artists;
+        if (offset !== "0") {
+          artists.map(artist => stateArtists.push(artist));
+          artists = stateArtists;
+        }
+      }
+      if (results.playlists) {
+        playlists = results.playlists.items;
+      }
+      if (results.tracks) {
+        tracks = results.tracks.items;
+        const stateTracks = getState().explorer.tracks;
+        if (offset !== "0") {
+          tracks.map(track => stateTracks.push(track));
+          tracks = stateTracks;
+        }
+      }
+      if (results.albums) {
+        albums = results.albums.items;
+        const stateAlbums = getState().explorer.albums;
+        if (offset !== "0") {
+          albums.map(album => stateAlbums.push(album));
+          albums = stateAlbums;
+        }
+      }
+      dispatch({
+        type: SET_ITEMS,
+        artists,
+        albums,
+        tracks,
+        playlists
+      });
+    });
   };
 }
 
 export function playAlbumFromExplorer(album) {
   return dispatch => {
     dispatch({ type: REMOVE_ALL_TRACKS });
-    dispatch(addTracksFromAlbum(album));
+    dispatch(addTracksFromAlbum(album.id));
+  };
+}
+export function viewAlbumsFromArtist(artist) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
+    parseAlbumsFromArtist(token, artist, (err, albums) => {
+      dispatch({
+        type: SET_ITEMS,
+        tracks: null,
+        albums: albums,
+        playlists: null,
+        artists: null
+      });
+      getArtistName(token, artist, name => {
+        dispatch({
+          type: SET_EXPLORER_METADATA,
+          currentId: artist,
+          title: name,
+          playlistable: false
+        });
+      });
+    });
+  };
+}
+
+export function viewTracksFromAlbum(album) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
+    parseTracksFromAlbum(token, album, (err, tracks) => {
+      if (err) console.log(err);
+      getAlbumInfos(token, album, (_err, _album) => {
+        const title = `${_album.artists[0].name} - ${_album.name}`;
+        const image = _album.images[0].url;
+        dispatch({
+          type: SET_EXPLORER_METADATA,
+          currentId: _album,
+          title: title,
+          image: image,
+          playlistable: true
+        });
+        dispatch({
+          type: SET_ITEMS,
+          tracks: tracks,
+          albums: null,
+          playlists: null,
+          artists: null
+        });
+      });
+    });
   };
 }
 
@@ -160,10 +214,22 @@ export function viewMyTopArtists() {
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
     parseTopArtistsFromMe(token, (err, artists) => {
       if (err) throw err;
       dispatch({
-        type: SET_ARTISTS_FROM_USER,
+        type: SET_EXPLORER_METADATA,
+        currentId: "top",
+        title: "My Top Artists",
+        image: null,
+        playlistable: false
+      });
+      dispatch({
+        type: SET_ITEMS,
+        tracks: null,
+        albums: null,
+        playlists: null,
         artists: artists
       });
     });
@@ -174,10 +240,22 @@ export function viewMyFollowedArtists() {
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
     parseFollowedArtistsFromMe(token, (err, artists) => {
       if (err) throw err;
       dispatch({
-        type: SET_ARTISTS_FROM_USER,
+        type: SET_EXPLORER_METADATA,
+        currentId: "following",
+        title: "Following",
+        image: null,
+        playlistable: false
+      });
+      dispatch({
+        type: SET_ITEMS,
+        tracks: null,
+        albums: null,
+        playlists: null,
         artists: artists
       });
     });
@@ -188,11 +266,23 @@ export function viewMyRecentlyPlayed() {
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
     parseMyRecentlyPlayed(token, (err, tracks) => {
       if (err) throw err;
       dispatch({
-        type: SET_TRACKS,
-        tracks: tracks
+        type: SET_EXPLORER_METADATA,
+        currentId: "recently",
+        title: "Recently Played",
+        image: null,
+        playlistable: false // TODO: Is it actually?
+      });
+      dispatch({
+        type: SET_ITEMS,
+        tracks: tracks,
+        albums: null,
+        playlists: null,
+        artists: null
       });
     });
   };
@@ -202,11 +292,49 @@ export function viewMyLibraryAlbums() {
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
     parseMyLibraryAlbums(token, (err, albums) => {
       if (err) throw err;
       dispatch({
-        type: SET_ALBUMS,
-        albums: albums.map(obj => obj.album)
+        type: SET_EXPLORER_METADATA,
+        currentId: "savedalbums",
+        title: "My Saved Albums",
+        image: null,
+        playlistable: false
+      });
+      dispatch({
+        type: SET_ITEMS,
+        tracks: null,
+        albums: albums.map(obj => obj.album),
+        playlists: null,
+        artists: null
+      });
+    });
+  };
+}
+
+export function viewMyLibraryTracks() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const token = state.media.player.access_token;
+    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: LOADING });
+    parseMyLibraryTracks(token, (err, tracks) => {
+      if (err) throw err;
+      dispatch({
+        type: SET_EXPLORER_METADATA,
+        currentId: "savedtracks",
+        title: "My Saved Tracks",
+        image: null,
+        playlistable: false // TODO: investigate
+      });
+      dispatch({
+        type: SET_ITEMS,
+        tracks: tracks.map(obj => obj.track),
+        albums: null,
+        playlists: null,
+        artists: null
       });
     });
   };
@@ -230,6 +358,12 @@ export function openImageModal(source) {
       type: OPEN_IMAGE_MODAL,
       source: source
     });
+  };
+}
+
+export function goPreviousState() {
+  return dispatch => {
+    dispatch({ type: GO_PREVIOUS_STATE });
   };
 }
 
@@ -263,6 +397,7 @@ export function addTrackZeroAndPlay(id) {
     const token = state.media.player.access_token;
 
     parseTrackURI(token, id, res => {
+      dispatch({ type: REMOVE_ALL_TRACKS });
       dispatch({
         type: ADD_TRACK_FROM_URI,
         defaultName: `${res.artist} - ${res.name}`,
@@ -759,4 +894,15 @@ export function downloadHtmlPlaylist() {
     const uri = getPlaylistURL(getState());
     downloadURI(uri, "Winamp Playlist.html");
   };
+}
+
+/* DESKTOP ACTIONS */
+export function createFile(file) {
+  return dispatch => {
+    dispatch({ type: CREATE_FILE, payload: file });
+  };
+}
+
+export function selectFiles(state) {
+  return state.desktop.allIds.map(id => state.desktop.byId[id]);
 }

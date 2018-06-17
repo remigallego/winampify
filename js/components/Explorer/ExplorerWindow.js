@@ -1,14 +1,13 @@
 import React from "react";
 import Draggable from "react-draggable";
 import { connect } from "react-redux";
-import $ from "jquery";
-
 import {
   viewAlbumsFromArtist,
   viewTracksFromAlbum,
   unsetFocusExplorer,
   playTrackFromExplorer,
-  searchOnSpotify
+  searchOnSpotify,
+  goPreviousState
 } from "../../actionCreators";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerWindowStyle } from "./styles.js";
@@ -23,24 +22,11 @@ class ExplorerWindow extends React.Component {
       width: 0,
       height: 0,
       x: 0,
-      y: 0
+      y: 0,
+      searchText: ""
     };
   }
   componentDidMount() {
-    $(".explorer-toolbar-backbutton")
-      .attr("unselectable", "on")
-      .css({
-        "-moz-user-select": "-moz-none",
-        "-o-user-select": "none",
-        "-khtml-user-select": "none" /* you could also put this in a class */,
-        "-webkit-user-select": "none" /* and add the CSS class here instead */,
-        "-ms-user-select": "none",
-        "user-select": "none"
-      })
-      .bind("selectstart", () => {
-        return false;
-      });
-
     // width
     window.addEventListener("resize", () => this.setWidthAndHeight());
     this.setWidthAndHeight();
@@ -71,7 +57,7 @@ class ExplorerWindow extends React.Component {
   }
 
   goBack() {
-    // TODO
+    this.props.goPreviousState();
   }
 
   render() {
@@ -105,28 +91,36 @@ class ExplorerWindow extends React.Component {
           <div className="explorer-wrapper" style={explorerWrapper}>
             <div className="explorer-title" style={explorerTitle}>
               <img src={magnifier} style={explorerTitleImg} />
-              <p style={explorerTitleP}>Winampify</p>
+              <p style={explorerTitleP}>{this.props.explorer.title}</p>
             </div>
-            <div
-              className="explorer-toolbar"
-              style={explorerToolbar}
-              onMouseDown={e => e.preventDefault()}
-            >
+            <div className="explorer-toolbar" style={explorerToolbar}>
               <img
                 className="explorer-toolbar-backbutton"
                 src={backButton}
                 style={backButtonStyle}
-                onClick={() => this.goBack()}
+                onClick={() => {
+                  if (this.props.explorer.previousStates.length > 1) {
+                    this.goBack();
+                  }
+                }}
               />
               <form
                 className="explorer-toolbar-searchbox"
                 style={searchbox}
                 onSubmit={e => {
                   e.preventDefault();
-                  this.props.searchOnSpotify(e.target[0].value);
+                  this.props.searchOnSpotify(
+                    e.target[0].value,
+                    "album,artist,playlist,track",
+                    "0"
+                  );
                 }}
               >
-                <input />
+                <input
+                  type="text"
+                  value={this.state.searchText}
+                  onChange={e => this.setState({ searchText: e.target.value })}
+                />
               </form>
             </div>
             <div className="explorer-mainview" style={mainView}>
@@ -155,6 +149,8 @@ const mapDispatchToProps = dispatch => ({
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
-  searchOnSpotify: search => dispatch(searchOnSpotify(search))
+  searchOnSpotify: (search, type, offset) =>
+    dispatch(searchOnSpotify(search, type, offset)),
+  goPreviousState: () => dispatch(goPreviousState())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ExplorerWindow);

@@ -47,6 +47,7 @@ import {
   OPEN_IMAGE_MODAL
 } from "../actionTypes";
 
+import desktop from "./desktop";
 import playlist from "./playlist";
 import windows from "./windows";
 import explorer from "./explorer";
@@ -290,7 +291,8 @@ const reducer = combineReducers({
   playlist,
   media,
   network,
-  explorer
+  explorer,
+  desktop
 });
 
 export default reducer;

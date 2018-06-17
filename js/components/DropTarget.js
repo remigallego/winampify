@@ -17,7 +17,9 @@ class DropTarget extends React.Component {
   }
 
   handleDrop(e) {
-    let id = e.dataTransfer.getData("id");
+    e.preventDefault();
+    const id = e.dataTransfer.getData("id");
+    console.log("im here____!!!");
     this.props.addTrackFromURI(id);
   }
 

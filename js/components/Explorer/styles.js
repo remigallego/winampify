@@ -28,9 +28,11 @@ const ExplorerWindowStyle = {
     fontWeight: 500,
     margin: "0px",
     position: "relative",
+    whiteSpace: "nowrap",
     bottom: "3px",
     left: "5px",
-    userSelect: "none"
+    userSelect: "none",
+    width: "0px" // Probably a hack... :p TODO: find a better solution
   },
   explorerTitleImg: {
     pointerEvents: "none",
@@ -103,6 +105,20 @@ const ExplorerContentStyle = {
     backgroundColor: "white",
     width: "100%",
     borderBottom: "1px solid black"
+  },
+  resultCategories: {
+    fontSize: "18px",
+    paddingLeft: "2px",
+    color: "#415b8e",
+    paddingTop: "5px",
+    paddingBottom: "5px",
+    marginBottom: "5px",
+    borderBottom: "0.7px solid #415b8e"
+  },
+  moreButton: {
+    fontSize: "16px",
+    cursor: "pointer",
+    color: "rgba(21, 108, 217, 0.78)"
   }
 };
 

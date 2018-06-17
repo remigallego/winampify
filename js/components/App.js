@@ -12,6 +12,7 @@ import SpotifyWebPlaybackAPI from "./SpotifyWebPlaybackAPI";
 import Explorer from "./Explorer";
 import "../../css/winamp.css";
 import ImageModal from "./ImageModal";
+import Desktop from "./Desktop";
 const genWindowMap = {
   AVS_WINDOW: AvsWindow
 };
@@ -50,6 +51,7 @@ const App = ({
     <div role="application" id="winamp2-js">
       <Skin />
       <WindowManager windows={windows} container={container} />
+      <Desktop />
       <SpotifyWebPlaybackAPI />
       <Explorer />
       {isModalOpen && (

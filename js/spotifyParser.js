@@ -1,3 +1,16 @@
+export const getArtistName = (token, URI, callback) => {
+  fetch(`https://api.spotify.com/v1/artists/${URI}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => response.json())
+    .then(json => {
+      callback(json.name);
+    });
+};
+
 export const parseTrackURI = (token, URI, callback) => {
   fetch(`https://api.spotify.com/v1/tracks/${URI}`, {
     method: "GET",
@@ -129,19 +142,19 @@ export const parseMyLibraryTracks = (token, callback) => {
     .catch(err => callback(err));
 };
 
-export const parseSearchSpotify = (token, search, callback) => {
-  let results = [];
-  const scope = "album,artist,playlist,track";
-  fetch(`https://api.spotify.com/v1/search?q=${search}&type=${scope}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`
+export const parseSearchSpotify = (token, search, scope, offset, callback) => {
+  fetch(
+    `https://api.spotify.com/v1/search?q=${search}&type=${scope}&offset=${offset}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     }
-  })
+  )
     .then(response => response.json())
-    .then(json => {
-      results = json;
-      callback(null, results);
+    .then(res => {
+      callback(null, res);
     })
     .catch(err => callback(err));
 };
