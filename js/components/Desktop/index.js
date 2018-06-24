@@ -2,12 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   addTrackZeroAndPlay,
-  createFile,
-  selectFiles,
   viewTracksFromAlbum,
   viewAlbumsFromArtist,
   playTrack
 } from "../../actionCreators";
+import { createFile, selectFiles } from "./../../actions/desktop";
 import File from "./File";
 // import "../../../css/spotify-ui.css";
 
@@ -20,15 +19,13 @@ class Desktop extends React.Component {
   }
   onDrop(e) {
     e.preventDefault();
-    console.log("onDrop");
     const id = e.dataTransfer.getData("id");
     const type = e.dataTransfer.getData("type");
     const title = e.dataTransfer.getData("title");
-    console.log(e.dataTransfer);
     this.props.createFile({
       id,
-      x: e.clientX,
-      y: e.clientY,
+      x: e.clientX - 50,
+      y: e.clientY - 50,
       title,
       type
     });
@@ -117,4 +114,7 @@ const mapDispatchToProps = dispatch => ({
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   addTrackZeroAndPlay: track => dispatch(addTrackZeroAndPlay(track))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Desktop);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Desktop);

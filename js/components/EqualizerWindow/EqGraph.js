@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getCurvePoints } from "cardinal-spline-js";
+// import { getCurvePoints } from "cardinal-spline-js";
 import { percentToRange, clamp } from "../../utils";
 
 import { BANDS } from "../../constants";
@@ -95,7 +95,7 @@ class EqGraph extends React.Component {
     // Spline between points in order to create nice curves
     const tension = 0.5;
     const resolution = 4; // Points in each segment
-    const smoothPoints = getCurvePoints(points, tension, resolution);
+    const smoothPoints = (points, tension, resolution);
     for (let i = 0; i < smoothPoints.length; i += 2) {
       // Splining can push peaks out of bounds. So we fudge them back in.
       const y = clamp(smoothPoints[i + 1], min, max);

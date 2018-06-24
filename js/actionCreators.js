@@ -52,8 +52,7 @@ import {
   SET_ITEMS,
   GO_PREVIOUS_STATE,
   SAVE_PREVIOUS_STATE,
-  LOADING,
-  CREATE_FILE
+  LOADING
 } from "./actionTypes";
 
 import {
@@ -503,7 +502,9 @@ export function createPlayerObject(p) {
 
 function playRandomTrack() {
   return (dispatch, getState) => {
-    const { playlist: { trackOrder, currentTrack } } = getState();
+    const {
+      playlist: { trackOrder, currentTrack }
+    } = getState();
     let nextId;
     do {
       nextId = trackOrder[Math.floor(trackOrder.length * Math.random())];
@@ -761,7 +762,9 @@ export function cropPlaylist() {
     if (getSelectedTrackObjects(state).length === 0) {
       return;
     }
-    const { playlist: { tracks } } = getState();
+    const {
+      playlist: { tracks }
+    } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => !tracks[id].selected)
@@ -771,7 +774,9 @@ export function cropPlaylist() {
 
 export function removeSelectedTracks() {
   return (dispatch, getState) => {
-    const { playlist: { tracks } } = getState();
+    const {
+      playlist: { tracks }
+    } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => tracks[id].selected)
@@ -834,7 +839,7 @@ export function scrollPlaylistByDelta(e) {
       e.stopPropagation();
     }
     const totalPixelHeight = state.playlist.trackOrder.length * TRACK_HEIGHT;
-    const percentDelta = e.deltaY / totalPixelHeight * 100;
+    const percentDelta = (e.deltaY / totalPixelHeight) * 100;
     dispatch({
       type: SET_PLAYLIST_SCROLL_POSITION,
       position: clamp(
@@ -865,7 +870,9 @@ function findLastIndex(arr, cb) {
 
 export function dragSelected(offset) {
   return (dispatch, getState) => {
-    const { playlist: { trackOrder, tracks } } = getState();
+    const {
+      playlist: { trackOrder, tracks }
+    } = getState();
     const firstSelected = trackOrder.findIndex(
       trackId => tracks[trackId] && tracks[trackId].selected
     );
@@ -897,12 +904,3 @@ export function downloadHtmlPlaylist() {
 }
 
 /* DESKTOP ACTIONS */
-export function createFile(file) {
-  return dispatch => {
-    dispatch({ type: CREATE_FILE, payload: file });
-  };
-}
-
-export function selectFiles(state) {
-  return state.desktop.allIds.map(id => state.desktop.byId[id]);
-}
