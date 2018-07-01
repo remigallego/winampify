@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   addTrackZeroAndPlay,
   viewTracksFromAlbum,
-  viewAlbumsFromArtist
+  viewAlbumsFromArtist,
+  openImageModal
 } from "../../actionCreators";
 import { createFile, moveFile, selectFiles } from "./../../actions/desktop";
 import File from "./File";
@@ -17,21 +18,9 @@ class Desktop extends React.Component {
     this.renderFile = this.renderFile.bind(this);
   }
 
-  componentDidMount() {
-    document.addEventListener(
-      "dragstart",
-      e => {
-        const dragIcon = document.createElement("img");
-        dragIcon.src = "./images/winamp-mp3.png";
-        dragIcon.width = 500;
-        e.dataTransfer.setDragImage(dragIcon, 10, -10);
-      },
-      false
-    );
-  }
-
   onDragStart(e, file) {
     e.dataTransfer.setData("oldFile", true);
+    e.dataTransfer.setData("id", file.id);
     e.dataTransfer.setData("uri", file.uri);
     e.dataTransfer.setData("type", file.type);
     e.dataTransfer.setData("title", file.title);
@@ -42,6 +31,7 @@ class Desktop extends React.Component {
   onDrop(e) {
     e.preventDefault();
     const uri = e.dataTransfer.getData("uri");
+    const id = e.dataTransfer.getData("id");
     const type = e.dataTransfer.getData("type");
     const title = e.dataTransfer.getData("title");
     const oldFile = e.dataTransfer.getData("oldFile");
@@ -55,7 +45,7 @@ class Desktop extends React.Component {
       });
     } else {
       this.props.moveFile({
-        uri,
+        id,
         x: e.clientX - 50,
         y: e.clientY - 50
       });
@@ -79,7 +69,7 @@ class Desktop extends React.Component {
     if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
     if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
     if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
-    if (file.type === "image") console.log("image !");
+    if (file.type === "image") this.props.openImage(file.uri);
   }
 
   onClick(file) {
@@ -124,7 +114,8 @@ const mapDispatchToProps = dispatch => ({
   viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   addTrackZeroAndPlay: track => dispatch(addTrackZeroAndPlay(track)),
-  moveFile: file => dispatch(moveFile(file))
+  moveFile: file => dispatch(moveFile(file)),
+  openImage: image => dispatch(openImageModal(image))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Desktop);

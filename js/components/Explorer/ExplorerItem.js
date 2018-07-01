@@ -21,16 +21,6 @@ class ExplorerItem extends React.Component {
     if (this.props.infos) {
       this.id = this.props.infos.id;
     }
-    document.addEventListener(
-      "dragstart",
-      e => {
-        const dragIcon = document.createElement("img");
-        dragIcon.src = "./images/winamp-mp3.png";
-        dragIcon.width = 500;
-        e.dataTransfer.setDragImage(dragIcon, 10, -10);
-      },
-      false
-    );
   }
 
   getDuration() {
@@ -84,13 +74,18 @@ class ExplorerItem extends React.Component {
   }
 
   drag(e) {
-    e.dataTransfer.setData("uri", this.id);
+    const emptyImage = document.createElement("img");
+    emptyImage.src =
+      "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    e.dataTransfer.setDragImage(emptyImage, 0, 0);
+    if (this.props.type === "image") {
+      e.dataTransfer.setData("uri", this.props.image);
+    } else e.dataTransfer.setData("uri", this.id);
     e.dataTransfer.setData("type", this.props.type);
     const children = isArray(this.props.children)
       ? this.props.children.join("")
       : this.props.children;
     e.dataTransfer.setData("title", children);
-    e.dataTransfer.setData("newFile", true);
   }
   render() {
     const {

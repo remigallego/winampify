@@ -14,7 +14,7 @@ const File = props => {
       case "artist":
         return folderclosed;
       case "image":
-        return folderclosed;
+        return props.file.uri;
       default:
         return bigWinampIcon;
     }

@@ -8,7 +8,8 @@ const DesktopFileStyle = {
   image: {
     width: "50px",
     height: "50px",
-    align: "center"
+    align: "center",
+    zIndex: -4
   }
 };
 

@@ -131,7 +131,8 @@ const ExplorerItemStyle = {
     height: "23px",
     width: "100%",
     whiteSpace: "nowrap",
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
+    display: "inline-block"
   },
   fileName: {
     userSelect: "none",

@@ -7,21 +7,14 @@ export function createFile(file) {
   };
 }
 
-export const moveFile = file => (dispatch, getState) => {
-  const findIdFromURI = () =>
-    getState().desktop.allIds.find(id => {
-      return getState().desktop.byId[id].uri === file.uri;
-    });
-  const id = findIdFromURI();
-  console.log(id);
+export const moveFile = file => dispatch => {
+  console.log(file.id);
   dispatch({
     type: "MOVE_FILE",
-    payload: { id, x: file.x, y: file.y }
+    payload: { id: file.id, x: file.x, y: file.y }
   });
 };
 
 export function selectFiles(state) {
   return state.desktop.allIds.map(id => state.desktop.byId[id]);
 }
-
-// Utils
