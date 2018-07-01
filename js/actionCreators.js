@@ -1,11 +1,10 @@
 import { creator } from "winamp-eqf";
 import {
   genArrayBufferFromFileReference,
-  genArrayBufferFromUrl,
-  promptForFileReferences
+  genArrayBufferFromUrl
 } from "./fileUtils";
 import skinParser from "./skinParser";
-import { BANDS, TRACK_HEIGHT } from "./constants";
+import { TRACK_HEIGHT } from "./constants";
 import {
   getEqfData,
   nextTrack,
@@ -89,7 +88,6 @@ export function playTrackFromExplorer(trackId) {
 }
 
 export function searchOnSpotify(search, type, offset) {
-  console.log("offset ==========", offset);
   return (dispatch, getState) => {
     const state = getState();
     const token = state.media.player.access_token;
@@ -104,7 +102,6 @@ export function searchOnSpotify(search, type, offset) {
     });
     if (offset === "0") dispatch({ type: LOADING });
     parseSearchSpotify(token, search, type, offset, (err, results) => {
-      console.log(offset, results);
       let albums = getState().explorer.albums;
       let artists = getState().explorer.artists;
       let playlists = getState().explorer.playlists;
@@ -502,9 +499,7 @@ export function createPlayerObject(p) {
 
 function playRandomTrack() {
   return (dispatch, getState) => {
-    const {
-      playlist: { trackOrder, currentTrack }
-    } = getState();
+    const { playlist: { trackOrder, currentTrack } } = getState();
     let nextId;
     do {
       nextId = trackOrder[Math.floor(trackOrder.length * Math.random())];
@@ -562,10 +557,6 @@ export function next() {
 
 export function previous() {
   return nextN(-1);
-}
-
-export function unsetFocus(dispatch) {
-  dispatch({ type: UNSET_FOCUS });
 }
 
 export function seekForward(seconds) {
@@ -666,6 +657,7 @@ export function setSkinFromUrl(url) {
 // This function is private, since Winamp consumers can provide means for
 // opening files via other methods. Only use the file type specific
 // versions below, since they can defer to the user-defined behavior.
+/*
 function _openFileDialog(accept) {
   return async dispatch => {
     const fileReferences = await promptForFileReferences({ accept });
@@ -688,7 +680,6 @@ export function openSkinFileDialog() {
 export function setEqBand(band, value) {
   return { type: SET_BAND_VALUE, band, value };
 }
-
 function _setEqTo(value) {
   return dispatch => {
     Object.keys(BANDS).forEach(key => {
@@ -713,6 +704,7 @@ export function setEqToMid() {
 export function setEqToMin() {
   return _setEqTo(0);
 }
+*/
 
 export function setPreamp(value) {
   return {
@@ -762,9 +754,7 @@ export function cropPlaylist() {
     if (getSelectedTrackObjects(state).length === 0) {
       return;
     }
-    const {
-      playlist: { tracks }
-    } = getState();
+    const { playlist: { tracks } } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => !tracks[id].selected)
@@ -774,9 +764,7 @@ export function cropPlaylist() {
 
 export function removeSelectedTracks() {
   return (dispatch, getState) => {
-    const {
-      playlist: { tracks }
-    } = getState();
+    const { playlist: { tracks } } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => tracks[id].selected)
@@ -839,7 +827,7 @@ export function scrollPlaylistByDelta(e) {
       e.stopPropagation();
     }
     const totalPixelHeight = state.playlist.trackOrder.length * TRACK_HEIGHT;
-    const percentDelta = (e.deltaY / totalPixelHeight) * 100;
+    const percentDelta = e.deltaY / totalPixelHeight * 100;
     dispatch({
       type: SET_PLAYLIST_SCROLL_POSITION,
       position: clamp(
@@ -870,9 +858,7 @@ function findLastIndex(arr, cb) {
 
 export function dragSelected(offset) {
   return (dispatch, getState) => {
-    const {
-      playlist: { trackOrder, tracks }
-    } = getState();
+    const { playlist: { trackOrder, tracks } } = getState();
     const firstSelected = trackOrder.findIndex(
       trackId => tracks[trackId] && tracks[trackId].selected
     );

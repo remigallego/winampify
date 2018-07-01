@@ -1,5 +1,5 @@
+import * as qs from "qs";
 import {
-  IS_PLAYING,
   IS_STOPPED,
   PAUSE,
   PLAY,
@@ -8,27 +8,20 @@ import {
   SET_BALANCE,
   SET_MEDIA,
   SET_VOLUME,
-  START_WORKING,
   STOP,
-  STOP_WORKING,
   UPDATE_TIME_ELAPSED,
   SET_EQ_OFF,
   SET_EQ_ON,
   PLAY_TRACK,
   BUFFER_TRACK,
-  S_PLAY_URI,
   S_UPDATE_PLAYER_OBJECT
 } from "./actionTypes";
 
 import eventListener from "./spotifyEvents";
 
 import { next as nextTrack } from "./actionCreators";
-import { getCurrentTrackId } from "./selectors";
-import * as qs from "qs";
 
 export default media => store => {
-  const { media: { volume, balance } } = store.getState();
-
   eventListener.on("player_state_changed", data => {
     store.dispatch({
       type: SET_MEDIA,
@@ -42,7 +35,7 @@ export default media => store => {
   });
 
   // Oops. Very dirty... This needs to be changed but for now this does the job I guess.
-  eventListener.on("unfocus", data => {
+  eventListener.on("unfocus", () => {
     setTimeout(() => {
       store.dispatch({
         type: "UNSET_FOCUS"
@@ -50,16 +43,18 @@ export default media => store => {
     }, 2000);
   });
 
-  eventListener.on("token_expired", refresh_token => {
-    console.log("refreshed");
+  eventListener.on("token_expired", refreshToken => {
+    console.log("=== Token has been refreshed");
     fetch(`https://accounts.spotify.com/api/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
       body: qs.stringify({
+        // eslint-disable-next-line
         grant_type: "refresh_token",
-        refresh_token: refresh_token
+        // eslint-disable-next-line
+        refresh_token: refreshToken
       })
     }).then(res => {
       console.log(res);
@@ -95,9 +90,6 @@ export default media => store => {
         break;
       case S_UPDATE_PLAYER_OBJECT:
         media.setPlayer(action.player);
-        break;
-      case S_PLAY_URI:
-        media.playURI(action.URI);
         break;
       case SET_VOLUME:
         media.setVolume(action.volume);

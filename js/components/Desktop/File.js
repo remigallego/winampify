@@ -10,9 +10,11 @@ const File = props => {
       case "track":
         return bigWinampIcon;
       case "album":
-        return folderclosed; //;
+        return folderclosed;
       case "artist":
-        return folderclosed; //
+        return folderclosed;
+      case "image":
+        return folderclosed;
       default:
         return bigWinampIcon;
     }

@@ -84,12 +84,13 @@ class ExplorerItem extends React.Component {
   }
 
   drag(e) {
-    e.dataTransfer.setData("id", this.id);
+    e.dataTransfer.setData("uri", this.id);
     e.dataTransfer.setData("type", this.props.type);
     const children = isArray(this.props.children)
       ? this.props.children.join("")
       : this.props.children;
     e.dataTransfer.setData("title", children);
+    e.dataTransfer.setData("newFile", true);
   }
   render() {
     const {
@@ -100,7 +101,6 @@ class ExplorerItem extends React.Component {
       onDoubleClick,
       children
     } = this.props;
-    console.log(children);
 
     let thisStyle = { ...itemStyle };
     let thisClass = "explorer-item";
