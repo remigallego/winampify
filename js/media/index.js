@@ -1,122 +1,118 @@
-import eventListener from '../spotifyEvents'
+import eventListener from "../spotifyEvents";
 
 export default class Media {
   constructor() {
-    this.player = null
+    this.player = null;
     this.getOAuthToken = null;
     this.id = null;
-    this.name = null
-    this.status = "PAUSED"
-    this.access_token = null
+    this.name = null;
+    this.status = "PAUSED";
+    this.access_token = null;
   }
 
   setPlayer(player) {
-    this.player = player
-    this.getOAuthToken = player._options.getOAuthToken
-    this.id = player._options.id
-    this.name = player._options.name
-    this.access_token = player._options.access_token
-    this.player.addListener('player_state_changed', (state) => {
-
+    this.player = player;
+    this.getOAuthToken = player._options.getOAuthToken;
+    this.id = player._options.id;
+    this.name = player._options.name;
+    this.access_token = player._options.access_token;
+    this.player.addListener("player_state_changed", state => {
       // Seems to be the condition for a track to be considered as ended
-      if(state.paused && state.position === 0 && state.duration === 0)
-        eventListener.emit("ended", state)
+      if (state.paused && state.position === 0 && state.duration === 0)
+        eventListener.emit("ended", state);
 
-      eventListener.emit("player_state_changed", state)
+      eventListener.emit("player_state_changed", state);
     });
-    player.addListener('authentication_error', ({ message }) => { 
-      eventListener.emit("token_expired", this.player.refresh_token)
-     });
-    
+    player.addListener("authentication_error", ({ message }) => {
+      eventListener.emit("token_expired", this.player.refresh_token);
+    });
   }
 
   getDuration(callback) {
     this.player.getCurrentState().then(state => {
-      callback(state.duration)
+      callback(state.duration);
     });
   }
 
   playURI(URI) {
-      this.getOAuthToken(access_token => {
-        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.id}`, {
-          method: 'PUT',
-          body: JSON.stringify({ uris: ["spotify:track:"+URI] }),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${access_token}`
-          },
-        }).then(()=> {
-          this.status = "PLAYING"
-        })
+    this.getOAuthToken(access_token => {
+      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.id}`, {
+        method: "PUT",
+        body: JSON.stringify({ uris: [`spotify:track:${URI}`] }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`
+        }
+      }).then(() => {
+        this.status = "PLAYING";
       });
+    });
   }
 
   timeElapsed(callback) {
-    if(this.status === "PLAYING") {
-    this.player.getCurrentState().then(state => {
-      if (!state) {
-        console.error('User is not playing music through the Web Playback SDK')   
-      }
-      else {
-        callback(state.position)
-      }     
-  }) }
-    if(this.status === "STOPPED") {
-      callback(0)
+    if (this.status === "PLAYING") {
+      /* this.player.getCurrentState().then(state => {
+        if (!state) {
+          console.error(
+            "User is not playing music through the Web Playback SDK"
+          );
+        } else {
+          callback(state.position);
+        }
+      });*/
+    }
+    if (this.status === "STOPPED") {
+      callback(0);
     }
   }
 
-
   /* Actions */
   play() {
-    if(this.status === "PAUSED") {
+    if (this.status === "PAUSED") {
+      console.log("play?");
       this.player.resume().then(() => {
-         this.status = "PLAYING"        
-      })
+        this.status = "PLAYING";
+      });
     }
-    if(this.status === "STOPPED") {
+    if (this.status === "STOPPED") {
       this.player.resume().then(() => {
-         this.status = "PLAYING"        
-      })
+        this.status = "PLAYING";
+      });
     }
   }
 
   pause() {
-    if(this.status === "PAUSED")
-      return null
-    if(this.status === "PLAYING")
-    this.player.pause().then(() => {
-      this.status = "PAUSED"
-    });
+    if (this.status === "PAUSED") return null;
+    if (this.status === "PLAYING")
+      this.player.pause().then(() => {
+        this.status = "PAUSED";
+      });
     // this._source.pause();
   }
 
   stop() {
-    if(this.status === "PLAYING" || this.status === "PAUSED")
-    this.player.seek(0).then(() => {
-      this.player.pause().then(() => {
-        this.status = "STOPPED"
+    if (this.status === "PLAYING" || this.status === "PAUSED")
+      this.player.seek(0).then(() => {
+        this.player.pause().then(() => {
+          this.status = "STOPPED";
+        });
       });
-    });
     // this._source.stop();
   }
 
   /* Actions with arguments */
   seekToPercentComplete(percent) {
-    this.getDuration((duration) => {
-      const seekTime = duration * (percent / 100)
-      this.player.seek(seekTime).then(() =>
-        {
-            eventListener.emit("unfocus");
-        }
-      )
-    })
+    this.getDuration(duration => {
+      const seekTime = duration * (percent / 100);
+      this.player.seek(seekTime).then(() => {
+        eventListener.emit("unfocus");
+      });
+    });
   }
 
   // From 0-1
   setVolume(volume) {
-    this.player.setVolume(volume/100).then(() => {
-    });
+    this.player.setVolume(volume / 100).then(() => {});
     // this._gainNode.gain.value = volume / 100;
   }
 
@@ -183,4 +179,5 @@ export default class Media {
       this.play();
     }
   }*/
-}}
+  }
+}

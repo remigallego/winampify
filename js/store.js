@@ -13,7 +13,8 @@ const compose = composeWithDevTools({
 });
 
 const logger = createLogger({
-  predicate: (getState, action) => action.type !== STEP_MARQUEE
+  predicate: (getState, action) =>
+    action.type !== STEP_MARQUEE && action.type !== UPDATE_TIME_ELAPSED
 });
 
 const getStore = (media, stateOverrides) => {

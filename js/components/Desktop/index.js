@@ -28,6 +28,14 @@ class Desktop extends React.Component {
     e.dataTransfer.setData("y", e.clientY - 50);
   }
 
+  componentDidUpdate(prevProps) {
+    console.log("cdu");
+    Object.entries(this.props).forEach(
+      ([key, val]) =>
+        prevProps[key] !== val && console.log(`Prop '${key}' changed.`)
+    );
+  }
+
   onDrop(e) {
     e.preventDefault();
     const uri = e.dataTransfer.getData("uri");
@@ -77,6 +85,7 @@ class Desktop extends React.Component {
   }
 
   render() {
+    const { files } = this.props;
     return (
       <div
         style={{
@@ -97,7 +106,7 @@ class Desktop extends React.Component {
           if (e.target.id === "dropzone") this.setState({ selected: [] });
         }}
       >
-        {this.props.files.map(this.renderFile)}
+        {files.map(this.renderFile)}
       </div>
     );
   }

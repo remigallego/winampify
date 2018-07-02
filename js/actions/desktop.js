@@ -1,4 +1,5 @@
 import uuidv1 from "uuid/v1";
+import { createSelector } from "reselect";
 import { CREATE_FILE } from "../actionTypes";
 
 export function createFile(file) {
@@ -15,6 +16,8 @@ export const moveFile = file => dispatch => {
   });
 };
 
-export function selectFiles(state) {
-  return state.desktop.allIds.map(id => state.desktop.byId[id]);
-}
+export const getDesktop = state => state.desktop;
+
+export const selectFiles = createSelector([getDesktop], desktop => {
+  return desktop.allIds.map(id => desktop.byId[id]);
+});

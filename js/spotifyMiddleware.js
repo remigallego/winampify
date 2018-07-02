@@ -20,9 +20,27 @@ import {
 import eventListener from "./spotifyEvents";
 
 import { next as nextTrack } from "./actionCreators";
-
 export default media => store => {
+  let timeElapsedTimer = null;
+
   eventListener.on("player_state_changed", data => {
+    let position = data.position / 1000;
+    store.dispatch({
+      type: UPDATE_TIME_ELAPSED,
+      elapsed: position
+    });
+    if (!data.paused) {
+      clearInterval(timeElapsedTimer);
+      timeElapsedTimer = setInterval(() => {
+        position += 1;
+        store.dispatch({
+          type: UPDATE_TIME_ELAPSED,
+          elapsed: position
+        });
+      }, 1000);
+    } else {
+      clearInterval(timeElapsedTimer);
+    }
     store.dispatch({
       type: SET_MEDIA,
       kbps: data.bitrate / 1000,
@@ -65,16 +83,6 @@ export default media => store => {
     store.dispatch({ type: IS_STOPPED });
     store.dispatch(nextTrack());
   });
-
-  setInterval(() => {
-    media.timeElapsed(elapsed => {
-      if (!isNaN(elapsed))
-        store.dispatch({
-          type: UPDATE_TIME_ELAPSED,
-          elapsed: elapsed / 1000
-        });
-    });
-  }, 1000);
 
   return next => action => {
     // TODO: Consider doing this after the action, and using the state as the source of truth.
