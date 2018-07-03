@@ -1,7 +1,4 @@
 import skin from "../skins/base-2.91.wsz";
-import llamaAudio from "../mp3/llama-2.91.mp3";
-
-/* global SENTRY_DSN */
 
 const { hash } = window.location;
 let config = {};
@@ -20,7 +17,7 @@ if (config.audioUrl && !config.initialTracks) {
 
 // Turn on the incomplete playlist window
 export const skinUrl = config.skinUrl === undefined ? skin : config.skinUrl;
-export const initialTracks = config.initialTracks 
+export const initialTracks = config.initialTracks;
 
 export const hideAbout = config.hideAbout || false;
 export const initialState = config.initialState || undefined;

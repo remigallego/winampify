@@ -10,6 +10,16 @@ const DesktopFileStyle = {
     height: "50px",
     align: "center",
     zIndex: -4
+  },
+  input: {
+    backgroundColor: "#3064BD",
+    border: "1px dotted white",
+    color: "white",
+    width: "10px",
+    borderStyle: "dotted",
+    boxSizing: "border-box",
+    minWidth: "10px",
+    maxWidth: "500px"
   }
 };
 

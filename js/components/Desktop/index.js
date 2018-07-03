@@ -6,7 +6,13 @@ import {
   viewAlbumsFromArtist,
   openImageModal
 } from "../../actionCreators";
-import { createFile, moveFile, selectFiles } from "./../../actions/desktop";
+import {
+  createFile,
+  moveFile,
+  selectFiles,
+  renameFile,
+  confirmRenameFile
+} from "./../../actions/desktop";
 import File from "./File";
 // import "../../../css/spotify-ui.css";
 
@@ -18,6 +24,12 @@ class Desktop extends React.Component {
     this.renderFile = this.renderFile.bind(this);
   }
 
+  componentWillMount() {
+    addEventListener("contextmenu", e => {
+      e.preventDefault();
+      console.log(e.target);
+    });
+  }
   onDragStart(e, file) {
     e.dataTransfer.setData("oldFile", true);
     e.dataTransfer.setData("id", file.id);
@@ -26,14 +38,6 @@ class Desktop extends React.Component {
     e.dataTransfer.setData("title", file.title);
     e.dataTransfer.setData("x", e.clientX - 50);
     e.dataTransfer.setData("y", e.clientY - 50);
-  }
-
-  componentDidUpdate(prevProps) {
-    console.log("cdu");
-    Object.entries(this.props).forEach(
-      ([key, val]) =>
-        prevProps[key] !== val && console.log(`Prop '${key}' changed.`)
-    );
   }
 
   onDrop(e) {
@@ -66,8 +70,15 @@ class Desktop extends React.Component {
         <File
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
-          onClick={() => this.onClick(file)}
+          onClick={e => this.onClick(file, e)}
           onDoubleClick={() => this.doubleClickHandler(file)}
+          confirmRenameFile={e => {
+            e.preventDefault();
+            if (e.target[0].value.length === 0) {
+              return;
+            }
+            this.props.confirmRenameFile(file, e.target[0].value);
+          }}
         />
       </div>
     );
@@ -80,7 +91,10 @@ class Desktop extends React.Component {
     if (file.type === "image") this.props.openImage(file.uri);
   }
 
-  onClick(file) {
+  onClick(file, e) {
+    if (e.button === 2) {
+      this.props.renameFile(file);
+    }
     this.setState({ selected: [file.id] });
   }
 
@@ -124,7 +138,9 @@ const mapDispatchToProps = dispatch => ({
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   addTrackZeroAndPlay: track => dispatch(addTrackZeroAndPlay(track)),
   moveFile: file => dispatch(moveFile(file)),
-  openImage: image => dispatch(openImageModal(image))
+  openImage: image => dispatch(openImageModal(image)),
+  renameFile: file => dispatch(renameFile(file)),
+  confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Desktop);

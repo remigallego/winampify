@@ -90,6 +90,7 @@
     "redux": "^3.5.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
+    "redux-persist": "^5.10.0",
     "redux-thunk": "^2.1.0",
     "reselect": "^3.0.1",
     "tinyqueue": "^1.2.3",

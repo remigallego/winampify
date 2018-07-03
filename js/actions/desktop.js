@@ -16,6 +16,23 @@ export const moveFile = file => dispatch => {
   });
 };
 
+export const renameFile = file => dispatch => {
+  dispatch({
+    type: "RESET_RENAMING" // TODO:
+  });
+  dispatch({
+    type: "RENAMING",
+    payload: { id: file.id }
+  });
+};
+
+export const confirmRenameFile = (file, title) => dispatch => {
+  dispatch({
+    type: "RENAMING_SUCCESS",
+    payload: { id: file.id, title }
+  });
+};
+
 export const getDesktop = state => state.desktop;
 
 export const selectFiles = createSelector([getDesktop], desktop => {

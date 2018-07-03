@@ -17,7 +17,8 @@ const desktop = (state = initialState, action) => {
             x: action.payload.x,
             y: action.payload.y,
             title: action.payload.title,
-            type: action.payload.type
+            type: action.payload.type,
+            renaming: false
           }
         },
         allIds: [...state.allIds, action.payload.id]
@@ -31,6 +32,31 @@ const desktop = (state = initialState, action) => {
             ...state.byId[action.payload.id],
             x: action.payload.x,
             y: action.payload.y
+          }
+        },
+        allIds: [...state.allIds]
+      };
+    case "RENAMING":
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            renaming: true
+          }
+        },
+        allIds: [...state.allIds]
+      };
+    case "RENAMING_SUCCESS":
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            title: action.payload.title,
+            renaming: false
           }
         },
         allIds: [...state.allIds]

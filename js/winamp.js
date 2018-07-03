@@ -1,18 +1,18 @@
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-
-import getStore from "./store";
+import getStore, { persistor } from "./store";
 import App from "./components/App";
 import Hotkeys from "./hotkeys";
 import Media from "./media";
 import { setSkinFromUrl, createPlayerObject } from "./actionCreators";
-
 import {
   SET_AVALIABLE_SKINS,
   NETWORK_CONNECTED,
   NETWORK_DISCONNECTED
 } from "./actionTypes";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
 // Return a promise that resolves when the store matches a predicate.
 const storeHas = (store, predicate) =>
@@ -96,6 +96,7 @@ class Winamp {
 
     this.media = new Media();
     this.store = getStore(this.media, this.options.__initialState);
+    this.persistor = persistStore(this.store);
     this.store.dispatch({
       type: navigator.onLine ? NETWORK_CONNECTED : NETWORK_DISCONNECTED
     });
@@ -127,11 +128,13 @@ class Winamp {
 
     render(
       <Provider store={this.store}>
-        <App
-          media={this.media}
-          container={this.options.container}
-          filePickers={this.options.filePickers}
-        />
+        <PersistGate loading={null} persistor={this.persistor}>
+          <App
+            media={this.media}
+            container={this.options.container}
+            filePickers={this.options.filePickers}
+          />
+        </PersistGate>
       </Provider>,
       node
     );

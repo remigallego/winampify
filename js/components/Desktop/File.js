@@ -2,6 +2,7 @@ import React from "react";
 import folderclosed from "./images/folderclosed.png";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import { DesktopFileStyle } from "./styles";
+import InputRenaming from "./InputRenaming";
 const File = props => {
   const { file } = props;
 
@@ -18,6 +19,15 @@ const File = props => {
       default:
         return bigWinampIcon;
     }
+  };
+
+  const renderInput = () => {
+    return (
+      <InputRenaming
+        initialValue={file.title}
+        onSubmit={props.confirmRenameFile}
+      />
+    );
   };
   return (
     <div
@@ -38,19 +48,23 @@ const File = props => {
       onDragStart={props.onDragStart}
     >
       <img src={getIcon()} style={DesktopFileStyle.image} />
-      <div
-        style={{
-          ...DesktopFileStyle.fileName,
-          backgroundColor: props.selected ? "#3064BD" : "transparent",
-          border: props.selected
-            ? "1px dotted white"
-            : "1px dotted transparent",
-          borderStyle: "dotted",
-          boxSizing: "border-box"
-        }}
-      >
-        {file.title}
-      </div>
+      {file.renaming ? (
+        renderInput()
+      ) : (
+        <div
+          style={{
+            ...DesktopFileStyle.fileName,
+            backgroundColor: props.selected ? "#3064BD" : "transparent",
+            border: props.selected
+              ? "1px dotted white"
+              : "1px dotted transparent",
+            borderStyle: "dotted",
+            boxSizing: "border-box"
+          }}
+        >
+          {file.title}
+        </div>
+      )}
     </div>
   );
 };
