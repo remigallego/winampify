@@ -32,7 +32,6 @@ class Desktop extends React.Component {
       console.log(e.target);
     });
     addEventListener("keydown", e => {
-      e.preventDefault();
       if (e.keyCode === 46) {
         this.state.selected.map(fileId => this.props.deleteFile(fileId));
       }
