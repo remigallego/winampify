@@ -21,14 +21,6 @@ const File = props => {
     }
   };
 
-  const renderInput = () => {
-    return (
-      <InputRenaming
-        initialValue={file.title}
-        onSubmit={props.confirmRenameFile}
-      />
-    );
-  };
   return (
     <div
       style={{
@@ -43,13 +35,16 @@ const File = props => {
       }}
       onMouseDown={props.onClick}
       onDoubleClick={props.onDoubleClick}
-      onClick={props.onClick}
-      draggable={"true"}
-      onDragStart={props.onDragStart}
+      //onClick={props.onClick}
+      //draggable={"true"}
+      //onDragStart={props.onDragStart}
     >
       <img src={getIcon()} style={DesktopFileStyle.image} />
       {file.renaming ? (
-        renderInput()
+        <InputRenaming
+          initialValue={file.title}
+          confirmRenameFile={props.confirmRenameFile}
+        />
       ) : (
         <div
           style={{

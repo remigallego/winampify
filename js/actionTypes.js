@@ -91,5 +91,6 @@ export const SAVE_PREVIOUS_STATE = "SAVE_PREVIOUS_STATE";
 export const LOADING = "LOADING";
 
 /* DESKTOP ACTION TYPES */
-export const CREATE_FILE = "CREATE_FILE";
 export const MOVE_FILE = "MOVE_FILE";
+export const CREATE_FILE = "CREATE_FILE";
+export const DELETE_FILE = "DELETE_FILE";

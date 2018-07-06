@@ -11,7 +11,9 @@ import {
   moveFile,
   selectFiles,
   renameFile,
-  confirmRenameFile
+  confirmRenameFile,
+  cancelRenaming,
+  deleteFile
 } from "./../../actions/desktop";
 import File from "./File";
 // import "../../../css/spotify-ui.css";
@@ -28,6 +30,12 @@ class Desktop extends React.Component {
     addEventListener("contextmenu", e => {
       e.preventDefault();
       console.log(e.target);
+    });
+    addEventListener("keydown", e => {
+      e.preventDefault();
+      if (e.keyCode === 46) {
+        this.state.selected.map(fileId => this.props.deleteFile(fileId));
+      }
     });
   }
   onDragStart(e, file) {
@@ -66,7 +74,10 @@ class Desktop extends React.Component {
 
   renderFile(file) {
     return (
-      <div draggable onDragStart={e => this.onDragStart(e, file)}>
+      <div
+        draggable={!file.renaming}
+        onDragStart={e => this.onDragStart(e, file)}
+      >
         <File
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
@@ -93,6 +104,7 @@ class Desktop extends React.Component {
 
   onClick(file, e) {
     if (e.button === 2) {
+      this.props.cancelRenaming();
       this.props.renameFile(file);
     }
     this.setState({ selected: [file.id] });
@@ -117,7 +129,10 @@ class Desktop extends React.Component {
           e.preventDefault();
         }}
         onClick={e => {
-          if (e.target.id === "dropzone") this.setState({ selected: [] });
+          if (e.target.id === "dropzone") {
+            this.setState({ selected: [] });
+            this.props.cancelRenaming();
+          }
         }}
       >
         {files.map(this.renderFile)}
@@ -140,6 +155,8 @@ const mapDispatchToProps = dispatch => ({
   moveFile: file => dispatch(moveFile(file)),
   openImage: image => dispatch(openImageModal(image)),
   renameFile: file => dispatch(renameFile(file)),
+  deleteFile: fileId => dispatch(deleteFile(fileId)),
+  cancelRenaming: () => dispatch(cancelRenaming()),
   confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title))
 });
 

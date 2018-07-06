@@ -1,7 +1,18 @@
-import { CREATE_FILE, MOVE_FILE } from "../actionTypes";
+import { CREATE_FILE, MOVE_FILE, DELETE_FILE } from "../actionTypes";
 const initialState = {
   byId: {},
   allIds: []
+};
+
+const cancelRenaming = state => {
+  const byId = {};
+  state.allIds.map(id => {
+    byId[id] = {
+      ...state.byId[id],
+      renaming: false
+    };
+  });
+  return { byId: byId, allIds: state.allIds };
 };
 
 const desktop = (state = initialState, action) => {
@@ -23,6 +34,15 @@ const desktop = (state = initialState, action) => {
         },
         allIds: [...state.allIds, action.payload.id]
       };
+    case DELETE_FILE: {
+      const { [action.payload.id]: omit, ...byId } = state.byId;
+      const allIds = state.allIds.filter(id => id !== action.payload.id);
+      return {
+        ...state,
+        byId,
+        allIds
+      };
+    }
     case MOVE_FILE:
       return {
         ...state,
@@ -61,6 +81,8 @@ const desktop = (state = initialState, action) => {
         },
         allIds: [...state.allIds]
       };
+    case "RENAMING_CANCEL":
+      return cancelRenaming(state);
     default:
       return state;
   }

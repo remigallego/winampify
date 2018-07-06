@@ -8,15 +8,22 @@ class InputRenaming extends React.Component {
   }
   render() {
     return (
-      <form onSubmit={this.props.onSubmit}>
+      <form onSubmit={this.props.confirmRenameFile}>
         <input
           style={{
-            ...DesktopFileStyle.input,
-            width: `${this.state.text.length}ch`
+            ...DesktopFileStyle.fileName,
+            backgroundColor: "white",
+            textShadow: "none",
+            color: "black",
+            border: "1px dotted transparent",
+            borderStyle: "dotted",
+            boxSizing: "border-box",
+            outline: "none",
+            margin: 0,
+            padding: 0
           }}
-          type="text"
+          onChange={text => this.setState({ text: text.target.value })}
           value={this.state.text}
-          onChange={e => this.setState({ text: e.target.value })}
         />
       </form>
     );

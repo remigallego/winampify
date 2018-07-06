@@ -16,6 +16,14 @@ export const moveFile = file => dispatch => {
   });
 };
 
+export const deleteFile = fileId => dispatch => {
+  console.log(fileId);
+  dispatch({
+    type: "DELETE_FILE",
+    payload: { id: fileId }
+  });
+};
+
 export const renameFile = file => dispatch => {
   dispatch({
     type: "RESET_RENAMING" // TODO:
@@ -23,6 +31,12 @@ export const renameFile = file => dispatch => {
   dispatch({
     type: "RENAMING",
     payload: { id: file.id }
+  });
+};
+
+export const cancelRenaming = () => dispatch => {
+  dispatch({
+    type: "RENAMING_CANCEL"
   });
 };
 
