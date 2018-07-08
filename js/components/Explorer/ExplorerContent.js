@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { openImageModal } from "../../actionCreators";
 import {
   viewAlbumsFromArtist,
   viewTracksFromAlbum,
@@ -8,9 +9,8 @@ import {
   playTrackFromExplorer,
   playAlbumFromExplorer,
   getArtistFromId,
-  openImageModal,
   searchOnSpotify
-} from "../../actionCreators";
+} from "../../actions/explorer";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
@@ -266,7 +266,7 @@ class ExplorerContent extends React.Component {
 
 const mapStateToProps = state => ({
   explorer: state.explorer,
-  token: state.media.player.access_token
+  token: state.media.player.accessToken
 });
 
 const mapDispatchToProps = dispatch => ({

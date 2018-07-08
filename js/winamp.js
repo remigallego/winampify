@@ -58,14 +58,15 @@ class Winamp {
     loadScriptAsync("https://sdk.scdn.co/spotify-player.js")
       .then(() => {
         window.onSpotifyWebPlaybackSDKReady = () => {
+          // eslint-disable-next-line
           const player = new Spotify.Player({
             name: "Winampify",
             getOAuthToken: cb => {
-              cb(this.options.tokens.access_token);
+              cb(this.options.tokens.accessToken);
             }
           });
-          player.access_token = this.options.tokens.access_token;
-          player.refresh_token = this.options.tokens.refresh_token;
+          player.accessToken = this.options.tokens.accessToken;
+          player.refreshToken = this.options.tokens.refreshToken;
 
           player.addListener("initialization_error", ({ message }) => {
             console.error(message);
@@ -78,9 +79,9 @@ class Winamp {
           });
 
           // Playback status updates
-          player.addListener("player_state_changed", state => {});
 
           // Ready
+          // eslint-disable-next-line
           player.addListener("ready", ({ device_id }) => {
             console.log("Ready with Device ID", device_id);
             this.store.dispatch(createPlayerObject(player));
@@ -116,10 +117,6 @@ class Winamp {
         skins: avaliableSkins
       });
     }
-
-    if (enableHotkeys) {
-      new Hotkeys(this.store.dispatch);
-    }
   }
 
   async renderWhenReady(node) {
@@ -130,7 +127,6 @@ class Winamp {
       <Provider store={this.store}>
         <PersistGate loading={null} persistor={this.persistor}>
           <App
-            media={this.media}
             container={this.options.container}
             filePickers={this.options.filePickers}
           />

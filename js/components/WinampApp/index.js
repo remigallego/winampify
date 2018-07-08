@@ -39,9 +39,7 @@ const mapStateToProps = state => ({
   closed: state.display.closed,
   equalizer: state.windows.equalizer,
   playlist: state.windows.playlist,
-  openWindows: new Set(state.windows.openGenWindows),
-  isModalOpen: state.display.isModalOpen,
-  imageSource: state.display.imageSource
+  openWindows: new Set(state.windows.openGenWindows)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WinampApp);

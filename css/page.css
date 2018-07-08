@@ -2,8 +2,8 @@
 html {
   height: 100%;
   width: 100%;
-  background-color: transparent;
-  background-image: url("https://i.redd.it/r0ad288kma8x.jpg");
+  background-color: #2973e9d2;
+  /* background-image: url("https://i.redd.it/r0ad288kma8x.jpg"); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

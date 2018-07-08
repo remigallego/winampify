@@ -19,7 +19,6 @@ const ImageModal = props => {
   };
   return (
     <div className="backdrop" onClick={props.onClick} style={backdropStyle}>
-      <div className="close">Close</div>
       <img src={props.image} style={imageStyle} />
     </div>
   );

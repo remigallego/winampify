@@ -70,9 +70,9 @@ export default media => store => {
       },
       body: qs.stringify({
         // eslint-disable-next-line
-        grant_type: "refresh_token",
+        grant_type: "refreshToken",
         // eslint-disable-next-line
-        refresh_token: refreshToken
+        refreshToken: refreshToken
       })
     }).then(res => {
       console.log(res);
@@ -103,7 +103,7 @@ export default media => store => {
         media.setVolume(action.volume);
         break;
       case SET_BALANCE:
-        media.setBalance(action.balance);
+        // Impossible with Spotify API
         break;
       case SEEK_TO_PERCENT_COMPLETE:
         media.seekToPercentComplete(action.percent);

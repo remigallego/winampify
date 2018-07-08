@@ -1,14 +1,14 @@
 import React from "react";
 import Draggable from "react-draggable";
 import { connect } from "react-redux";
+import { goPreviousState } from "../../actionCreators";
 import {
   viewAlbumsFromArtist,
   viewTracksFromAlbum,
   unsetFocusExplorer,
   playTrackFromExplorer,
-  searchOnSpotify,
-  goPreviousState
-} from "../../actionCreators";
+  searchOnSpotify
+} from "../../actions/explorer";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerWindowStyle } from "./styles.js";
 import magnifier from "./images/magnifier.png";

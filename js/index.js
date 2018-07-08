@@ -12,7 +12,7 @@ import Winamp from "./winamp";
 import Loading from "./loading";
 import LandingPage from "./landingpage";
 
-import { hideAbout, skinUrl, initialTracks, initialState } from "./config";
+import { hideAbout, skinUrl, initialState } from "./config";
 
 if (hideAbout) {
   document.getElementsByClassName("about")[0].style.visibility = "hidden";
@@ -30,8 +30,8 @@ if (url !== "") {
   const params = getQuery.split("&");
   if (params.length === 2)
     tokens = {
-      access_token: params[0].slice(2),
-      refresh_token: params[1].slice(2)
+      accessToken: params[0].slice(2),
+      refreshToken: params[1].slice(2)
     };
   else tokens = 0;
 } else tokens = 0;
@@ -42,7 +42,6 @@ if (tokens) {
       url: skinUrl
     },
     tokens: tokens,
-    initialTracks,
     avaliableSkins: [
       { url: base, name: "<Base Skin>" },
       { url: green, name: "Green Dimension V2" },
@@ -52,7 +51,6 @@ if (tokens) {
       { url: xmms, name: "XMMS Turquoise " },
       { url: zaxon, name: "Zaxon Remake" }
     ],
-    filePickers: [{}],
     enableHotkeys: false,
     __initialState: initialState
   });

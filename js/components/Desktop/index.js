@@ -33,7 +33,9 @@ class Desktop extends React.Component {
     });
     addEventListener("keydown", e => {
       if (e.keyCode === 46) {
-        this.state.selected.map(fileId => this.props.deleteFile(fileId));
+        // SUPPR
+        if (!this.props.files.some(file => file.renaming))
+          this.state.selected.map(fileId => this.props.deleteFile(fileId));
       }
     });
   }
@@ -130,7 +132,8 @@ class Desktop extends React.Component {
         onClick={e => {
           if (e.target.id === "dropzone") {
             this.setState({ selected: [] });
-            this.props.cancelRenaming();
+            if (this.props.files.some(file => file.renaming))
+              this.props.cancelRenaming();
           }
         }}
       >

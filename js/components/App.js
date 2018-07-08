@@ -8,11 +8,7 @@ import ImageModal from "./ImageModal";
 import Desktop from "./Desktop";
 import WinampApp from "./WinampApp";
 
-const App = ({ closed, isModalOpen, imageSource, closeModal }) => {
-  if (closed) {
-    return null;
-  }
-
+const App = ({ isModalOpen, imageSource, closeModal }) => {
   return (
     <div role="application" id="winamp2-js">
       <WinampApp />
@@ -35,10 +31,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  closed: state.display.closed,
-  equalizer: state.windows.equalizer,
-  playlist: state.windows.playlist,
-  openWindows: new Set(state.windows.openGenWindows),
   isModalOpen: state.display.isModalOpen,
   imageSource: state.display.imageSource
 });

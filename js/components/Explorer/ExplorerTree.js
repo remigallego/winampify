@@ -7,7 +7,7 @@ import {
   viewMyRecentlyPlayed,
   viewMyLibraryAlbums,
   viewMyLibraryTracks
-} from "../../actionCreators";
+} from "../../actions/explorer";
 import hearts from "./images/hearts.ico";
 import harddrive from "./images/7.ico";
 import recentdocuments from "./images/recentdocuments.png";
