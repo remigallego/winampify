@@ -5,7 +5,6 @@ import { createLogger } from "redux-logger";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web and AsyncStorage for react-native
 import reducer from "./reducers";
-// import mediaMiddleware from "./mediaMiddleware";
 import spotifyMiddleware from "./spotifyMiddleware";
 import { merge } from "./utils";
 import { UPDATE_TIME_ELAPSED, STEP_MARQUEE } from "./actionTypes";

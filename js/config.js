@@ -3,6 +3,7 @@ import skin from "../skins/base-2.91.wsz";
 const { hash } = window.location;
 let config = {};
 if (hash) {
+  console.log(hash);
   try {
     config = JSON.parse(decodeURIComponent(hash).slice(1));
   } catch (e) {
@@ -20,4 +21,3 @@ export const skinUrl = config.skinUrl === undefined ? skin : config.skinUrl;
 
 export const hideAbout = config.hideAbout || false;
 export const initialState = config.initialState || undefined;
-// export const sentryDsn = SENTRY_DSN;

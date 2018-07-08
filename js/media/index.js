@@ -53,15 +53,6 @@ export default class Media {
 
   timeElapsed(callback) {
     if (this.status === "PLAYING") {
-      /* this.player.getCurrentState().then(state => {
-        if (!state) {
-          console.error(
-            "User is not playing music through the Web Playback SDK"
-          );
-        } else {
-          callback(state.position);
-        }
-      });*/
     }
     if (this.status === "STOPPED") {
       callback(0);
