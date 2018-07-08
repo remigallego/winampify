@@ -2,30 +2,31 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import Explorer from "./Explorer";
-import "../../css/winamp.css";
-import ImageModal from "./ImageModal";
-import Desktop from "./Desktop";
-import WinampApp from "./WinampApp";
+import MainWindow from "./MainWindow";
+import PlaylistWindow from "./PlaylistWindow";
+import Skin from "./Skin";
+import "../../../css/winamp.css";
+import WindowManager from "./WindowManager";
 
-const App = ({ closed, isModalOpen, imageSource, closeModal }) => {
+const WinampApp = ({ media, closed, playlist, container, filePickers }) => {
   if (closed) {
     return null;
   }
 
+  const windows = {
+    main: <MainWindow mediaPlayer={media} filePickers={filePickers} />,
+    playlist: playlist && <PlaylistWindow />
+  };
+
   return (
     <div role="application" id="winamp2-js">
-      <WinampApp />
-      <Desktop />
-      <Explorer />
-      {isModalOpen && (
-        <ImageModal image={imageSource} onClick={() => closeModal()} />
-      )}
+      <Skin />
+      <WindowManager windows={windows} container={container} />
     </div>
   );
 };
 
-App.propTypes = {
+WinampApp.propTypes = {
   container: PropTypes.instanceOf(Element)
 };
 const mapDispatchToProps = dispatch => ({
@@ -43,4 +44,4 @@ const mapStateToProps = state => ({
   imageSource: state.display.imageSource
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(WinampApp);

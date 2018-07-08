@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Loader from "react-loaders";
 
 import {
   viewAlbumsFromArtist,
@@ -39,7 +38,7 @@ class ExplorerContent extends React.Component {
   renderAlbums(albums) {
     if (albums)
       return albums.map((album, index) => {
-        return this.renderAlbum(album, "al" + index);
+        return this.renderAlbum(album, `al${index}`);
       });
     return null;
   }
@@ -47,7 +46,7 @@ class ExplorerContent extends React.Component {
   renderTracks(tracks) {
     if (tracks)
       return tracks.map((track, index) => {
-        return this.renderTrack(track, "tr" + index);
+        return this.renderTrack(track, `tr${index}`);
       });
     return null;
   }
@@ -55,7 +54,7 @@ class ExplorerContent extends React.Component {
   renderArtists(artists) {
     if (artists)
       return artists.map((artist, index) => {
-        return this.renderArtist(artist, "ar" + index);
+        return this.renderArtist(artist, `ar${index}`);
       });
     return null;
   }

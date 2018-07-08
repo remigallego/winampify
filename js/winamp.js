@@ -1,7 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import getStore, { persistor } from "./store";
+import { persistStore } from "redux-persist";
+import getStore from "./store";
 import App from "./components/App";
 import Hotkeys from "./hotkeys";
 import Media from "./media";
@@ -12,7 +13,6 @@ import {
   NETWORK_DISCONNECTED
 } from "./actionTypes";
 import { PersistGate } from "redux-persist/integration/react";
-import { persistStore } from "redux-persist";
 
 // Return a promise that resolves when the store matches a predicate.
 const storeHas = (store, predicate) =>

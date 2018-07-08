@@ -1,4 +1,6 @@
 import "babel-polyfill";
+import React from "react";
+import { render } from "react-dom";
 import base from "../skins/base-2.91.wsz";
 import osx from "../skins/MacOSXAqua1-5.wsz";
 import topaz from "../skins/TopazAmp1-2.wsz";
@@ -9,9 +11,7 @@ import green from "../skins/Green-Dimension-V2.wsz";
 import Winamp from "./winamp";
 import Loading from "./loading";
 import LandingPage from "./landingpage";
-import React from "react";
 
-import { render } from "react-dom";
 import { hideAbout, skinUrl, initialTracks, initialState } from "./config";
 
 if (hideAbout) {

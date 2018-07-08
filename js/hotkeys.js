@@ -5,7 +5,6 @@ import {
   adjustVolume,
   toggleRepeat,
   toggleShuffle,
-  openMediaFileDialog,
   seekForward,
   seekBackward,
   reverseList,
@@ -72,7 +71,6 @@ export default function(dispatch) {
           dispatch(pause());
           break;
         case 76: // L
-          dispatch(openMediaFileDialog());
           break;
         case 82: // R
           dispatch(toggleRepeat());
@@ -90,7 +88,6 @@ export default function(dispatch) {
           dispatch(previous());
           break;
         case 96: // numpad 0
-          dispatch(openMediaFileDialog());
           break;
         case 97: // numpad 1
           dispatch(nextN(-10));
