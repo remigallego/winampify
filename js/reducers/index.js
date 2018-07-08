@@ -96,8 +96,7 @@ const defaultDisplayState = {
   visualizerStyle: 2,
   playlistScrollPosition: 0,
   playlistSize: [0, 0],
-  isModalOpen: false,
-  imageSource: ""
+  albumCovers: []
 };
 
 const display = (state = defaultDisplayState, action) => {
@@ -139,8 +138,11 @@ const display = (state = defaultDisplayState, action) => {
       return { ...state, playlistSize: action.size };
     case S_UPDATE_PLAYER_OBJECT:
       return { ...state, loading: false };
-    case OPEN_IMAGE_MODAL:
-      return { ...state, isModalOpen: true, imageSource: action.source };
+    case OPEN_IMAGE_MODAL: {
+      const albumCovers = state.albumCovers;
+      albumCovers.push(action.source);
+      return { ...state, albumCovers };
+    }
     case "CLOSE_MODAL":
       return { ...state, isModalOpen: false };
     default:

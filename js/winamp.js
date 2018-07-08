@@ -1,10 +1,10 @@
 import React from "react";
+import * as qs from "qs";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import getStore from "./store";
 import App from "./components/App";
-import Hotkeys from "./hotkeys";
 import Media from "./media";
 import { setSkinFromUrl, createPlayerObject } from "./actionCreators";
 import {
@@ -53,7 +53,7 @@ class Winamp {
 
   constructor(options) {
     this.options = options;
-    const { avaliableSkins, enableHotkeys = false } = this.options;
+    const { avaliableSkins } = this.options;
 
     loadScriptAsync("https://sdk.scdn.co/spotify-player.js")
       .then(() => {
@@ -71,14 +71,35 @@ class Winamp {
           player.addListener("initialization_error", ({ message }) => {
             console.error(message);
           });
+          player.addListener("authentication_error", ({ message }) => {
+            const refreshInterval = refreshToken => {
+              console.log("I need to fresh the token");
+              fetch(`https://accounts.spotify.com/api/token`, {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8"
+                },
+                body: qs.stringify({
+                  // eslint-disable-next-line
+                  grant_type: "refreshToken",
+                  // eslint-disable-next-line
+                  refreshToken: refreshToken
+                })
+              }).then(res => {
+                console.log(res);
+              });
+            };
+
+            refreshInterval(this.options.tokens.refreshToken);
+            console.error(message);
+          });
           player.addListener("account_error", ({ message }) => {
             console.error(message);
           });
           player.addListener("playback_error", ({ message }) => {
             console.error(message);
           });
-
-          // Playback status updates
 
           // Ready
           // eslint-disable-next-line
@@ -87,11 +108,16 @@ class Winamp {
             this.store.dispatch(createPlayerObject(player));
           });
 
+          player.addListener("not_ready", ({ device_id }) => {
+            console.log("Device ID has gone offline", device_id);
+          });
+
           // Connect to the player!
           player.connect();
         };
       })
       .catch(e => {
+        console.log("habe");
         console.error(e);
       });
 

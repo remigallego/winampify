@@ -2,10 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   addTrackZeroAndPlay,
-  viewTracksFromAlbum,
-  viewAlbumsFromArtist,
-  openImageModal
+  openImageModal,
+  addTrackFromURI
 } from "../../actionCreators";
+import {
+  viewTracksFromAlbum,
+  viewAlbumsFromArtist
+} from "./../../actions/explorer";
 import {
   createFile,
   moveFile,
@@ -16,12 +19,14 @@ import {
   deleteFile
 } from "./../../actions/desktop";
 import File from "./File";
+import FileContextMenu from "./FileContextMenu";
+import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: [] };
+    this.state = { selected: [], clipboard: null };
     this.doubleClickHandler = this.doubleClickHandler.bind(this);
     this.renderFile = this.renderFile.bind(this);
   }
@@ -82,7 +87,7 @@ class Desktop extends React.Component {
         <File
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
-          onClick={e => this.onClick(file, e)}
+          onClick={e => this.setState({ selected: [file.id] })}
           onDoubleClick={() => this.doubleClickHandler(file)}
           confirmRenameFile={e => {
             e.preventDefault();
@@ -103,16 +108,20 @@ class Desktop extends React.Component {
     if (file.type === "image") this.props.openImage(file.uri);
   }
 
-  onClick(file, e) {
-    if (e.button === 2) {
-      this.props.cancelRenaming();
-      this.props.renameFile(file);
+  handleDesktopClick(e) {
+    if (e.target.id === "dropzone") {
+      this.setState({ selected: [] });
+      if (this.props.files.some(file => file.renaming)) {
+        const renamingInProgress = this.props.files.filter(
+          file => file.renaming
+        );
+        renamingInProgress.map(file => this.props.confirmRenameFile(file.id));
+      }
     }
-    this.setState({ selected: [file.id] });
   }
-
   render() {
     const { files } = this.props;
+    console.log(this.state.clipboard);
     return (
       <div
         style={{
@@ -129,14 +138,46 @@ class Desktop extends React.Component {
         onDragOver={e => {
           e.preventDefault();
         }}
-        onClick={e => {
-          if (e.target.id === "dropzone") {
-            this.setState({ selected: [] });
-            if (this.props.files.some(file => file.renaming))
-              this.props.cancelRenaming();
-          }
-        }}
       >
+        <FileContextMenu
+          onRename={e => {
+            this.props.cancelRenaming();
+            this.props.renameFile(e.ref.id);
+          }}
+          onDelete={e => {
+            this.props.deleteFile(e.ref.id);
+          }}
+          onCopy={e => {
+            this.setState({ clipboard: e.ref.id });
+          }}
+          onPaste={e => {
+            const copy = this.props.files.find(
+              file => file.id === this.state.clipboard
+            );
+            if (copy)
+              this.props.createFile({
+                ...copy,
+                x: e.event.clientX - 25,
+                y: e.event.clientY - 25
+              });
+          }}
+          addToPlaylist={e => {
+            const track = this.props.files.find(file => file.id === e.ref.id);
+
+            this.props.addTrackFromURI(track.uri);
+          }}
+        />
+        <ContextMenuProvider id="desktop">
+          <div
+            id="dropzone"
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%"
+            }}
+            onClick={e => this.handleDesktopClick(e)}
+          />
+        </ContextMenuProvider>
         {files.map(this.renderFile)}
       </div>
     );
@@ -159,7 +200,8 @@ const mapDispatchToProps = dispatch => ({
   renameFile: file => dispatch(renameFile(file)),
   deleteFile: fileId => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),
-  confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title))
+  confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title)),
+  addTrackFromURI: uri => dispatch(addTrackFromURI(uri))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Desktop);

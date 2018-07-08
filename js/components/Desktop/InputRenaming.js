@@ -22,6 +22,7 @@ class InputRenaming extends React.Component {
             margin: 0,
             padding: 0
           }}
+          ref={`test`}
           onChange={text => this.setState({ text: text.target.value })}
           value={this.state.text}
         />

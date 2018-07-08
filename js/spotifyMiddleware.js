@@ -61,8 +61,8 @@ export default media => store => {
     }, 2000);
   });
 
-  eventListener.on("token_expired", refreshToken => {
-    console.log("=== Token has been refreshed");
+  const refreshInterval = refreshToken => {
+    console.log("I need to fresh the token");
     fetch(`https://accounts.spotify.com/api/token`, {
       method: "POST",
       headers: {
@@ -77,7 +77,11 @@ export default media => store => {
     }).then(res => {
       console.log(res);
     });
-  });
+  };
+
+  eventListener.on("token_expired", refreshToken =>
+    refreshInterval(refreshToken)
+  );
 
   eventListener.on("ended", () => {
     store.dispatch({ type: IS_STOPPED });

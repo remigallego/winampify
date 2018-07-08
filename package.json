@@ -78,6 +78,8 @@
     "qs": "^6.5.1",
     "rc-slider": "^8.1.5",
     "react": "^16.2.0",
+    "react-contexify": "^3.0.2",
+    "react-contextmenu": "^2.9.2",
     "react-dnd": "^2.6.0",
     "react-dnd-html5-backend": "^2.6.0",
     "react-dom": "^16.2.0",

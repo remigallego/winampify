@@ -1,4 +1,5 @@
 import React from "react";
+import { ContextMenuProvider } from "react-contexify";
 import folderclosed from "./images/folderclosed.png";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import { DesktopFileStyle } from "./styles";
@@ -22,45 +23,44 @@ const File = props => {
   };
 
   return (
-    <div
-      style={{
-        width: "100px",
-        height: "auto",
-        position: "absolute",
-        left: file.x,
-        top: file.y,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
-      }}
-      onMouseDown={props.onClick}
-      onDoubleClick={props.onDoubleClick}
-      //onClick={props.onClick}
-      //draggable={"true"}
-      //onDragStart={props.onDragStart}
-    >
-      <img src={getIcon()} style={DesktopFileStyle.image} />
-      {file.renaming ? (
-        <InputRenaming
-          initialValue={file.title}
-          confirmRenameFile={props.confirmRenameFile}
-        />
-      ) : (
-        <div
-          style={{
-            ...DesktopFileStyle.fileName,
-            backgroundColor: props.selected ? "#3064BD" : "transparent",
-            border: props.selected
-              ? "1px dotted white"
-              : "1px dotted transparent",
-            borderStyle: "dotted",
-            boxSizing: "border-box"
-          }}
-        >
-          {file.title}
-        </div>
-      )}
-    </div>
+    <ContextMenuProvider id={file.type}>
+      <div
+        style={{
+          width: "100px",
+          position: "absolute",
+          left: file.x,
+          top: file.y,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}
+        id={file.id}
+        onMouseDown={props.onClick}
+        onDoubleClick={props.onDoubleClick}
+      >
+        <img src={getIcon()} style={DesktopFileStyle.image} />
+        {file.renaming ? (
+          <InputRenaming
+            initialValue={file.title}
+            confirmRenameFile={props.confirmRenameFile}
+          />
+        ) : (
+          <div
+            style={{
+              ...DesktopFileStyle.fileName,
+              backgroundColor: props.selected ? "#3064BD" : "transparent",
+              border: props.selected
+                ? "1px dotted white"
+                : "1px dotted transparent",
+              borderStyle: "dotted",
+              boxSizing: "border-box"
+            }}
+          >
+            {file.title}
+          </div>
+        )}
+      </div>
+    </ContextMenuProvider>
   );
 };
 

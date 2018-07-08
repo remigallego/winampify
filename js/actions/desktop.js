@@ -24,13 +24,13 @@ export const deleteFile = fileId => dispatch => {
   });
 };
 
-export const renameFile = file => dispatch => {
+export const renameFile = fileId => dispatch => {
   dispatch({
     type: "RESET_RENAMING" // TODO:
   });
   dispatch({
     type: "RENAMING",
-    payload: { id: file.id }
+    payload: { id: fileId }
   });
 };
 
