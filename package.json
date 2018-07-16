@@ -86,6 +86,7 @@
     "react-draggable": "^3.0.5",
     "react-load-script": "0.0.6",
     "react-loaders": "^3.0.1",
+    "react-motion": "^0.5.2",
     "react-redux": "^5.0.6",
     "react-resizable": "^1.7.5",
     "react-rnd": "^7.4.0",

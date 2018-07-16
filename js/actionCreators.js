@@ -1,3 +1,4 @@
+import uuidv1 from "uuid/v1";
 import { creator } from "winamp-eqf";
 import {
   genArrayBufferFromFileReference,
@@ -13,7 +14,6 @@ import {
   getPlaylistURL,
   getSelectedTrackObjects
 } from "./selectors";
-
 import { clamp, base64FromArrayBuffer, downloadURI, sort } from "./utils";
 import {
   CLOSE_WINAMP,
@@ -45,8 +45,9 @@ import {
   PLAYLIST_SIZE_CHANGED,
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
-  OPEN_IMAGE_MODAL,
-  GO_PREVIOUS_STATE
+  ADD_IMAGE,
+  GO_PREVIOUS_STATE,
+  CLOSE_IMAGE
 } from "./actionTypes";
 
 import {
@@ -54,18 +55,6 @@ import {
   parseTracksPlaylist,
   parseTracksAlbum
 } from "./spotifyParser";
-
-/* EXPLORER functions */
-
-/* UI FUNCTIONS */
-export function openImageModal(source) {
-  return dispatch => {
-    dispatch({
-      type: OPEN_IMAGE_MODAL,
-      source: source
-    });
-  };
-}
 
 export function goPreviousState() {
   return dispatch => {

@@ -80,7 +80,7 @@ export const UNSET_FOCUS_EXPLORER = "UNSET_FOCUS_EXPLORER";
 export const SET_ARTISTS_FROM_USER = "SET_ARTISTS_FROM_USER";
 export const SET_ALBUMS_FROM_LIBRARY = "SET_ALBUMS_FROM_LIBRARY";
 
-export const OPEN_IMAGE_MODAL = "OPEN_IMAGE_MODAL";
+export const ADD_IMAGE = "ADD_IMAGE";
 export const WIPE_ALBUMS = "WIPE_ALBUMS";
 export const WIPE_ARTISTS = "WIPE_ARTISTS";
 export const WIPE_PLAYLISTS = "WIPE_PLAYLISTS";
@@ -94,3 +94,4 @@ export const LOADING = "LOADING";
 export const MOVE_FILE = "MOVE_FILE";
 export const CREATE_FILE = "CREATE_FILE";
 export const DELETE_FILE = "DELETE_FILE";
+export const CLOSE_IMAGE = "CLOSE_IMAGE";

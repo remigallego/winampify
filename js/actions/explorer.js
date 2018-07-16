@@ -1,10 +1,13 @@
+import uuidv1 from "uuid/v1";
 import {
   REMOVE_ALL_TRACKS,
   UNSET_FOCUS_EXPLORER,
   SAVE_PREVIOUS_STATE,
   SET_EXPLORER_METADATA,
   LOADING,
-  SET_ITEMS
+  SET_ITEMS,
+  ADD_IMAGE,
+  CLOSE_IMAGE
 } from "../actionTypes";
 import { addTrackZeroAndPlay, addTracksFromAlbum } from "../actionCreators";
 import {
@@ -292,6 +295,27 @@ export function getArtistFromId(id) {
     parseArtist(token, id, (err, result) => {
       if (err) throw err;
       return result;
+    });
+  };
+}
+
+export function addImage(source, x, y) {
+  return dispatch => {
+    dispatch({
+      type: ADD_IMAGE,
+      id: uuidv1(),
+      source,
+      x,
+      y
+    });
+  };
+}
+
+export function closeImage(id) {
+  return dispatch => {
+    dispatch({
+      type: CLOSE_IMAGE,
+      id
     });
   };
 }

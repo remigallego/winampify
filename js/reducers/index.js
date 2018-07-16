@@ -44,7 +44,8 @@ import {
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
   S_PLAY_URI,
-  OPEN_IMAGE_MODAL
+  ADD_IMAGE,
+  CLOSE_IMAGE
 } from "../actionTypes";
 
 import desktop from "./desktop";
@@ -95,8 +96,7 @@ const defaultDisplayState = {
   skinRegion: {},
   visualizerStyle: 2,
   playlistScrollPosition: 0,
-  playlistSize: [0, 0],
-  albumCovers: []
+  playlistSize: [0, 0]
 };
 
 const display = (state = defaultDisplayState, action) => {
@@ -138,11 +138,7 @@ const display = (state = defaultDisplayState, action) => {
       return { ...state, playlistSize: action.size };
     case S_UPDATE_PLAYER_OBJECT:
       return { ...state, loading: false };
-    case OPEN_IMAGE_MODAL: {
-      const albumCovers = state.albumCovers;
-      albumCovers.push(action.source);
-      return { ...state, albumCovers };
-    }
+
     case "CLOSE_MODAL":
       return { ...state, isModalOpen: false };
     default:

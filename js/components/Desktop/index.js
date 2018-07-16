@@ -1,13 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  addTrackZeroAndPlay,
-  openImageModal,
-  addTrackFromURI
-} from "../../actionCreators";
+import { addTrackZeroAndPlay, addTrackFromURI } from "../../actionCreators";
+import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 import {
   viewTracksFromAlbum,
-  viewAlbumsFromArtist
+  viewAlbumsFromArtist,
+  addImage
 } from "./../../actions/explorer";
 import {
   createFile,
@@ -20,7 +18,6 @@ import {
 } from "./../../actions/desktop";
 import File from "./File";
 import FileContextMenu from "./FileContextMenu";
-import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
@@ -34,7 +31,6 @@ class Desktop extends React.Component {
   componentWillMount() {
     addEventListener("contextmenu", e => {
       e.preventDefault();
-      console.log(e.target);
     });
     addEventListener("keydown", e => {
       if (e.keyCode === 46) {
@@ -87,8 +83,8 @@ class Desktop extends React.Component {
         <File
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
-          onClick={e => this.setState({ selected: [file.id] })}
-          onDoubleClick={() => this.doubleClickHandler(file)}
+          onClick={() => this.setState({ selected: [file.id] })}
+          onDoubleClick={e => this.doubleClickHandler(file, e)}
           confirmRenameFile={e => {
             e.preventDefault();
             if (e.target[0].value.length === 0) {
@@ -101,11 +97,16 @@ class Desktop extends React.Component {
     );
   }
 
-  doubleClickHandler(file) {
+  doubleClickHandler(file, e) {
     if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
     if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
     if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
-    if (file.type === "image") this.props.openImage(file.uri);
+    if (file.type === "image")
+      this.props.openImage(
+        file.uri,
+        e.nativeEvent.clientX,
+        e.nativeEvent.clientY
+      );
   }
 
   handleDesktopClick(e) {
@@ -121,7 +122,6 @@ class Desktop extends React.Component {
   }
   render() {
     const { files } = this.props;
-    console.log(this.state.clipboard);
     return (
       <div
         style={{
@@ -185,7 +185,8 @@ class Desktop extends React.Component {
 }
 const mapStateToProps = state => ({
   desktop: state.desktop,
-  files: selectFiles(state)
+  files: selectFiles(state),
+  albumCovers: state.display.albumCovers
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -196,7 +197,7 @@ const mapDispatchToProps = dispatch => ({
   viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
   addTrackZeroAndPlay: track => dispatch(addTrackZeroAndPlay(track)),
   moveFile: file => dispatch(moveFile(file)),
-  openImage: image => dispatch(openImageModal(image)),
+  openImage: (image, x, y) => dispatch(addImage(image, x, y)),
   renameFile: file => dispatch(renameFile(file)),
   deleteFile: fileId => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),

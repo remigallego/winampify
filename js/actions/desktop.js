@@ -9,7 +9,6 @@ export function createFile(file) {
 }
 
 export const moveFile = file => dispatch => {
-  console.log(file.id);
   dispatch({
     type: "MOVE_FILE",
     payload: { id: file.id, x: file.x, y: file.y }
@@ -17,7 +16,6 @@ export const moveFile = file => dispatch => {
 };
 
 export const deleteFile = fileId => dispatch => {
-  console.log(fileId);
   dispatch({
     type: "DELETE_FILE",
     payload: { id: fileId }

@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { openImageModal } from "../../actionCreators";
 import {
   viewAlbumsFromArtist,
   viewTracksFromAlbum,
@@ -9,7 +8,8 @@ import {
   playTrackFromExplorer,
   playAlbumFromExplorer,
   getArtistFromId,
-  searchOnSpotify
+  searchOnSpotify,
+  addImage
 } from "../../actions/explorer";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerContentStyle } from "./styles";
@@ -122,7 +122,13 @@ class ExplorerContent extends React.Component {
         type={"image"}
         image={image}
         onClick={() => this.clickHandler(-1)}
-        onDoubleClick={() => this.props.openImage(image)}
+        onDoubleClick={e =>
+          this.props.openImage(
+            image,
+            e.nativeEvent.clientX,
+            e.nativeEvent.clientY
+          )
+        }
       >
         {title}.jpg
       </ExplorerItem>
@@ -284,7 +290,7 @@ const mapDispatchToProps = dispatch => ({
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
   playAlbumFromExplorer: currentId =>
     dispatch(playAlbumFromExplorer(currentId)),
-  openImage: source => dispatch(openImageModal(source)),
+  openImage: (image, x, y) => dispatch(addImage(image, x, y)),
   searchOnSpotify: (search, type, offset) =>
     dispatch(searchOnSpotify(search, type, offset))
 });

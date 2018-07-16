@@ -5,7 +5,9 @@ import {
   SET_ITEMS,
   GO_PREVIOUS_STATE,
   SAVE_PREVIOUS_STATE,
-  LOADING
+  LOADING,
+  ADD_IMAGE,
+  CLOSE_IMAGE
 } from "../actionTypes";
 
 const initialState = {
@@ -21,7 +23,9 @@ const initialState = {
   albums: null,
   tracks: null,
   playlists: null,
-  loading: false
+  loading: false,
+  // images
+  albumCovers: {}
 };
 
 const explorer = (state = initialState, action) => {
@@ -66,6 +70,22 @@ const explorer = (state = initialState, action) => {
         image: action.image,
         playlistable: action.playlistable
       };
+    case ADD_IMAGE: {
+      return {
+        ...state,
+        albumCovers: {
+          ...state.albumCovers,
+          [action.id]: { source: action.source, x: action.x, y: action.y }
+        }
+      };
+    }
+    case CLOSE_IMAGE: {
+      const { [action.id]: omit, ...albumCovers } = state.albumCovers;
+      return {
+        ...state,
+        albumCovers
+      };
+    }
     default:
       return state;
   }
