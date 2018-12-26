@@ -6,10 +6,12 @@ import "../../css/winamp.css";
 
 import Desktop from "./Desktop";
 import WinampApp from "./WinampApp";
+import InfosBar from "./InfosBar";
 
 const App = () => {
   return (
     <div role="application">
+      <InfosBar />
       <WinampApp />
       <Desktop />
       <Explorer />

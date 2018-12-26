@@ -43,15 +43,14 @@ import {
   NETWORK_DISCONNECTED,
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
-  S_PLAY_URI,
-  ADD_IMAGE,
-  CLOSE_IMAGE
+  S_PLAY_URI
 } from "../actionTypes";
 
 import desktop from "./desktop";
 import playlist from "./playlist";
 import windows from "./windows";
 import explorer from "./explorer";
+import user from "./user";
 
 const defaultUserInput = {
   focus: null,
@@ -201,7 +200,7 @@ const media = (state, action) => {
       // The winamp ini file declares the default volume as "200".
       // The UI seems to show a default volume near 78, which would
       // math with the default value being 200 out of 255.
-      volume: Math.round(200 / 255 * 100),
+      volume: Math.round((200 / 255) * 100),
       balance: 0,
       channels: null,
       shuffle: false,
@@ -290,7 +289,8 @@ const reducer = combineReducers({
   media,
   network,
   explorer,
-  desktop
+  desktop,
+  user
 });
 
 export default reducer;

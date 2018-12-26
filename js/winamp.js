@@ -97,8 +97,8 @@ class Winamp {
           player.addListener("account_error", ({ message }) => {
             console.error(message);
           });
-          player.addListener("playback_error", ({ message }) => {
-            console.error(message);
+          player.addListener("playback_error", event => {
+            console.error(event);
           });
 
           // Ready
@@ -117,7 +117,6 @@ class Winamp {
         };
       })
       .catch(e => {
-        console.log("habe");
         console.error(e);
       });
 

@@ -13,6 +13,17 @@ html {
   user-select: none;
 }
 
+.infos-bar {
+  height: auto;
+  width: auto;
+  float: right;
+  background-color: rgba(255, 255, 255, 1);
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 body {
   font-family: arial;
   font-size: 15px;

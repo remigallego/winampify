@@ -4,6 +4,8 @@ import folderclosed from "./images/folderclosed.png";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import { DesktopFileStyle } from "./styles";
 import InputRenaming from "./InputRenaming";
+import "./file.css";
+
 const File = props => {
   const { file } = props;
 
@@ -25,6 +27,7 @@ const File = props => {
   return (
     <ContextMenuProvider id={file.type}>
       <div
+        className="file-fadeIn"
         style={{
           width: "100px",
           position: "absolute",

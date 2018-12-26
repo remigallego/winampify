@@ -96,6 +96,12 @@ export const getSearchResult = (search, scope, offset) => {
   });
 };
 
+export const getUserInfos = () => {
+  return new Promise(resolve => {
+    SpotifyApiService.get("me").then(res => resolve(res));
+  });
+};
+
 // TODO: Work In Progress
 /* export const getPlaylist = (tracks, user, URI, offset) => {
  fetch(

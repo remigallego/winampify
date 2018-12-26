@@ -205,4 +205,7 @@ const mapDispatchToProps = dispatch => ({
   addTrackFromURI: uri => dispatch(addTrackFromURI(uri))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Desktop);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Desktop);

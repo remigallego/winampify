@@ -29,8 +29,6 @@ const url = window.location.search;
 if (url !== "") {
   const getQuery = url.split("?")[1];
   const params = getQuery.split("&");
-  console.log("getQuery", getQuery);
-  console.log("params", params);
   if (params.length === 2)
     tokens = {
       // access_token= is 13 characters
