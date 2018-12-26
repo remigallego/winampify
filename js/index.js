@@ -28,10 +28,14 @@ const url = window.location.search;
 if (url !== "") {
   const getQuery = url.split("?")[1];
   const params = getQuery.split("&");
+  console.log("getQuery", getQuery);
+  console.log("params", params);
   if (params.length === 2)
     tokens = {
-      accessToken: params[0].slice(2),
-      refreshToken: params[1].slice(2)
+      // access_token= is 13 characters
+      // refresh_token= is 14 characters
+      accessToken: params[0].slice(13),
+      refreshToken: params[1].slice(14)
     };
   else tokens = 0;
 } else tokens = 0;

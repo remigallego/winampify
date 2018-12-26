@@ -1,7 +1,6 @@
 import React from "react";
-import { render } from "react-dom";
 
-const server = "http://remigallego.com:8888";
+const server = "https://spotifyauth.now.sh";
 
 const Signin = () => {
   return (
