@@ -11,18 +11,18 @@ import {
 } from "../actionTypes";
 import { addTrackZeroAndPlay, addTracksFromAlbum } from "../actionCreators";
 import {
-  parseSearchSpotify,
-  parseAlbumsFromArtist,
+  getSearchResult,
+  getAlbumsFromArtist,
   getArtistName,
-  parseTracksFromAlbum,
+  getTracksFromAlbum,
   getAlbumInfos,
-  parseTopArtistsFromMe,
-  parseFollowedArtistsFromMe,
-  parseMyRecentlyPlayed,
-  parseMyLibraryAlbums,
-  parseMyLibraryTracks,
-  parseArtist
-} from "../spotifyParser";
+  getTopArtistsFromMe,
+  getFollowedArtistsFromMe,
+  getMyRecentlyPlayed,
+  getMyLibraryAlbums,
+  getMyLibraryTracks,
+  getArtistInfos
+} from "../SpotifyApiFunctions";
 
 export function unsetFocusExplorer() {
   return dispatch => {
@@ -41,8 +41,6 @@ export function playTrackFromExplorer(trackId) {
 
 export function searchOnSpotify(search, type, offset) {
   return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
     dispatch({ type: "SEARCH" });
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({
@@ -53,7 +51,7 @@ export function searchOnSpotify(search, type, offset) {
       playlistable: false
     });
     if (offset === "0") dispatch({ type: LOADING });
-    parseSearchSpotify(token, search, type, offset, (err, results) => {
+    getSearchResult(search, type, offset).then(results => {
       let albums = getState().explorer.albums;
       let artists = getState().explorer.artists;
       let playlists = getState().explorer.playlists;
@@ -103,12 +101,10 @@ export function playAlbumFromExplorer(album) {
   };
 }
 export function viewAlbumsFromArtist(artist) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseAlbumsFromArtist(token, artist, (err, albums) => {
+    getAlbumsFromArtist(artist).then(albums => {
       dispatch({
         type: SET_ITEMS,
         tracks: null,
@@ -116,7 +112,7 @@ export function viewAlbumsFromArtist(artist) {
         playlists: null,
         artists: null
       });
-      getArtistName(token, artist, name => {
+      getArtistName(artist).then(name => {
         dispatch({
           type: SET_EXPLORER_METADATA,
           currentId: artist,
@@ -129,43 +125,39 @@ export function viewAlbumsFromArtist(artist) {
 }
 
 export function viewTracksFromAlbum(album) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseTracksFromAlbum(token, album, (err, tracks) => {
-      if (err) console.log(err);
-      getAlbumInfos(token, album, (_err, _album) => {
-        const title = `${_album.artists[0].name} - ${_album.name}`;
-        const image = _album.images[0].url;
-        dispatch({
-          type: SET_EXPLORER_METADATA,
-          currentId: _album,
-          title: title,
-          image: image,
-          playlistable: true
-        });
-        dispatch({
-          type: SET_ITEMS,
-          tracks: tracks,
-          albums: null,
-          playlists: null,
-          artists: null
-        });
-      });
-    });
+    getTracksFromAlbum(album)
+      .then(tracks => tracks)
+      .then(tracks =>
+        getAlbumInfos(album).then(albumInfos => {
+          const title = `${albumInfos.artists[0].name} - ${albumInfos.name}`;
+          const image = albumInfos.images[0].url;
+          dispatch({
+            type: SET_EXPLORER_METADATA,
+            currentId: albumInfos,
+            title: title,
+            image: image,
+            playlistable: true
+          });
+          dispatch({
+            type: SET_ITEMS,
+            tracks: tracks,
+            albums: null,
+            playlists: null,
+            artists: null
+          });
+        })
+      );
   };
 }
 
 export function viewMyTopArtists() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseTopArtistsFromMe(token, (err, artists) => {
-      if (err) throw err;
+    getTopArtistsFromMe().then(artists => {
       dispatch({
         type: SET_EXPLORER_METADATA,
         currentId: "top",
@@ -185,13 +177,10 @@ export function viewMyTopArtists() {
 }
 
 export function viewMyFollowedArtists() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseFollowedArtistsFromMe(token, (err, artists) => {
-      if (err) throw err;
+    getFollowedArtistsFromMe().then(artists => {
       dispatch({
         type: SET_EXPLORER_METADATA,
         currentId: "following",
@@ -211,13 +200,10 @@ export function viewMyFollowedArtists() {
 }
 
 export function viewMyRecentlyPlayed() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseMyRecentlyPlayed(token, (err, tracks) => {
-      if (err) throw err;
+    getMyRecentlyPlayed().then(tracks => {
       dispatch({
         type: SET_EXPLORER_METADATA,
         currentId: "recently",
@@ -237,13 +223,10 @@ export function viewMyRecentlyPlayed() {
 }
 
 export function viewMyLibraryAlbums() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseMyLibraryAlbums(token, (err, albums) => {
-      if (err) throw err;
+    getMyLibraryAlbums().then(albums => {
       dispatch({
         type: SET_EXPLORER_METADATA,
         currentId: "savedalbums",
@@ -263,13 +246,10 @@ export function viewMyLibraryAlbums() {
 }
 
 export function viewMyLibraryTracks() {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
+  return dispatch => {
     dispatch({ type: SAVE_PREVIOUS_STATE });
     dispatch({ type: LOADING });
-    parseMyLibraryTracks(token, (err, tracks) => {
-      if (err) throw err;
+    getMyLibraryTracks().then(tracks => {
       dispatch({
         type: SET_EXPLORER_METADATA,
         currentId: "savedtracks",
@@ -289,13 +269,8 @@ export function viewMyLibraryTracks() {
 }
 
 export function getArtistFromId(id) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
-    parseArtist(token, id, (err, result) => {
-      if (err) throw err;
-      return result;
-    });
+  return () => {
+    getArtistInfos(id).then(result => result);
   };
 }
 

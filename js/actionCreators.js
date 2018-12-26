@@ -1,4 +1,3 @@
-import uuidv1 from "uuid/v1";
 import { creator } from "winamp-eqf";
 import {
   genArrayBufferFromFileReference,
@@ -45,16 +44,10 @@ import {
   PLAYLIST_SIZE_CHANGED,
   ADD_TRACK_FROM_URI,
   S_UPDATE_PLAYER_OBJECT,
-  ADD_IMAGE,
-  GO_PREVIOUS_STATE,
-  CLOSE_IMAGE
+  GO_PREVIOUS_STATE
 } from "./actionTypes";
 
-import {
-  parseTrackURI,
-  parseTracksPlaylist,
-  parseTracksAlbum
-} from "./spotifyParser";
+import { getTrackInfos, getTracksFromAlbum } from "./SpotifyApiFunctions";
 
 export function goPreviousState() {
   return dispatch => {
@@ -66,18 +59,16 @@ export function goPreviousState() {
 export function addTrackFromURI(URI, index) {
   return (dispatch, getState) => {
     const state = getState();
-    const token = state.media.player.accessToken;
-
-    parseTrackURI(token, URI, res => {
+    getTrackInfos(URI).then(infos => {
       if (index === undefined) {
         index = state.playlist.trackOrder.length;
       }
       dispatch({
         type: ADD_TRACK_FROM_URI,
-        defaultName: `${res.artist} - ${res.name}`,
-        artist: res.artist,
-        title: res.name,
-        duration: res.duration / 1000,
+        defaultName: `${infos.artist} - ${infos.name}`,
+        artist: infos.artist,
+        title: infos.name,
+        duration: infos.duration / 1000,
         URI: URI,
         id: index,
         atIndex: index
@@ -87,18 +78,15 @@ export function addTrackFromURI(URI, index) {
 }
 
 export function addTrackZeroAndPlay(id) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
-
-    parseTrackURI(token, id, res => {
+  return dispatch => {
+    getTrackInfos(id).then(infos => {
       dispatch({ type: REMOVE_ALL_TRACKS });
       dispatch({
         type: ADD_TRACK_FROM_URI,
-        defaultName: `${res.artist} - ${res.name}`,
-        artist: res.artist,
-        title: res.name,
-        duration: res.duration / 1000,
+        defaultName: `${infos.artist} - ${infos.name}`,
+        artist: infos.artist,
+        title: infos.name,
+        duration: infos.duration / 1000,
         URI: id,
         id: 0,
         atIndex: 0
@@ -108,52 +96,26 @@ export function addTrackZeroAndPlay(id) {
   };
 }
 
-export function addTracksFromPlaylist(playlist) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const token = state.media.player.accessToken;
-    const playlistCount = state.playlist.trackOrder.length;
-
-    parseTracksPlaylist(token, playlist, (err, arr) => {
-      if (err) throw err;
-      for (let i = 0; i < arr.length; i++) {
-        const index = arr[i].index + playlistCount;
-        dispatch({
-          type: ADD_TRACK_FROM_URI,
-          defaultName: `${arr[i].artist} - ${arr[i].name}`,
-          artist: arr[i].artist,
-          title: arr[i].name,
-          duration: arr[i].duration,
-          URI: arr[i].uri,
-          id: index,
-          atIndex: index
-        });
-      }
-    });
-  };
-}
-
 export function addTracksFromAlbum(album) {
   return (dispatch, getState) => {
     const state = getState();
-    const token = state.media.player.accessToken;
     const playlistCount = state.playlist.trackOrder.length;
 
-    parseTracksAlbum(token, album, (err, tracks) => {
-      if (err) throw err;
-      for (let i = 0; i < tracks.length; i++) {
-        const index = tracks[i].index + playlistCount;
+    getTracksFromAlbum(album).then(tracks => {
+      console.log("tracks", tracks);
+      tracks.map(track => {
+        const index = track.track_number + playlistCount;
         dispatch({
           type: ADD_TRACK_FROM_URI,
-          defaultName: `${tracks[i].artist} - ${tracks[i].name}`,
-          artist: tracks[i].artist,
-          title: tracks[i].name,
-          duration: tracks[i].duration,
-          URI: tracks[i].uri,
+          defaultName: `${track.artists[0].name} - ${track.name}`,
+          artist: track.artists[0].name,
+          title: track.name,
+          duration: track.duration_ms / 1000,
+          URI: track.uri,
           id: index,
           atIndex: index
         });
-      }
+      });
     });
   };
 }
@@ -198,7 +160,9 @@ export function createPlayerObject(p) {
 
 function playRandomTrack() {
   return (dispatch, getState) => {
-    const { playlist: { trackOrder, currentTrack } } = getState();
+    const {
+      playlist: { trackOrder, currentTrack }
+    } = getState();
     let nextId;
     do {
       nextId = trackOrder[Math.floor(trackOrder.length * Math.random())];
@@ -453,7 +417,9 @@ export function cropPlaylist() {
     if (getSelectedTrackObjects(state).length === 0) {
       return;
     }
-    const { playlist: { tracks } } = getState();
+    const {
+      playlist: { tracks }
+    } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => !tracks[id].selected)
@@ -463,7 +429,9 @@ export function cropPlaylist() {
 
 export function removeSelectedTracks() {
   return (dispatch, getState) => {
-    const { playlist: { tracks } } = getState();
+    const {
+      playlist: { tracks }
+    } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => tracks[id].selected)
@@ -526,7 +494,7 @@ export function scrollPlaylistByDelta(e) {
       e.stopPropagation();
     }
     const totalPixelHeight = state.playlist.trackOrder.length * TRACK_HEIGHT;
-    const percentDelta = e.deltaY / totalPixelHeight * 100;
+    const percentDelta = (e.deltaY / totalPixelHeight) * 100;
     dispatch({
       type: SET_PLAYLIST_SCROLL_POSITION,
       position: clamp(
@@ -557,7 +525,9 @@ function findLastIndex(arr, cb) {
 
 export function dragSelected(offset) {
   return (dispatch, getState) => {
-    const { playlist: { trackOrder, tracks } } = getState();
+    const {
+      playlist: { trackOrder, tracks }
+    } = getState();
     const firstSelected = trackOrder.findIndex(
       trackId => tracks[trackId] && tracks[trackId].selected
     );

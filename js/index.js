@@ -13,6 +13,7 @@ import Loading from "./loading";
 import LandingPage from "./landingpage";
 
 import { hideAbout, skinUrl, initialState } from "./config";
+import SpotifyApiService from "./SpotifyApiService";
 
 if (hideAbout) {
   document.getElementsByClassName("about")[0].style.visibility = "hidden";
@@ -58,6 +59,7 @@ if (tokens) {
     enableHotkeys: false,
     __initialState: initialState
   });
+  SpotifyApiService.setAccessToken(tokens.accessToken);
   render(<Loading />, document.getElementById("app"));
   winamp.renderWhenReady(document.getElementById("app"), tokens);
 } else {

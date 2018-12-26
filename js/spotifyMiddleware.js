@@ -20,6 +20,7 @@ import {
 import eventListener from "./spotifyEvents";
 
 import { next as nextTrack } from "./actionCreators";
+import SpotifyApiService from "./SpotifyApiService";
 export default media => store => {
   let timeElapsedTimer = null;
 

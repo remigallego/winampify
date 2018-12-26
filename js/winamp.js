@@ -72,7 +72,7 @@ class Winamp {
             console.error(message);
           });
           player.addListener("authentication_error", ({ message }) => {
-            const refreshInterval = refreshToken => {
+            /* const refreshInterval = refreshToken => {
               console.log("I need to fresh the token");
               fetch(`https://accounts.spotify.com/api/token`, {
                 method: "POST",
@@ -92,7 +92,7 @@ class Winamp {
             };
 
             refreshInterval(this.options.tokens.refreshToken);
-            console.error(message);
+            console.error(message); */
           });
           player.addListener("account_error", ({ message }) => {
             console.error(message);

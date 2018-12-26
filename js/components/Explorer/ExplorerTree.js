@@ -38,7 +38,8 @@ class ExplorerTree extends React.Component {
             className="explorer-tree-icon"
             style={explorerTreeIcon}
             src={hearts}
-          />My Top Artists
+          />
+          My Top Artists
         </div>
         <div
           className="explorer-tree-text"
@@ -49,7 +50,8 @@ class ExplorerTree extends React.Component {
             className="explorer-tree-icon"
             style={explorerTreeIcon}
             src={star}
-          />Following
+          />
+          Following
         </div>
         <div
           className="explorer-tree-text"
@@ -104,4 +106,7 @@ const mapDispatchToProps = dispatch => ({
   viewMyLibraryTracks: () => dispatch(viewMyLibraryTracks())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExplorerTree);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ExplorerTree);

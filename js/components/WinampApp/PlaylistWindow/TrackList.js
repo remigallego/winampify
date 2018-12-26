@@ -71,7 +71,9 @@ class TrackList extends React.Component {
           {this._renderTracks((id, i) => `${i + 1 + offset}.`)}
         </div>
         <div className="playlist-track-titles">
-          {this._renderTracks(id => <TrackTitle id={id} />)}
+          {this._renderTracks(id => (
+            <TrackTitle id={id} />
+          ))}
         </div>
         <div className="playlist-track-durations">
           {this._renderTracks(id => getTimeStr(tracks[id].duration))}
@@ -93,4 +95,7 @@ const mapStateToProps = state => ({
   tracks: state.playlist.tracks
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrackList);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TrackList);

@@ -47,6 +47,9 @@ export const confirmRenameFile = (file, title) => dispatch => {
 
 export const getDesktop = state => state.desktop;
 
-export const selectFiles = createSelector([getDesktop], desktop => {
-  return desktop.allIds.map(id => desktop.byId[id]);
-});
+export const selectFiles = createSelector(
+  [getDesktop],
+  desktop => {
+    return desktop.allIds.map(id => desktop.byId[id]);
+  }
+);
