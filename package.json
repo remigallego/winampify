@@ -10,7 +10,7 @@
     "build": "webpack --config=config/webpack.prod.js",
     "build-library": "webpack --config=config/webpack.library.js",
     "serve": "http-server ./built",
-    "start": "webpack-dev-server --config=config/webpack.dev.js",
+    "start": "webpack-dev-server --config=config/webpack.dev.js --port 8888",
     "weight": "echo 'FIXME: Need to find cache-busted file' || (npm run build && gzip-size built/winamp.js)",
     "test": "jest --coverage",
     "travis-tests": "jest --coverage && npm run lint && npm run build",
