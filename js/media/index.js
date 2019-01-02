@@ -24,7 +24,7 @@ export default class Media {
       eventListener.emit("player_state_changed", state);
     });
     player.addListener("authentication_error", ({ message }) => {
-      console.log("now is the time to refresh the token!!!!");
+      console.log("Token should be refreshed.");
       console.log(message);
       eventListener.emit("token_expired", this.player.refreshToken);
     });
@@ -37,6 +37,10 @@ export default class Media {
   }
 
   playURI(URI) {
+    console.log(URI);
+    if (URI.length > 22) {
+      URI = URI.slice(14, URI.length);
+    }
     this.getOAuthToken(accessToken => {
       fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.id}`, {
         method: "PUT",
@@ -62,7 +66,6 @@ export default class Media {
   /* Actions */
   play() {
     if (this.status === "PAUSED") {
-      console.log("play?");
       this.player.resume().then(() => {
         this.status = "PLAYING";
       });

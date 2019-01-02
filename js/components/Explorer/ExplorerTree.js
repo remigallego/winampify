@@ -11,6 +11,7 @@ import {
 } from "../../actions/explorer";
 import hearts from "./images/hearts.ico";
 import harddrive from "./images/7.ico";
+import newexplorer from "./images/319.ico";
 import recentdocuments from "./images/recentdocuments.png";
 import star from "./images/star.ico";
 import { ExplorerTreeStyle } from "./styles.js";
@@ -92,15 +93,16 @@ class ExplorerTree extends React.Component {
         </div>
         <div
           className="explorer-tree-text"
+          id="disallow-on-top"
           onClick={() => this.props.createNewExplorer()}
           style={explorerTreeText}
         >
           <img
             className="explorer-tree-icon"
             style={explorerTreeIcon}
-            src={harddrive}
+            src={newexplorer}
           />
-          Create new Explorer
+          New Explorer
         </div>
       </div>
     );

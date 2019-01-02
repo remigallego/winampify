@@ -1,0 +1,37 @@
+.title-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.title {
+  background-color: #0055e5;
+  background: linear-gradient(#026bfe, #1a6cd0);
+  width: auto;
+  height: auto;
+  cursor: move;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.title-img {
+  pointer-events: none;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  user-select: none;
+}
+.title-text {
+  display: inline-block;
+  font-family: Trebuchet MS Bold;
+  font-size: 16px;
+  color: white;
+  font-weight: 500;
+  margin: 0px;
+  position: relative;
+  white-space: nowrap;
+  bottom: 3px;
+  left: 5px;
+  user-select: none;
+  width: 0px;
+}

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getAlbumCovers } from "../../selectors/explorer";
+import { getAlbumCovers, getExplorers } from "../../selectors/explorer";
 import { closeImage } from "../../actions/explorer";
 import ExplorerWindow from "./ExplorerWindow";
 import ImagesModal from "./ImagesModal";

@@ -10,13 +10,6 @@ import {
   CLOSE_IMAGE
 } from "../actionTypes";
 
-/*
-
-byId: [0: {}, 1: {}]
-allIds: [0, 1] etc
-
-*/
-
 const initialStateExplorer = {
   selected: null,
   currentId: null,
@@ -29,7 +22,12 @@ const initialStateExplorer = {
   albums: null,
   tracks: null,
   playlists: null,
-  loading: false
+  loading: false,
+  // position
+  width: 400,
+  height: 500,
+  x: 0,
+  y: 0
 };
 
 const initialState = {
@@ -42,6 +40,10 @@ const initialState = {
 };
 
 const CREATE_NEW_EXPLORER = "CREATE_NEW_EXPLORER";
+const CLOSE_EXPLORER = "CLOSE_EXPLORER";
+const UPDATE_POSITION = "UPDATE_POSITION";
+const UPDATE_SIZE = "UPDATE_SIZE";
+const SET_ON_TOP = "SET_ON_TOP";
 
 const explorer = (state = initialState, action) => {
   const createNewExplorer = () => {
@@ -57,14 +59,50 @@ const explorer = (state = initialState, action) => {
   };
 
   switch (action.type) {
+    case SET_ON_TOP:
+      if (state.allIds.length === 1) return state;
+      const array = state.allIds.filter(id => id !== action.id);
+      array.push(action.id);
+      return {
+        ...state,
+        allIds: array
+      };
     case CREATE_NEW_EXPLORER:
       return createNewExplorer();
+    case CLOSE_EXPLORER:
+      const byId = state.byId;
+      delete byId[action.id];
+      return {
+        ...state,
+        byId: byId,
+        allIds: state.allIds.filter(id => id !== action.id)
+      };
     case LOADING:
       return {
         ...state,
         byId: {
           ...state.byId,
           [action.id]: { ...state.byId[action.id], loading: true }
+        }
+      };
+    case UPDATE_POSITION:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.id]: { ...state.byId[action.id], x: action.x, y: action.y }
+        }
+      };
+    case UPDATE_SIZE:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            width: action.width,
+            height: action.height
+          }
         }
       };
     case SET_SELECTED_EXPLORER:

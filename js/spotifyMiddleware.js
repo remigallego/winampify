@@ -62,7 +62,6 @@ export default media => store => {
   });
 
   const refreshInterval = refreshToken => {
-    console.log("I need to fresh the token");
     fetch(`https://accounts.spotify.com/api/token`, {
       method: "POST",
       headers: {

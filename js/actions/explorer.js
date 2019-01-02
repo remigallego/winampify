@@ -32,6 +32,46 @@ export function createNewExplorer() {
   };
 }
 
+export function closeExplorer(explorerId) {
+  return dispatch => {
+    dispatch({
+      type: "CLOSE_EXPLORER",
+      id: explorerId
+    });
+  };
+}
+
+export function updatePosition(x, y, explorerId) {
+  return dispatch => {
+    dispatch({
+      type: "UPDATE_POSITION",
+      id: explorerId,
+      x,
+      y
+    });
+  };
+}
+
+export function updateSize(width, height, explorerId) {
+  return dispatch => {
+    dispatch({
+      type: "UPDATE_SIZE",
+      id: explorerId,
+      width,
+      height
+    });
+  };
+}
+
+export function setOnTop(explorerId) {
+  return dispatch => {
+    dispatch({
+      type: "SET_ON_TOP",
+      id: explorerId
+    });
+  };
+}
+
 export function unsetFocusExplorer(explorerId) {
   return dispatch => {
     dispatch({
@@ -111,8 +151,13 @@ export function playAlbumFromExplorer(album, explorerId) {
     dispatch(addTracksFromAlbum(album.id));
   };
 }
+
 export function viewAlbumsFromArtist(artist, explorerId) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    if (explorerId === undefined) {
+      dispatch(createNewExplorer());
+      explorerId = getState().explorer.allIds.length - 1;
+    }
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getAlbumsFromArtist(artist).then(albums => {

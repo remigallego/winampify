@@ -14,7 +14,6 @@ class SpotifyApiService extends React.Component {
 
   get(endpoint) {
     return new Promise(resolve => {
-      console.log("GET:", endpoint);
       fetch(`${this.apiEndpoint}/${endpoint}`, {
         method: "GET",
         headers: {
@@ -23,7 +22,6 @@ class SpotifyApiService extends React.Component {
       })
         .then(response => response.json())
         .then(json => {
-          console.log("GET Result:", json);
           resolve(json);
         })
         .catch(console.error);

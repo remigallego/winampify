@@ -8,15 +8,7 @@ const ExplorerWindowStyle = {
     minWidth: "400px",
     minHeight: "200px"
   },
-  explorerTitle: {
-    backgroundColor: "#0055e5",
-    background: "linear-gradient(#026bfe, #1a6cd0)",
-    width: "auto",
-    height: "auto",
-    cursor: "move",
-    "border-top-left-radius": "inherit",
-    "border-top-right-radius": "inherit"
-  },
+
   explorerWrapper: {
     display: "flex",
     flexDirection: "column",
@@ -25,27 +17,7 @@ const ExplorerWindowStyle = {
     border: "1px solid rgba(0, 0, 0, 1)",
     borderRadius: "2px"
   },
-  explorerTitleP: {
-    display: "inline-block",
-    fontFamily: "Trebuchet MS Bold",
-    fontSize: "16px",
-    color: "white",
-    fontWeight: 500,
-    margin: "0px",
-    position: "relative",
-    whiteSpace: "nowrap",
-    bottom: "3px",
-    left: "5px",
-    userSelect: "none",
-    width: "0px" // Probably a hack... :p TODO: find a better solution
-  },
-  explorerTitleImg: {
-    pointerEvents: "none",
-    width: "20px",
-    height: "20px",
-    display: "inline-block",
-    userSelect: "none"
-  },
+
   explorerToolbar: {
     backgroundColor: "#EFEBD6",
     height: "40px",

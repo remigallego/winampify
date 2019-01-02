@@ -45,7 +45,6 @@ export const getAlbumsFromArtist = artistId => {
 };
 
 export const getTracksFromAlbum = albumId => {
-  console.log("getTracksFromAlbum");
   return new Promise(resolve => {
     SpotifyApiService.get(`albums/${albumId}/tracks`).then(res =>
       resolve(res.items)
@@ -54,7 +53,6 @@ export const getTracksFromAlbum = albumId => {
 };
 
 export const getTopArtistsFromMe = () => {
-  console.log("getTopArtistsFromMe");
   return new Promise(resolve => {
     SpotifyApiService.get("me/top/artists").then(res => resolve(res.items));
   });

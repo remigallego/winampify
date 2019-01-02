@@ -3,7 +3,6 @@ import skin from "../skins/base-2.91.wsz";
 const { hash } = window.location;
 let config = {};
 if (hash) {
-  console.log(hash);
   try {
     config = JSON.parse(decodeURIComponent(hash).slice(1));
   } catch (e) {

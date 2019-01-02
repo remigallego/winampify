@@ -102,7 +102,6 @@ export function addTracksFromAlbum(album) {
     const playlistCount = state.playlist.trackOrder.length;
 
     getTracksFromAlbum(album).then(tracks => {
-      console.log("tracks", tracks);
       tracks.map(track => {
         const index = track.track_number + playlistCount;
         dispatch({

@@ -12,7 +12,6 @@ import {
   addImage,
   selectFile
 } from "../../actions/explorer";
-import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
 
@@ -257,7 +256,6 @@ class ExplorerContent extends React.Component {
   }
 
   render() {
-    console.log("explorer content prop:", this.props.explorer);
     return (
       <div
         className="explorer-items-container"
@@ -271,10 +269,6 @@ class ExplorerContent extends React.Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  token: state.media.player.accessToken
-});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   selectFile: id => {
@@ -299,6 +293,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(ExplorerContent);
