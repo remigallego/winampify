@@ -49,9 +49,9 @@ import {
 
 import { getTrackInfos, getTracksFromAlbum } from "./SpotifyApiFunctions";
 
-export function goPreviousState() {
+export function goPreviousState(explorerId) {
   return dispatch => {
-    dispatch({ type: GO_PREVIOUS_STATE });
+    dispatch({ type: GO_PREVIOUS_STATE, id: explorerId });
   };
 }
 

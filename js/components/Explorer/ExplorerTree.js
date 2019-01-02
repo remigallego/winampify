@@ -6,7 +6,8 @@ import {
   viewMyFollowedArtists,
   viewMyRecentlyPlayed,
   viewMyLibraryAlbums,
-  viewMyLibraryTracks
+  viewMyLibraryTracks,
+  createNewExplorer
 } from "../../actions/explorer";
 import hearts from "./images/hearts.ico";
 import harddrive from "./images/7.ico";
@@ -89,24 +90,35 @@ class ExplorerTree extends React.Component {
           />
           My Saved Tracks
         </div>
+        <div
+          className="explorer-tree-text"
+          onClick={() => this.props.createNewExplorer()}
+          style={explorerTreeText}
+        >
+          <img
+            className="explorer-tree-icon"
+            style={explorerTreeIcon}
+            src={harddrive}
+          />
+          Create new Explorer
+        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  explorer: state.explorer
-});
-
-const mapDispatchToProps = dispatch => ({
-  viewMyTopArtists: () => dispatch(viewMyTopArtists()),
-  viewMyFollowedArtists: () => dispatch(viewMyFollowedArtists()),
-  viewMyRecentlyPlayed: () => dispatch(viewMyRecentlyPlayed()),
-  viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums()),
-  viewMyLibraryTracks: () => dispatch(viewMyLibraryTracks())
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  viewMyTopArtists: () => dispatch(viewMyTopArtists(ownProps.explorerId)),
+  viewMyFollowedArtists: () =>
+    dispatch(viewMyFollowedArtists(ownProps.explorerId)),
+  viewMyRecentlyPlayed: () =>
+    dispatch(viewMyRecentlyPlayed(ownProps.explorerId)),
+  viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums(ownProps.explorerId)),
+  viewMyLibraryTracks: () => dispatch(viewMyLibraryTracks(ownProps.explorerId)),
+  createNewExplorer: () => dispatch(createNewExplorer())
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(ExplorerTree);

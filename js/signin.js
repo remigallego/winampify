@@ -1,15 +1,20 @@
 import React from "react";
 
-const server = "https://spotifyauth.now.sh";
+const server =
+  process.env.NODE_ENV === "production"
+    ? "https://spotifyauth.now.sh"
+    : "https://spotifyauthdev.now.sh";
 
 const Signin = () => {
   return (
     <div className="signin-btn-wrapper">
-      <div
-        className="signin-btn"
-        onClick={() => (window.location = `${server}/login?dev=true`)}
-      >
-        SIGN IN TO SPOTIFY
+      <div className="signin-btn-flex">
+        <div
+          className="signin-btn"
+          onClick={() => (window.location = `${server}/login`)}
+        >
+          SIGN IN TO SPOTIFY
+        </div>
       </div>
     </div>
   );

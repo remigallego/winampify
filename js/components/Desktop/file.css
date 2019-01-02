@@ -7,7 +7,13 @@
   }
 }
 
-.file-fadeIn {
+.file-fadein {
   animation-duration: 0.3s;
   animation-name: fadeIn;
+}
+
+.file-fadeout {
+  animation-duration: 0.3s;
+  animation-name: fadeIn;
+  animation-direction: reverse;
 }

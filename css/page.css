@@ -29,21 +29,27 @@ body {
   font-size: 15px;
 }
 
-.landing-wrapper {
-  position: absolute;
-  height: 300px;
-  width: 900px;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+.sign-button {
+  display: inline-block;
+  border: 1px solid red;
+  background-color: green;
 }
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-top: 150px;
+}
+
 .landing-text {
-  color: rgb(203, 255, 59);
+  color: rgb(238, 238, 238);
   font-size: 80px;
   font-family: "Cabin", sans-serif;
   text-align: center;
+  margin-bottom: 20px;
 }
 .landing-text--black {
   color: rgb(17, 29, 59);
@@ -52,31 +58,33 @@ body {
 .signin-btn {
   font-family: "Helvetica", sans-serif;
   font-weight: 600;
-  font-size: 20px;
-  padding-top: 0.9em;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+.signin-btn-flex {
+  height: 100%;
+  padding-left: 25px;
+  padding-right: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .signin-btn-wrapper {
-  border: 3px solid rgb(203, 255, 59);
-  border-radius: 1.875rem;
-  height: 3.75rem;
-  padding: 0 3.4375rem;
-  font-size: 0.875rem;
-  background-color: transparent;
+  border: 3px solid rgb(29, 185, 84);
+  display: inline-block;
+  border-radius: 15px;
+  height: 30px;
+  background-color: rgb(29, 185, 84);
   cursor: pointer;
-  width: 200px;
-  color: rgb(203, 255, 59);
+  color: white;
   transition: all 0.3s;
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  opacity: 0.8;
+  opacity: 1;
+  margin-bottom: 20px;
 }
 
 .signin-btn-wrapper:hover {
-  background-color: #2973e9;
+  background-color: rgb(47, 213, 102);
   color: white;
   border: 3px solid transparent;
   opacity: 1;

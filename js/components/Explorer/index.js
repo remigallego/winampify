@@ -8,7 +8,9 @@ import ImagesModal from "./ImagesModal";
 const Explorer = props => {
   return (
     <div>
-      <ExplorerWindow />
+      {props.explorers.map(explorerId => (
+        <ExplorerWindow explorerId={explorerId} />
+      ))}
       {Object.keys(props.albumCovers).map(key => (
         <ImagesModal
           key={key}
@@ -21,10 +23,14 @@ const Explorer = props => {
 };
 
 const mapStateToProps = state => ({
-  albumCovers: getAlbumCovers(state)
+  albumCovers: getAlbumCovers(state),
+  explorers: state.explorer.allIds
 });
 
 const mapDispatchToProps = dispatch => ({
   closeImage: id => dispatch(closeImage(id))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(Explorer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Explorer);

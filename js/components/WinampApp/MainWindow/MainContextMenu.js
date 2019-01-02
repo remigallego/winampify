@@ -66,4 +66,7 @@ const mapDispatchToProps = {
   setSkin: setSkinFromUrl
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainContextMenu);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainContextMenu);

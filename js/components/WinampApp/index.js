@@ -42,4 +42,7 @@ const mapStateToProps = state => ({
   openWindows: new Set(state.windows.openGenWindows)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WinampApp);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WinampApp);

@@ -24,33 +24,43 @@ import {
   getArtistInfos
 } from "../SpotifyApiFunctions";
 
-export function unsetFocusExplorer() {
+export function createNewExplorer() {
   return dispatch => {
     dispatch({
-      type: UNSET_FOCUS_EXPLORER
+      type: "CREATE_NEW_EXPLORER"
     });
   };
 }
 
-export function playTrackFromExplorer(trackId) {
+export function unsetFocusExplorer(explorerId) {
   return dispatch => {
-    dispatch({ type: REMOVE_ALL_TRACKS });
+    dispatch({
+      type: UNSET_FOCUS_EXPLORER,
+      id: explorerId
+    });
+  };
+}
+
+export function playTrackFromExplorer(trackId, explorerId) {
+  return dispatch => {
+    dispatch({ type: REMOVE_ALL_TRACKS, id: explorerId });
     dispatch(addTrackZeroAndPlay(trackId));
   };
 }
 
-export function searchOnSpotify(search, type, offset) {
+export function searchOnSpotify(search, type, offset, explorerId) {
   return (dispatch, getState) => {
-    dispatch({ type: "SEARCH" });
-    dispatch({ type: SAVE_PREVIOUS_STATE });
+    dispatch({ type: "SEARCH", id: explorerId });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({
       type: SET_EXPLORER_METADATA,
+      id: explorerId,
       currentId: "search",
       title: search,
       image: null,
       playlistable: false
     });
-    if (offset === "0") dispatch({ type: LOADING });
+    if (offset === "0") dispatch({ type: LOADING, id: explorerId });
     getSearchResult(search, type, offset).then(results => {
       let albums = getState().explorer.albums;
       let artists = getState().explorer.artists;
@@ -85,6 +95,7 @@ export function searchOnSpotify(search, type, offset) {
       }
       dispatch({
         type: SET_ITEMS,
+        id: explorerId,
         artists,
         albums,
         tracks,
@@ -94,19 +105,20 @@ export function searchOnSpotify(search, type, offset) {
   };
 }
 
-export function playAlbumFromExplorer(album) {
+export function playAlbumFromExplorer(album, explorerId) {
   return dispatch => {
-    dispatch({ type: REMOVE_ALL_TRACKS });
+    dispatch({ type: REMOVE_ALL_TRACKS, id: explorerId });
     dispatch(addTracksFromAlbum(album.id));
   };
 }
-export function viewAlbumsFromArtist(artist) {
+export function viewAlbumsFromArtist(artist, explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getAlbumsFromArtist(artist).then(albums => {
       dispatch({
         type: SET_ITEMS,
+        id: explorerId,
         tracks: null,
         albums: albums,
         playlists: null,
@@ -115,6 +127,7 @@ export function viewAlbumsFromArtist(artist) {
       getArtistName(artist).then(name => {
         dispatch({
           type: SET_EXPLORER_METADATA,
+          id: explorerId,
           currentId: artist,
           title: name,
           playlistable: false
@@ -124,10 +137,10 @@ export function viewAlbumsFromArtist(artist) {
   };
 }
 
-export function viewTracksFromAlbum(album) {
+export function viewTracksFromAlbum(album, explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getTracksFromAlbum(album)
       .then(tracks => tracks)
       .then(tracks =>
@@ -136,6 +149,7 @@ export function viewTracksFromAlbum(album) {
           const image = albumInfos.images[0].url;
           dispatch({
             type: SET_EXPLORER_METADATA,
+            id: explorerId,
             currentId: albumInfos,
             title: title,
             image: image,
@@ -143,6 +157,7 @@ export function viewTracksFromAlbum(album) {
           });
           dispatch({
             type: SET_ITEMS,
+            id: explorerId,
             tracks: tracks,
             albums: null,
             playlists: null,
@@ -153,13 +168,14 @@ export function viewTracksFromAlbum(album) {
   };
 }
 
-export function viewMyTopArtists() {
+export function viewMyTopArtists(explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getTopArtistsFromMe().then(artists => {
       dispatch({
         type: SET_EXPLORER_METADATA,
+        id: explorerId,
         currentId: "top",
         title: "My Top Artists",
         image: null,
@@ -167,6 +183,7 @@ export function viewMyTopArtists() {
       });
       dispatch({
         type: SET_ITEMS,
+        id: explorerId,
         tracks: null,
         albums: null,
         playlists: null,
@@ -176,13 +193,14 @@ export function viewMyTopArtists() {
   };
 }
 
-export function viewMyFollowedArtists() {
+export function viewMyFollowedArtists(explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getFollowedArtistsFromMe().then(artists => {
       dispatch({
         type: SET_EXPLORER_METADATA,
+        id: explorerId,
         currentId: "following",
         title: "Following",
         image: null,
@@ -191,6 +209,7 @@ export function viewMyFollowedArtists() {
       dispatch({
         type: SET_ITEMS,
         tracks: null,
+        id: explorerId,
         albums: null,
         playlists: null,
         artists: artists
@@ -199,13 +218,14 @@ export function viewMyFollowedArtists() {
   };
 }
 
-export function viewMyRecentlyPlayed() {
+export function viewMyRecentlyPlayed(explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getMyRecentlyPlayed().then(tracks => {
       dispatch({
         type: SET_EXPLORER_METADATA,
+        id: explorerId,
         currentId: "recently",
         title: "Recently Played",
         image: null,
@@ -214,6 +234,7 @@ export function viewMyRecentlyPlayed() {
       dispatch({
         type: SET_ITEMS,
         tracks: tracks,
+        id: explorerId,
         albums: null,
         playlists: null,
         artists: null
@@ -222,13 +243,14 @@ export function viewMyRecentlyPlayed() {
   };
 }
 
-export function viewMyLibraryAlbums() {
+export function viewMyLibraryAlbums(explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getMyLibraryAlbums().then(albums => {
       dispatch({
         type: SET_EXPLORER_METADATA,
+        id: explorerId,
         currentId: "savedalbums",
         title: "My Saved Albums",
         image: null,
@@ -236,6 +258,7 @@ export function viewMyLibraryAlbums() {
       });
       dispatch({
         type: SET_ITEMS,
+        id: explorerId,
         tracks: null,
         albums: albums.map(obj => obj.album),
         playlists: null,
@@ -245,13 +268,14 @@ export function viewMyLibraryAlbums() {
   };
 }
 
-export function viewMyLibraryTracks() {
+export function viewMyLibraryTracks(explorerId) {
   return dispatch => {
-    dispatch({ type: SAVE_PREVIOUS_STATE });
-    dispatch({ type: LOADING });
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
     getMyLibraryTracks().then(tracks => {
       dispatch({
         type: SET_EXPLORER_METADATA,
+        id: explorerId,
         currentId: "savedtracks",
         title: "My Saved Tracks",
         image: null,
@@ -259,6 +283,7 @@ export function viewMyLibraryTracks() {
       });
       dispatch({
         type: SET_ITEMS,
+        id: explorerId,
         tracks: tracks.map(obj => obj.track),
         albums: null,
         playlists: null,
@@ -271,6 +296,16 @@ export function viewMyLibraryTracks() {
 export function getArtistFromId(id) {
   return () => {
     getArtistInfos(id).then(result => result);
+  };
+}
+
+export function selectFile(fileId, explorerId) {
+  return dispatch => {
+    dispatch({
+      type: "SET_SELECTED_EXPLORER",
+      id: explorerId,
+      selected: fileId
+    });
   };
 }
 

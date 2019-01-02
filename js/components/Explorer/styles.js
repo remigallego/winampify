@@ -13,12 +13,17 @@ const ExplorerWindowStyle = {
     background: "linear-gradient(#026bfe, #1a6cd0)",
     width: "auto",
     height: "auto",
-    cursor: "move"
+    cursor: "move",
+    "border-top-left-radius": "inherit",
+    "border-top-right-radius": "inherit"
   },
   explorerWrapper: {
     display: "flex",
     flexDirection: "column",
-    height: "100%"
+    height: "100%",
+    width: "100%",
+    border: "1px solid rgba(0, 0, 0, 1)",
+    borderRadius: "2px"
   },
   explorerTitleP: {
     display: "inline-block",
@@ -74,7 +79,9 @@ const ExplorerWindowStyle = {
     backgroundColor: "white",
     height: "100%",
     width: "100%",
-    overflow: "auto"
+    overflow: "auto",
+    "border-bottom-left-radius": "inherit",
+    "border-bottom-right-radius": "inherit"
   }
 };
 
@@ -103,8 +110,7 @@ const ExplorerContentStyle = {
     overflow: "scroll",
     overflowX: "hidden",
     backgroundColor: "white",
-    width: "100%",
-    borderBottom: "1px solid black"
+    width: "100%"
   },
   resultCategories: {
     fontSize: "18px",

@@ -9,7 +9,8 @@ import {
   playAlbumFromExplorer,
   getArtistFromId,
   searchOnSpotify,
-  addImage
+  addImage,
+  selectFile
 } from "../../actions/explorer";
 import { SET_SELECTED_EXPLORER } from "../../actionTypes";
 import { ExplorerContentStyle } from "./styles";
@@ -23,7 +24,7 @@ class ExplorerContent extends React.Component {
     this.timer = null;
   }
   clickHandler(id) {
-    this.props.click(id);
+    this.props.selectFile(id);
   }
   doubleClickHandler(id) {
     this.props.doubleclick(id);
@@ -256,6 +257,7 @@ class ExplorerContent extends React.Component {
   }
 
   render() {
+    console.log("explorer content prop:", this.props.explorer);
     return (
       <div
         className="explorer-items-container"
@@ -271,28 +273,32 @@ class ExplorerContent extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  explorer: state.explorer,
   token: state.media.player.accessToken
 });
 
-const mapDispatchToProps = dispatch => ({
-  click: id => {
-    dispatch({ type: SET_SELECTED_EXPLORER, selected: id });
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  selectFile: id => {
+    dispatch(selectFile(id, ownProps.explorerId));
   },
   playTrack: id => {
-    dispatch(playTrackFromExplorer(id));
+    dispatch(playTrackFromExplorer(id, ownProps.explorerId));
   },
   getArtistInfo: id => {
-    dispatch(getArtistFromId(id));
+    dispatch(getArtistFromId(id, ownProps.explorerId));
   },
-  viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
-  viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
-  unsetFocusExplorer: () => dispatch(unsetFocusExplorer()),
+  viewAlbumsFromArtist: artist =>
+    dispatch(viewAlbumsFromArtist(artist, ownProps.explorerId)),
+  viewTracksFromAlbum: album =>
+    dispatch(viewTracksFromAlbum(album, ownProps.explorerId)),
+  unsetFocusExplorer: () => dispatch(unsetFocusExplorer(ownProps.explorerId)),
   playAlbumFromExplorer: currentId =>
-    dispatch(playAlbumFromExplorer(currentId)),
+    dispatch(playAlbumFromExplorer(currentId, ownProps.explorerId)),
   openImage: (image, x, y) => dispatch(addImage(image, x, y)),
   searchOnSpotify: (search, type, offset) =>
-    dispatch(searchOnSpotify(search, type, offset))
+    dispatch(searchOnSpotify(search, type, offset, ownProps.explorerId))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ExplorerContent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ExplorerContent);
