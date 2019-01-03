@@ -71,29 +71,7 @@ class Winamp {
           player.addListener("initialization_error", ({ message }) => {
             console.error(message);
           });
-          player.addListener("authentication_error", ({ message }) => {
-            /* const refreshInterval = refreshToken => {
-              console.log("I need to fresh the token");
-              fetch(`https://accounts.spotify.com/api/token`, {
-                method: "POST",
-                headers: {
-                  "Content-Type":
-                    "application/x-www-form-urlencoded;charset=UTF-8"
-                },
-                body: qs.stringify({
-                  // eslint-disable-next-line
-                  grant_type: "refreshToken",
-                  // eslint-disable-next-line
-                  refreshToken: refreshToken
-                })
-              }).then(res => {
-                console.log(res);
-              });
-            };
-
-            refreshInterval(this.options.tokens.refreshToken);
-            console.error(message); */
-          });
+          player.addListener("authentication_error", ({ message }) => {});
           player.addListener("account_error", ({ message }) => {
             console.error(message);
           });

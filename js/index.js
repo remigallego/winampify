@@ -14,7 +14,8 @@ import LandingPage from "./landingpage";
 
 import { hideAbout, skinUrl, initialState } from "./config";
 import SpotifyApiService from "./SpotifyApiService";
-
+import { persistStore } from "redux-persist";
+import getStore from "../js/store";
 if (hideAbout) {
   document.getElementsByClassName("about")[0].style.visibility = "hidden";
 }
@@ -22,7 +23,9 @@ if (!Winamp.browserIsSupported()) {
   document.getElementById("browser-compatibility").style.display = "block";
   document.getElementById("app").style.visibility = "hidden";
 }
-
+const storemz = getStore();
+const persistor = persistStore(storemz);
+console.log(persistor);
 let tokens;
 
 const url = window.location.search;

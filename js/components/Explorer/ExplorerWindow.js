@@ -59,8 +59,6 @@ class ExplorerWindow extends React.Component {
       mainView
     } = ExplorerWindowStyle;
 
-    console.log(this.props.explorer.width);
-
     return (
       <div
         onClick={e => {

@@ -1,7 +1,8 @@
 const initialState = {
   name: "",
   image: "",
-  uri: ""
+  uri: "",
+  logged: false
 };
 
 const SET_USER_INFOS = "SET_USER_INFOS";
@@ -13,7 +14,8 @@ const user = (state = initialState, action) => {
         ...state,
         name: action.name,
         image: action.image,
-        uri: action.uri
+        uri: action.uri,
+        logged: true
       };
     default:
       return state;

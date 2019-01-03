@@ -18,12 +18,16 @@ import {
 } from "./../../actions/desktop";
 import File from "./File";
 import FileContextMenu from "./FileContextMenu";
+import SelectionBox from "./SelectionBox";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { selected: [], clipboard: null };
+    this.state = {
+      selected: [],
+      clipboard: null
+    };
     this.doubleClickHandler = this.doubleClickHandler.bind(this);
     this.renderFile = this.renderFile.bind(this);
   }
@@ -40,37 +44,34 @@ class Desktop extends React.Component {
       }
     });
   }
-  onDragStart(e, file) {
-    e.dataTransfer.setData("oldFile", true);
-    e.dataTransfer.setData("id", file.id);
-    e.dataTransfer.setData("uri", file.uri);
-    e.dataTransfer.setData("type", file.type);
-    e.dataTransfer.setData("title", file.title);
-    e.dataTransfer.setData("x", e.clientX - 50);
-    e.dataTransfer.setData("y", e.clientY - 50);
+  onDragStart(e, files) {
+    e.dataTransfer.setData("isFileMoving", true);
+    e.dataTransfer.setData("files", JSON.stringify(files)); // dataTransfer only accepts strings
   }
 
   onDrop(e) {
     e.preventDefault();
-    const uri = e.dataTransfer.getData("uri");
-    const id = e.dataTransfer.getData("id");
-    const type = e.dataTransfer.getData("type");
-    const title = e.dataTransfer.getData("title");
-    const oldFile = e.dataTransfer.getData("oldFile");
-    if (!oldFile) {
-      this.props.createFile({
-        uri,
-        x: e.clientX - 50,
-        y: e.clientY - 50,
-        title,
-        type
-      });
+    const isFileMoving = e.dataTransfer.getData("isFileMoving");
+    const files = JSON.parse(e.dataTransfer.getData("files"));
+
+    if (!isFileMoving) {
+      files.map(file =>
+        this.props.createFile({
+          uri: file.uri,
+          x: e.clientX - 50,
+          y: e.clientY - 50,
+          title: file.title,
+          type: file.type
+        })
+      );
     } else {
-      this.props.moveFile({
-        id,
-        x: e.clientX - 50,
-        y: e.clientY - 50
-      });
+      files.map(file =>
+        this.props.moveFile({
+          id: file.id,
+          x: e.clientX + file.deltaX,
+          y: e.clientY + file.deltaY
+        })
+      );
     }
   }
 
@@ -78,12 +79,24 @@ class Desktop extends React.Component {
     return (
       <div
         draggable={!file.renaming}
-        onDragStart={e => this.onDragStart(e, file)}
+        onDragStart={e => {
+          const selectedFiles = this.props.files
+            .filter(_file => this.state.selected.indexOf(_file.id) > -1)
+            .map(_file => {
+              _file.deltaX = _file.x - e.clientX;
+              _file.deltaY = _file.y - e.clientY;
+              return _file;
+            });
+          this.onDragStart(e, selectedFiles);
+        }}
+        onMouseDown={() => {
+          if (this.state.selected.length <= 1)
+            this.setState({ selected: [file.id] });
+        }}
       >
         <File
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
-          onClick={() => this.setState({ selected: [file.id] })}
           onDoubleClick={e => this.doubleClickHandler(file, e)}
           confirmRenameFile={e => {
             e.preventDefault();
@@ -110,7 +123,7 @@ class Desktop extends React.Component {
   }
 
   handleDesktopClick(e) {
-    if (e.target.id === "dropzone") {
+    if (e.target.id.split(" ").indexOf("dropzone") !== -1) {
       this.setState({ selected: [] });
       if (this.props.files.some(file => file.renaming)) {
         const renamingInProgress = this.props.files.filter(
@@ -134,51 +147,71 @@ class Desktop extends React.Component {
           zIndex: "-777"
         }}
         id="dropzone"
+        className="selectzone"
         onDrop={e => this.onDrop(e)}
         onDragOver={e => {
           e.preventDefault();
         }}
       >
-        <FileContextMenu
-          onRename={e => {
-            this.props.cancelRenaming();
-            this.props.renameFile(e.ref.id);
+        <SelectionBox
+          selectZoneId={"selectzone"}
+          onSelect={(evt, origin, target) => {
+            const selected = files
+              .filter(
+                file =>
+                  ((file.x + 50 < target[0] && file.x + 50 > origin[0]) ||
+                    (file.x + 50 > target[0] && file.x + 50 < origin[0])) &&
+                  ((file.y + 50 < target[1] && file.y + 50 > origin[1]) ||
+                    (file.y + 50 > target[1] && file.y + 50 < origin[1]))
+              )
+              .map(file => file.id);
+            this.setState({
+              selected
+            });
           }}
-          onDelete={e => {
-            this.props.deleteFile(e.ref.id);
-          }}
-          onCopy={e => {
-            this.setState({ clipboard: e.ref.id });
-          }}
-          onPaste={e => {
-            const copy = this.props.files.find(
-              file => file.id === this.state.clipboard
-            );
-            if (copy)
-              this.props.createFile({
-                ...copy,
-                x: e.event.clientX - 25,
-                y: e.event.clientY - 25
-              });
-          }}
-          addToPlaylist={e => {
-            const track = this.props.files.find(file => file.id === e.ref.id);
-
-            this.props.addTrackFromURI(track.uri);
-          }}
-        />
-        <ContextMenuProvider id="desktop">
-          <div
-            id="dropzone"
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%"
+        >
+          <FileContextMenu
+            onRename={e => {
+              this.props.cancelRenaming();
+              this.props.renameFile(e.ref.id);
             }}
-            onClick={e => this.handleDesktopClick(e)}
+            onDelete={e => {
+              this.props.deleteFile(e.ref.id);
+            }}
+            onCopy={e => {
+              this.setState({ clipboard: e.ref.id });
+            }}
+            onPaste={e => {
+              const copy = this.props.files.find(
+                file => file.id === this.state.clipboard
+              );
+              if (copy)
+                this.props.createFile({
+                  ...copy,
+                  x: e.event.clientX - 25,
+                  y: e.event.clientY - 25
+                });
+            }}
+            addToPlaylist={e => {
+              const track = this.props.files.find(file => file.id === e.ref.id);
+
+              this.props.addTrackFromURI(track.uri);
+            }}
           />
-        </ContextMenuProvider>
-        {files.map(this.renderFile)}
+          <ContextMenuProvider id="desktop">
+            <div
+              id="dropzone selectzone"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%"
+              }}
+              onMouseDown={e => this.handleDesktopClick(e)}
+              // onClick={e => this.handleDesktopClick(e)}
+            />
+          </ContextMenuProvider>
+          {files.map(this.renderFile)}
+        </SelectionBox>
       </div>
     );
   }

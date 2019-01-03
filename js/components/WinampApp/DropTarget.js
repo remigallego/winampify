@@ -18,8 +18,8 @@ class DropTarget extends React.Component {
 
   handleDrop(e) {
     e.preventDefault();
-    const uri = e.dataTransfer.getData("uri");
-    this.props.addTrackFromURI(uri);
+    const files = JSON.parse(e.dataTransfer.getData("files"));
+    files.map((file, index) => this.props.addTrackFromURI(file.uri, index));
   }
 
   _ref(node) {
@@ -53,8 +53,11 @@ const mapStateToProps = state => ({
   explorer: state.explorer
 });
 const mapDispatchToProps = dispatch => ({
-  addTrackFromURI: id => {
-    dispatch(addTrackFromURI(id));
+  addTrackFromURI: (id, index) => {
+    dispatch(addTrackFromURI(id, index));
   }
 });
-export default connect(mapStateToProps, mapDispatchToProps)(DropTarget);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DropTarget);

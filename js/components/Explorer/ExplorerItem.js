@@ -74,18 +74,28 @@ class ExplorerItem extends React.Component {
   }
 
   drag(e) {
+    console.log(this.props.infos);
     const emptyImage = document.createElement("img");
     emptyImage.src =
       "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
     e.dataTransfer.setDragImage(emptyImage, 0, 0);
-    if (this.props.type === "image") {
+    /*  if (this.props.type === "image") {
       e.dataTransfer.setData("uri", this.props.image);
-    } else e.dataTransfer.setData("uri", this.id);
-    e.dataTransfer.setData("type", this.props.type);
+    } else e.dataTransfer.setData("uri", this.id); */
+
     const children = isArray(this.props.children)
       ? this.props.children.join("")
       : this.props.children;
-    e.dataTransfer.setData("title", children);
+
+    const file = {
+      id: this.id,
+      type: this.props.type,
+      title: children,
+      uri: this.props.type === "image" ? this.props.image : this.id
+    };
+
+    // TODO: Will make sense when scaling to multi-dragging
+    e.dataTransfer.setData("files", JSON.stringify([file]));
   }
   render() {
     const {

@@ -59,10 +59,9 @@ export function goPreviousState(explorerId) {
 export function addTrackFromURI(URI, index) {
   return (dispatch, getState) => {
     const state = getState();
+    console.log(index);
     getTrackInfos(URI).then(infos => {
-      if (index === undefined) {
-        index = state.playlist.trackOrder.length;
-      }
+      index = state.playlist.trackOrder.length + index;
       dispatch({
         type: ADD_TRACK_FROM_URI,
         defaultName: `${infos.artist} - ${infos.name}`,

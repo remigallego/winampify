@@ -1,4 +1,14 @@
 /* Rules for the page layout */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 html {
   height: 100%;
   width: 100%;
@@ -22,6 +32,19 @@ html {
   padding-right: 14px;
   padding-top: 10px;
   padding-bottom: 10px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 20px;
+  color: white;
+}
+.selection-box {
+  background-color: transparent;
+  border: 1px dashed white;
+  position: absolute;
+  animation-duration: 0.2s;
+  animation-name: fadeIn;
 }
 
 body {
@@ -86,14 +109,21 @@ body {
 .signin-btn-wrapper:hover {
   background-color: rgb(47, 213, 102);
   color: white;
-  border: 3px solid transparent;
+  border: 3px solid rgb(47, 213, 102);
   opacity: 1;
 }
 
-.footer {
+.description {
   text-align: center;
   color: #fff;
-  opacity: 0.6;
+  opacity: 0.8;
+}
+.bold {
+  color: rgb(255, 255, 255);
+  font-family: "Arial";
+  opacity: 1;
+  font-weight: 700;
+  cursor: pointer;
 }
 #browser-compatibility {
   display: none;

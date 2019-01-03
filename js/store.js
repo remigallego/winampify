@@ -12,7 +12,7 @@ import { UPDATE_TIME_ELAPSED, STEP_MARQUEE } from "./actionTypes";
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: ["desktop", "playlist"] // only desktop will be persisted
+  whitelist: ["desktop", "playlist", "user"] // only desktop will be persisted
 };
 
 const compose = composeWithDevTools({
