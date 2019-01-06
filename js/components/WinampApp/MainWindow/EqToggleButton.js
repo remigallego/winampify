@@ -9,7 +9,7 @@ const EqToggleButton = props => (
   <div
     id="equalizer-button"
     className={classnames({ selected: props.equalizer })}
-    onClick={() => alert("Not supported in Winampify, but checkout Winamp2-js")}
+    onClick={() => alert("Not supported in Winampify")}
     title="Toggle Graphical Equalizer"
   />
 );
@@ -22,4 +22,7 @@ const mapDispatchToProps = dispatch => ({
   handleClick: () => dispatch({ type: TOGGLE_EQUALIZER_WINDOW })
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EqToggleButton);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EqToggleButton);

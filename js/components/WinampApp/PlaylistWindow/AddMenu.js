@@ -13,15 +13,11 @@ const AddMenu = ({}) => (
     <div className="add-url" />
     <div
       className="add-dir"
-      onClick={() =>
-        alert("Not supported in Winampify, but checkout Winamp2-js")
-      }
+      onClick={() => alert("Not supported in Winampify")}
     />
     <div
       className="add-file"
-      onClick={() =>
-        alert("Not supported in Winampify, but checkout Winamp2-js")
-      }
+      onClick={() => alert("Not supported in Winampify")}
     />
   </PlaylistMenu>
 );
@@ -30,4 +26,7 @@ const mapStateToProps = state => ({
   nextIndex: state.playlist.trackOrder.length
 });
 
-export default connect(mapStateToProps, undefined)(AddMenu);
+export default connect(
+  mapStateToProps,
+  undefined
+)(AddMenu);
