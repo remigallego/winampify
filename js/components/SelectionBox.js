@@ -36,6 +36,7 @@ export default class SelectionBox extends React.Component {
               selectionBoxTarget: [e.nativeEvent.offsetX, e.nativeEvent.offsetY]
             });
         }}
+        onMouseLeave={() => this.setState({ selectionBox: false })}
         onMouseUp={() => this.setState({ selectionBox: false })}
         onMouseMove={evt => {
           if (this.state.selectionBox) {
@@ -58,7 +59,7 @@ export default class SelectionBox extends React.Component {
           <div
             className="selection-box"
             style={{
-              zIndex: 99,
+              zIndex: 7,
               left: this.state.selectionBoxOrigin[0],
               top: this.state.selectionBoxOrigin[1],
               height: Math.abs(

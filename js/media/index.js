@@ -1,6 +1,6 @@
 import eventListener from "../spotifyEvents";
 
-export default class Media {
+class Media {
   constructor() {
     this.player = null;
     this.getOAuthToken = null;
@@ -18,8 +18,12 @@ export default class Media {
     this.accessToken = player._options.accessToken;
     this.player.addListener("player_state_changed", state => {
       // Seems to be the condition for a track to be considered as ended
-      if (state.paused && state.position === 0 && state.duration === 0)
-        eventListener.emit("ended", state);
+      if (state.paused && state.position === 0) {
+        if (this.status !== "STOPPED") {
+          this.status = "STOPPED";
+          eventListener.emit("track_ended", state);
+        }
+      }
 
       eventListener.emit("player_state_changed", state);
     });
@@ -111,3 +115,5 @@ export default class Media {
     this.player.setVolume(volume / 100);
   }
 }
+
+export default new Media();

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getAlbumCovers, getExplorers } from "../../selectors/explorer";
+import { getAlbumCovers } from "../../selectors/explorer";
 import { closeImage } from "../../actions/explorer";
 import ExplorerWindow from "./ExplorerWindow";
 import ImagesModal from "./ImagesModal";
@@ -9,7 +9,7 @@ const Explorer = props => {
   return (
     <div>
       {props.explorers.map(explorerId => (
-        <ExplorerWindow explorerId={explorerId} />
+        <ExplorerWindow key={explorerId} explorerId={explorerId} />
       ))}
       {Object.keys(props.albumCovers).map(key => (
         <ImagesModal
@@ -30,7 +30,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   closeImage: id => dispatch(closeImage(id))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Explorer);
+export default connect(mapStateToProps, mapDispatchToProps)(Explorer);

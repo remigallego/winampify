@@ -58,7 +58,7 @@ class ClipPaths extends React.Component {
     const { children } = this.props;
 
     return createPortal(
-      <svg height={0} width={0}>
+      <svg height={0} width={0} style={{ position: "absolute" }}>
         <defs>
           {Object.keys(children).map(id => (
             <clipPath id={id} key={id}>

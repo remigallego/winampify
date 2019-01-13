@@ -18,7 +18,7 @@ import {
 } from "./../../actions/desktop";
 import File from "./File";
 import FileContextMenu from "./FileContextMenu";
-import SelectionBox from "./SelectionBox";
+import SelectionBox from "../SelectionBox";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
@@ -44,6 +44,27 @@ class Desktop extends React.Component {
       }
     });
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectionBox === this.props.selectionBox) return;
+    const selected = nextProps.files
+      .filter(
+        file =>
+          ((file.x + 50 < nextProps.selectionBox.target[0] &&
+            file.x + 50 > nextProps.selectionBox.origin[0]) ||
+            (file.x + 50 > nextProps.selectionBox.target[0] &&
+              file.x + 50 < nextProps.selectionBox.origin[0])) &&
+          ((file.y + 50 < nextProps.selectionBox.target[1] &&
+            file.y + 50 > nextProps.selectionBox.origin[1]) ||
+            (file.y + 50 > nextProps.selectionBox.target[1] &&
+              file.y + 50 < nextProps.selectionBox.origin[1]))
+      )
+      .map(file => file.id);
+    this.setState({
+      selected
+    });
+  }
+
   onDragStart(e, files) {
     e.dataTransfer.setData("isFileMoving", true);
     e.dataTransfer.setData("files", JSON.stringify(files)); // dataTransfer only accepts strings
@@ -135,6 +156,7 @@ class Desktop extends React.Component {
   }
   render() {
     const { files } = this.props;
+
     return (
       <div
         style={{
@@ -153,65 +175,47 @@ class Desktop extends React.Component {
           e.preventDefault();
         }}
       >
-        <SelectionBox
-          selectZoneId={"selectzone"}
-          onSelect={(evt, origin, target) => {
-            const selected = files
-              .filter(
-                file =>
-                  ((file.x + 50 < target[0] && file.x + 50 > origin[0]) ||
-                    (file.x + 50 > target[0] && file.x + 50 < origin[0])) &&
-                  ((file.y + 50 < target[1] && file.y + 50 > origin[1]) ||
-                    (file.y + 50 > target[1] && file.y + 50 < origin[1]))
-              )
-              .map(file => file.id);
-            this.setState({
-              selected
-            });
+        <FileContextMenu
+          onRename={e => {
+            this.props.cancelRenaming();
+            this.props.renameFile(e.ref.id);
           }}
-        >
-          <FileContextMenu
-            onRename={e => {
-              this.props.cancelRenaming();
-              this.props.renameFile(e.ref.id);
-            }}
-            onDelete={e => {
-              this.props.deleteFile(e.ref.id);
-            }}
-            onCopy={e => {
-              this.setState({ clipboard: e.ref.id });
-            }}
-            onPaste={e => {
-              const copy = this.props.files.find(
-                file => file.id === this.state.clipboard
-              );
-              if (copy)
-                this.props.createFile({
-                  ...copy,
-                  x: e.event.clientX - 25,
-                  y: e.event.clientY - 25
-                });
-            }}
-            addToPlaylist={e => {
-              const track = this.props.files.find(file => file.id === e.ref.id);
+          onDelete={e => {
+            this.props.deleteFile(e.ref.id);
+          }}
+          onCopy={e => {
+            this.setState({ clipboard: e.ref.id });
+          }}
+          onPaste={e => {
+            const copy = this.props.files.find(
+              file => file.id === this.state.clipboard
+            );
+            if (copy)
+              this.props.createFile({
+                ...copy,
+                x: e.event.clientX - 25,
+                y: e.event.clientY - 25
+              });
+          }}
+          addToPlaylist={e => {
+            const track = this.props.files.find(file => file.id === e.ref.id);
 
-              this.props.addTrackFromURI(track.uri);
+            this.props.addTrackFromURI(track.uri);
+          }}
+        />
+        <ContextMenuProvider id="desktop">
+          <div
+            id="dropzone selectzone"
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%"
             }}
+            onMouseDown={e => this.handleDesktopClick(e)}
+            // onClick={e => this.handleDesktopClick(e)}
           />
-          <ContextMenuProvider id="desktop">
-            <div
-              id="dropzone selectzone"
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%"
-              }}
-              onMouseDown={e => this.handleDesktopClick(e)}
-              // onClick={e => this.handleDesktopClick(e)}
-            />
-          </ContextMenuProvider>
-          {files.map(this.renderFile)}
-        </SelectionBox>
+        </ContextMenuProvider>
+        {files.map(this.renderFile)}
       </div>
     );
   }
@@ -238,7 +242,4 @@ const mapDispatchToProps = dispatch => ({
   addTrackFromURI: uri => dispatch(addTrackFromURI(uri))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Desktop);
+export default connect(mapStateToProps, mapDispatchToProps)(Desktop);

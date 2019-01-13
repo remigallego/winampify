@@ -15,13 +15,15 @@ const TitleBar = props => {
           <img src={magnifier} className="title-img" />
           <p className="title-text">{props.title}</p>
         </div>
-        <Icon
-          id="disallow-on-top"
-          src={close}
-          onClick={props.onClose}
-          width={20}
-          height={20}
-        />
+        {props.onClose && (
+          <Icon
+            id="disallow-on-top"
+            src={close}
+            onClick={props.onClose}
+            width={20}
+            height={20}
+          />
+        )}
       </div>
     </div>
   );

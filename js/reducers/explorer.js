@@ -139,7 +139,9 @@ const explorer = (state = initialState, action) => {
     case GO_PREVIOUS_STATE: {
       const explorerState = state.byId[action.id];
       const previousStates = explorerState.previousStates;
-      const albumCovers = explorerState.albumCovers;
+      console.log(previousStates);
+      if (previousStates.length < 1) return state;
+      const { albumCovers, x, y, height, width } = explorerState;
       const lastState = previousStates.pop();
       return {
         ...state,
@@ -150,7 +152,11 @@ const explorer = (state = initialState, action) => {
             ...lastState,
             previousStates,
             loading: false,
-            albumCovers
+            albumCovers,
+            x,
+            y,
+            height,
+            width
           }
         }
       };

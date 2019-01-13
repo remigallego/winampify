@@ -75,6 +75,7 @@ canvas {
 }
 
 #winamp2-js .window {
+  z-index: 8;
   position: absolute;
   /* Ask the browser to scale showing large pixels if possible */
   image-rendering: -moz-crisp-edges; /* Firefox */

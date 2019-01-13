@@ -23,6 +23,10 @@ html {
   user-select: none;
 }
 
+body {
+  margin: 0px;
+}
+
 .infos-bar {
   height: auto;
   width: auto;
@@ -40,6 +44,7 @@ html {
   color: white;
 }
 .selection-box {
+  z-index: 1;
   background-color: transparent;
   border: 1px dashed white;
   position: absolute;

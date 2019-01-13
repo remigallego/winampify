@@ -1,6 +1,7 @@
 import "babel-polyfill";
 import React from "react";
 import { render } from "react-dom";
+import { persistStore } from "redux-persist";
 import base from "../skins/base-2.91.wsz";
 import osx from "../skins/MacOSXAqua1-5.wsz";
 import topaz from "../skins/TopazAmp1-2.wsz";
@@ -8,14 +9,14 @@ import visor from "../skins/Vizor1-01.wsz";
 import xmms from "../skins/XMMS-Turquoise.wsz";
 import zaxon from "../skins/ZaxonRemake1-0.wsz";
 import green from "../skins/Green-Dimension-V2.wsz";
+import getStore from "../js/store";
 import Winamp from "./winamp";
 import Loading from "./loading";
 import LandingPage from "./landingpage";
-
 import { hideAbout, skinUrl, initialState } from "./config";
 import SpotifyApiService from "./SpotifyApiService";
-import { persistStore } from "redux-persist";
-import getStore from "../js/store";
+import media from "./media";
+
 if (hideAbout) {
   document.getElementsByClassName("about")[0].style.visibility = "hidden";
 }
@@ -23,9 +24,8 @@ if (!Winamp.browserIsSupported()) {
   document.getElementById("browser-compatibility").style.display = "block";
   document.getElementById("app").style.visibility = "hidden";
 }
-const storemz = getStore();
-const persistor = persistStore(storemz);
-console.log(persistor);
+const store = getStore(media);
+persistStore(store);
 let tokens;
 
 const url = window.location.search;

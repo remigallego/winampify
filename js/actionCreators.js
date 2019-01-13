@@ -59,7 +59,6 @@ export function goPreviousState(explorerId) {
 export function addTrackFromURI(URI, index) {
   return (dispatch, getState) => {
     const state = getState();
-    console.log(index);
     getTrackInfos(URI).then(infos => {
       index = state.playlist.trackOrder.length + index;
       dispatch({
@@ -158,9 +157,7 @@ export function createPlayerObject(p) {
 
 function playRandomTrack() {
   return (dispatch, getState) => {
-    const {
-      playlist: { trackOrder, currentTrack }
-    } = getState();
+    const { playlist: { trackOrder, currentTrack } } = getState();
     let nextId;
     do {
       nextId = trackOrder[Math.floor(trackOrder.length * Math.random())];
@@ -208,7 +205,9 @@ export function nextN(n) {
     if (nextTrackId == null) {
       return;
     }
-    dispatch({ type: PLAY_TRACK, id: nextTrackId });
+
+    const id = getState().playlist.trackOrder.indexOf(nextTrackId);
+    dispatch(playTrack(id));
   };
 }
 
@@ -415,9 +414,7 @@ export function cropPlaylist() {
     if (getSelectedTrackObjects(state).length === 0) {
       return;
     }
-    const {
-      playlist: { tracks }
-    } = getState();
+    const { playlist: { tracks } } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => !tracks[id].selected)
@@ -427,9 +424,7 @@ export function cropPlaylist() {
 
 export function removeSelectedTracks() {
   return (dispatch, getState) => {
-    const {
-      playlist: { tracks }
-    } = getState();
+    const { playlist: { tracks } } = getState();
     dispatch({
       type: REMOVE_TRACKS,
       ids: Object.keys(tracks).filter(id => tracks[id].selected)
@@ -492,7 +487,7 @@ export function scrollPlaylistByDelta(e) {
       e.stopPropagation();
     }
     const totalPixelHeight = state.playlist.trackOrder.length * TRACK_HEIGHT;
-    const percentDelta = (e.deltaY / totalPixelHeight) * 100;
+    const percentDelta = e.deltaY / totalPixelHeight * 100;
     dispatch({
       type: SET_PLAYLIST_SCROLL_POSITION,
       position: clamp(
@@ -523,9 +518,7 @@ function findLastIndex(arr, cb) {
 
 export function dragSelected(offset) {
   return (dispatch, getState) => {
-    const {
-      playlist: { trackOrder, tracks }
-    } = getState();
+    const { playlist: { trackOrder, tracks } } = getState();
     const firstSelected = trackOrder.findIndex(
       trackId => tracks[trackId] && tracks[trackId].selected
     );

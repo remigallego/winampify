@@ -19,8 +19,6 @@ class ExplorerWindow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: this.props.explorer.width,
-      height: this.props.explorer.height,
       x: 0,
       y: 0,
       searchText: ""
@@ -33,17 +31,16 @@ class ExplorerWindow extends React.Component {
 
   onDragStop(d) {
     const { clientHeight, clientWidth } = document.documentElement;
-
     const getX = () => {
       if (d.x < 0) return 0;
-      if (d.x + Number(this.state.width) > clientWidth)
-        return clientWidth - Number(this.state.width);
+      if (d.x + Number(this.props.explorer.width) > clientWidth)
+        return clientWidth - Number(this.props.explorer.width) - 50;
       return d.x;
     };
     const getY = () => {
       if (d.y < 0) return 0;
-      if (d.y + Number(this.state.height) > clientHeight)
-        return clientHeight - Number(this.state.height);
+      if (d.y + Number(this.props.explorer.height) > clientHeight)
+        return clientHeight - Number(this.props.explorer.height) - 50;
       return d.y;
     };
 
@@ -61,6 +58,7 @@ class ExplorerWindow extends React.Component {
 
     return (
       <div
+        style={{ zIndex: 9 }}
         onClick={e => {
           if (e.target.id !== "disallow-on-top") this.props.setOnTop();
         }}
@@ -89,8 +87,8 @@ class ExplorerWindow extends React.Component {
           minHeight={200}
           onResizeStop={(e, direction, ref) => {
             this.props.updateSize(
-              ref.style.width.substring(0, ref.style.width.length - 2),
-              ref.style.height.substring(0, ref.style.height.length - 2)
+              Number(ref.style.width.substring(0, ref.style.width.length - 2)),
+              Number(ref.style.height.substring(0, ref.style.height.length - 2))
             );
           }}
           onDragStop={(e, d) => this.onDragStop(d)}
@@ -104,11 +102,11 @@ class ExplorerWindow extends React.Component {
           <div className="explorer-wrapper" style={explorerWrapper}>
             <TitleBar
               title={this.props.explorer.title}
-              onClose={() => {
-                if (this.props.explorerId !== 0) {
-                  this.props.closeExplorer();
-                }
-              }}
+              onClose={
+                this.props.explorerId !== 0
+                  ? () => this.props.closeExplorer()
+                  : null
+              }
             />
             <div className="explorer-toolbar" style={explorerToolbar}>
               <img
@@ -166,7 +164,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(updateSize(width, height, ownProps.explorerId)),
   setOnTop: () => dispatch(setOnTop(ownProps.explorerId))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ExplorerWindow);
+export default connect(mapStateToProps, mapDispatchToProps)(ExplorerWindow);

@@ -20,7 +20,8 @@ import {
 import eventListener from "./spotifyEvents";
 
 import { next as nextTrack } from "./actionCreators";
-export default media => store => {
+export default mediaClass => store => {
+  let media = mediaClass;
   let timeElapsedTimer = null;
 
   eventListener.on("player_state_changed", data => {
@@ -41,14 +42,13 @@ export default media => store => {
     } else {
       clearInterval(timeElapsedTimer);
     }
+    if (data.duration / 1000 === store.getState().media.length) return;
     store.dispatch({
       type: SET_MEDIA,
       kbps: data.bitrate / 1000,
       khz: "44.1",
       length: data.duration / 1000 || null,
-      elapsed: data.position / 1000 || null,
-      channels: 2,
-      volume: data.volume * 100
+      channels: 2
     });
   });
 
@@ -82,7 +82,10 @@ export default media => store => {
     refreshInterval(refreshToken)
   );
 
-  eventListener.on("ended", () => {
+  eventListener.on("track_ended", state => {
+    console.log("************* track_ended ************", state);
+    console.log(store.getState().media);
+    if (store.getState().media.status === "STOPPED") return;
     store.dispatch({ type: IS_STOPPED });
     store.dispatch(nextTrack());
   });
@@ -111,9 +114,10 @@ export default media => store => {
       case SEEK_TO_PERCENT_COMPLETE:
         media.seekToPercentComplete(action.percent);
         break;
-      case PLAY_TRACK:
+      case PLAY_TRACK: {
         media.playURI(store.getState().playlist.tracks[action.id].URI);
         break;
+      }
       case BUFFER_TRACK:
         media.loadFromUrl(
           store.getState().playlist.tracks[action.id].url,

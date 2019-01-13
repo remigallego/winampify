@@ -74,7 +74,6 @@ class ExplorerItem extends React.Component {
   }
 
   drag(e) {
-    console.log(this.props.infos);
     const emptyImage = document.createElement("img");
     emptyImage.src =
       "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";

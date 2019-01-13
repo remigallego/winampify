@@ -7,17 +7,33 @@ import "../../css/winamp.css";
 import Desktop from "./Desktop";
 import WinampApp from "./WinampApp";
 import InfosBar from "./InfosBar";
+import SelectionBox from "./SelectionBox";
 
-const App = () => {
-  return (
-    <div role="application">
-      <InfosBar />
-      <WinampApp />
-      <Desktop />
-      <Explorer />
-    </div>
-  );
-};
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectionBox: { target: [0, 0], origin: [0, 0] }
+    };
+  }
+  render() {
+    return (
+      <div>
+        <SelectionBox
+          selectZoneId={"selectzone"}
+          onSelect={(e, origin, target) =>
+            this.setState({ selectionBox: { target, origin } })
+          }
+        >
+          <InfosBar />
+          <WinampApp />
+          <Desktop selectionBox={this.state.selectionBox} />
+          <Explorer />
+        </SelectionBox>
+      </div>
+    );
+  }
+}
 
 App.propTypes = {
   container: PropTypes.instanceOf(Element)

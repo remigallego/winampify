@@ -7,7 +7,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import reducer from "./reducers";
 import spotifyMiddleware from "./spotifyMiddleware";
 import { merge } from "./utils";
-import { UPDATE_TIME_ELAPSED, STEP_MARQUEE } from "./actionTypes";
+import { UPDATE_TIME_ELAPSED, STEP_MARQUEE, SET_MEDIA } from "./actionTypes";
 
 const persistConfig = {
   key: "root",
@@ -21,7 +21,9 @@ const compose = composeWithDevTools({
 
 const logger = createLogger({
   predicate: (getState, action) =>
-    action.type !== STEP_MARQUEE && action.type !== UPDATE_TIME_ELAPSED
+    action.type !== STEP_MARQUEE &&
+    action.type !== UPDATE_TIME_ELAPSED &&
+    action.type !== SET_MEDIA
 });
 
 const getStore = (media, stateOverrides) => {
@@ -37,7 +39,7 @@ const getStore = (media, stateOverrides) => {
   return createStore(
     persistedReducer,
     initialState,
-    compose(applyMiddleware(thunk, spotifyMiddleware(media), logger))
+    compose(applyMiddleware(thunk, logger, spotifyMiddleware(media)))
   );
 };
 export default getStore;

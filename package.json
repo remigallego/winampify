@@ -88,6 +88,7 @@
     "react-load-script": "0.0.6",
     "react-loaders": "^3.0.1",
     "react-motion": "^0.5.2",
+    "react-rectangle-selection": "^1.0.4",
     "react-redux": "^5.0.6",
     "react-rnd": "^7.4.3",
     "redux": "^3.5.2",

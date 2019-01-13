@@ -98,7 +98,7 @@ class Winamp {
         console.error(e);
       });
 
-    this.media = new Media();
+    this.media = Media;
     this.store = getStore(this.media, this.options.__initialState);
     this.persistor = persistStore(this.store);
     this.store.dispatch({
