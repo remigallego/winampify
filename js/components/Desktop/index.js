@@ -18,7 +18,6 @@ import {
 } from "./../../actions/desktop";
 import File from "./File";
 import FileContextMenu from "./FileContextMenu";
-import SelectionBox from "../SelectionBox";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
@@ -180,8 +179,8 @@ class Desktop extends React.Component {
             this.props.cancelRenaming();
             this.props.renameFile(e.ref.id);
           }}
-          onDelete={e => {
-            this.props.deleteFile(e.ref.id);
+          onDelete={() => {
+            this.state.selected.forEach(id => this.props.deleteFile(id));
           }}
           onCopy={e => {
             this.setState({ clipboard: e.ref.id });
