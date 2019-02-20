@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import { BANDS } from "../constants";
 import {
   PLAY,
   PLAY_TRACK,
@@ -9,7 +8,6 @@ import {
   IS_STOPPED,
   CLOSE_WINAMP,
   SET_BALANCE,
-  SET_BAND_VALUE,
   SET_FOCUS,
   SET_BAND_FOCUS,
   SET_MEDIA,
@@ -20,9 +18,6 @@ import {
   STEP_MARQUEE,
   STOP_WORKING,
   TOGGLE_DOUBLESIZE_MODE,
-  SET_EQ_AUTO,
-  SET_EQ_ON,
-  SET_EQ_OFF,
   TOGGLE_LLAMA_MODE,
   TOGGLE_REPEAT,
   TOGGLE_MAIN_SHADE_MODE,
@@ -42,13 +37,10 @@ import {
   NETWORK_CONNECTED,
   NETWORK_DISCONNECTED,
   ADD_TRACK_FROM_URI,
-  S_UPDATE_PLAYER_OBJECT,
-  S_PLAY_URI
+  S_UPDATE_PLAYER_OBJECT
 } from "../actionTypes";
 
 import desktop from "./desktop";
-import playlist from "./playlist";
-import windows from "./windows";
 import explorer from "./explorer";
 import user from "./user";
 
@@ -137,7 +129,6 @@ const display = (state = defaultDisplayState, action) => {
       return { ...state, playlistSize: action.size };
     case S_UPDATE_PLAYER_OBJECT:
       return { ...state, loading: false };
-
     case "CLOSE_MODAL":
       return { ...state, isModalOpen: false };
     default:
@@ -153,35 +144,6 @@ const settings = (state = defaultSettingsState, action) => {
   switch (action.type) {
     case SET_AVALIABLE_SKINS:
       return { ...state, avaliableSkins: action.skins };
-    default:
-      return state;
-  }
-};
-
-const equalizer = (state, action) => {
-  if (!state) {
-    state = {
-      on: true,
-      auto: false,
-      sliders: {
-        preamp: 50
-      }
-    };
-    BANDS.forEach(band => {
-      state.sliders[band] = 50;
-    });
-    return state;
-  }
-  switch (action.type) {
-    case SET_BAND_VALUE:
-      const newSliders = { ...state.sliders, [action.band]: action.value };
-      return { ...state, sliders: newSliders };
-    case SET_EQ_ON:
-      return { ...state, on: true };
-    case SET_EQ_OFF:
-      return { ...state, on: false };
-    case SET_EQ_AUTO:
-      return { ...state, auto: action.value };
     default:
       return state;
   }
@@ -213,7 +175,7 @@ const media = (state, action) => {
     // TODO: Make these constants
     case PLAY:
     case IS_PLAYING:
-    case S_PLAY_URI:
+    case "S_PLAY_URI":
     case PLAY_TRACK:
       return { ...state, status: "PLAYING" };
     case PAUSE:
@@ -281,11 +243,8 @@ const network = (state = { connected: true }, action) => {
 
 const reducer = combineReducers({
   userInput,
-  windows,
   display,
   settings,
-  equalizer,
-  playlist,
   media,
   network,
   explorer,

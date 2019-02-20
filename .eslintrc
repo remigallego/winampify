@@ -1,4 +1,5 @@
 {
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 8,
     "sourceType": "module",
@@ -7,10 +8,15 @@
       "experimentalObjectRestSpread": true
     }
   },
-  "plugins": ["react", "prettier", "import"],
+  "plugins": ["react", "prettier", "import", "no-constructor-bind"],
   "settings": {
     "react": {
       "version": "15.2"
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts", ".tsx"]
+      }
     }
   },
   "env": {
@@ -19,6 +25,10 @@
     "amd": true,
     "es6": true,
     "jest": true
+  },
+  "globals": {
+    "page": true,
+    "browser": true
   },
   "rules": {
     "no-multiple-empty-lines": [
@@ -36,10 +46,10 @@
     "dot-notation": "error",
     "eqeqeq": ["error", "smart"],
     "guard-for-in": "error",
+    "lines-between-class-members": "warn",
     "max-depth": ["warn", 4],
     "max-params": ["warn", 5],
     "new-cap": "error",
-    "no-alert": "error",
     "no-caller": "error",
     "no-catch-shadow": "error",
     "no-const-assign": "error",
@@ -124,6 +134,7 @@
     "import/no-extraneous-dependencies": "error",
     "import/no-named-as-default-member": "error",
     "import/no-unresolved": "error",
-    "import/order": "error"
+    "import/order": "error",
+    "no-constructor-bind/no-constructor-bind": "error"
   }
 }

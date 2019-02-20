@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import Explorer from "./Explorer";
 import "../../css/react-context-menu.css";
 import "../../css/winamp.css";
-
 import Desktop from "./Desktop";
-import WinampApp from "./WinampApp";
 import InfosBar from "./InfosBar";
 import SelectionBox from "./SelectionBox";
 
@@ -26,7 +24,6 @@ class App extends React.Component {
           }
         >
           <InfosBar />
-          <WinampApp />
           <Desktop selectionBox={this.state.selectionBox} />
           <Explorer />
         </SelectionBox>

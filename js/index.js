@@ -2,30 +2,42 @@ import "babel-polyfill";
 import React from "react";
 import { render } from "react-dom";
 import { persistStore } from "redux-persist";
-import base from "../skins/base-2.91.wsz";
-import osx from "../skins/MacOSXAqua1-5.wsz";
-import topaz from "../skins/TopazAmp1-2.wsz";
-import visor from "../skins/Vizor1-01.wsz";
-import xmms from "../skins/XMMS-Turquoise.wsz";
-import zaxon from "../skins/ZaxonRemake1-0.wsz";
-import green from "../skins/Green-Dimension-V2.wsz";
+import { Provider } from "react-redux";
+import Webamp from "../webamp/built/webamp.bundle";
 import getStore from "../js/store";
-import Winamp from "./winamp";
-import Loading from "./loading";
+import App from "./components/App";
+// import Loading from "./loading";
 import LandingPage from "./landingpage";
-import { hideAbout, skinUrl, initialState } from "./config";
 import SpotifyApiService from "./SpotifyApiService";
 import media from "./media";
+import { PersistGate } from "redux-persist/integration/react";
 
-if (hideAbout) {
-  document.getElementsByClassName("about")[0].style.visibility = "hidden";
+if (!Webamp.browserIsSupported()) {
+  // eslint-disable-next-line
+  alert("Oh no! Webamp does not work!");
+  throw new Error("What's the point of anything?");
 }
-if (!Winamp.browserIsSupported()) {
-  document.getElementById("browser-compatibility").style.display = "block";
-  document.getElementById("app").style.visibility = "hidden";
-}
+
+const webamp = new Webamp({
+  initialTracks: [
+    {
+      metaData: {
+        artist: "DJ Mike Llama",
+        title: "Llama Whippin' Intro"
+      },
+      // Can be downloaded from: https://github.com/captbaritone/webamp/raw/master/mp3/llama-2.91.mp3
+      url: "path/to/mp3/llama-2.91.mp3"
+    }
+  ]
+  // Optional. The default skin is included in the js bundle, and will be loaded by default.
+});
+
+console.log(webamp);
+// Render after the skin has loaded.
+webamp.renderWhenReady(document.getElementById("winamp-container"));
+
 const store = getStore(media);
-persistStore(store);
+const persistor = persistStore(store);
 let tokens;
 
 const url = window.location.search;
@@ -43,26 +55,19 @@ if (url !== "") {
 } else tokens = 0;
 
 if (tokens) {
-  const winamp = new Winamp({
-    initialSkin: {
-      url: skinUrl
-    },
-    tokens: tokens,
-    avaliableSkins: [
-      { url: base, name: "<Base Skin>" },
-      { url: green, name: "Green Dimension V2" },
-      { url: osx, name: "Mac OSX v1.5 (Aqua)" },
-      { url: topaz, name: "TopazAmp" },
-      { url: visor, name: "Vizor" },
-      { url: xmms, name: "XMMS Turquoise " },
-      { url: zaxon, name: "Zaxon Remake" }
-    ],
-    enableHotkeys: false,
-    __initialState: initialState
-  });
   SpotifyApiService.setAccessToken(tokens.accessToken);
-  render(<Loading />, document.getElementById("app"));
-  winamp.renderWhenReady(document.getElementById("app"), tokens);
+  render(
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App
+        // container={this.options.container}
+        // filePickers={this.options.filePickers}
+        />
+      </PersistGate>
+    </Provider>,
+    document.getElementById("app")
+  );
+  // winamp.renderWhenReady(document.getElementById("app"), tokens);
 } else {
   render(<LandingPage />, document.getElementById("app"));
 }

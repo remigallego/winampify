@@ -16,9 +16,10 @@ import {
   cancelRenaming,
   deleteFile
 } from "./../../actions/desktop";
-import File from "./File";
+import DesktopFile from "./File";
 import FileContextMenu from "./FileContextMenu";
 import SelectionBox from "../SelectionBox";
+import { getTrackInfos } from "../../SpotifyApiFunctions";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
@@ -67,7 +68,21 @@ class Desktop extends React.Component {
 
   onDragStart(e, files) {
     e.dataTransfer.setData("isFileMoving", true);
-    e.dataTransfer.setData("files", JSON.stringify(files)); // dataTransfer only accepts strings
+    const tracks = files.map(file => {
+      return {
+        metaData: {
+          artist: "",
+          title: file.name
+        },
+        url: file.uri,
+        duration: file.duration,
+        mediaType: "SPOTIFY"
+      };
+    });
+
+    console.log(tracks);
+    e.dataTransfer.setData("files", JSON.stringify(files)); // for desktop
+    e.dataTransfer.setData("tracks", JSON.stringify(tracks)); // for winamp
   }
 
   onDrop(e) {
@@ -106,6 +121,9 @@ class Desktop extends React.Component {
             .map(_file => {
               _file.deltaX = _file.x - e.clientX;
               _file.deltaY = _file.y - e.clientY;
+              _file.name = file.title; // FIXME:
+              _file.duration = Math.floor(Math.random() * 306) + 201;
+              _file.defaultName = file.title;
               return _file;
             });
           this.onDragStart(e, selectedFiles);
@@ -115,7 +133,7 @@ class Desktop extends React.Component {
             this.setState({ selected: [file.id] });
         }}
       >
-        <File
+        <DesktopFile
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
           onDoubleClick={e => this.doubleClickHandler(file, e)}
@@ -239,7 +257,11 @@ const mapDispatchToProps = dispatch => ({
   deleteFile: fileId => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),
   confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title)),
-  addTrackFromURI: uri => dispatch(addTrackFromURI(uri))
+  addTrackFromURI: uri => dispatch(addTrackFromURI(uri)),
+  getTrackInfos: uri => dispatch(getTrackInfos(uri))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Desktop);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Desktop);
