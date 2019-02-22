@@ -18,8 +18,6 @@ import {
 } from "./../../actions/desktop";
 import DesktopFile from "./File";
 import FileContextMenu from "./FileContextMenu";
-import SelectionBox from "../SelectionBox";
-import { getTrackInfos } from "../../SpotifyApiFunctions";
 // import "../../../css/spotify-ui.css";
 
 class Desktop extends React.Component {
@@ -198,8 +196,8 @@ class Desktop extends React.Component {
             this.props.cancelRenaming();
             this.props.renameFile(e.ref.id);
           }}
-          onDelete={e => {
-            this.props.deleteFile(e.ref.id);
+          onDelete={() => {
+            this.state.selected.forEach(id => this.props.deleteFile(id));
           }}
           onCopy={e => {
             this.setState({ clipboard: e.ref.id });
@@ -257,8 +255,7 @@ const mapDispatchToProps = dispatch => ({
   deleteFile: fileId => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),
   confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title)),
-  addTrackFromURI: uri => dispatch(addTrackFromURI(uri)),
-  getTrackInfos: uri => dispatch(getTrackInfos(uri))
+  addTrackFromURI: uri => dispatch(addTrackFromURI(uri))
 });
 
 export default connect(

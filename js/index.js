@@ -18,19 +18,32 @@ if (!Webamp.browserIsSupported()) {
   throw new Error("What's the point of anything?");
 }
 
-const webamp = new Webamp({
-  initialTracks: [
-    {
-      metaData: {
-        artist: "DJ Mike Llama",
-        title: "Llama Whippin' Intro"
-      },
-      // Can be downloaded from: https://github.com/captbaritone/webamp/raw/master/mp3/llama-2.91.mp3
-      url: "path/to/mp3/llama-2.91.mp3"
+const webamp = new Webamp(
+  {
+    initialTracks: [
+      {
+        metaData: {
+          artist: "DJ Mike Llama",
+          title: "Llama Whippin' Intro"
+        },
+        // Can be downloaded from: https://github.com/captbaritone/webamp/raw/master/mp3/llama-2.91.mp3
+        url: "path/to/mp3/llama-2.91.mp3"
+      }
+    ],
+    handleTrackDropEvent: e => {
+      console.log(e);
+      if (e.dataTransfer.getData("tracks").length > 0) {
+        try {
+          return JSON.parse(e.dataTransfer.getData("tracks"));
+        } catch (err) {
+          alert("Error parsing track");
+        }
+      }
     }
-  ]
-  // Optional. The default skin is included in the js bundle, and will be loaded by default.
-});
+    // Optional. The default skin is included in the js bundle, and will be loaded by default.
+  },
+  {}
+);
 
 console.log(webamp);
 // Render after the skin has loaded.

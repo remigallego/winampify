@@ -102,13 +102,13 @@ export function searchOnSpotify(search, type, offset, explorerId) {
     });
     if (offset === "0") dispatch({ type: LOADING, id: explorerId });
     getSearchResult(search, type, offset).then(results => {
-      let albums = getState().explorer.albums;
-      let artists = getState().explorer.artists;
-      let playlists = getState().explorer.playlists;
-      let tracks = getState().explorer.tracks;
+      let albums = getState().explorer.byId[explorerId].albums;
+      let artists = getState().explorer.byId[explorerId].artists;
+      let playlists = getState().explorer.byId[explorerId].playlists;
+      let tracks = getState().explorer.byId[explorerId].tracks;
       if (results.artists) {
         artists = results.artists.items;
-        const stateArtists = getState().explorer.artists;
+        const stateArtists = getState().explorer.byId[explorerId].artists;
         if (offset !== "0") {
           artists.map(artist => stateArtists.push(artist));
           artists = stateArtists;
@@ -119,7 +119,7 @@ export function searchOnSpotify(search, type, offset, explorerId) {
       }
       if (results.tracks) {
         tracks = results.tracks.items;
-        const stateTracks = getState().explorer.tracks;
+        const stateTracks = getState().explorer.byId[explorerId].tracks;
         if (offset !== "0") {
           tracks.map(track => stateTracks.push(track));
           tracks = stateTracks;
@@ -127,7 +127,7 @@ export function searchOnSpotify(search, type, offset, explorerId) {
       }
       if (results.albums) {
         albums = results.albums.items;
-        const stateAlbums = getState().explorer.albums;
+        const stateAlbums = getState().explorer.byId[explorerId].albums;
         if (offset !== "0") {
           albums.map(album => stateAlbums.push(album));
           albums = stateAlbums;
