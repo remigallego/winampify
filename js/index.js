@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
 import Webamp from "../webamp/built/webamp.bundle";
-import getStore from "../js/store";
+import getStore from "./store";
 import App from "./components/App";
 // import Loading from "./loading";
 import LandingPage from "./landingpage";
@@ -31,14 +31,17 @@ const webamp = new Webamp(
       }
     ],
     handleTrackDropEvent: e => {
-      console.log(e);
-      if (e.dataTransfer.getData("tracks").length > 0) {
-        try {
-          return JSON.parse(e.dataTransfer.getData("tracks"));
-        } catch (err) {
-          alert("Error parsing track");
+      return new Promise((resolve, reject) => {
+        if (e.dataTransfer.getData("tracks").length > 0) {
+          try {
+            resolve(JSON.parse(e.dataTransfer.getData("tracks")));
+          } catch (err) {
+            resolve(null);
+          }
+        } else {
+          resolve(null);
         }
-      }
+      });
     }
     // Optional. The default skin is included in the js bundle, and will be loaded by default.
   },

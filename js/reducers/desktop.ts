@@ -1,12 +1,22 @@
 import { CREATE_FILE, MOVE_FILE, DELETE_FILE } from "../actionTypes";
-const initialState = {
+import Desktop from "../components/Desktop";
+
+export interface DesktopState {
+  byId: {
+    [id: number]: any;
+  };
+  allIds: number[];
+}
+
+const initialState: DesktopState = {
   byId: {},
   allIds: []
 };
 
-const cancelRenaming = state => {
+const cancelRenaming = (state: DesktopState) => {
   const byId = {};
-  state.allIds.map(id => {
+  state.allIds.map((id: number) => {
+    // @ts-ignore
     byId[id] = {
       ...state.byId[id],
       renaming: false
@@ -15,7 +25,7 @@ const cancelRenaming = state => {
   return { byId: byId, allIds: state.allIds };
 };
 
-const desktop = (state = initialState, action) => {
+const desktop = (state: DesktopState = initialState, action: any) => {
   switch (action.type) {
     case CREATE_FILE:
       return {

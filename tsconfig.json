@@ -9,9 +9,8 @@
     "resolveJsonModule": true,
     "strict": true,
     "jsx": "preserve",
-    "noEmit": true,
     "pretty": true
   },
   "include": ["**/*.js", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts", "./js/index.tsx", "./webamp/*"]
 }

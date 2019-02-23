@@ -1,9 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
 import { setUserInfos } from "../actions/infosbar";
+import { AppState } from "../reducers";
 
-class InfosBar extends React.Component {
-  constructor(props) {
+interface DispatchProps {
+  setUserInfos: () => void;
+}
+
+interface StateProps {
+  image: string;
+  name: string;
+}
+
+type Props = DispatchProps & StateProps;
+
+class InfosBar extends React.Component<Props, {}> {
+  constructor(props: Props) {
     super(props);
   }
   componentWillMount() {
@@ -32,12 +44,12 @@ class InfosBar extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state: AppState) => ({
   name: state.user.name,
   image: state.user.image,
   uri: state.user.uri
 });
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   setUserInfos: () => dispatch(setUserInfos())
 });
 

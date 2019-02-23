@@ -10,7 +10,33 @@ import {
   CLOSE_IMAGE
 } from "../actionTypes";
 
-const initialStateExplorer = {
+export interface SingleExplorerState {
+  selected: any;
+  currentId: any;
+  title: any;
+  image: any;
+  playlistable: boolean; // Is this ever useful?
+  previousStates: Array<any>;
+  artists: any;
+  albums: any;
+  tracks: any;
+  playlists: any;
+  loading: boolean;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
+export interface ExplorerState {
+  byId: {
+    [id: number]: SingleExplorerState;
+  };
+  allIds: number[];
+  albumCovers: any;
+}
+
+const initialStateExplorer: SingleExplorerState = {
   selected: null,
   currentId: null,
   title: null,
@@ -30,7 +56,7 @@ const initialStateExplorer = {
   y: 0
 };
 
-const initialState = {
+const initialState: ExplorerState = {
   byId: {
     0: initialStateExplorer
   },
@@ -45,7 +71,7 @@ const UPDATE_POSITION = "UPDATE_POSITION";
 const UPDATE_SIZE = "UPDATE_SIZE";
 const SET_ON_TOP = "SET_ON_TOP";
 
-const explorer = (state = initialState, action) => {
+const explorer = (state = initialState, action: any) => {
   const createNewExplorer = () => {
     const newId = state.allIds.length;
     return {
@@ -141,7 +167,8 @@ const explorer = (state = initialState, action) => {
       const previousStates = explorerState.previousStates;
       console.log(previousStates);
       if (previousStates.length < 1) return state;
-      const { albumCovers, x, y, height, width } = explorerState;
+      const albumCovers = state;
+      const { x, y, height, width } = explorerState;
       const lastState = previousStates.pop();
       return {
         ...state,
@@ -152,12 +179,12 @@ const explorer = (state = initialState, action) => {
             ...lastState,
             previousStates,
             loading: false,
-            albumCovers,
             x,
             y,
             height,
             width
-          }
+          },
+          albumCovers
         }
       };
     }

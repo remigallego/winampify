@@ -4,7 +4,7 @@ const WebpackPwaManifest = require("webpack-pwa-manifest");
 
 module.exports = {
   resolve: {
-    extensions: [".js"]
+    extensions: [".js", ".ts", ".tsx"]
   },
   module: {
     rules: [
@@ -13,10 +13,13 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
-        test: /\.js$/,
+        test: /\.(js|ts|tsx)$/,
         exclude: /(node_modules)/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
+          options: {
+            envName: "library"
+          }
         }
       },
       {

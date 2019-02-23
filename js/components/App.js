@@ -7,6 +7,8 @@ import Desktop from "./Desktop";
 import InfosBar from "./InfosBar";
 import SelectionBox from "./SelectionBox";
 
+import Test from "./Test";
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -31,9 +33,5 @@ class App extends React.Component {
     );
   }
 }
-
-App.propTypes = {
-  container: PropTypes.instanceOf(Element)
-};
 
 export default App;
