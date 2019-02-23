@@ -5,12 +5,21 @@ import bigWinampIcon from "./images/bigWinampIcon.png";
 import { DesktopFileStyle } from "./styles";
 import InputRenaming from "./InputRenaming";
 import "./file.css";
+import { File } from "../../types";
 
-const File = props => {
+interface Props {
+  file: File;
+  onClick?: (e: any) => void;
+  onDoubleClick: (e: any) => void;
+  confirmRenameFile: (e: any) => void;
+  selected: boolean;
+}
+
+const FileItem = (props: Props) => {
   const { file } = props;
 
   const getIcon = () => {
-    switch (props.file.type) {
+    switch (file.type) {
       case "track":
         return bigWinampIcon;
       case "album":
@@ -18,7 +27,7 @@ const File = props => {
       case "artist":
         return folderclosed;
       case "image":
-        return props.file.uri;
+        return file.uri;
       default:
         return bigWinampIcon;
     }
@@ -50,7 +59,10 @@ const File = props => {
         ) : (
           <div
             style={{
-              ...DesktopFileStyle.fileName,
+              fontSize: "14px",
+              textAlign: "center",
+              color: "white",
+              textShadow: "1px 1px black",
               backgroundColor: props.selected ? "#3064BD" : "transparent",
               border: props.selected
                 ? "1px dotted white"
@@ -67,4 +79,4 @@ const File = props => {
   );
 };
 
-export default File;
+export default FileItem;

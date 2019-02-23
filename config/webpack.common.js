@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WebpackPwaManifest = require("webpack-pwa-manifest");
 
 module.exports = {
   resolve: {
@@ -40,40 +39,10 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./index.html"
-    }),
-    // Automatically generates the manifest.json file inside the built
-    // directory, and injects a tag into the gererated index.html file
-    // it also, applies cache-busting for all the icons.
-    new WebpackPwaManifest({
-      name: "Winampify",
-      short_name: "Winampify", // eslint-disable-line camelcase
-      description: "Winampify is a Web Client for Spotify using Winamp 2 skins",
-      start_url: "./?utm_source=web_app_manifest", // eslint-disable-line camelcase
-      scope: "./",
-      display: "standalone",
-      theme_color: "#4b4b4b", // eslint-disable-line camelcase
-      background_color: "#ffffff", // eslint-disable-line camelcase
-      icons: [
-        {
-          src: path.resolve("./images/manifest/icon-192x192.png"),
-          sizes: "192x192",
-          type: "image/png"
-        },
-        {
-          src: path.resolve("./images/manifest/icon-512x512.png"),
-          sizes: "512x512",
-          type: "image/png"
-        },
-        {
-          src: path.resolve("./images/manifest/icon.svg"),
-          sizes: "513x513",
-          type: "image/svg+xml"
-        }
-      ].map(icon => ({ ...icon, destination: path.join("images", "manifest") }))
     })
   ],
   entry: {
-    winamp: ["./js/index.js"]
+    winamp: ["./js/index.tsx"]
   },
   output: {
     filename: "[name]-[hash].js",

@@ -1,8 +1,17 @@
 import React from "react";
 import { DesktopFileStyle } from "./styles";
 
-class InputRenaming extends React.Component {
-  constructor(props) {
+interface Props {
+  initialValue: string;
+  confirmRenameFile: (e: any) => void;
+}
+
+interface State {
+  text: string;
+}
+
+class InputRenaming extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { text: this.props.initialValue };
   }
@@ -11,7 +20,8 @@ class InputRenaming extends React.Component {
       <form onSubmit={this.props.confirmRenameFile}>
         <input
           style={{
-            ...DesktopFileStyle.fileName,
+            fontSize: "14px",
+            textAlign: "center",
             backgroundColor: "white",
             textShadow: "none",
             color: "black",

@@ -26,13 +26,10 @@ const logger = createLogger({
     action.type !== SET_MEDIA
 });
 
-const getStore = (media, stateOverrides) => {
+const getStore = (media: any, stateOverrides: any) => {
   let initialState;
   if (stateOverrides) {
-    initialState = merge(
-      reducer(undefined, { type: "@@init" }),
-      stateOverrides
-    );
+    initialState = merge(reducer, stateOverrides);
   }
   const persistedReducer = persistReducer(persistConfig, reducer);
 

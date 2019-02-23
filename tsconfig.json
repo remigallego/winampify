@@ -11,6 +11,6 @@
     "jsx": "preserve",
     "pretty": true
   },
-  "include": ["**/*.js", "**/*.ts", "**/*.tsx"],
+  "include": ["index.d.ts", "**/*.js", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "**/*.spec.ts", "./js/index.tsx", "./webamp/*"]
 }

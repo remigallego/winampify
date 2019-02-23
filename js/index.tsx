@@ -3,7 +3,7 @@ import React from "react";
 import { render } from "react-dom";
 import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
-import Webamp from "../webamp/built/webamp.bundle";
+import * as WebampInstance from "../webamp/built/webamp.bundle";
 import getStore from "./store";
 import App from "./components/App";
 // import Loading from "./loading";
@@ -11,6 +11,9 @@ import LandingPage from "./landingpage";
 import SpotifyApiService from "./SpotifyApiService";
 import media from "./media";
 import { PersistGate } from "redux-persist/integration/react";
+
+// TODO: Workaround, need to figure out how to import webamp types
+const Webamp: any = WebampInstance;
 
 if (!Webamp.browserIsSupported()) {
   // eslint-disable-next-line
@@ -48,11 +51,10 @@ const webamp = new Webamp(
   {}
 );
 
-console.log(webamp);
 // Render after the skin has loaded.
 webamp.renderWhenReady(document.getElementById("winamp-container"));
 
-const store = getStore(media);
+const store = getStore(media, null);
 const persistor = persistStore(store);
 let tokens;
 
@@ -75,15 +77,11 @@ if (tokens) {
   render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <App
-        // container={this.options.container}
-        // filePickers={this.options.filePickers}
-        />
+        <App />
       </PersistGate>
     </Provider>,
     document.getElementById("app")
   );
-  // winamp.renderWhenReady(document.getElementById("app"), tokens);
 } else {
   render(<LandingPage />, document.getElementById("app"));
 }

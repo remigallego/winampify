@@ -1,21 +1,23 @@
-import { ContextMenu, Item, Separator, Submenu } from "react-contexify";
+import { ContextMenu, Item, Separator } from "react-contexify";
 import "react-contexify/dist/ReactContexify.min.css";
 import React from "react";
 
-const FileContextMenu = ({
-  onRename,
-  onDelete,
-  addToPlaylist,
-  onCopy,
-  onPaste
-}) => {
-  const renameItem = () => <Item onClick={onRename}>Rename</Item>;
-  const deleteItem = () => <Item onClick={onDelete}>Delete</Item>;
+interface Props {
+  onRename: (e: any) => void;
+  onDelete: (e: any) => void;
+  addToPlaylist: (e: any) => void;
+  onCopy: (e: any) => void;
+  onPaste: (e: any) => void;
+}
+
+const FileContextMenu = (props: Props) => {
+  const renameItem = () => <Item onClick={props.onRename}>Rename</Item>;
+  const deleteItem = () => <Item onClick={props.onDelete}>Delete</Item>;
   const addToPlaylistItem = () => (
-    <Item onClick={addToPlaylist}>Add To Playlist</Item>
+    <Item onClick={props.addToPlaylist}>Add To Playlist</Item>
   );
-  const copyItem = () => <Item onClick={onCopy}>Copy</Item>;
-  const pasteItem = () => <Item onClick={onPaste}>Paste</Item>;
+  const copyItem = () => <Item onClick={props.onCopy}>Copy</Item>;
+  const pasteItem = () => <Item onClick={props.onPaste}>Paste</Item>;
 
   return (
     <div>

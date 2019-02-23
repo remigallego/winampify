@@ -16,12 +16,39 @@ import {
   cancelRenaming,
   deleteFile
 } from "./../../actions/desktop";
-import DesktopFile from "./File";
+import FileItem from "./FileItem";
 import FileContextMenu from "./FileContextMenu";
-// import "../../../css/spotify-ui.css";
+import { File } from "../../types";
+import { AppState } from "../../reducers";
 
-class Desktop extends React.Component {
-  constructor(props) {
+interface OwnProps {
+  files: Array<File>;
+  selectionBox: any;
+}
+
+interface DispatchProps {
+  deleteFile: (fileId: string) => void;
+  moveFile: (file: any) => void;
+  cancelRenaming: () => void;
+  createFile: (file: any) => void;
+  renameFile: (id: string) => void;
+  confirmRenameFile: (file: any, value?: any) => void;
+  addTrackFromURI: (uri: string) => void;
+  openImage: (uri: string, x: number, y: number) => void;
+  addTrackZeroAndPlay: (uri: string) => void;
+  viewTracksFromAlbum: (uri: string) => void;
+  viewAlbumsFromArtist: (uri: string) => void;
+}
+
+type Props = DispatchProps & OwnProps;
+
+interface State {
+  selected: Array<string>;
+  clipboard: string | null;
+}
+
+class Desktop extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       selected: [],
@@ -44,7 +71,7 @@ class Desktop extends React.Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.selectionBox === this.props.selectionBox) return;
     const selected = nextProps.files
       .filter(
@@ -64,9 +91,9 @@ class Desktop extends React.Component {
     });
   }
 
-  onDragStart(e, files) {
-    e.dataTransfer.setData("isFileMoving", true);
-    const tracks = files.map(file => {
+  onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<File>) {
+    e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
+    const tracks = files.map((file: any) => {
       return {
         metaData: {
           artist: "",
@@ -83,13 +110,13 @@ class Desktop extends React.Component {
     e.dataTransfer.setData("tracks", JSON.stringify(tracks)); // for winamp
   }
 
-  onDrop(e) {
+  onDrop(e: React.DragEvent<HTMLElement>) {
     e.preventDefault();
     const isFileMoving = e.dataTransfer.getData("isFileMoving");
     const files = JSON.parse(e.dataTransfer.getData("files"));
 
     if (!isFileMoving) {
-      files.map(file =>
+      files.map((file: any) =>
         this.props.createFile({
           uri: file.uri,
           x: e.clientX - 50,
@@ -99,7 +126,7 @@ class Desktop extends React.Component {
         })
       );
     } else {
-      files.map(file =>
+      files.map((file: any) =>
         this.props.moveFile({
           id: file.id,
           x: e.clientX + file.deltaX,
@@ -109,17 +136,17 @@ class Desktop extends React.Component {
     }
   }
 
-  renderFile(file) {
+  renderFile(file: File) {
     return (
       <div
         draggable={!file.renaming}
         onDragStart={e => {
           const selectedFiles = this.props.files
             .filter(_file => this.state.selected.indexOf(_file.id) > -1)
-            .map(_file => {
+            .map((_file: any) => {
               _file.deltaX = _file.x - e.clientX;
               _file.deltaY = _file.y - e.clientY;
-              _file.name = file.title; // FIXME:
+              _file.name = file.title; // TODO:
               _file.duration = Math.floor(Math.random() * 306) + 201;
               _file.defaultName = file.title;
               return _file;
@@ -131,7 +158,7 @@ class Desktop extends React.Component {
             this.setState({ selected: [file.id] });
         }}
       >
-        <DesktopFile
+        <FileItem
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
           onDoubleClick={e => this.doubleClickHandler(file, e)}
@@ -147,7 +174,7 @@ class Desktop extends React.Component {
     );
   }
 
-  doubleClickHandler(file, e) {
+  doubleClickHandler(file: File, e: any) {
     if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
     if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
     if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
@@ -159,7 +186,7 @@ class Desktop extends React.Component {
       );
   }
 
-  handleDesktopClick(e) {
+  handleDesktopClick(e: any) {
     if (e.target.id.split(" ").indexOf("dropzone") !== -1) {
       this.setState({ selected: [] });
       if (this.props.files.some(file => file.renaming)) {
@@ -182,7 +209,7 @@ class Desktop extends React.Component {
           padding: 0,
           margin: 0,
           overflow: "hidden",
-          zIndex: "-777"
+          zIndex: -777
         }}
         id="dropzone"
         className="selectzone"
@@ -215,8 +242,7 @@ class Desktop extends React.Component {
           }}
           addToPlaylist={e => {
             const track = this.props.files.find(file => file.id === e.ref.id);
-
-            this.props.addTrackFromURI(track.uri);
+            if (track !== undefined) this.props.addTrackFromURI(track.uri);
           }}
         />
         <ContextMenuProvider id="desktop">
@@ -236,26 +262,28 @@ class Desktop extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state: AppState) => ({
   desktop: state.desktop,
-  files: selectFiles(state),
-  albumCovers: state.display.albumCovers
+  files: selectFiles(state)
 });
 
-const mapDispatchToProps = dispatch => ({
-  createFile: file => {
+const mapDispatchToProps = (dispatch: any): DispatchProps => ({
+  createFile: (file: File) => {
     dispatch(createFile(file));
   },
-  viewTracksFromAlbum: album => dispatch(viewTracksFromAlbum(album)),
-  viewAlbumsFromArtist: artist => dispatch(viewAlbumsFromArtist(artist)),
-  addTrackZeroAndPlay: track => dispatch(addTrackZeroAndPlay(track)),
-  moveFile: file => dispatch(moveFile(file)),
-  openImage: (image, x, y) => dispatch(addImage(image, x, y)),
-  renameFile: file => dispatch(renameFile(file)),
-  deleteFile: fileId => dispatch(deleteFile(fileId)),
+  viewTracksFromAlbum: (album: string) => dispatch(viewTracksFromAlbum(album)),
+  viewAlbumsFromArtist: (artist: string) =>
+    dispatch(viewAlbumsFromArtist(artist)),
+  addTrackZeroAndPlay: (track: any) => dispatch(addTrackZeroAndPlay(track)),
+  moveFile: (file: File) => dispatch(moveFile(file)),
+  openImage: (image: string, x: number, y: number) =>
+    dispatch(addImage(image, x, y)),
+  renameFile: (id: string) => dispatch(renameFile(id)),
+  deleteFile: (fileId: string) => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),
-  confirmRenameFile: (file, title) => dispatch(confirmRenameFile(file, title)),
-  addTrackFromURI: uri => dispatch(addTrackFromURI(uri))
+  confirmRenameFile: (file: any, title: string) =>
+    dispatch(confirmRenameFile(file, title)),
+  addTrackFromURI: (uri: string) => dispatch(addTrackFromURI(uri))
 });
 
 export default connect(

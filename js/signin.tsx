@@ -11,7 +11,7 @@ const Signin = () => {
       <div className="signin-btn-flex">
         <div
           className="signin-btn"
-          onClick={() => (window.location = `${server}/login`)}
+          onClick={() => (window.location.href = `${server}/login`)}
         >
           SIGN IN WITH SPOTIFY
         </div>
