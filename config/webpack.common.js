@@ -42,12 +42,15 @@ module.exports = {
     })
   ],
   entry: {
-    winamp: ["./js/index.tsx"]
+    winampify: ["./js/index.tsx"]
   },
   output: {
     filename: "[name]-[hash].js",
     chunkFilename: "[name]-[hash].js",
     publicPath: "/",
     path: path.resolve(__dirname, "../built")
+  },
+  optimization: {
+    minimize: true
   }
 };

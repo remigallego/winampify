@@ -1,16 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Explorer from "./Explorer";
-import "../../css/react-context-menu.css";
-import "../../css/winamp.css";
 import Desktop from "./Desktop";
 import InfosBar from "./InfosBar";
 import SelectionBox from "./SelectionBox";
 
-import Test from "./Test";
+interface State {
+  selectionBox: {
+    target: Array<number>;
+    origin: Array<number>;
+  };
+}
 
-class App extends React.Component {
-  constructor(props) {
+class App extends React.Component<{}, State> {
+  constructor(props: {}) {
     super(props);
     this.state = {
       selectionBox: { target: [0, 0], origin: [0, 0] }
@@ -21,7 +23,7 @@ class App extends React.Component {
       <div>
         <SelectionBox
           selectZoneId={"selectzone"}
-          onSelect={(e, origin, target) =>
+          onSelect={(e: any, origin: any, target: any) =>
             this.setState({ selectionBox: { target, origin } })
           }
         >
