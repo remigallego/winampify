@@ -1,11 +1,12 @@
 import { createSelector } from "reselect";
+import { AppState } from "../reducers";
 
 export const getAlbumCovers = createSelector(
-  state => state.explorer.albumCovers,
+  (state: AppState) => state.explorer.albumCovers,
   albumCovers => albumCovers
 );
 
 export const getExplorers = createSelector(
-  state => state.explorer.allIds,
+  (state: AppState) => state.explorer.allIds,
   allIds => allIds
 );

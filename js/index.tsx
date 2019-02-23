@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import * as WebampInstance from "../webamp/built/webamp.bundle";
 import getStore from "./store";
 import App from "./components/App";
-// import Loading from "./loading";
 import LandingPage from "./landingpage";
 import SpotifyApiService from "./SpotifyApiService";
 import media from "./media";

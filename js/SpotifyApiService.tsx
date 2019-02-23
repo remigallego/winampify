@@ -1,18 +1,24 @@
 import React from "react";
 
-class SpotifyApiService extends React.Component {
-  constructor() {
-    super();
+interface Props {}
+interface State {}
+
+class SpotifyApiService extends React.Component<Props, State> {
+  accessToken: string | null;
+  apiEndpoint: string;
+
+  constructor(props: Props) {
+    super(props);
     this.accessToken = null;
     this.apiEndpoint = "https://api.spotify.com/v1";
     this.setAccessToken = this.setAccessToken.bind(this);
   }
 
-  setAccessToken(accessToken) {
+  setAccessToken(accessToken: string) {
     this.accessToken = accessToken;
   }
 
-  get(endpoint) {
+  get(endpoint: string) {
     return new Promise(resolve => {
       fetch(`${this.apiEndpoint}/${endpoint}`, {
         method: "GET",
@@ -29,5 +35,5 @@ class SpotifyApiService extends React.Component {
   }
 }
 
-const SpotifyApiServiceInstance = new SpotifyApiService();
+const SpotifyApiServiceInstance = new SpotifyApiService({});
 export default SpotifyApiServiceInstance;
