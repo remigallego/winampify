@@ -6,7 +6,6 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web and AsyncStorage for react-native
 import reducer from "./reducers";
 import spotifyMiddleware from "./spotifyMiddleware";
-import { merge } from "./utils";
 import { UPDATE_TIME_ELAPSED, STEP_MARQUEE, SET_MEDIA } from "./actionTypes";
 
 const persistConfig = {
@@ -26,11 +25,8 @@ const logger = createLogger({
     action.type !== SET_MEDIA
 });
 
-const getStore = (media: any, stateOverrides: any) => {
+const getStore = (media: any) => {
   let initialState;
-  if (stateOverrides) {
-    initialState = merge(reducer, stateOverrides);
-  }
   const persistedReducer = persistReducer(persistConfig, reducer);
 
   return createStore(

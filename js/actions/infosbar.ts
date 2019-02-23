@@ -1,7 +1,8 @@
 import { getUserInfos } from "../SpotifyApiFunctions";
+import { Dispatch, Action } from "redux";
 
 export function setUserInfos() {
-  return dispatch => {
+  return (dispatch: Dispatch<Action>) => {
     getUserInfos().then(res => {
       dispatch({
         type: "SET_USER_INFOS",
