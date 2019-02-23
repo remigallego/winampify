@@ -1,7 +1,22 @@
 import React from "react";
 
-export default class SelectionBox extends React.Component {
-  constructor(props) {
+interface Props {
+  selectZoneId: string;
+  onSelect: (
+    e: any,
+    selectionBoxOrigin: Array<number>,
+    selectionBoxTarget: Array<number>
+  ) => void;
+}
+
+interface State {
+  selectionBox: boolean;
+  selectionBoxOrigin: Array<number>;
+  selectionBoxTarget: Array<number>;
+}
+
+export default class SelectionBox extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       selectionBox: false,
@@ -19,13 +34,13 @@ export default class SelectionBox extends React.Component {
 
     if (selectionBoxOrigin[1] > selectionBoxTarget[1]) return "scaleY(-1)";
     if (selectionBoxOrigin[0] > selectionBoxTarget[0]) return "scaleX(-1)";
-    return null;
+    return "";
   }
 
   render() {
     return (
       <div
-        onMouseDown={e => {
+        onMouseDown={(e: any) => {
           if (e.target.id.split(" ").indexOf(this.props.selectZoneId) !== -1)
             this.setState({
               selectionBox: true,
