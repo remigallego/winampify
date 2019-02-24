@@ -1,3 +1,4 @@
+import ReactGA from "react-ga";
 import React from "react";
 import PropTypes from "prop-types";
 import Explorer from "./Explorer";
@@ -16,6 +17,11 @@ class App extends React.Component {
       selectionBox: { target: [0, 0], origin: [0, 0] }
     };
   }
+
+  componentDidMount() {
+    ReactGA.pageview("/app");
+  }
+
   render() {
     return (
       <div>

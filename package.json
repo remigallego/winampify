@@ -85,6 +85,7 @@
     "react-dnd-html5-backend": "^2.6.0",
     "react-dom": "^16.2.0",
     "react-draggable": "^3.0.5",
+    "react-ga": "^2.5.7",
     "react-load-script": "0.0.6",
     "react-loaders": "^3.0.1",
     "react-motion": "^0.5.2",
