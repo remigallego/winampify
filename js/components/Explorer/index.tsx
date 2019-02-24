@@ -1,14 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getAlbumCovers } from "../../selectors/explorer";
+import { getImages } from "../../selectors/explorer";
 import { closeImage } from "../../actions/explorer";
 import ExplorerWindow from "./ExplorerWindow";
 import ImagesModal from "./ImagesModal";
 import { AppState } from "../../reducers";
+import { Image } from "../../types";
 
 interface StateProps {
   explorers: Array<number>;
-  albumCovers: any;
+  images: Array<Image>;
 }
 
 interface DispatchProps {
@@ -18,16 +19,17 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps;
 
 const Explorer = (props: Props) => {
+  console.log("props.images", props.images);
   return (
     <div>
       {props.explorers.map(explorerId => (
         <ExplorerWindow key={explorerId} explorerId={explorerId} />
       ))}
-      {Object.keys(props.albumCovers).map(key => (
+      {props.images.map((image, index) => (
         <ImagesModal
-          key={key}
-          image={props.albumCovers[key]}
-          onDismiss={() => props.closeImage(key)}
+          key={index}
+          image={props.images[index]}
+          onDismiss={() => props.closeImage(image.id)}
         />
       ))}
     </div>
@@ -35,7 +37,7 @@ const Explorer = (props: Props) => {
 };
 
 const mapStateToProps = (state: AppState): StateProps => ({
-  albumCovers: getAlbumCovers(state),
+  images: getImages(state),
   explorers: state.explorer.allIds
 });
 

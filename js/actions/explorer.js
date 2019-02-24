@@ -6,7 +6,7 @@ import {
   SET_EXPLORER_METADATA,
   LOADING,
   SET_ITEMS,
-  ADD_IMAGE,
+  OPEN_IMAGE,
   CLOSE_IMAGE
 } from "../actionTypes";
 import { addTrackZeroAndPlay, addTracksFromAlbum } from "../actionCreators";
@@ -357,7 +357,7 @@ export function selectFile(fileId, explorerId) {
 export function addImage(source, x, y) {
   return dispatch => {
     dispatch({
-      type: ADD_IMAGE,
+      type: OPEN_IMAGE,
       id: uuidv1(),
       source,
       x,

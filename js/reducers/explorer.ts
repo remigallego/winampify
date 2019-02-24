@@ -5,9 +5,7 @@ import {
   SET_ITEMS,
   GO_PREVIOUS_STATE,
   SAVE_PREVIOUS_STATE,
-  LOADING,
-  ADD_IMAGE,
-  CLOSE_IMAGE
+  LOADING
 } from "../actionTypes";
 
 export interface SingleExplorerState {
@@ -33,7 +31,6 @@ export interface ExplorerState {
     [id: number]: SingleExplorerState;
   };
   allIds: number[];
-  albumCovers: any;
 }
 
 const initialStateExplorer: SingleExplorerState = {
@@ -60,9 +57,7 @@ const initialState: ExplorerState = {
   byId: {
     0: initialStateExplorer
   },
-  allIds: [0],
-  // images
-  albumCovers: {}
+  allIds: [0]
 };
 
 const CREATE_NEW_EXPLORER = "CREATE_NEW_EXPLORER";
@@ -167,7 +162,6 @@ const explorer = (state = initialState, action: any) => {
       const previousStates = explorerState.previousStates;
       console.log(previousStates);
       if (previousStates.length < 1) return state;
-      const albumCovers = state;
       const { x, y, height, width } = explorerState;
       const lastState = previousStates.pop();
       return {
@@ -183,8 +177,7 @@ const explorer = (state = initialState, action: any) => {
             y,
             height,
             width
-          },
-          albumCovers
+          }
         }
       };
     }
@@ -218,22 +211,6 @@ const explorer = (state = initialState, action: any) => {
           }
         }
       };
-    case ADD_IMAGE: {
-      return {
-        ...state,
-        albumCovers: {
-          ...state.albumCovers,
-          [action.id]: { source: action.source, x: action.x, y: action.y }
-        }
-      };
-    }
-    case CLOSE_IMAGE: {
-      const { [action.id]: omit, ...albumCovers } = state.albumCovers;
-      return {
-        ...state,
-        albumCovers
-      };
-    }
     default:
       return state;
   }

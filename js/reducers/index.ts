@@ -15,15 +15,14 @@ import {
   UPDATE_TIME_ELAPSED,
   ADD_TRACK_FROM_URL,
   ADD_TRACK_FROM_URI,
-  S_UPDATE_PLAYER_OBJECT,
-  TOGGLE_DOUBLESIZE_MODE,
-  TOGGLE_MAIN_SHADE_MODE,
-  TOGGLE_EQUALIZER_SHADE_MODE
+  S_UPDATE_PLAYER_OBJECT
 } from "../actionTypes";
 
 import desktop, { DesktopState } from "./desktop";
 import explorer, { ExplorerState } from "./explorer";
 import user, { UserState } from "./user";
+import windows, { WindowsState } from "./windows";
+import images, { ImagesState } from "./images";
 
 const media = (state: any, action: any) => {
   if (!state) {
@@ -113,11 +112,15 @@ export interface AppState {
   explorer: ExplorerState;
   desktop: DesktopState;
   user: UserState;
+  windows: WindowsState;
+  images: ImagesState;
 }
 
 const reducer = combineReducers<AppState>({
   media,
   explorer,
+  images,
+  windows,
   desktop,
   user
 });

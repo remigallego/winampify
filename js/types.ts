@@ -7,3 +7,10 @@ export interface File {
   y: number;
   renaming: boolean;
 }
+
+export interface Image {
+  id: string;
+  source: string;
+  x: number;
+  y: number;
+}

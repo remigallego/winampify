@@ -1,8 +1,15 @@
 import React from "react";
 import Draggable from "react-draggable";
 import "./ImageAnimation.css";
-class ImagesModal extends React.Component {
-  constructor(props) {
+
+interface Props {}
+
+interface State {
+  animation: string;
+}
+
+class ImagesModal extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { animation: "growing-animation" };
   }
