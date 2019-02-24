@@ -7,6 +7,7 @@ import {
   SAVE_PREVIOUS_STATE,
   LOADING
 } from "../actionTypes";
+import { generateExplorerId } from "../utils/explorer";
 
 export interface SingleExplorerState {
   selected: any;
@@ -28,9 +29,9 @@ export interface SingleExplorerState {
 
 export interface ExplorerState {
   byId: {
-    [id: number]: SingleExplorerState;
+    [id: string]: SingleExplorerState;
   };
-  allIds: number[];
+  allIds: string[];
 }
 
 const initialStateExplorer: SingleExplorerState = {
@@ -54,42 +55,30 @@ const initialStateExplorer: SingleExplorerState = {
 };
 
 const initialState: ExplorerState = {
-  byId: {
-    0: initialStateExplorer
-  },
-  allIds: [0]
+  byId: {},
+  allIds: []
 };
 
-const CREATE_NEW_EXPLORER = "CREATE_NEW_EXPLORER";
-const CLOSE_EXPLORER = "CLOSE_EXPLORER";
-const UPDATE_POSITION = "UPDATE_POSITION";
-const UPDATE_SIZE = "UPDATE_SIZE";
-const SET_ON_TOP = "SET_ON_TOP";
+export const OPEN_EXPLORER = "OPEN_EXPLORER";
+export const CLOSE_EXPLORER = "CLOSE_EXPLORER";
+export const UPDATE_POSITION = "UPDATE_POSITION";
+export const UPDATE_SIZE = "UPDATE_SIZE";
 
 const explorer = (state = initialState, action: any) => {
-  const createNewExplorer = () => {
-    const newId = state.allIds.length;
+  const createNewExplorer = (id: string) => {
     return {
       ...state,
       byId: {
         ...state.byId,
-        [newId]: initialStateExplorer
+        [id]: initialStateExplorer
       },
-      allIds: [...state.allIds, newId]
+      allIds: [...state.allIds, id]
     };
   };
 
   switch (action.type) {
-    case SET_ON_TOP:
-      if (state.allIds.length === 1) return state;
-      const array = state.allIds.filter(id => id !== action.id);
-      array.push(action.id);
-      return {
-        ...state,
-        allIds: array
-      };
-    case CREATE_NEW_EXPLORER:
-      return createNewExplorer();
+    case OPEN_EXPLORER:
+      return createNewExplorer(action.id);
     case CLOSE_EXPLORER:
       const byId = state.byId;
       delete byId[action.id];

@@ -1,8 +1,13 @@
 import React from "react";
 import Draggable from "react-draggable";
 import "./ImageAnimation.css";
+import { Image } from "../../../types";
 
-interface Props {}
+interface Props {
+  image: Image;
+  key: string;
+  onDismiss: () => void;
+}
 
 interface State {
   animation: string;
@@ -11,7 +16,13 @@ interface State {
 class ImagesModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { animation: "growing-animation" };
+    this.state = { animation: "" };
+  }
+
+  componentWillMount() {
+    this.setState({ animation: "growing-animation" }, () =>
+      setTimeout(() => this.setState({ animation: "" }), 250)
+    );
   }
 
   imageStyle() {
@@ -26,7 +37,7 @@ class ImagesModal extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <>
         <Draggable
           onMouseDown={e => e.preventDefault()}
           key={this.props.key}
@@ -68,7 +79,7 @@ class ImagesModal extends React.Component<Props, State> {
             </div>
           </div>
         </Draggable>
-      </div>
+      </>
     );
   }
 }

@@ -3,7 +3,7 @@
   animation-timing-function: ease-out;
 }
 .shrink-animation {
-  animation: shrinkBox 0.26s forwards;
+  animation: shrinkBox 0.17s forwards;
   animation-timing-function: ease-out;
 }
 @keyframes createBox {

@@ -53,7 +53,7 @@ const webamp = new Webamp(
 // Render after the skin has loaded.
 webamp.renderWhenReady(document.getElementById("winamp-container"));
 
-const store = getStore(media, null);
+const store = getStore(media);
 const persistor = persistStore(store);
 let tokens;
 

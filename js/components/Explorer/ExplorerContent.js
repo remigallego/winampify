@@ -9,7 +9,7 @@ import {
   playAlbumFromExplorer,
   getArtistFromId,
   searchOnSpotify,
-  addImage,
+  openImage,
   selectFile
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
@@ -287,7 +287,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer(ownProps.explorerId)),
   playAlbumFromExplorer: currentId =>
     dispatch(playAlbumFromExplorer(currentId, ownProps.explorerId)),
-  openImage: (image, x, y) => dispatch(addImage(image, x, y)),
+  openImage: (image, x, y) => dispatch(openImage(image, x, y)),
   searchOnSpotify: (search, type, offset) =>
     dispatch(searchOnSpotify(search, type, offset, ownProps.explorerId))
 });

@@ -1,6 +1,6 @@
 import { Image } from "../types";
-import { OPEN_IMAGE, CLOSE_IMAGE } from "../actionTypes";
 import _ from "lodash";
+import { OPEN_IMAGE, CLOSE_IMAGE } from "../actions/images";
 
 export interface ImagesState {
   byId: {

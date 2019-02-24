@@ -23,11 +23,14 @@ import {
   getMyLibraryTracks,
   getArtistInfos
 } from "../SpotifyApiFunctions";
+import { generateExplorerId } from "../utils/explorer";
+import { OPEN_EXPLORER } from "../reducers/explorer";
 
 export function createNewExplorer() {
   return dispatch => {
     dispatch({
-      type: "CREATE_NEW_EXPLORER"
+      type: OPEN_EXPLORER,
+      id: generateExplorerId()
     });
   };
 }
@@ -59,15 +62,6 @@ export function updateSize(width, height, explorerId) {
       id: explorerId,
       width,
       height
-    });
-  };
-}
-
-export function setOnTop(explorerId) {
-  return dispatch => {
-    dispatch({
-      type: "SET_ON_TOP",
-      id: explorerId
     });
   };
 }
@@ -350,27 +344,6 @@ export function selectFile(fileId, explorerId) {
       type: "SET_SELECTED_EXPLORER",
       id: explorerId,
       selected: fileId
-    });
-  };
-}
-
-export function addImage(source, x, y) {
-  return dispatch => {
-    dispatch({
-      type: OPEN_IMAGE,
-      id: uuidv1(),
-      source,
-      x,
-      y
-    });
-  };
-}
-
-export function closeImage(id) {
-  return dispatch => {
-    dispatch({
-      type: CLOSE_IMAGE,
-      id
     });
   };
 }

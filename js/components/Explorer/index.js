@@ -6,7 +6,6 @@ import {
   searchOnSpotify,
   closeExplorer,
   updatePosition,
-  setOnTop,
   updateSize
 } from "../../actions/explorer";
 import { ExplorerWindowStyle } from "./styles.js";
@@ -57,12 +56,7 @@ class ExplorerWindow extends React.Component {
     } = ExplorerWindowStyle;
 
     return (
-      <div
-        style={{ zIndex: 9 }}
-        onClick={e => {
-          if (e.target.id !== "disallow-on-top") this.props.setOnTop();
-        }}
-      >
+      <div>
         <Rnd
           enableResizing={{
             top: false,
@@ -161,7 +155,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   closeExplorer: () => dispatch(closeExplorer(ownProps.explorerId)),
   updatePosition: (x, y) => dispatch(updatePosition(x, y, ownProps.explorerId)),
   updateSize: (width, height) =>
-    dispatch(updateSize(width, height, ownProps.explorerId)),
-  setOnTop: () => dispatch(setOnTop(ownProps.explorerId))
+    dispatch(updateSize(width, height, ownProps.explorerId))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(ExplorerWindow);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ExplorerWindow);

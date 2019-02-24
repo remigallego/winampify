@@ -4,8 +4,7 @@ import { addTrackZeroAndPlay, addTrackFromURI } from "../../actionCreators";
 import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 import {
   viewTracksFromAlbum,
-  viewAlbumsFromArtist,
-  addImage
+  viewAlbumsFromArtist
 } from "./../../actions/explorer";
 import {
   createFile,
@@ -20,6 +19,7 @@ import FileItem from "./FileItem";
 import FileContextMenu from "./FileContextMenu";
 import { File } from "../../types";
 import { AppState } from "../../reducers";
+import { openImage } from "../../actions/images";
 
 interface OwnProps {
   files: Array<File>;
@@ -34,7 +34,10 @@ interface DispatchProps {
   renameFile: (id: string) => void;
   confirmRenameFile: (file: any, value?: any) => void;
   addTrackFromURI: (uri: string) => void;
-  openImage: (uri: string, x: number, y: number) => void;
+  openImage: (
+    uri: string,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => void;
   addTrackZeroAndPlay: (uri: string) => void;
   viewTracksFromAlbum: (uri: string) => void;
   viewAlbumsFromArtist: (uri: string) => void;
@@ -161,7 +164,9 @@ class Desktop extends React.Component<Props, State> {
         <FileItem
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
-          onDoubleClick={e => this.doubleClickHandler(file, e)}
+          onDoubleClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+            this.doubleClickHandler(file, e)
+          }
           confirmRenameFile={e => {
             e.preventDefault();
             if (e.target[0].value.length === 0) {
@@ -174,16 +179,14 @@ class Desktop extends React.Component<Props, State> {
     );
   }
 
-  doubleClickHandler(file: File, e: any) {
+  doubleClickHandler(
+    file: File,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) {
     if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
     if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
     if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
-    if (file.type === "image")
-      this.props.openImage(
-        file.uri,
-        e.nativeEvent.clientX,
-        e.nativeEvent.clientY
-      );
+    if (file.type === "image") this.props.openImage(file.uri, e);
   }
 
   handleDesktopClick(e: any) {
@@ -276,8 +279,8 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
     dispatch(viewAlbumsFromArtist(artist)),
   addTrackZeroAndPlay: (track: any) => dispatch(addTrackZeroAndPlay(track)),
   moveFile: (file: File) => dispatch(moveFile(file)),
-  openImage: (image: string, x: number, y: number) =>
-    dispatch(addImage(image, x, y)),
+  openImage: (image: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+    dispatch(openImage(image, e)),
   renameFile: (id: string) => dispatch(renameFile(id)),
   deleteFile: (fileId: string) => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),

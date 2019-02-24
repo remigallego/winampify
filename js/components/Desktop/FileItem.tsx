@@ -10,7 +10,7 @@ import { File } from "../../types";
 interface Props {
   file: File;
   onClick?: (e: any) => void;
-  onDoubleClick: (e: any) => void;
+  onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   confirmRenameFile: (e: any) => void;
   selected: boolean;
 }

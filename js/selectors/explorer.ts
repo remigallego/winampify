@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { AppState } from "../reducers";
 
-export const getImages = createSelector(
+export const selectImages = createSelector(
   (state: AppState) => state.images.allIds,
   (state: AppState) => state.images.byId,
   (allIds, byId) => {

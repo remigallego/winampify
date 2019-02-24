@@ -1,8 +1,8 @@
 import React from "react";
-import Explorer from "./Explorer";
 import Desktop from "./Desktop";
 import InfosBar from "./InfosBar";
 import SelectionBox from "./SelectionBox";
+import WindowsManager from "./WindowsManager";
 
 interface State {
   selectionBox: {
@@ -18,6 +18,7 @@ class App extends React.Component<{}, State> {
       selectionBox: { target: [0, 0], origin: [0, 0] }
     };
   }
+
   render() {
     return (
       <div>
@@ -29,7 +30,7 @@ class App extends React.Component<{}, State> {
         >
           <InfosBar />
           <Desktop selectionBox={this.state.selectionBox} />
-          <Explorer />
+          <WindowsManager />
         </SelectionBox>
       </div>
     );
