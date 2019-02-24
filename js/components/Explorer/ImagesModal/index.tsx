@@ -25,16 +25,6 @@ class ImagesModal extends React.Component<Props, State> {
     );
   }
 
-  imageStyle() {
-    return {
-      position: "absolute",
-      transform: "translate(-50%, -50%)",
-      width: "400px",
-      resize: "both",
-      overflow: "auto"
-    };
-  }
-
   render() {
     return (
       <>
@@ -46,7 +36,19 @@ class ImagesModal extends React.Component<Props, State> {
             y: this.props.image.y - 200
           }}
         >
-          <div style={this.imageStyle()}>
+          <div
+            style={{
+              position: "absolute",
+              transform: "translate(-50%, -50%)",
+              width: "400px",
+              resize: "both",
+              overflow: "auto",
+              "box-shadow":
+                this.state.animation.length === 0
+                  ? "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                  : ""
+            }}
+          >
             <div className={this.state.animation}>
               <div
                 style={{
