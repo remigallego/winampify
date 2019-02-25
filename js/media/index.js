@@ -1,4 +1,4 @@
-import eventListener from "../spotifyEvents";
+import eventListener from "../SpotifyEvents";
 
 class Media {
   constructor() {

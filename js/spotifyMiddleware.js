@@ -17,7 +17,7 @@ import {
   S_UPDATE_PLAYER_OBJECT
 } from "./actionTypes";
 
-import eventListener from "./spotifyEvents";
+import eventListener from "./SpotifyEvents";
 
 import { next as nextTrack } from "./actionCreators";
 export default mediaClass => store => {

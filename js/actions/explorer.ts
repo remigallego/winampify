@@ -1,4 +1,3 @@
-import uuidv1 from "uuid/v1";
 import {
   REMOVE_ALL_TRACKS,
   UNSET_FOCUS_EXPLORER,
@@ -6,8 +5,6 @@ import {
   SET_EXPLORER_METADATA,
   LOADING,
   SET_ITEMS,
-  OPEN_IMAGE,
-  CLOSE_IMAGE
 } from "../actionTypes";
 import { addTrackZeroAndPlay, addTracksFromAlbum } from "../actionCreators";
 import {
@@ -25,9 +22,11 @@ import {
 } from "../SpotifyApiFunctions";
 import { generateExplorerId } from "../utils/explorer";
 import { OPEN_EXPLORER } from "../reducers/explorer";
+import { Dispatch, Action } from "redux";
+import { AppState } from "../reducers";
 
 export function createNewExplorer() {
-  return dispatch => {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: OPEN_EXPLORER,
       id: generateExplorerId()
@@ -35,8 +34,8 @@ export function createNewExplorer() {
   };
 }
 
-export function closeExplorer(explorerId) {
-  return dispatch => {
+export function closeExplorer(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "CLOSE_EXPLORER",
       id: explorerId
@@ -44,8 +43,8 @@ export function closeExplorer(explorerId) {
   };
 }
 
-export function updatePosition(x, y, explorerId) {
-  return dispatch => {
+export function updatePosition(x: number, y: number, explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "UPDATE_POSITION",
       id: explorerId,
@@ -55,8 +54,8 @@ export function updatePosition(x, y, explorerId) {
   };
 }
 
-export function updateSize(width, height, explorerId) {
-  return dispatch => {
+export function updateSize(width: number, height: number, explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "UPDATE_SIZE",
       id: explorerId,
@@ -66,8 +65,8 @@ export function updateSize(width, height, explorerId) {
   };
 }
 
-export function unsetFocusExplorer(explorerId) {
-  return dispatch => {
+export function unsetFocusExplorer(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: UNSET_FOCUS_EXPLORER,
       id: explorerId
@@ -75,15 +74,15 @@ export function unsetFocusExplorer(explorerId) {
   };
 }
 
-export function playTrackFromExplorer(trackId, explorerId) {
-  return dispatch => {
+export function playTrackFromExplorer(trackId: string, explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: REMOVE_ALL_TRACKS, id: explorerId });
     dispatch(addTrackZeroAndPlay(trackId));
   };
 }
 
-export function searchOnSpotify(search, type, offset, explorerId) {
-  return (dispatch, getState) => {
+export function searchOnSpotify(search: string, type: string, offset: string, explorerId: string) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     dispatch({ type: "SEARCH", id: explorerId });
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({
@@ -139,15 +138,15 @@ export function searchOnSpotify(search, type, offset, explorerId) {
   };
 }
 
-export function playAlbumFromExplorer(album, explorerId) {
-  return dispatch => {
+export function playAlbumFromExplorer(album, explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: REMOVE_ALL_TRACKS, id: explorerId });
     dispatch(addTracksFromAlbum(album.id));
   };
 }
 
-export function viewAlbumsFromArtist(artist, explorerId) {
-  return (dispatch, getState) => {
+export function viewAlbumsFromArtist(artist: string, explorerId: string) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     if (explorerId === undefined) {
       dispatch(createNewExplorer());
       explorerId = getState().explorer.allIds.length - 1;
@@ -176,8 +175,8 @@ export function viewAlbumsFromArtist(artist, explorerId) {
   };
 }
 
-export function viewTracksFromAlbum(album, explorerId) {
-  return dispatch => {
+export function viewTracksFromAlbum(album: string, explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getTracksFromAlbum(album)
@@ -207,8 +206,8 @@ export function viewTracksFromAlbum(album, explorerId) {
   };
 }
 
-export function viewMyTopArtists(explorerId) {
-  return dispatch => {
+export function viewMyTopArtists(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getTopArtistsFromMe().then(artists => {
@@ -232,8 +231,8 @@ export function viewMyTopArtists(explorerId) {
   };
 }
 
-export function viewMyFollowedArtists(explorerId) {
-  return dispatch => {
+export function viewMyFollowedArtists(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getFollowedArtistsFromMe().then(artists => {
@@ -257,8 +256,8 @@ export function viewMyFollowedArtists(explorerId) {
   };
 }
 
-export function viewMyRecentlyPlayed(explorerId) {
-  return dispatch => {
+export function viewMyRecentlyPlayed(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getMyRecentlyPlayed().then(tracks => {
@@ -282,8 +281,8 @@ export function viewMyRecentlyPlayed(explorerId) {
   };
 }
 
-export function viewMyLibraryAlbums(explorerId) {
-  return dispatch => {
+export function viewMyLibraryAlbums(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getMyLibraryAlbums().then(albums => {
@@ -307,8 +306,8 @@ export function viewMyLibraryAlbums(explorerId) {
   };
 }
 
-export function viewMyLibraryTracks(explorerId) {
-  return dispatch => {
+export function viewMyLibraryTracks(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
     getMyLibraryTracks().then(tracks => {
@@ -323,7 +322,7 @@ export function viewMyLibraryTracks(explorerId) {
       dispatch({
         type: SET_ITEMS,
         id: explorerId,
-        tracks: tracks.map(obj => obj.track),
+        tracks: tracks.map((obj: any) => obj.track),
         albums: null,
         playlists: null,
         artists: null
@@ -332,14 +331,14 @@ export function viewMyLibraryTracks(explorerId) {
   };
 }
 
-export function getArtistFromId(id) {
+export function getArtistFromId(id: string) {
   return () => {
     getArtistInfos(id).then(result => result);
   };
 }
 
-export function selectFile(fileId, explorerId) {
-  return dispatch => {
+export function selectFile(fileId: string, explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "SET_SELECTED_EXPLORER",
       id: explorerId,
