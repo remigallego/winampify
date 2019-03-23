@@ -51,7 +51,7 @@ const FileItem = (props: Props) => {
         onDoubleClick={props.onDoubleClick}
       >
         <img src={getIcon()} style={DesktopFileStyle.image} />
-        {file.renaming ? (
+        {file.isRenaming ? (
           <InputRenaming
             initialValue={file.title}
             confirmRenameFile={props.confirmRenameFile}

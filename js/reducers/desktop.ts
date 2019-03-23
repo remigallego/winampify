@@ -19,7 +19,7 @@ const cancelRenaming = (state: DesktopState) => {
     // @ts-ignore
     byId[id] = {
       ...state.byId[id],
-      renaming: false
+      isRenaming: false
     };
   });
   return { byId: byId, allIds: state.allIds };
@@ -39,7 +39,7 @@ const desktop = (state: DesktopState = initialState, action: any) => {
             y: action.payload.y,
             title: action.payload.title,
             type: action.payload.type,
-            renaming: false
+            isRenaming: false
           }
         },
         allIds: [...state.allIds, action.payload.id]
@@ -73,7 +73,7 @@ const desktop = (state: DesktopState = initialState, action: any) => {
           ...state.byId,
           [action.payload.id]: {
             ...state.byId[action.payload.id],
-            renaming: true
+            isRenaming: true
           }
         },
         allIds: [...state.allIds]
@@ -86,7 +86,7 @@ const desktop = (state: DesktopState = initialState, action: any) => {
           [action.payload.id]: {
             ...state.byId[action.payload.id],
             title: action.payload.title,
-            renaming: false
+            isRenaming: false
           }
         },
         allIds: [...state.allIds]

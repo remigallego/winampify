@@ -1,16 +1,13 @@
 import {
-  REMOVE_ALL_TRACKS,
   UNSET_FOCUS_EXPLORER,
   SAVE_PREVIOUS_STATE,
   SET_EXPLORER_METADATA,
   LOADING,
-  SET_ITEMS,
+  SET_ITEMS
 } from "../actionTypes";
-import { addTrackZeroAndPlay, addTracksFromAlbum } from "../actionCreators";
 import {
   getSearchResult,
   getAlbumsFromArtist,
-  getArtistName,
   getTracksFromAlbum,
   getAlbumInfos,
   getTopArtistsFromMe,
@@ -18,7 +15,7 @@ import {
   getMyRecentlyPlayed,
   getMyLibraryAlbums,
   getMyLibraryTracks,
-  getArtistInfos
+  getArtistData
 } from "../SpotifyApiFunctions";
 import { generateExplorerId } from "../utils/explorer";
 import { OPEN_EXPLORER } from "../reducers/explorer";
@@ -74,14 +71,12 @@ export function unsetFocusExplorer(explorerId: string) {
   };
 }
 
-export function playTrackFromExplorer(trackId: string, explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: REMOVE_ALL_TRACKS, id: explorerId });
-    dispatch(addTrackZeroAndPlay(trackId));
-  };
-}
-
-export function searchOnSpotify(search: string, type: string, offset: string, explorerId: string) {
+export function searchOnSpotify(
+  search: string,
+  type: string,
+  offset: string,
+  explorerId: string
+) {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     dispatch({ type: "SEARCH", id: explorerId });
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
@@ -103,7 +98,7 @@ export function searchOnSpotify(search: string, type: string, offset: string, ex
         artists = results.artists.items;
         const stateArtists = getState().explorer.byId[explorerId].artists;
         if (offset !== "0") {
-          artists.map(artist => stateArtists.push(artist));
+          artists.map((artist: any) => stateArtists.push(artist));
           artists = stateArtists;
         }
       }
@@ -114,7 +109,7 @@ export function searchOnSpotify(search: string, type: string, offset: string, ex
         tracks = results.tracks.items;
         const stateTracks = getState().explorer.byId[explorerId].tracks;
         if (offset !== "0") {
-          tracks.map(track => stateTracks.push(track));
+          tracks.map((track: any) => stateTracks.push(track));
           tracks = stateTracks;
         }
       }
@@ -122,7 +117,7 @@ export function searchOnSpotify(search: string, type: string, offset: string, ex
         albums = results.albums.items;
         const stateAlbums = getState().explorer.byId[explorerId].albums;
         if (offset !== "0") {
-          albums.map(album => stateAlbums.push(album));
+          albums.map((album: any) => stateAlbums.push(album));
           albums = stateAlbums;
         }
       }
@@ -138,39 +133,32 @@ export function searchOnSpotify(search: string, type: string, offset: string, ex
   };
 }
 
-export function playAlbumFromExplorer(album, explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: REMOVE_ALL_TRACKS, id: explorerId });
-    dispatch(addTracksFromAlbum(album.id));
-  };
-}
-
-export function viewAlbumsFromArtist(artist: string, explorerId: string) {
-  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export function viewAlbumsFromArtist(artist: string, explorerId: number) {
+  return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     if (explorerId === undefined) {
-      dispatch(createNewExplorer());
+      createNewExplorer();
       explorerId = getState().explorer.allIds.length - 1;
     }
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
-    getAlbumsFromArtist(artist).then(albums => {
-      dispatch({
-        type: SET_ITEMS,
-        id: explorerId,
-        tracks: null,
-        albums: albums,
-        playlists: null,
-        artists: null
-      });
-      getArtistName(artist).then(name => {
-        dispatch({
-          type: SET_EXPLORER_METADATA,
-          id: explorerId,
-          currentId: artist,
-          title: name,
-          playlistable: false
-        });
-      });
+
+    const albums = await getAlbumsFromArtist(artist);
+    const artistName = await getArtistData(artist);
+
+    dispatch({
+      type: SET_ITEMS,
+      id: explorerId,
+      tracks: null,
+      albums: albums,
+      playlists: null,
+      artists: null
+    });
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: artistName,
+      title: name,
+      playlistable: false
     });
   };
 }
@@ -182,7 +170,7 @@ export function viewTracksFromAlbum(album: string, explorerId: string) {
     getTracksFromAlbum(album)
       .then(tracks => tracks)
       .then(tracks =>
-        getAlbumInfos(album).then(albumInfos => {
+        getAlbumInfos(album).then((albumInfos: any) => {
           const title = `${albumInfos.artists[0].name} - ${albumInfos.name}`;
           const image = albumInfos.images[0].url;
           dispatch({
@@ -256,30 +244,30 @@ export function viewMyFollowedArtists(explorerId: string) {
   };
 }
 
-export function viewMyRecentlyPlayed(explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
+export const viewMyRecentlyPlayed = (explorerId: string) => {
+  return async (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
-    getMyRecentlyPlayed().then(tracks => {
-      dispatch({
-        type: SET_EXPLORER_METADATA,
-        id: explorerId,
-        currentId: "recently",
-        title: "Recently Played",
-        image: null,
-        playlistable: false // TODO: Is it actually?
-      });
-      dispatch({
-        type: SET_ITEMS,
-        tracks: tracks,
-        id: explorerId,
-        albums: null,
-        playlists: null,
-        artists: null
-      });
+    const recentlyPlayed = await getMyRecentlyPlayed();
+    const tracks = recentlyPlayed.map(derivedTrack => derivedTrack.track);
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: "recently",
+      title: "Recently Played",
+      image: null,
+      playlistable: false // TODO: Is it actually useful?
+    });
+    dispatch({
+      type: SET_ITEMS,
+      tracks: tracks,
+      id: explorerId,
+      albums: null,
+      playlists: null,
+      artists: null
     });
   };
-}
+};
 
 export function viewMyLibraryAlbums(explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
@@ -298,7 +286,7 @@ export function viewMyLibraryAlbums(explorerId: string) {
         type: SET_ITEMS,
         id: explorerId,
         tracks: null,
-        albums: albums.map(obj => obj.album),
+        albums: albums.map((obj: any) => obj.album),
         playlists: null,
         artists: null
       });
@@ -333,7 +321,7 @@ export function viewMyLibraryTracks(explorerId: string) {
 
 export function getArtistFromId(id: string) {
   return () => {
-    getArtistInfos(id).then(result => result);
+    getArtistData(id).then(result => result);
   };
 }
 

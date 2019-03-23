@@ -98,6 +98,7 @@ class ExplorerContent extends React.Component {
 
   renderTrack(track, index) {
     const selected = this.props.explorer.selected === index;
+    console.log("track === ", track);
     const fileName = `${track.artists[0].name} - ${track.name}`;
     return (
       <ExplorerItem

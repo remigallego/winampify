@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { addTrackZeroAndPlay, addTrackFromURI } from "../../actionCreators";
 import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 import {
   viewTracksFromAlbum,
@@ -33,12 +32,10 @@ interface DispatchProps {
   createFile: (file: any) => void;
   renameFile: (id: string) => void;
   confirmRenameFile: (file: any, value?: any) => void;
-  addTrackFromURI: (uri: string) => void;
   openImage: (
     uri: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
-  addTrackZeroAndPlay: (uri: string) => void;
   viewTracksFromAlbum: (uri: string) => void;
   viewAlbumsFromArtist: (uri: string) => void;
 }
@@ -68,7 +65,7 @@ class Desktop extends React.Component<Props, State> {
     addEventListener("keydown", e => {
       if (e.keyCode === 46) {
         // SUPPR
-        if (!this.props.files.some(file => file.renaming))
+        if (!this.props.files.some(file => file.isRenaming))
           this.state.selected.map(fileId => this.props.deleteFile(fileId));
       }
     });
@@ -142,7 +139,7 @@ class Desktop extends React.Component<Props, State> {
   renderFile(file: File) {
     return (
       <div
-        draggable={!file.renaming}
+        draggable={!file.isRenaming}
         onDragStart={e => {
           const selectedFiles = this.props.files
             .filter(_file => this.state.selected.indexOf(_file.id) > -1)
@@ -192,9 +189,9 @@ class Desktop extends React.Component<Props, State> {
   handleDesktopClick(e: any) {
     if (e.target.id.split(" ").indexOf("dropzone") !== -1) {
       this.setState({ selected: [] });
-      if (this.props.files.some(file => file.renaming)) {
+      if (this.props.files.some(file => file.isRenaming)) {
         const renamingInProgress = this.props.files.filter(
-          file => file.renaming
+          file => file.isRenaming
         );
         renamingInProgress.map(file => this.props.confirmRenameFile(file.id));
       }
@@ -277,7 +274,6 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   viewTracksFromAlbum: (album: string) => dispatch(viewTracksFromAlbum(album)),
   viewAlbumsFromArtist: (artist: string) =>
     dispatch(viewAlbumsFromArtist(artist)),
-  addTrackZeroAndPlay: (track: any) => dispatch(addTrackZeroAndPlay(track)),
   moveFile: (file: File) => dispatch(moveFile(file)),
   openImage: (image: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
     dispatch(openImage(image, e)),
@@ -285,8 +281,7 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   deleteFile: (fileId: string) => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),
   confirmRenameFile: (file: any, title: string) =>
-    dispatch(confirmRenameFile(file, title)),
-  addTrackFromURI: (uri: string) => dispatch(addTrackFromURI(uri))
+    dispatch(confirmRenameFile(file, title))
 });
 
 export default connect(

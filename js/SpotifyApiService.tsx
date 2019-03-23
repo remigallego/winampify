@@ -14,7 +14,7 @@ class SpotifyApiService {
     this.accessToken = accessToken;
   }
 
-  get(endpoint: string) {
+  get(endpoint: string): Promise<any> {
     return new Promise(resolve => {
       fetch(`${this.apiEndpoint}/${endpoint}`, {
         method: "GET",

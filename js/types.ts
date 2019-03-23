@@ -5,7 +5,7 @@ export interface File {
   uri: string;
   x: number;
   y: number;
-  renaming: boolean;
+  isRenaming: boolean;
 }
 
 export interface Image {
@@ -14,3 +14,22 @@ export interface Image {
   x: number;
   y: number;
 }
+
+export interface Track {
+  artists: Artist[];
+  available_markets: string[];
+  disc_number: number;
+  explicit: boolean;
+  external_urls: {
+    [service: string]: string;
+  };
+  href: string;
+  id: string;
+  is_local: boolean;
+  name: string;
+  track_number: number;
+  type: string;
+  uri: string;
+}
+
+export interface Artist {}

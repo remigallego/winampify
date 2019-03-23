@@ -33,17 +33,13 @@ const webamp = new Webamp(
       }
     ],
     handleTrackDropEvent: e => {
-      return new Promise((resolve, reject) => {
-        if (e.dataTransfer.getData("tracks").length > 0) {
-          try {
-            resolve(JSON.parse(e.dataTransfer.getData("tracks")));
-          } catch (err) {
-            resolve(null);
-          }
-        } else {
-          resolve(null);
-        }
-      });
+      if (e.dataTransfer.getData("tracks").length > 0) {
+        const json = e.dataTransfer.getData("tracks");
+        try {
+          return JSON.parse(json);
+        } catch (err) {}
+      }
+      return null;
     }
     // Optional. The default skin is included in the js bundle, and will be loaded by default.
   },
