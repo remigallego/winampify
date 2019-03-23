@@ -8,6 +8,12 @@ import {
   LOADING
 } from "../actionTypes";
 import { generateExplorerId } from "../utils/explorer";
+import {
+  ArtistData,
+  PlaylistData,
+  AlbumData,
+  TrackData
+} from "../SpotifyApi/types";
 
 export interface SingleExplorerState {
   selected: any;
@@ -16,15 +22,12 @@ export interface SingleExplorerState {
   image: any;
   playlistable: boolean; // Is this ever useful?
   previousStates: Array<any>;
-  artists: any;
-  albums: any;
-  tracks: any;
-  playlists: any;
   loading: boolean;
   width: number;
   height: number;
   x: number;
   y: number;
+  files: Array<File> | null;
 }
 
 export interface ExplorerState {
@@ -42,10 +45,7 @@ const initialStateExplorer: SingleExplorerState = {
   playlistable: false, // Is this ever useful?
   previousStates: [],
   // items
-  artists: null,
-  albums: null,
-  tracks: null,
-  playlists: null,
+  files: null,
   loading: false,
   // position
   width: 400,
@@ -64,21 +64,73 @@ export const CLOSE_EXPLORER = "CLOSE_EXPLORER";
 export const UPDATE_POSITION = "UPDATE_POSITION";
 export const UPDATE_SIZE = "UPDATE_SIZE";
 
-const explorer = (state = initialState, action: any) => {
-  const createNewExplorer = (id: string) => {
-    return {
-      ...state,
-      byId: {
-        ...state.byId,
-        [id]: initialStateExplorer
-      },
-      allIds: [...state.allIds, id]
-    };
+const setItems = (
+  state: ExplorerState,
+  payload: { id: string; files: File[] }
+) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...state.byId[payload.id],
+        files: payload.files.map(formatToFile),
+        loading: false
+      }
+    }
   };
+};
 
+const createNewExplorer = (state: ExplorerState, id: string) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [id]: initialStateExplorer
+    },
+    allIds: [...state.allIds, id]
+  };
+};
+
+const formatToFile = (item: any) => {
+  return {
+    metaData: item,
+    id: "",
+    isRenaming: false,
+    title: "",
+    x: 0,
+    y: 0
+  };
+};
+
+const goPreviousStateUpdate = (state: ExplorerState, payload: any) => {
+  const explorerState = state.byId[payload.id];
+  const previousStates = explorerState.previousStates;
+  if (previousStates.length < 1) return state;
+  const { x, y, height, width } = explorerState;
+  const lastState = previousStates.pop();
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...state.byId[payload.id],
+        ...lastState,
+        previousStates,
+        loading: false,
+        x,
+        y,
+        height,
+        width
+      }
+    }
+  };
+};
+
+const explorer = (state = initialState, action: any) => {
   switch (action.type) {
     case OPEN_EXPLORER:
-      return createNewExplorer(action.id);
+      return createNewExplorer(state, action.id);
     case CLOSE_EXPLORER:
       const byId = state.byId;
       delete byId[action.id];
@@ -120,7 +172,10 @@ const explorer = (state = initialState, action: any) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.id]: { ...state.byId[action.id], selected: action.selected }
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            selected: action.payload.selected
+          }
         }
       };
     case UNSET_FOCUS_EXPLORER:
@@ -147,45 +202,10 @@ const explorer = (state = initialState, action: any) => {
       };
     }
     case GO_PREVIOUS_STATE: {
-      const explorerState = state.byId[action.id];
-      const previousStates = explorerState.previousStates;
-      console.log(previousStates);
-      if (previousStates.length < 1) return state;
-      const { x, y, height, width } = explorerState;
-      const lastState = previousStates.pop();
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.id]: {
-            ...state.byId[action.id],
-            ...lastState,
-            previousStates,
-            loading: false,
-            x,
-            y,
-            height,
-            width
-          }
-        }
-      };
+      return goPreviousStateUpdate(state, action.payload);
     }
-    case SET_ITEMS: {
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.id]: {
-            ...state.byId[action.id],
-            tracks: action.tracks,
-            artists: action.artists,
-            albums: action.albums,
-            playlists: action.playlists,
-            loading: false
-          }
-        }
-      };
-    }
+    case SET_ITEMS:
+      return setItems(state, action.payload);
     case SET_EXPLORER_METADATA:
       return {
         ...state,

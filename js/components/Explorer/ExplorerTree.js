@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 
 import {
-  viewMyTopArtists,
-  viewMyFollowedArtists,
+  setMyTopArtists,
+  setMyFollowedArtists,
   viewMyRecentlyPlayed,
   viewMyLibraryAlbums,
   viewMyLibraryTracks,
@@ -17,7 +17,7 @@ import star from "./images/star.ico";
 import { ExplorerTreeStyle } from "./styles.js";
 class ExplorerTree extends React.Component {
   componentDidMount() {
-    this.props.viewMyTopArtists();
+    this.props.setMyTopArtists();
   }
   render() {
     const {
@@ -33,7 +33,7 @@ class ExplorerTree extends React.Component {
       >
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.viewMyTopArtists()}
+          onClick={() => this.props.setMyTopArtists()}
           style={explorerTreeText}
         >
           <img
@@ -45,7 +45,7 @@ class ExplorerTree extends React.Component {
         </div>
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.viewMyFollowedArtists()}
+          onClick={() => this.props.setMyFollowedArtists()}
           style={explorerTreeText}
         >
           <img
@@ -110,9 +110,9 @@ class ExplorerTree extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  viewMyTopArtists: () => dispatch(viewMyTopArtists(ownProps.explorerId)),
-  viewMyFollowedArtists: () =>
-    dispatch(viewMyFollowedArtists(ownProps.explorerId)),
+  setMyTopArtists: () => dispatch(setMyTopArtists(ownProps.explorerId)),
+  setMyFollowedArtists: () =>
+    dispatch(setMyFollowedArtists(ownProps.explorerId)),
   viewMyRecentlyPlayed: () =>
     dispatch(viewMyRecentlyPlayed(ownProps.explorerId)),
   viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums(ownProps.explorerId)),

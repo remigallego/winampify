@@ -6,13 +6,16 @@ import {
   GO_PREVIOUS_STATE
 } from "./actionTypes";
 
-import { getTrackInfos, getTracksFromAlbum } from "./SpotifyApiFunctions";
+import {
+  getTrackData,
+  getTracksFromAlbum
+} from "./SpotifyApi/spotifyFunctions";
 import { Action, Dispatch } from "redux";
 import { AppState } from "./reducers";
 
 export function goPreviousState(explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: GO_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: GO_PREVIOUS_STATE, payload: { id: explorerId } });
   };
 }
 

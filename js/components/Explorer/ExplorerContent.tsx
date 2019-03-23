@@ -3,39 +3,55 @@ import { connect } from "react-redux";
 
 import {
   viewAlbumsFromArtist,
-  viewTracksFromAlbum,
+  setTracksFromAlbum,
   unsetFocusExplorer,
-  playTrackFromExplorer,
-  playAlbumFromExplorer,
   getArtistFromId,
   searchOnSpotify,
-  openImage,
   selectFile
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
+import { File, Image } from "../../types";
+import { ArtistData, AlbumData, TrackData } from "../../SpotifyApi/types";
+import { SingleExplorerState } from "../../reducers/explorer";
 
 const { container } = ExplorerContentStyle;
 
-class ExplorerContent extends React.Component {
-  constructor(props) {
+interface Props {
+  selectFile: (id: string) => void;
+  playTrack: (id: string) => void;
+  getArtistInfo: (id: string) => void;
+  viewAlbumsFromArtist: (artist: string) => void;
+  setTracksFromAlbum: (album: string) => void;
+  unsetFocusExplorer: () => void;
+  playAlbumFromExplorer: (currentId: string) => void;
+  openImage: (image: string, x: number, y: number) => void;
+  searchOnSpotify: (search: string, type: string, offset: string) => void;
+  doubleclick: (id: string) => void;
+  explorerId: string;
+  explorer: SingleExplorerState;
+}
+
+class ExplorerContent extends React.Component<Props> {
+  timer: any = null;
+
+  constructor(props: Props) {
     super(props);
-    this.timer = null;
   }
-  clickHandler(id) {
+  clickHandler(id: number) {
     this.props.selectFile(id);
   }
-  doubleClickHandler(id) {
+  doubleClickHandler(id: string) {
     this.props.doubleclick(id);
   }
-  openAlbumFolder(albumId) {
-    this.props.viewTracksFromAlbum(albumId);
+  openAlbumFolder(albumId: string) {
+    this.props.setTracksFromAlbum(albumId);
   }
-  openArtistFolder(artistId) {
+  openArtistFolder(artistId: string) {
     this.props.viewAlbumsFromArtist(artistId);
   }
 
-  renderAlbums(albums) {
+  renderAlbums(albums: AlbumData[]) {
     if (albums)
       return albums.map((album, index) => {
         return this.renderAlbum(album, `al${index}`);
@@ -43,7 +59,7 @@ class ExplorerContent extends React.Component {
     return null;
   }
 
-  renderTracks(tracks) {
+  renderTracks(tracks: TrackData[]) {
     if (tracks)
       return tracks.map((track, index) => {
         return this.renderTrack(track, `tr${index}`);
@@ -51,33 +67,32 @@ class ExplorerContent extends React.Component {
     return null;
   }
 
-  renderArtists(artists) {
+  renderArtists(artists: ArtistData[]) {
     if (artists)
       return artists.map((artist, index) => {
+        console.log(artist);
         return this.renderArtist(artist, `ar${index}`);
       });
     return null;
   }
 
-  renderArtist(artist, index) {
-    const artistId = artist.id;
-    const selected = this.props.explorer.selected === artistId;
-    const fileName = artist.name;
+  renderArtist(artist: ArtistData, index: string) {
+    const selected = this.props.explorer.selected === artist.id;
     return (
       <ExplorerItem
         key={index}
         artist={artist}
         selected={selected}
         type={"artist"}
-        onClick={() => this.clickHandler(artistId)}
-        onDoubleClick={() => this.openArtistFolder(artistId)}
+        onClick={() => this.clickHandler(artist.id)}
+        onDoubleClick={() => this.openArtistFolder(artist.id)}
         infos={artist}
       >
-        {fileName}
+        {artist.name}
       </ExplorerItem>
     );
   }
-  renderAlbum(album, index) {
+  renderAlbum(album: AlbumData, index: string) {
     const selected = this.props.explorer.selected === index;
     const artist = album.artists.length > 0 ? album.artists[0].name : "unknown";
     return (
@@ -96,9 +111,8 @@ class ExplorerContent extends React.Component {
     );
   }
 
-  renderTrack(track, index) {
+  renderTrack(track: TrackData, index: string) {
     const selected = this.props.explorer.selected === index;
-    console.log("track === ", track);
     const fileName = `${track.artists[0].name} - ${track.name}`;
     return (
       <ExplorerItem
@@ -114,7 +128,7 @@ class ExplorerContent extends React.Component {
     );
   }
 
-  renderImage(image) {
+  renderImage(image: Image) {
     const selected = this.props.explorer.selected === -1;
     const title = this.props.explorer.title;
     return (
@@ -123,7 +137,7 @@ class ExplorerContent extends React.Component {
         type={"image"}
         image={image}
         onClick={() => this.clickHandler(-1)}
-        onDoubleClick={e =>
+        onDoubleClick={(e: any) =>
           this.props.openImage(
             image,
             e.nativeEvent.clientX,
@@ -160,12 +174,12 @@ class ExplorerContent extends React.Component {
     }
   }
 
-  renderCategory(text) {
+  renderCategory(text: string) {
     if (this.props.explorer.currentId === "search") {
       const count = () => {
         switch (text) {
           case "Artists": {
-            if (this.props.explorer.artists)
+            if (this.props.explorer.files)
               return this.props.explorer.artists.length;
             return 0;
           }
@@ -192,7 +206,7 @@ class ExplorerContent extends React.Component {
     return null;
   }
 
-  renderMore(type) {
+  renderMore(type: string) {
     return (
       <div
         style={ExplorerContentStyle.moreButton}
@@ -210,34 +224,53 @@ class ExplorerContent extends React.Component {
   }
 
   renderLoadedItems() {
-    const { artists, albums, tracks, image } = this.props.explorer;
+    const { files } = this.props.explorer;
+    console.log(files);
+    if (!files) {
+      return;
+    }
+    const artists = files
+      .filter((file: File) => file.metaData.type === "artist")
+      .map((file: File) => file.metaData);
+
+    const albums = files
+      .filter((file: File) => file.metaData.type === "album")
+      .map((file: File) => file.metaData);
+
+    const tracks = files
+      .filter((file: File) => file.metaData.type === "track")
+      .map((file: File) => file.metaData);
+
+    const playlists = files
+      .filter((file: File) => file.metaData.type === "playlist")
+      .map((file: File) => file.metaData);
     return (
       <div>
         {this.renderCategory("Artists")}
         {this.renderArtists(artists)}
-        {this.props.explorer.artists &&
+        {artists &&
           this.props.explorer.currentId === "search" &&
-          !(this.props.explorer.artists.length % 20) &&
+          !(artists.length % 20) &&
           this.renderMore("artist")}
         {this.renderCategory("Albums")}
         {this.renderAlbums(albums)}
-        {this.props.explorer.albums &&
+        {albums &&
           this.props.explorer.currentId === "search" &&
-          !(this.props.explorer.albums.length % 20) &&
+          !(albums.length % 20) &&
           this.renderMore("album")}
         {this.renderCategory("Tracks")}
         {this.renderTracks(tracks)}
-        {this.props.explorer.tracks &&
+        {tracks &&
           this.props.explorer.currentId === "search" &&
-          !(this.props.explorer.tracks.length % 20) &&
+          !(tracks.length % 20) &&
           this.renderMore("track")}
-        {this.props.explorer.image && this.renderImage(image)}
-        {this.props.explorer.playlistable && this.renderPlaylistFile()}
+        {this.props.explorer.image &&
+          this.renderImage(this.props.explorer.image)}
       </div>
     );
   }
 
-  renderLoader() {
+  renderLoading() {
     return (
       <div
         style={{
@@ -264,32 +297,34 @@ class ExplorerContent extends React.Component {
         style={container}
       >
         {this.props.explorer.loading
-          ? this.renderLoader()
+          ? this.renderLoading()
           : this.renderLoadedItems()}
       </div>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  selectFile: id => {
+const mapDispatchToProps = (dispatch: any, ownProps: Props) => ({
+  selectFile: (id: number) => {
     dispatch(selectFile(id, ownProps.explorerId));
   },
-  playTrack: id => {
+  playTrack: (id: string) => {
     dispatch(playTrackFromExplorer(id, ownProps.explorerId));
   },
-  getArtistInfo: id => {
-    dispatch(getArtistFromId(id, ownProps.explorerId));
+  getArtistInfo: (id: string) => {
+    dispatch(getArtistFromId(id));
   },
-  viewAlbumsFromArtist: artist =>
-    dispatch(viewAlbumsFromArtist(artist, ownProps.explorerId)),
-  viewTracksFromAlbum: album =>
-    dispatch(viewTracksFromAlbum(album, ownProps.explorerId)),
+  viewAlbumsFromArtist: (artist: string) => {
+    dispatch(viewAlbumsFromArtist(artist, ownProps.explorerId));
+  },
+  setTracksFromAlbum: (album: string) => {
+    dispatch(setTracksFromAlbum(album, ownProps.explorerId));
+  },
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer(ownProps.explorerId)),
-  playAlbumFromExplorer: currentId =>
+  playAlbumFromExplorer: (currentId: string) =>
     dispatch(playAlbumFromExplorer(currentId, ownProps.explorerId)),
   openImage: (image, x, y) => dispatch(openImage(image, x, y)),
-  searchOnSpotify: (search, type, offset) =>
+  searchOnSpotify: (search: string, type: string, offset: string) =>
     dispatch(searchOnSpotify(search, type, offset, ownProps.explorerId))
 });
 

@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 import {
-  viewTracksFromAlbum,
+  setTracksFromAlbum,
   viewAlbumsFromArtist
 } from "./../../actions/explorer";
 import {
@@ -29,14 +29,14 @@ interface DispatchProps {
   deleteFile: (fileId: string) => void;
   moveFile: (file: any) => void;
   cancelRenaming: () => void;
-  createFile: (file: any) => void;
+  createFile: (file: File) => void;
   renameFile: (id: string) => void;
   confirmRenameFile: (file: any, value?: any) => void;
   openImage: (
     uri: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
-  viewTracksFromAlbum: (uri: string) => void;
+  setTracksFromAlbum: (uri: string) => void;
   viewAlbumsFromArtist: (uri: string) => void;
 }
 
@@ -116,15 +116,17 @@ class Desktop extends React.Component<Props, State> {
     const files = JSON.parse(e.dataTransfer.getData("files"));
 
     if (!isFileMoving) {
-      files.map((file: any) =>
+      files.map((file: any) => {
+        console.log(file);
         this.props.createFile({
           uri: file.uri,
           x: e.clientX - 50,
           y: e.clientY - 50,
           title: file.title,
-          type: file.type
-        })
-      );
+          type: file.type,
+          metaData: null
+        });
+      });
     } else {
       files.map((file: any) =>
         this.props.moveFile({
@@ -137,6 +139,7 @@ class Desktop extends React.Component<Props, State> {
   }
 
   renderFile(file: File) {
+    console.log(file);
     return (
       <div
         draggable={!file.isRenaming}
@@ -181,7 +184,7 @@ class Desktop extends React.Component<Props, State> {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
     if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
-    if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
+    if (file.type === "album") this.props.setTracksFromAlbum(file.uri);
     if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
     if (file.type === "image") this.props.openImage(file.uri, e);
   }
@@ -240,6 +243,9 @@ class Desktop extends React.Component<Props, State> {
                 y: e.event.clientY - 25
               });
           }}
+          onTrackData={e => {
+            console.log(e.ref.id);
+          }}
           addToPlaylist={e => {
             const track = this.props.files.find(file => file.id === e.ref.id);
             if (track !== undefined) this.props.addTrackFromURI(track.uri);
@@ -271,7 +277,7 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   createFile: (file: File) => {
     dispatch(createFile(file));
   },
-  viewTracksFromAlbum: (album: string) => dispatch(viewTracksFromAlbum(album)),
+  setTracksFromAlbum: (album: string) => dispatch(setTracksFromAlbum(album)),
   viewAlbumsFromArtist: (artist: string) =>
     dispatch(viewAlbumsFromArtist(artist)),
   moveFile: (file: File) => dispatch(moveFile(file)),

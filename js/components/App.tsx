@@ -3,6 +3,7 @@ import Desktop from "./Desktop";
 import InfosBar from "./InfosBar";
 import SelectionBox from "./SelectionBox";
 import WindowsManager from "./WindowsManager";
+import AudioPlayer from "./AudioPlayer";
 
 interface State {
   selectionBox: {
@@ -32,6 +33,7 @@ class App extends React.Component<{}, State> {
           <Desktop selectionBox={this.state.selectionBox} />
           <WindowsManager />
         </SelectionBox>
+        <AudioPlayer onPlay={() => console.log("onPlay!")} />
       </div>
     );
   }

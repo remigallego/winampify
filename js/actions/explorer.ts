@@ -9,18 +9,20 @@ import {
   getSearchResult,
   getAlbumsFromArtist,
   getTracksFromAlbum,
-  getAlbumInfos,
+  getAlbumData,
   getTopArtistsFromMe,
   getFollowedArtistsFromMe,
   getMyRecentlyPlayed,
   getMyLibraryAlbums,
   getMyLibraryTracks,
   getArtistData
-} from "../SpotifyApiFunctions";
+} from "../SpotifyApi/spotifyFunctions";
 import { generateExplorerId } from "../utils/explorer";
 import { OPEN_EXPLORER } from "../reducers/explorer";
 import { Dispatch, Action } from "redux";
 import { AppState } from "../reducers";
+import { File } from "../types";
+import { ArtistData } from "../SpotifyApi/types";
 
 export function createNewExplorer() {
   return (dispatch: Dispatch<Action>) => {
@@ -146,100 +148,93 @@ export function viewAlbumsFromArtist(artist: string, explorerId: number) {
     const artistName = await getArtistData(artist);
 
     dispatch({
-      type: SET_ITEMS,
-      id: explorerId,
-      tracks: null,
-      albums: albums,
-      playlists: null,
-      artists: null
-    });
-    dispatch({
       type: SET_EXPLORER_METADATA,
       id: explorerId,
       currentId: artistName,
       title: name,
       playlistable: false
     });
-  };
-}
-
-export function viewTracksFromAlbum(album: string, explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
-    dispatch({ type: LOADING, id: explorerId });
-    getTracksFromAlbum(album)
-      .then(tracks => tracks)
-      .then(tracks =>
-        getAlbumInfos(album).then((albumInfos: any) => {
-          const title = `${albumInfos.artists[0].name} - ${albumInfos.name}`;
-          const image = albumInfos.images[0].url;
-          dispatch({
-            type: SET_EXPLORER_METADATA,
-            id: explorerId,
-            currentId: albumInfos,
-            title: title,
-            image: image,
-            playlistable: true
-          });
-          dispatch({
-            type: SET_ITEMS,
-            id: explorerId,
-            tracks: tracks,
-            albums: null,
-            playlists: null,
-            artists: null
-          });
-        })
-      );
-  };
-}
-
-export function viewMyTopArtists(explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
-    dispatch({ type: LOADING, id: explorerId });
-    getTopArtistsFromMe().then(artists => {
-      dispatch({
-        type: SET_EXPLORER_METADATA,
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
         id: explorerId,
-        currentId: "top",
-        title: "My Top Artists",
-        image: null,
-        playlistable: false
-      });
-      dispatch({
-        type: SET_ITEMS,
-        id: explorerId,
-        tracks: null,
-        albums: null,
-        playlists: null,
-        artists: artists
-      });
+        files: albums
+      }
     });
   };
 }
 
-export function viewMyFollowedArtists(explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
+export function setTracksFromAlbum(album: string, explorerId: string) {
+  return async (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
-    getFollowedArtistsFromMe().then(artists => {
-      dispatch({
-        type: SET_EXPLORER_METADATA,
+
+    const tracks = await getTracksFromAlbum(album);
+    const albumData = await getAlbumData(album);
+    const title = `${albumData.artists[0].name} - ${albumData.name}`;
+    const image = albumData.images[0].url;
+
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: albumData,
+      title: title,
+      image: image,
+      playlistable: true
+    });
+    dispatch({
+      type: SET_ITEMS,
+      payload: { id: explorerId, files: tracks }
+    });
+  };
+}
+
+export function setMyTopArtists(explorerId: string) {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
+
+    const artists = await getTopArtistsFromMe();
+
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: "top",
+      title: "My Top Artists",
+      image: null,
+      playlistable: false
+    });
+
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
         id: explorerId,
-        currentId: "following",
-        title: "Following",
-        image: null,
-        playlistable: false
-      });
-      dispatch({
-        type: SET_ITEMS,
-        tracks: null,
+        files: artists
+      }
+    });
+  };
+}
+
+export function setMyFollowedArtists(explorerId: string) {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
+    dispatch({ type: LOADING, id: explorerId });
+
+    const artists = await getFollowedArtistsFromMe();
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: "following",
+      title: "Following",
+      image: null,
+      playlistable: false
+    });
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
         id: explorerId,
-        albums: null,
-        playlists: null,
-        artists: artists
-      });
+        files: artists
+      }
     });
   };
 }
@@ -260,61 +255,58 @@ export const viewMyRecentlyPlayed = (explorerId: string) => {
     });
     dispatch({
       type: SET_ITEMS,
-      tracks: tracks,
-      id: explorerId,
-      albums: null,
-      playlists: null,
-      artists: null
+      payload: {
+        files: tracks,
+        id: explorerId
+      }
     });
   };
 };
 
 export function viewMyLibraryAlbums(explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
+  return async (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
-    getMyLibraryAlbums().then(albums => {
-      dispatch({
-        type: SET_EXPLORER_METADATA,
+    const items = await getMyLibraryAlbums();
+    const albums = items.map(item => item.album);
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: "savedalbums",
+      title: "My Saved Albums",
+      image: null,
+      playlistable: false
+    });
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
         id: explorerId,
-        currentId: "savedalbums",
-        title: "My Saved Albums",
-        image: null,
-        playlistable: false
-      });
-      dispatch({
-        type: SET_ITEMS,
-        id: explorerId,
-        tracks: null,
-        albums: albums.map((obj: any) => obj.album),
-        playlists: null,
-        artists: null
-      });
+        files: albums
+      }
     });
   };
 }
 
 export function viewMyLibraryTracks(explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
+  return async (dispatch: Dispatch<Action>) => {
     dispatch({ type: SAVE_PREVIOUS_STATE, id: explorerId });
     dispatch({ type: LOADING, id: explorerId });
-    getMyLibraryTracks().then(tracks => {
-      dispatch({
-        type: SET_EXPLORER_METADATA,
+    const items = await getMyLibraryTracks();
+    const tracks = items.map(item => item.track);
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      id: explorerId,
+      currentId: "savedtracks",
+      title: "My Saved Tracks",
+      image: null,
+      playlistable: false // TODO: investigate
+    });
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
         id: explorerId,
-        currentId: "savedtracks",
-        title: "My Saved Tracks",
-        image: null,
-        playlistable: false // TODO: investigate
-      });
-      dispatch({
-        type: SET_ITEMS,
-        id: explorerId,
-        tracks: tracks.map((obj: any) => obj.track),
-        albums: null,
-        playlists: null,
-        artists: null
-      });
+        files: tracks
+      }
     });
   };
 }
@@ -325,12 +317,14 @@ export function getArtistFromId(id: string) {
   };
 }
 
-export function selectFile(fileId: string, explorerId: string) {
+export function selectFile(fileId: number, explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "SET_SELECTED_EXPLORER",
-      id: explorerId,
-      selected: fileId
+      payload: {
+        id: explorerId,
+        selected: fileId
+      }
     });
   };
 }

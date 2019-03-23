@@ -7,7 +7,7 @@ import * as WebampInstance from "../webamp/built/webamp.bundle";
 import getStore from "./store";
 import App from "./components/App";
 import LandingPage from "./landingpage";
-import SpotifyApiService from "./SpotifyApiService";
+import SpotifyApiService from "./SpotifyApi/spotifyService";
 import media from "./media";
 import { PersistGate } from "redux-persist/integration/react";
 

@@ -1,44 +1,14 @@
-import SpotifyApiService from "./SpotifyApiService";
-
-export interface Items {
-  href: string;
-  items: any[];
-  limit: number;
-  next: any; // ?
-  offset: number;
-  previous: any; // ?
-  total: number;
-}
-
-export interface ImageData {
-  height: number;
-  width: number;
-  url: string;
-}
-
-export interface ArtistData {
-  external_urls: {
-    [service: string]: string;
-  };
-  followers: {
-    href: string | null;
-    total: number;
-  };
-  href: string;
-  id: string;
-  images: ImageData[];
-  name: string;
-  popularity: number;
-  type: string;
-  uri: string;
-}
-
-export interface Search {
-  albums: Items;
-  artists: Items;
-  playlists: Items;
-  tracks: Items;
-}
+import SpotifyApiService from "./spotifyService";
+import {
+  ArtistData,
+  Items,
+  Search,
+  AlbumData,
+  TrackItems,
+  AlbumItems,
+  TrackData,
+  ArtistItems
+} from "./types";
 
 // input: URI of an artist (string)
 // output: name of artist (string)
@@ -49,40 +19,39 @@ export const getArtistData = async (URI: string) => {
 
 // input: URI of a track
 // output: artist: string, name: string, duration: number
-export const getTrackInfos = async (URI: string) => {
-  const response: Items = await SpotifyApiService.get(`tracks/${URI}`);
-  return response.items;
+export const getTrackData = async (URI: string) => {
+  const response: TrackData = await SpotifyApiService.get(`tracks/${URI}`);
+  return response;
 };
 
-export const getAlbumInfos = async (id: string) => {
-  const response: Items = await SpotifyApiService.get(`albums/${id}`);
-  return response.items;
+export const getAlbumData = async (id: string) => {
+  const response: AlbumData = await SpotifyApiService.get(`albums/${id}`);
+  return response;
 };
 
 export const getAlbumsFromArtist = async (artistId: string) => {
-  const response: Items = await SpotifyApiService.get(
+  const response: AlbumItems = await SpotifyApiService.get(
     `artists/${artistId}/albums?include_groups=album%2Csingle`
   );
   return response.items;
 };
 
 export const getTracksFromAlbum = async (albumId: string) => {
-  const response: Items = await SpotifyApiService.get(
+  const response: TrackItems = await SpotifyApiService.get(
     `albums/${albumId}/tracks`
   );
   return response.items;
 };
 
 export const getTopArtistsFromMe = async () => {
-  const response: Items = await SpotifyApiService.get("me/top/artists");
+  const response: ArtistItems = await SpotifyApiService.get("me/top/artists");
   return response.items;
 };
 
 export const getFollowedArtistsFromMe = async () => {
-  const response: Items = await SpotifyApiService.get(
-    "me/following?type=artist"
-  );
-  return response.items;
+  const response = await SpotifyApiService.get("me/following?type=artist");
+  const items: ArtistData[] = response.artists.items;
+  return items;
 };
 
 export const getMyRecentlyPlayed = async () => {

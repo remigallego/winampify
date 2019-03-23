@@ -71,6 +71,7 @@
     "react-contexify": "^3.0.2",
     "react-dom": "next",
     "react-draggable": "^3.0.5",
+    "react-h5-audio-player": "^1.1.0",
     "react-redux": "^5.0.6",
     "react-rnd": "^7.4.3",
     "redux": "^3.5.2",

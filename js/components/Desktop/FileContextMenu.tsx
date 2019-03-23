@@ -8,6 +8,7 @@ interface Props {
   addToPlaylist: (e: any) => void;
   onCopy: (e: any) => void;
   onPaste: (e: any) => void;
+  onTrackData: (e: any) => void;
 }
 
 const FileContextMenu = (props: Props) => {
@@ -18,6 +19,9 @@ const FileContextMenu = (props: Props) => {
   );
   const copyItem = () => <Item onClick={props.onCopy}>Copy</Item>;
   const pasteItem = () => <Item onClick={props.onPaste}>Paste</Item>;
+  const getTrackData = () => (
+    <Item onClick={props.onTrackData}>Track Data</Item>
+  );
 
   return (
     <div>
@@ -27,6 +31,7 @@ const FileContextMenu = (props: Props) => {
         {copyItem()}
         <Separator />
         {addToPlaylistItem()}
+        {getTrackData()}
       </ContextMenu>
 
       <ContextMenu id="artist">
