@@ -11,7 +11,7 @@ import {
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
-import { File, Image } from "../../types";
+import { File, Image, ArtistFile } from "../../types";
 import { ArtistData, AlbumData, TrackData } from "../../SpotifyApi/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 
@@ -67,7 +67,8 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderArtists(artists: ArtistData[]) {
+  renderArtists(artists: File[]) {
+    console.log(artists);
     if (artists)
       return artists.map((artist, index) => {
         console.log(artist);
@@ -76,19 +77,17 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderArtist(artist: ArtistData, index: string) {
-    const selected = this.props.explorer.selected === artist.id;
+  renderArtist(file: ArtistFile, index: string) {
+    const selected = this.props.explorer.selected === file.metaData.id;
     return (
       <ExplorerItem
         key={index}
-        artist={artist}
+        file={file}
         selected={selected}
-        type={"artist"}
-        onClick={() => this.clickHandler(artist.id)}
-        onDoubleClick={() => this.openArtistFolder(artist.id)}
-        infos={artist}
+        onClick={() => this.clickHandler(file.metaData.id)}
+        onDoubleClick={() => this.openArtistFolder(file.metaData.id)}
       >
-        {artist.name}
+        {file.title}
       </ExplorerItem>
     );
   }
@@ -231,7 +230,7 @@ class ExplorerContent extends React.Component<Props> {
     }
     const artists = files
       .filter((file: File) => file.metaData.type === "artist")
-      .map((file: File) => file.metaData);
+      .map((file: File) => file);
 
     const albums = files
       .filter((file: File) => file.metaData.type === "album")

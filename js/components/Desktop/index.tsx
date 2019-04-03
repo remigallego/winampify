@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 import {
-  setTracksFromAlbum,
+  viewTracksFromAlbum,
   viewAlbumsFromArtist
 } from "./../../actions/explorer";
 import {
@@ -36,7 +36,7 @@ interface DispatchProps {
     uri: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
-  setTracksFromAlbum: (uri: string) => void;
+  viewTracksFromAlbum: (uri: string) => void;
   viewAlbumsFromArtist: (uri: string) => void;
 }
 
@@ -116,15 +116,11 @@ class Desktop extends React.Component<Props, State> {
     const files = JSON.parse(e.dataTransfer.getData("files"));
 
     if (!isFileMoving) {
-      files.map((file: any) => {
-        console.log(file);
+      files.map((file: File) => {
         this.props.createFile({
-          uri: file.uri,
+          ...file,
           x: e.clientX - 50,
-          y: e.clientY - 50,
-          title: file.title,
-          type: file.type,
-          metaData: null
+          y: e.clientY - 50
         });
       });
     } else {
@@ -139,7 +135,6 @@ class Desktop extends React.Component<Props, State> {
   }
 
   renderFile(file: File) {
-    console.log(file);
     return (
       <div
         draggable={!file.isRenaming}
@@ -184,7 +179,7 @@ class Desktop extends React.Component<Props, State> {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
     if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
-    if (file.type === "album") this.props.setTracksFromAlbum(file.uri);
+    if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
     if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
     if (file.type === "image") this.props.openImage(file.uri, e);
   }
@@ -277,7 +272,7 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   createFile: (file: File) => {
     dispatch(createFile(file));
   },
-  setTracksFromAlbum: (album: string) => dispatch(setTracksFromAlbum(album)),
+  viewTracksFromAlbum: (album: string) => dispatch(viewTracksFromAlbum(album)),
   viewAlbumsFromArtist: (artist: string) =>
     dispatch(viewAlbumsFromArtist(artist)),
   moveFile: (file: File) => dispatch(moveFile(file)),

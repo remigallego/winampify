@@ -7,7 +7,7 @@ import { AppState } from "../reducers";
 
 export function createFile(file: File) {
   return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: CREATE_FILE, payload: { ...file, id: uuidv1() } });
+    dispatch({ type: CREATE_FILE, payload: { file, id: uuidv1() } });
   };
 }
 

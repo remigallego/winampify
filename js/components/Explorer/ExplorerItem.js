@@ -18,23 +18,23 @@ class ExplorerItem extends React.Component {
     this.id = null;
   }
   componentDidMount() {
-    if (this.props.infos) {
-      this.id = this.props.infos.id;
+    if (this.props.file) {
+      this.id = this.props.file.metaData.id;
     }
   }
 
   getDuration() {
     const seconds = `0${Math.floor(
-      (this.props.infos.duration_ms / 1000) % 60
+      (this.props.file.metaData.duration_ms / 1000) % 60
     )}`.slice(-2);
     const minutes = Math.floor(
-      (this.props.infos.duration_ms / (60 * 1000)) % 60
+      (this.props.file.metaData.duration_ms / (60 * 1000)) % 60
     );
     return `${minutes}:${seconds}`;
   }
 
   getGenre() {
-    const genreArray = this.props.artist.genres;
+    const genreArray = this.props.file.metaData.genres;
     return genreArray.length > 0 ? genreArray[0] : "";
   }
 
@@ -78,39 +78,23 @@ class ExplorerItem extends React.Component {
     emptyImage.src =
       "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
     e.dataTransfer.setDragImage(emptyImage, 0, 0);
-    /*  if (this.props.type === "image") {
-      e.dataTransfer.setData("uri", this.props.image);
-    } else e.dataTransfer.setData("uri", this.id); */
-
     const children = isArray(this.props.children)
       ? this.props.children.join("")
       : this.props.children;
-
-    const file = {
-      id: this.id,
-      type: this.props.type,
-      title: children,
-      uri: this.props.type === "image" ? this.props.image : this.id
-    };
-
+    console.log(this.props);
     // TODO: Will make sense when scaling to multi-dragging
-    e.dataTransfer.setData("files", JSON.stringify([file]));
+    e.dataTransfer.setData("files", JSON.stringify([this.props.file]));
   }
   render() {
-    const {
-      artist,
-      type,
-      selected,
-      onClick,
-      onDoubleClick,
-      children
-    } = this.props;
+    const { selected, onClick, onDoubleClick, children } = this.props;
 
     let thisStyle = { ...itemStyle };
     let thisClass = "explorer-item";
     const icons = [];
 
-    switch (type) {
+    const { metaData } = this.props.file;
+
+    switch (metaData.type) {
       case "track":
       case "playlist":
         icons.push(winampmp3);
@@ -121,7 +105,7 @@ class ExplorerItem extends React.Component {
         break;
       case "artist":
         icons.push(folderclosed);
-        icons.push(artist.images.length > 0 ? artist.images[0].url : "");
+        icons.push(metaData.images.length > 0 ? metaData.images[0].url : "");
         break;
       case "image":
         icons.push(this.props.image);

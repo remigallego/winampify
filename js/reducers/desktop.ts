@@ -1,5 +1,6 @@
 import { CREATE_FILE, MOVE_FILE, DELETE_FILE } from "../actionTypes";
 import Desktop from "../components/Desktop";
+import { File } from "../types";
 
 export interface DesktopState {
   byId: {
@@ -25,25 +26,27 @@ const cancelRenaming = (state: DesktopState) => {
   return { byId: byId, allIds: state.allIds };
 };
 
+const createFile = (
+  state: DesktopState,
+  payload: { file: File; id: string }
+) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...payload.file,
+        id: payload.id
+      }
+    },
+    allIds: [...state.allIds, payload.id]
+  };
+};
+
 const desktop = (state: DesktopState = initialState, action: any) => {
   switch (action.type) {
     case CREATE_FILE:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.payload.id]: {
-            id: action.payload.id,
-            uri: action.payload.uri,
-            x: action.payload.x,
-            y: action.payload.y,
-            title: action.payload.title,
-            type: action.payload.type,
-            isRenaming: false
-          }
-        },
-        allIds: [...state.allIds, action.payload.id]
-      };
+      return createFile(state, action.payload);
     case DELETE_FILE: {
       const { [action.payload.id]: omit, ...byId } = state.byId;
       const allIds = state.allIds.filter(id => id !== action.payload.id);

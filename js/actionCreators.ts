@@ -1,17 +1,5 @@
-import {
-  REMOVE_ALL_TRACKS,
-  PLAY_TRACK,
-  ADD_TRACK_FROM_URI,
-  S_UPDATE_PLAYER_OBJECT,
-  GO_PREVIOUS_STATE
-} from "./actionTypes";
-
-import {
-  getTrackData,
-  getTracksFromAlbum
-} from "./SpotifyApi/spotifyFunctions";
+import { S_UPDATE_PLAYER_OBJECT, GO_PREVIOUS_STATE } from "./actionTypes";
 import { Action, Dispatch } from "redux";
-import { AppState } from "./reducers";
 
 export function goPreviousState(explorerId: string) {
   return (dispatch: Dispatch<Action>) => {

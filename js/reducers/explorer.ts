@@ -20,7 +20,6 @@ export interface SingleExplorerState {
   currentId: any;
   title: any;
   image: any;
-  playlistable: boolean; // Is this ever useful?
   previousStates: Array<any>;
   loading: boolean;
   width: number;
@@ -42,7 +41,6 @@ const initialStateExplorer: SingleExplorerState = {
   currentId: null,
   title: null,
   image: null,
-  playlistable: false, // Is this ever useful?
   previousStates: [],
   // items
   files: null,
@@ -97,7 +95,7 @@ const formatToFile = (item: any) => {
     metaData: item,
     id: "",
     isRenaming: false,
-    title: "",
+    title: item.name,
     x: 0,
     y: 0
   };
@@ -122,6 +120,40 @@ const goPreviousStateUpdate = (state: ExplorerState, payload: any) => {
         y,
         height,
         width
+      }
+    }
+  };
+};
+
+const setExplorerMetadata = (
+  state: ExplorerState,
+  payload: { id: string; currentId: string; title: string; image: any }
+) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...state.byId[payload.id],
+        currentId: payload.currentId,
+        title: payload.title,
+        image: payload.image
+      }
+    }
+  };
+};
+
+const savePreviousState = (state: ExplorerState, payload: { id: string }) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...state.byId[payload.id],
+        previousStates: [
+          ...state.byId[payload.id].previousStates,
+          state.byId[payload.id]
+        ].slice(-20)
       }
     }
   };
@@ -186,40 +218,14 @@ const explorer = (state = initialState, action: any) => {
           [action.id]: { ...state.byId[action.id], selected: null }
         }
       };
-    case SAVE_PREVIOUS_STATE: {
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.id]: {
-            ...state.byId[action.id],
-            previousStates: [
-              ...state.byId[action.id].previousStates,
-              state.byId[action.id]
-            ].slice(-20)
-          }
-        }
-      };
-    }
-    case GO_PREVIOUS_STATE: {
+    case SAVE_PREVIOUS_STATE:
+      return savePreviousState(state, action.payload);
+    case GO_PREVIOUS_STATE:
       return goPreviousStateUpdate(state, action.payload);
-    }
     case SET_ITEMS:
       return setItems(state, action.payload);
     case SET_EXPLORER_METADATA:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.id]: {
-            ...state.byId[action.id],
-            currentId: action.currentId,
-            title: action.title,
-            image: action.image,
-            playlistable: action.playlistable
-          }
-        }
-      };
+      return setExplorerMetadata(state, action.payload);
     default:
       return state;
   }
