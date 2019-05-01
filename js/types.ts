@@ -21,7 +21,12 @@ export interface ArtistFile extends File {
   metaData: ArtistData;
 }
 
+export interface TrackFile extends File {
+  metaData: TrackData;
+}
+
 export type GenericData = TrackData | AlbumData | PlaylistData | ArtistData;
+export type GenericFile = AlbumFile | ArtistFile | TrackFile;
 
 export interface Image {
   id: string;

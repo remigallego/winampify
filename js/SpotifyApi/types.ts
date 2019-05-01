@@ -24,6 +24,7 @@ export interface TrackData {
   artists: ArtistData[];
   available_markets: string[];
   disc_number: number;
+  duration_ms: number;
   explicit: boolean;
   external_urls: {
     [service: string]: string;

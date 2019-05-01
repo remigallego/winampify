@@ -146,16 +146,17 @@ export function viewAlbumsFromArtist(artist: string, explorerId: number) {
     dispatch({ type: LOADING, id: explorerId });
 
     const albums = await getAlbumsFromArtist(artist);
-    const artistName = await getArtistData(artist);
+    const artistName = (await getArtistData(artist)).name;
 
     dispatch({
       type: SET_EXPLORER_METADATA,
       payload: {
         id: explorerId,
         currentId: artistName,
-        title: name
+        title: artistName
       }
     });
+
     dispatch({
       type: SET_ITEMS,
       payload: {

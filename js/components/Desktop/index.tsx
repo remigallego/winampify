@@ -19,6 +19,7 @@ import FileContextMenu from "./FileContextMenu";
 import { File } from "../../types";
 import { AppState } from "../../reducers";
 import { openImage } from "../../actions/images";
+import { formatToWebampMetaData } from "../../utils/drag";
 
 interface OwnProps {
   files: Array<File>;
@@ -94,18 +95,9 @@ class Desktop extends React.Component<Props, State> {
   onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<File>) {
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
     const tracks = files.map((file: any) => {
-      return {
-        metaData: {
-          artist: "",
-          title: file.name
-        },
-        url: file.uri,
-        duration: file.duration,
-        mediaType: "SPOTIFY"
-      };
+      return formatToWebampMetaData(file);
     });
 
-    console.log(tracks);
     e.dataTransfer.setData("files", JSON.stringify(files)); // for desktop
     e.dataTransfer.setData("tracks", JSON.stringify(tracks)); // for winamp
   }

@@ -33,7 +33,7 @@ class App extends React.Component<{}, State> {
           <Desktop selectionBox={this.state.selectionBox} />
           <WindowsManager />
         </SelectionBox>
-        <AudioPlayer onPlay={() => console.log("onPlay!")} />
+        {/* <AudioPlayer onPlay={() => console.log("onPlay!")} /> */}
       </div>
     );
   }

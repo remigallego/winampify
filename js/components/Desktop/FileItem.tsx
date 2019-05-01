@@ -5,10 +5,10 @@ import bigWinampIcon from "./images/bigWinampIcon.png";
 import { DesktopFileStyle } from "./styles";
 import InputRenaming from "./InputRenaming";
 import "./file.css";
-import { File } from "../../types";
+import { File, GenericFile } from "../../types";
 
 interface Props {
-  file: File;
+  file: GenericFile;
   onClick?: (e: any) => void;
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   confirmRenameFile: (e: any) => void;
@@ -19,7 +19,7 @@ const FileItem = (props: Props) => {
   const { file } = props;
 
   const getIcon = () => {
-    switch (file.type) {
+    switch (file.metaData.type) {
       case "track":
         return bigWinampIcon;
       case "album":

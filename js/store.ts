@@ -5,7 +5,6 @@ import { createLogger } from "redux-logger";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web and AsyncStorage for react-native
 import reducer from "./reducers";
-import SpotifyMiddleware from "./SpotifyMiddleware";
 import { UPDATE_TIME_ELAPSED, STEP_MARQUEE, SET_MEDIA } from "./actionTypes";
 
 const persistConfig = {
@@ -32,7 +31,7 @@ const getStore = (media: any) => {
   return createStore(
     persistedReducer,
     initialState,
-    compose(applyMiddleware(thunk, logger, SpotifyMiddleware(media)))
+    compose(applyMiddleware(thunk, logger))
   );
 };
 export default getStore;

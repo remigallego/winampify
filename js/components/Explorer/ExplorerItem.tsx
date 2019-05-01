@@ -3,6 +3,8 @@ import React from "react";
 import winampmp3 from "./images/winamp-mp3.png";
 import folderclosed from "./images/folder-closed.ico";
 import { ExplorerItemStyle } from "./styles";
+import { AlbumFile, TrackFile, ArtistFile } from "../../types";
+import { formatToWebampMetaData } from "../../utils/drag";
 
 const {
   itemStyle,
@@ -12,8 +14,16 @@ const {
   iconSmall
 } = ExplorerItemStyle;
 
-class ExplorerItem extends React.Component {
-  constructor(props) {
+interface Props {
+  file: AlbumFile | TrackFile | ArtistFile;
+  selected: boolean;
+  onClick: () => void;
+  onDoubleClick: () => void;
+}
+
+class ExplorerItem extends React.Component<Props> {
+  id: string | null;
+  constructor(props: Props) {
     super(props);
     this.id = null;
   }
@@ -23,6 +33,7 @@ class ExplorerItem extends React.Component {
     }
   }
 
+  /* 
   getDuration() {
     const seconds = `0${Math.floor(
       (this.props.file.metaData.duration_ms / 1000) % 60
@@ -43,9 +54,10 @@ class ExplorerItem extends React.Component {
     const rgx = /-/gi;
     const date = releaseDate.replace(rgx, "/");
     return date;
-  }
+  } 
+  */
 
-  renderIcons(icons) {
+  renderIcons(icons: Array<string>) {
     if (icons.length > 1) {
       return (
         <div className="explorer-item-icon--wrapper" style={iconWrapper}>
@@ -73,19 +85,20 @@ class ExplorerItem extends React.Component {
     );
   }
 
-  drag(e) {
+  drag(e: any) {
     const emptyImage = document.createElement("img");
     emptyImage.src =
       "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
     e.dataTransfer.setDragImage(emptyImage, 0, 0);
-    const children = isArray(this.props.children)
-      ? this.props.children.join("")
-      : this.props.children;
-    console.log(this.props);
-    // TODO: Will make sense when scaling to multi-dragging
-    e.dataTransfer.setData("files", JSON.stringify([this.props.file]));
+
+    if (this.props.file.metaData.type === "track") {
+      const track = formatToWebampMetaData(this.props.file);
+      e.dataTransfer.setData("tracks", JSON.stringify([track])); // for winamp
+    }
+    e.dataTransfer.setData("files", JSON.stringify([this.props.file])); // for desktop
   }
   render() {
+    if (!this.props.file) return null;
     const { selected, onClick, onDoubleClick, children } = this.props;
 
     let thisStyle = { ...itemStyle };
@@ -101,7 +114,7 @@ class ExplorerItem extends React.Component {
         break;
       case "album":
         icons.push(folderclosed);
-        icons.push(this.props.image);
+        icons.push(metaData.images.length > 0 ? metaData.images[0].url : "");
         break;
       case "artist":
         icons.push(folderclosed);

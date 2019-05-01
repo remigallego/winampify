@@ -1,4 +1,5 @@
 import "babel-polyfill";
+import "../css/line-scale.css";
 import React from "react";
 import { render } from "react-dom";
 import { persistStore } from "redux-persist";
@@ -10,6 +11,7 @@ import LandingPage from "./landingpage";
 import SpotifyApiService from "./SpotifyApi/spotifyService";
 import media from "./media";
 import { PersistGate } from "redux-persist/integration/react";
+import GenerateSpotifyMediaClass from "./SpotifyMediaClass";
 
 // TODO: Workaround, need to figure out how to import webamp types
 const Webamp: any = WebampInstance;
@@ -20,34 +22,13 @@ if (!Webamp.browserIsSupported()) {
   throw new Error("What's the point of anything?");
 }
 
-const webamp = new Webamp(
-  {
-    initialTracks: [
-      {
-        metaData: {
-          artist: "DJ Mike Llama",
-          title: "Llama Whippin' Intro"
-        },
-        // Can be downloaded from: https://github.com/captbaritone/webamp/raw/master/mp3/llama-2.91.mp3
-        url: "path/to/mp3/llama-2.91.mp3"
-      }
-    ],
-    handleTrackDropEvent: e => {
-      if (e.dataTransfer.getData("tracks").length > 0) {
-        const json = e.dataTransfer.getData("tracks");
-        try {
-          return JSON.parse(json);
-        } catch (err) {}
-      }
-      return null;
+const defaultWindowsState = {
+  genWindows: {
+    equalizer: {
+      open: false
     }
-    // Optional. The default skin is included in the js bundle, and will be loaded by default.
-  },
-  {}
-);
-
-// Render after the skin has loaded.
-webamp.renderWhenReady(document.getElementById("winamp-container"));
+  }
+};
 
 const store = getStore(media);
 const persistor = persistStore(store);
@@ -68,6 +49,27 @@ if (url !== "") {
 } else tokens = 0;
 
 if (tokens) {
+  const webamp = new Webamp(
+    {
+      handleTrackDropEvent: e => {
+        if (e.dataTransfer.getData("tracks").length > 0) {
+          const json = e.dataTransfer.getData("tracks");
+          console.log(json);
+          try {
+            return JSON.parse(json);
+          } catch (err) {}
+        }
+        return null;
+      },
+      __customMediaClass: GenerateSpotifyMediaClass(tokens),
+      __initialState: { windows: defaultWindowsState }
+      // Optional. The default skin is included in the js bundle, and will be loaded by default.
+    },
+    {}
+  );
+
+  // Render after the skin has loaded.
+  webamp.renderWhenReady(document.getElementById("winamp-container"));
   SpotifyApiService.setAccessToken(tokens.accessToken);
   render(
     <Provider store={store}>

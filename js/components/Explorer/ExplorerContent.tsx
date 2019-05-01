@@ -11,7 +11,7 @@ import {
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
-import { File, Image, ArtistFile } from "../../types";
+import { File, Image, ArtistFile, AlbumFile, TrackFile } from "../../types";
 import { ArtistData, AlbumData, TrackData } from "../../SpotifyApi/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 
@@ -38,7 +38,7 @@ class ExplorerContent extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
-  clickHandler(id: number) {
+  clickHandler(id: string) {
     this.props.selectFile(id);
   }
   doubleClickHandler(id: string) {
@@ -68,10 +68,8 @@ class ExplorerContent extends React.Component<Props> {
   }
 
   renderArtists(artists: File[]) {
-    console.log(artists);
     if (artists)
       return artists.map((artist, index) => {
-        console.log(artist);
         return this.renderArtist(artist, `ar${index}`);
       });
     return null;
@@ -91,38 +89,32 @@ class ExplorerContent extends React.Component<Props> {
       </ExplorerItem>
     );
   }
-  renderAlbum(album: AlbumData, index: string) {
-    const selected = this.props.explorer.selected === index;
-    const artist = album.artists.length > 0 ? album.artists[0].name : "unknown";
+  renderAlbum(file: AlbumFile, index: string) {
+    const selected = this.props.explorer.selected === file.metaData.id;
     return (
       <ExplorerItem
         key={index}
+        file={file}
         selected={selected}
-        type={"album"}
-        image={album.images ? album.images[0].url : null}
-        onClick={() => this.clickHandler(index)}
-        onDoubleClick={() => this.openAlbumFolder(album.id)}
-        releaseDate={album.release_date}
-        infos={album}
+        onClick={() => this.clickHandler(file.metaData.id)}
+        onDoubleClick={() => this.openAlbumFolder(file.metaData.id)}
       >
-        {artist} - {album.name}
+        {file.title}
       </ExplorerItem>
     );
   }
 
-  renderTrack(track: TrackData, index: string) {
-    const selected = this.props.explorer.selected === index;
-    const fileName = `${track.artists[0].name} - ${track.name}`;
+  renderTrack(file: TrackFile, index: string) {
+    const selected = this.props.explorer.selected === file.metaData.id;
     return (
       <ExplorerItem
         key={index}
+        file={file}
         selected={selected}
-        type={"track"}
-        onClick={() => this.clickHandler(index)}
-        onDoubleClick={() => this.props.playTrack(track.id)}
-        infos={track}
+        onClick={() => this.clickHandler(file.metaData.id)}
+        onDoubleClick={() => this.props.playTrack(file.metaData.id)}
       >
-        {fileName}.mp3
+        {file.title}.mp3
       </ExplorerItem>
     );
   }
@@ -224,25 +216,26 @@ class ExplorerContent extends React.Component<Props> {
 
   renderLoadedItems() {
     const { files } = this.props.explorer;
-    console.log(files);
     if (!files) {
       return;
     }
+
     const artists = files
       .filter((file: File) => file.metaData.type === "artist")
       .map((file: File) => file);
 
     const albums = files
       .filter((file: File) => file.metaData.type === "album")
-      .map((file: File) => file.metaData);
+      .map((file: File) => file);
 
     const tracks = files
       .filter((file: File) => file.metaData.type === "track")
-      .map((file: File) => file.metaData);
+      .map((file: File) => file);
 
     const playlists = files
       .filter((file: File) => file.metaData.type === "playlist")
-      .map((file: File) => file.metaData);
+      .map((file: File) => file);
+
     return (
       <div>
         {this.renderCategory("Artists")}

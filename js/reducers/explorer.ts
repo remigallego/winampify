@@ -91,11 +91,17 @@ const createNewExplorer = (state: ExplorerState, id: string) => {
 };
 
 const formatToFile = (item: any) => {
+  const getFileTitle = () => {
+    if (item.type === "track") {
+      return `${item.artists[0].name} - ${item.name}`;
+    }
+    return item.name;
+  };
   return {
     metaData: item,
     id: "",
     isRenaming: false,
-    title: item.name,
+    title: getFileTitle(),
     x: 0,
     y: 0
   };
