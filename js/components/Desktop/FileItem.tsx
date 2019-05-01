@@ -27,14 +27,14 @@ const FileItem = (props: Props) => {
       case "artist":
         return folderclosed;
       case "image":
-        return file.uri;
+        return file.metaData.url;
       default:
         return bigWinampIcon;
     }
   };
 
   return (
-    <ContextMenuProvider id={file.type}>
+    <ContextMenuProvider id={file.metaData.type}>
       <div
         className="file-fadeIn"
         style={{

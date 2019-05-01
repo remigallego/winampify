@@ -175,20 +175,23 @@ export function setTracksFromAlbum(album: string, explorerId: string) {
     const tracks = await getTracksFromAlbum(album);
     const albumData = await getAlbumData(album);
     const title = `${albumData.artists[0].name} - ${albumData.name}`;
-    const image = albumData.images[0].url;
+    const imageFile = {
+      name: title,
+      type: "image",
+      url: albumData.images[0].url
+    };
 
     dispatch({
       type: SET_EXPLORER_METADATA,
       payload: {
         id: explorerId,
         currentId: albumData,
-        title: title,
-        image: image
+        title: title
       }
     });
     dispatch({
       type: SET_ITEMS,
-      payload: { id: explorerId, files: tracks }
+      payload: { id: explorerId, files: [...tracks, imageFile] }
     });
   };
 }

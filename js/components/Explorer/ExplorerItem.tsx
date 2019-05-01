@@ -3,7 +3,7 @@ import React from "react";
 import winampmp3 from "./images/winamp-mp3.png";
 import folderclosed from "./images/folder-closed.ico";
 import { ExplorerItemStyle } from "./styles";
-import { AlbumFile, TrackFile, ArtistFile } from "../../types";
+import { AlbumFile, TrackFile, ArtistFile, GenericFile } from "../../types";
 import { formatToWebampMetaData } from "../../utils/drag";
 
 const {
@@ -15,22 +15,16 @@ const {
 } = ExplorerItemStyle;
 
 interface Props {
-  file: AlbumFile | TrackFile | ArtistFile;
+  file: GenericFile;
   selected: boolean;
   onClick: () => void;
-  onDoubleClick: () => void;
+  onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 class ExplorerItem extends React.Component<Props> {
   id: string | null;
   constructor(props: Props) {
     super(props);
-    this.id = null;
-  }
-  componentDidMount() {
-    if (this.props.file) {
-      this.id = this.props.file.metaData.id;
-    }
   }
 
   /* 
@@ -109,7 +103,7 @@ class ExplorerItem extends React.Component<Props> {
 
     switch (metaData.type) {
       case "track":
-      case "playlist":
+        // case "playlist":
         icons.push(winampmp3);
         break;
       case "album":
@@ -121,7 +115,7 @@ class ExplorerItem extends React.Component<Props> {
         icons.push(metaData.images.length > 0 ? metaData.images[0].url : "");
         break;
       case "image":
-        icons.push(this.props.image);
+        icons.push(metaData.url);
         break;
       default:
         break;

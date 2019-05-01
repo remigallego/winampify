@@ -16,7 +16,7 @@ import {
 } from "./../../actions/desktop";
 import FileItem from "./FileItem";
 import FileContextMenu from "./FileContextMenu";
-import { File } from "../../types";
+import { File, GenericFile } from "../../types";
 import { AppState } from "../../reducers";
 import { openImage } from "../../actions/images";
 import { formatToWebampMetaData } from "../../utils/drag";
@@ -167,13 +167,17 @@ class Desktop extends React.Component<Props, State> {
   }
 
   doubleClickHandler(
-    file: File,
+    file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
-    if (file.type === "track") this.props.addTrackZeroAndPlay(file.uri);
-    if (file.type === "album") this.props.viewTracksFromAlbum(file.uri);
-    if (file.type === "artist") this.props.viewAlbumsFromArtist(file.uri);
-    if (file.type === "image") this.props.openImage(file.uri, e);
+    if (file.metaData.type === "track")
+      this.props.addTrackZeroAndPlay(file.metaData.uri);
+    if (file.metaData.type === "album")
+      this.props.viewTracksFromAlbum(file.metaData.uri);
+    if (file.metaData.type === "artist")
+      this.props.viewAlbumsFromArtist(file.metaData.uri);
+    if (file.metaData.type === "image")
+      this.props.openImage(file.metaData.url, e);
   }
 
   handleDesktopClick(e: any) {

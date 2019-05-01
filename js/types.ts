@@ -2,7 +2,8 @@ import {
   AlbumData,
   ArtistData,
   TrackData,
-  PlaylistData
+  PlaylistData,
+  ImageData
 } from "./SpotifyApi/types";
 
 export interface File {
@@ -11,7 +12,13 @@ export interface File {
   title: string;
   x: number;
   y: number;
-  metaData: TrackData | AlbumData | ArtistData | PlaylistData | null;
+  metaData:
+    | TrackData
+    | AlbumData
+    | ArtistData
+    | PlaylistData
+    | ImageData
+    | null;
 }
 
 export interface AlbumFile extends File {
@@ -25,8 +32,12 @@ export interface TrackFile extends File {
   metaData: TrackData;
 }
 
+export interface ImageFile extends File {
+  metaData: ImageData;
+}
+
 export type GenericData = TrackData | AlbumData | PlaylistData | ArtistData;
-export type GenericFile = AlbumFile | ArtistFile | TrackFile;
+export type GenericFile = AlbumFile | ArtistFile | TrackFile | ImageFile;
 
 export interface Image {
   id: string;

@@ -90,6 +90,8 @@ export interface ImageData {
   height: number;
   width: number;
   url: string;
+  name: string;
+  type: "image";
 }
 
 export interface Search {
