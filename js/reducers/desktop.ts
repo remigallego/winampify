@@ -1,22 +1,48 @@
 import { CREATE_FILE, MOVE_FILE, DELETE_FILE } from "../actionTypes";
 import Desktop from "../components/Desktop";
-import { File } from "../types";
+import { File, GenericFile } from "../types";
+import { ACTION_TYPE } from "../actions/explorer";
 
 export interface DesktopState {
   byId: {
-    [id: number]: any;
+    [id: string]: GenericFile;
   };
-  allIds: number[];
+  allIds: string[];
 }
 
 const initialState: DesktopState = {
-  byId: {},
-  allIds: []
+  byId: {
+    recently_played: {
+      id: "recently_played",
+      title: "Recently Played",
+      isRenaming: false,
+      locked: true,
+      x: 20,
+      y: 40,
+      metaData: {
+        type: "action",
+        action: ACTION_TYPE.RECENTLY_PLAYED
+      }
+    },
+    top_artists: {
+      id: "top_artists",
+      title: "Top Artists",
+      isRenaming: false,
+      locked: true,
+      x: 20,
+      y: 140,
+      metaData: {
+        type: "action",
+        action: ACTION_TYPE.TOP
+      }
+    }
+  },
+  allIds: ["recently_played", "top_artists"]
 };
 
 const cancelRenaming = (state: DesktopState) => {
   const byId = {};
-  state.allIds.map((id: number) => {
+  state.allIds.map((id: string) => {
     // @ts-ignore
     byId[id] = {
       ...state.byId[id],
@@ -48,6 +74,7 @@ const desktop = (state: DesktopState = initialState, action: any) => {
     case CREATE_FILE:
       return createFile(state, action.payload);
     case DELETE_FILE: {
+      if (state.byId[action.payload.id].locked) return;
       const { [action.payload.id]: omit, ...byId } = state.byId;
       const allIds = state.allIds.filter(id => id !== action.payload.id);
       return {

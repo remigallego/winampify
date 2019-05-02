@@ -1,3 +1,5 @@
+import { ACTION_TYPE } from "../actions/explorer";
+
 export interface Items {
   href: string;
   items: any[];
@@ -92,6 +94,11 @@ export interface ImageData {
   url: string;
   name: string;
   type: "image";
+}
+
+export interface ActionData {
+  action: ACTION_TYPE;
+  type: "action";
 }
 
 export interface Search {

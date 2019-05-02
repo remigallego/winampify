@@ -8,10 +8,9 @@ import * as WebampInstance from "../webamp/built/webamp.bundle";
 import getStore from "./store";
 import App from "./components/App";
 import LandingPage from "./landingpage";
-import SpotifyApiService from "./SpotifyApi/spotifyService";
-import media from "./media";
+import SpotifyApiService from "./SpotifyApi/api";
 import { PersistGate } from "redux-persist/integration/react";
-import GenerateSpotifyMediaClass from "./SpotifyMediaClass";
+import SpotifyMediaClass from "./SpotifyMediaClass";
 
 // TODO: Workaround, need to figure out how to import webamp types
 const Webamp: any = WebampInstance;
@@ -22,15 +21,7 @@ if (!Webamp.browserIsSupported()) {
   throw new Error("What's the point of anything?");
 }
 
-const defaultWindowsState = {
-  genWindows: {
-    equalizer: {
-      open: false
-    }
-  }
-};
-
-const store = getStore(media);
+const store = getStore();
 const persistor = persistStore(store);
 let tokens;
 
@@ -61,7 +52,7 @@ if (tokens) {
         }
         return null;
       },
-      __customMediaClass: GenerateSpotifyMediaClass(tokens)
+      __customMediaClass: SpotifyMediaClass
       // Optional. The default skin is included in the js bundle, and will be loaded by default.
     },
     {}

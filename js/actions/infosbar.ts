@@ -1,4 +1,4 @@
-import { getUserInfos } from "../SpotifyApi/spotifyFunctions";
+import { getUserInfos } from "../SpotifyApi/apiFunctions";
 import { Dispatch, Action } from "redux";
 
 export function setUserInfos() {

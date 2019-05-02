@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { WindowType, Window } from "../reducers/windows";
+import { WINDOW_TYPE, Window } from "../reducers/windows";
 import ImageModal from "./Explorer/ImageModal";
 import Explorer from "./Explorer";
 import { Image } from "../types";
@@ -30,11 +30,11 @@ type Props = StateProps & DispatchProps;
 class WindowsManager extends React.Component<Props, {}> {
   getWindow(window: Window, index: number) {
     switch (window.type) {
-      case WindowType.Explorer:
+      case WINDOW_TYPE.Explorer:
         return (
           <Explorer key={window.id} explorerId={window.id} zIndex={index * 5} />
         );
-      case WindowType.Image: {
+      case WINDOW_TYPE.Image: {
         const image = this.props.images.find(img => img.id === window.id);
         if (image !== undefined)
           return (
@@ -51,8 +51,8 @@ class WindowsManager extends React.Component<Props, {}> {
   }
 
   componentDidMount() {
-    this.props.createNewExplorer();
-    this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED);
+    // this.props.createNewExplorer();
+    // this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED);
   }
   render() {
     return (

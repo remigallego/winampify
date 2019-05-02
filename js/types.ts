@@ -5,6 +5,7 @@ import {
   PlaylistData,
   ImageData
 } from "./SpotifyApi/types";
+import { ACTION_TYPE } from "./actions/explorer";
 
 export interface File {
   id: string;
@@ -12,6 +13,7 @@ export interface File {
   title: string;
   x: number;
   y: number;
+  locked: boolean;
   metaData:
     | TrackData
     | AlbumData
@@ -36,8 +38,17 @@ export interface ImageFile extends File {
   metaData: ImageData;
 }
 
+export interface ActionFile extends File {
+  metaData: ActionData;
+}
+
 export type GenericData = TrackData | AlbumData | PlaylistData | ArtistData;
-export type GenericFile = AlbumFile | ArtistFile | TrackFile | ImageFile;
+export type GenericFile =
+  | AlbumFile
+  | ArtistFile
+  | TrackFile
+  | ImageFile
+  | ActionFile;
 
 export interface Image {
   id: string;
@@ -49,8 +60,8 @@ export interface Image {
 export interface Artist {}
 
 export const FILE_TYPE = {
-  ARTIST: 'artist',
-  ALBUM: 'album',
-  TRACK: 'track',
-  IMAGE: 'image'
-}
+  ARTIST: "artist",
+  ALBUM: "album",
+  TRACK: "track",
+  IMAGE: "image"
+};

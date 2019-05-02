@@ -178,6 +178,8 @@ class Desktop extends React.Component<Props, State> {
       this.props.setItems(ACTION_TYPE.ARTIST, file.metaData.id, e);
     if (file.metaData.type === "image")
       this.props.openImage(file.metaData.url, e);
+    if (file.metaData.type === "action")
+      this.props.setItems(file.metaData.action, null, e);
   }
 
   handleDesktopClick(e: any) {

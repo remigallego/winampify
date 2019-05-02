@@ -23,7 +23,7 @@ const FileItem = (props: Props) => {
       case "track":
         return bigWinampIcon;
       case "album":
-        return folderclosed;
+      case "action":
       case "artist":
         return folderclosed;
       case "image":

@@ -17,7 +17,6 @@ import TitleBar from "./TitleBar";
 class ExplorerWindow extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.explorer)
     this.state = {
       x: 0,
       y: 0,
@@ -32,19 +31,18 @@ class ExplorerWindow extends React.Component {
   onDragStop(d) {
     const { clientHeight, clientWidth } = document.documentElement;
     const getX = () => {
-      if (d.x < 0) return 0;
       if (d.x + Number(this.props.explorer.width) > clientWidth)
         return clientWidth - Number(this.props.explorer.width) - 50;
       return d.x;
     };
     const getY = () => {
-      if (d.y < 0) return 0;
       if (d.y + Number(this.props.explorer.height) > clientHeight)
         return clientHeight - Number(this.props.explorer.height) - 50;
       return d.y;
     };
 
-    this.props.updatePosition(getX(), getY());
+    console.log(getY());
+    this.props.updatePosition(getX() < 0 ? 0 : getX(), getY() < 0 ? 0 : getY());
   }
 
   render() {

@@ -79,9 +79,8 @@ const setItems = (
   };
 };
 
-const createNewExplorer = (state: ExplorerState, action: any) => {
-  const { id, x, y } = action;
-
+const createNewExplorer = (state: ExplorerState, payload: any) => {
+  const { id, x, y } = payload;
   return {
     ...state,
     byId: {
@@ -170,14 +169,13 @@ const savePreviousState = (state: ExplorerState, payload: { id: string }) => {
 const explorer = (state = initialState, action: any) => {
   switch (action.type) {
     case OPEN_EXPLORER:
-      return createNewExplorer(state, action);
+      return createNewExplorer(state, action.payload);
     case CLOSE_EXPLORER:
-      const byId = state.byId;
-      delete byId[action.id];
+      const { [action.payload.id]: omit, ...byId } = state.byId;
       return {
         ...state,
         byId: byId,
-        allIds: state.allIds.filter(id => id !== action.id)
+        allIds: state.allIds.filter(id => id !== action.payload.id)
       };
     case LOADING:
       return {
@@ -192,7 +190,11 @@ const explorer = (state = initialState, action: any) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.id]: { ...state.byId[action.id], x: action.x, y: action.y }
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            x: action.payload.x,
+            y: action.payload.y
+          }
         }
       };
     case UPDATE_SIZE:

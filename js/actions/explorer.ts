@@ -16,9 +16,13 @@ import {
   getMyLibraryAlbums,
   getMyLibraryTracks,
   getArtistData
-} from "../SpotifyApi/spotifyFunctions";
+} from "../SpotifyApi/apiFunctions";
 import { generateExplorerId } from "../utils/explorer";
-import { OPEN_EXPLORER } from "../reducers/explorer";
+import {
+  OPEN_EXPLORER,
+  CLOSE_EXPLORER,
+  UPDATE_POSITION
+} from "../reducers/explorer";
 import { Dispatch, Action } from "redux";
 import { AppState } from "../reducers";
 
@@ -26,9 +30,11 @@ export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: OPEN_EXPLORER,
-      id: id ? id : generateExplorerId(),
-      x: x ? x - 100 : 0,
-      y: y ? y - 100: 0
+      payload: {
+        id: id ? id : generateExplorerId(),
+        x: x && x - 100 > 0 ? x - 100 : 0,
+        y: y && y - 100 > 0 ? y - 100 : 0
+      }
     });
   };
 }
@@ -36,8 +42,10 @@ export function createNewExplorer(id?: string, x?: number, y?: number): any {
 export function closeExplorer(explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
-      type: "CLOSE_EXPLORER",
-      id: explorerId
+      type: CLOSE_EXPLORER,
+      payload: {
+        id: explorerId
+      }
     });
   };
 }
@@ -45,10 +53,12 @@ export function closeExplorer(explorerId: string) {
 export function updatePosition(x: number, y: number, explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
-      type: "UPDATE_POSITION",
-      id: explorerId,
-      x,
-      y
+      type: UPDATE_POSITION,
+      payload: {
+        id: explorerId,
+        x,
+        y
+      }
     });
   };
 }

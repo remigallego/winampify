@@ -3,14 +3,14 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createLogger } from "redux-logger";
 import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web and AsyncStorage for react-native
+import storage from "redux-persist/lib/storage";
 import reducer from "./reducers";
 import { UPDATE_TIME_ELAPSED, STEP_MARQUEE, SET_MEDIA } from "./actionTypes";
 
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: ["desktop", "playlist", "user"] // only desktop will be persisted
+  whitelist: ["desktop", "playlist", "user", "explorer", "windows", "images"]
 };
 
 const compose = composeWithDevTools({
@@ -24,7 +24,7 @@ const logger = createLogger({
     action.type !== SET_MEDIA
 });
 
-const getStore = (media: any) => {
+const getStore = () => {
   let initialState;
   const persistedReducer = persistReducer(persistConfig, reducer);
 

@@ -1,4 +1,4 @@
-import SpotifyApiService from "./spotifyService";
+import SpotifyApiService from "./api";
 import {
   ArtistData,
   Items,
@@ -83,8 +83,8 @@ export const getSearchResult = async (
 };
 
 export const getUserInfos = async () => {
-  const response: Items = await SpotifyApiService.get("me");
-  return response.items;
+  const response: any = await SpotifyApiService.get("me");
+  return response;
 };
 
 // TODO: Work In Progress
