@@ -21,14 +21,14 @@ import { generateExplorerId } from "../utils/explorer";
 import { OPEN_EXPLORER } from "../reducers/explorer";
 import { Dispatch, Action } from "redux";
 import { AppState } from "../reducers";
-import { File } from "../types";
-import { ArtistData } from "../SpotifyApi/types";
 
-export function createNewExplorer() {
+export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: OPEN_EXPLORER,
-      id: generateExplorerId()
+      id: id ? id : generateExplorerId(),
+      x: x ? x - 100 : 0,
+      y: y ? y - 100: 0
     });
   };
 }
@@ -136,24 +136,106 @@ export function searchOnSpotify(
   };
 }
 
-export function viewAlbumsFromArtist(artist: string, explorerId: number) {
+// what kind of folder was clicked on
+export enum ACTION_TYPE {
+  ALBUM,
+  ARTIST,
+  TOP,
+  FOLLOWING,
+  RECENTLY_PLAYED,
+  LIBRARY_ALBUMS,
+  LIBRARY_TRACKS
+}
+
+export function setItems(
+  actionType: ACTION_TYPE,
+  uri?: string,
+  explorerId?: string,
+  e?: any
+) {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    if (explorerId === undefined) {
-      createNewExplorer();
-      explorerId = getState().explorer.allIds.length - 1;
+    if (!explorerId) {
+      explorerId = generateExplorerId();
+      if (e) {
+        dispatch(
+          createNewExplorer(
+            explorerId,
+            e.nativeEvent.clientX,
+            e.nativeEvent.clientY
+          )
+        );
+      } else dispatch(createNewExplorer(explorerId));
+    } else dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
+    dispatch({ type: LOADING, id: explorerId });
+
+    let files;
+    let currentId;
+    let title;
+
+    switch (actionType) {
+      case ACTION_TYPE.ARTIST: {
+        if (!uri) return;
+        files = await getAlbumsFromArtist(uri);
+        currentId = (await getArtistData(uri)).name;
+        title = currentId;
+        break;
+      }
+      case ACTION_TYPE.ALBUM: {
+        if (!uri) return;
+        const tracks = await getTracksFromAlbum(uri);
+        const albumData = await getAlbumData(uri);
+        const imageFile = {
+          name: `${albumData.artists[0].name} - ${albumData.name}`,
+          type: "image",
+          url: albumData.images[0].url
+        };
+
+        files = [...tracks, imageFile];
+        currentId = albumData;
+        title = `${albumData.artists[0].name} - ${albumData.name}`;
+        break;
+      }
+      case ACTION_TYPE.TOP: {
+        files = await getTopArtistsFromMe();
+        currentId = "top";
+        title = "My Top Artists";
+        break;
+      }
+      case ACTION_TYPE.FOLLOWING: {
+        files = await getFollowedArtistsFromMe();
+        currentId = "following";
+        title = "Following";
+        break;
+      }
+      case ACTION_TYPE.RECENTLY_PLAYED: {
+        const recentlyPlayed = await getMyRecentlyPlayed();
+        files = recentlyPlayed.map(derivedTrack => derivedTrack.track);
+        currentId = "recently";
+        title = "Recently Played";
+        break;
+      }
+      case ACTION_TYPE.LIBRARY_TRACKS: {
+        const items = await getMyLibraryTracks();
+        files = items.map(item => item.track);
+        currentId = "savedtracks";
+        title = "My Saved Tracks";
+        break;
+      }
+      case ACTION_TYPE.LIBRARY_ALBUMS: {
+        const items = await getMyLibraryAlbums();
+        files = items.map(item => item.album);
+        currentId = "savedalbums";
+        title = "My Saved Albums";
+        break;
+      }
     }
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-
-    const albums = await getAlbumsFromArtist(artist);
-    const artistName = (await getArtistData(artist)).name;
 
     dispatch({
       type: SET_EXPLORER_METADATA,
       payload: {
         id: explorerId,
-        currentId: artistName,
-        title: artistName
+        currentId,
+        title
       }
     });
 
@@ -161,163 +243,7 @@ export function viewAlbumsFromArtist(artist: string, explorerId: number) {
       type: SET_ITEMS,
       payload: {
         id: explorerId,
-        files: albums
-      }
-    });
-  };
-}
-
-export function setTracksFromAlbum(album: string, explorerId: string) {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-
-    const tracks = await getTracksFromAlbum(album);
-    const albumData = await getAlbumData(album);
-    const title = `${albumData.artists[0].name} - ${albumData.name}`;
-    const imageFile = {
-      name: title,
-      type: "image",
-      url: albumData.images[0].url
-    };
-
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        currentId: albumData,
-        title: title
-      }
-    });
-    dispatch({
-      type: SET_ITEMS,
-      payload: { id: explorerId, files: [...tracks, imageFile] }
-    });
-  };
-}
-
-export function setMyTopArtists(explorerId: string) {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-
-    const artists = await getTopArtistsFromMe();
-
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        currentId: "top",
-        title: "My Top Artists",
-        image: null
-      }
-    });
-
-    dispatch({
-      type: SET_ITEMS,
-      payload: {
-        id: explorerId,
-        files: artists
-      }
-    });
-  };
-}
-
-export function setMyFollowedArtists(explorerId: string) {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-
-    const artists = await getFollowedArtistsFromMe();
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        currentId: "following",
-        title: "Following",
-        image: null
-      }
-    });
-    dispatch({
-      type: SET_ITEMS,
-      payload: {
-        id: explorerId,
-        files: artists
-      }
-    });
-  };
-}
-
-export const viewMyRecentlyPlayed = (explorerId: string) => {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-    const recentlyPlayed = await getMyRecentlyPlayed();
-    const tracks = recentlyPlayed.map(derivedTrack => derivedTrack.track);
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        currentId: "recently",
-        title: "Recently Played",
-        image: null
-      }
-    });
-    dispatch({
-      type: SET_ITEMS,
-      payload: {
-        files: tracks,
-        id: explorerId
-      }
-    });
-  };
-};
-
-export function viewMyLibraryAlbums(explorerId: string) {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-    const items = await getMyLibraryAlbums();
-    const albums = items.map(item => item.album);
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        currentId: "savedalbums",
-        title: "My Saved Albums",
-        image: null
-      }
-    });
-    dispatch({
-      type: SET_ITEMS,
-      payload: {
-        id: explorerId,
-        files: albums
-      }
-    });
-  };
-}
-
-export function viewMyLibraryTracks(explorerId: string) {
-  return async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
-    const items = await getMyLibraryTracks();
-    const tracks = items.map(item => item.track);
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        currentId: "savedtracks",
-        title: "My Saved Tracks",
-        image: null
-      }
-    });
-    dispatch({
-      type: SET_ITEMS,
-      payload: {
-        id: explorerId,
-        files: tracks
+        files
       }
     });
   };

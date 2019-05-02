@@ -61,8 +61,7 @@ if (tokens) {
         }
         return null;
       },
-      __customMediaClass: GenerateSpotifyMediaClass(tokens),
-      __initialState: { windows: defaultWindowsState }
+      __customMediaClass: GenerateSpotifyMediaClass(tokens)
       // Optional. The default skin is included in the js bundle, and will be loaded by default.
     },
     {}

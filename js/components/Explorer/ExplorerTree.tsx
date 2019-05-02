@@ -2,12 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 
 import {
-  setMyTopArtists,
-  setMyFollowedArtists,
-  viewMyRecentlyPlayed,
-  viewMyLibraryAlbums,
-  viewMyLibraryTracks,
-  createNewExplorer
+  createNewExplorer,
+  ACTION_TYPE,
+  setItems
 } from "../../actions/explorer";
 import hearts from "./images/hearts.ico";
 import harddrive from "./images/7.ico";
@@ -15,10 +12,13 @@ import newexplorer from "./images/319.ico";
 import recentdocuments from "./images/recentdocuments.png";
 import star from "./images/star.ico";
 import { ExplorerTreeStyle } from "./styles.js";
-class ExplorerTree extends React.Component {
-  componentDidMount() {
-    this.props.setMyTopArtists();
-  }
+
+interface Props {
+  setItems: (actionType: ACTION_TYPE, uri?: string) => void;
+  createNewExplorer: () => void;
+}
+
+class ExplorerTree extends React.Component<Props> {
   render() {
     const {
       explorerTree,
@@ -33,7 +33,7 @@ class ExplorerTree extends React.Component {
       >
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.setMyTopArtists()}
+          onClick={() => this.props.setItems(ACTION_TYPE.TOP)}
           style={explorerTreeText}
         >
           <img
@@ -45,7 +45,7 @@ class ExplorerTree extends React.Component {
         </div>
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.setMyFollowedArtists()}
+          onClick={() => this.props.setItems(ACTION_TYPE.FOLLOWING)}
           style={explorerTreeText}
         >
           <img
@@ -57,7 +57,7 @@ class ExplorerTree extends React.Component {
         </div>
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.viewMyRecentlyPlayed()}
+          onClick={() => this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED)}
           style={explorerTreeText}
         >
           <img
@@ -69,7 +69,7 @@ class ExplorerTree extends React.Component {
         </div>
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.viewMyLibraryAlbums()}
+          onClick={() => this.props.setItems(ACTION_TYPE.LIBRARY_ALBUMS)}
           style={explorerTreeText}
         >
           <img
@@ -81,7 +81,7 @@ class ExplorerTree extends React.Component {
         </div>
         <div
           className="explorer-tree-text"
-          onClick={() => this.props.viewMyLibraryTracks()}
+          onClick={() => this.props.setItems(ACTION_TYPE.LIBRARY_TRACKS)}
           style={explorerTreeText}
         >
           <img
@@ -110,13 +110,8 @@ class ExplorerTree extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  setMyTopArtists: () => dispatch(setMyTopArtists(ownProps.explorerId)),
-  setMyFollowedArtists: () =>
-    dispatch(setMyFollowedArtists(ownProps.explorerId)),
-  viewMyRecentlyPlayed: () =>
-    dispatch(viewMyRecentlyPlayed(ownProps.explorerId)),
-  viewMyLibraryAlbums: () => dispatch(viewMyLibraryAlbums(ownProps.explorerId)),
-  viewMyLibraryTracks: () => dispatch(viewMyLibraryTracks(ownProps.explorerId)),
+  setItems: (actionType: ACTION_TYPE, uri?: string) =>
+    dispatch(setItems(actionType, uri, ownProps.explorerId)),
   createNewExplorer: () => dispatch(createNewExplorer())
 });
 

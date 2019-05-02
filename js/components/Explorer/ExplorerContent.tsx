@@ -2,24 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 
 import {
-  viewAlbumsFromArtist,
-  setTracksFromAlbum,
   unsetFocusExplorer,
   getArtistFromId,
   searchOnSpotify,
-  selectFile
+  selectFile,
+  setItems,
+  ACTION_TYPE
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
-import {
-  File,
-  Image,
-  ArtistFile,
-  AlbumFile,
-  TrackFile,
-  ImageFile,
-  GenericFile
-} from "../../types";
+import { File, ImageFile, GenericFile, FILE_TYPE } from "../../types";
 import { ArtistData, AlbumData, TrackData } from "../../SpotifyApi/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
@@ -30,8 +22,6 @@ interface Props {
   selectFile: (id: string) => void;
   playTrack: (id: string) => void;
   getArtistInfo: (id: string) => void;
-  viewAlbumsFromArtist: (artist: string) => void;
-  setTracksFromAlbum: (album: string) => void;
   unsetFocusExplorer: () => void;
   playAlbumFromExplorer: (currentId: string) => void;
   openImage: (
@@ -42,6 +32,7 @@ interface Props {
   doubleclick: (id: string) => void;
   explorerId: string;
   explorer: SingleExplorerState;
+  setItems: (type: ACTION_TYPE, uri: string) => void;
 }
 
 class ExplorerContent extends React.Component<Props> {
@@ -52,12 +43,6 @@ class ExplorerContent extends React.Component<Props> {
   }
   clickHandler(id: string) {
     this.props.selectFile(id);
-  }
-  openAlbumFolder(albumId: string) {
-    this.props.setTracksFromAlbum(albumId);
-  }
-  openArtistFolder(artistId: string) {
-    this.props.viewAlbumsFromArtist(artistId);
   }
 
   renderAlbums(albums: AlbumData[]) {
@@ -96,11 +81,13 @@ class ExplorerContent extends React.Component<Props> {
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
-    if (file.metaData.type === "track") this.props.playTrack(file.metaData.id);
-    if (file.metaData.type === "album") this.openAlbumFolder(file.metaData.id);
-    if (file.metaData.type === "artist")
-      this.openArtistFolder(file.metaData.id);
-    if (file.metaData.type === "image")
+    if (file.metaData.type === FILE_TYPE.TRACK)
+      this.props.playTrack(file.metaData.id);
+    if (file.metaData.type === FILE_TYPE.ALBUM)
+      this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id);
+    if (file.metaData.type === FILE_TYPE.ARTIST)
+      this.props.setItems(ACTION_TYPE.ARTIST, file.metaData.id);
+    if (file.metaData.type === FILE_TYPE.IMAGE)
       this.props.openImage(file.metaData.url, e);
   }
 
@@ -276,19 +263,15 @@ const mapDispatchToProps = (dispatch: any, ownProps: Props) => ({
   getArtistInfo: (id: string) => {
     dispatch(getArtistFromId(id));
   },
-  viewAlbumsFromArtist: (artist: string) => {
-    dispatch(viewAlbumsFromArtist(artist, ownProps.explorerId));
-  },
-  setTracksFromAlbum: (album: string) => {
-    dispatch(setTracksFromAlbum(album, ownProps.explorerId));
-  },
   unsetFocusExplorer: () => dispatch(unsetFocusExplorer(ownProps.explorerId)),
   playAlbumFromExplorer: (currentId: string) =>
     dispatch(playAlbumFromExplorer(currentId, ownProps.explorerId)),
   openImage: (image: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
     dispatch(openImage(image, e)),
   searchOnSpotify: (search: string, type: string, offset: string) =>
-    dispatch(searchOnSpotify(search, type, offset, ownProps.explorerId))
+    dispatch(searchOnSpotify(search, type, offset, ownProps.explorerId)),
+  setItems: (uriType: FILE_TYPE, uri: string) =>
+    dispatch(setItems(uriType, uri, ownProps.explorerId))
 });
 
 export default connect(

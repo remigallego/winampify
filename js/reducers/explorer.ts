@@ -79,12 +79,14 @@ const setItems = (
   };
 };
 
-const createNewExplorer = (state: ExplorerState, id: string) => {
+const createNewExplorer = (state: ExplorerState, action: any) => {
+  const { id, x, y } = action;
+
   return {
     ...state,
     byId: {
       ...state.byId,
-      [id]: initialStateExplorer
+      [id]: { ...initialStateExplorer, x, y }
     },
     allIds: [...state.allIds, id]
   };
@@ -168,7 +170,7 @@ const savePreviousState = (state: ExplorerState, payload: { id: string }) => {
 const explorer = (state = initialState, action: any) => {
   switch (action.type) {
     case OPEN_EXPLORER:
-      return createNewExplorer(state, action.id);
+      return createNewExplorer(state, action);
     case CLOSE_EXPLORER:
       const byId = state.byId;
       delete byId[action.id];

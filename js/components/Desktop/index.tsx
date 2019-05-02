@@ -2,10 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { ContextMenuProvider } from "../../../node_modules/react-contexify";
 import {
-  viewTracksFromAlbum,
-  viewAlbumsFromArtist
-} from "./../../actions/explorer";
-import {
   createFile,
   moveFile,
   selectFiles,
@@ -20,6 +16,7 @@ import { File, GenericFile } from "../../types";
 import { AppState } from "../../reducers";
 import { openImage } from "../../actions/images";
 import { formatToWebampMetaData } from "../../utils/drag";
+import { ACTION_TYPE, setItems } from "../../actions/explorer";
 
 interface OwnProps {
   files: Array<File>;
@@ -27,6 +24,11 @@ interface OwnProps {
 }
 
 interface DispatchProps {
+  setItems: (
+    actionType: ACTION_TYPE,
+    uri?: string,
+    e?: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => void;
   deleteFile: (fileId: string) => void;
   moveFile: (file: any) => void;
   cancelRenaming: () => void;
@@ -37,8 +39,6 @@ interface DispatchProps {
     uri: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
-  viewTracksFromAlbum: (uri: string) => void;
-  viewAlbumsFromArtist: (uri: string) => void;
 }
 
 type Props = DispatchProps & OwnProps;
@@ -126,7 +126,7 @@ class Desktop extends React.Component<Props, State> {
     }
   }
 
-  renderFile(file: File) {
+  renderFile(file: GenericFile) {
     return (
       <div
         draggable={!file.isRenaming}
@@ -173,9 +173,9 @@ class Desktop extends React.Component<Props, State> {
     if (file.metaData.type === "track")
       this.props.addTrackZeroAndPlay(file.metaData.uri);
     if (file.metaData.type === "album")
-      this.props.viewTracksFromAlbum(file.metaData.uri);
+      this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id, e);
     if (file.metaData.type === "artist")
-      this.props.viewAlbumsFromArtist(file.metaData.uri);
+      this.props.setItems(ACTION_TYPE.ARTIST, file.metaData.id, e);
     if (file.metaData.type === "image")
       this.props.openImage(file.metaData.url, e);
   }
@@ -268,9 +268,11 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   createFile: (file: File) => {
     dispatch(createFile(file));
   },
-  viewTracksFromAlbum: (album: string) => dispatch(viewTracksFromAlbum(album)),
-  viewAlbumsFromArtist: (artist: string) =>
-    dispatch(viewAlbumsFromArtist(artist)),
+  setItems: (
+    actionType: ACTION_TYPE,
+    uri?: string,
+    e?: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => dispatch(setItems(actionType, uri ? uri : null, null, e)),
   moveFile: (file: File) => dispatch(moveFile(file)),
   openImage: (image: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
     dispatch(openImage(image, e)),

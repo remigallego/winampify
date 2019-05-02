@@ -17,6 +17,7 @@ import TitleBar from "./TitleBar";
 class ExplorerWindow extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props.explorer)
     this.state = {
       x: 0,
       y: 0,

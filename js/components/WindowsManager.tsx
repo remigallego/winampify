@@ -8,7 +8,7 @@ import { selectImages } from "../selectors/explorer";
 import { getWindows } from "../selectors/windows";
 import { AppState } from "../reducers";
 import { closeImage } from "../actions/images";
-import { createNewExplorer } from "../actions/explorer";
+import { createNewExplorer, ACTION_TYPE, setItems } from "../actions/explorer";
 import { setOnTop } from "../actions/windows";
 import WindowInstance from "./WindowInstance";
 
@@ -21,6 +21,7 @@ interface StateProps {
 interface DispatchProps {
   closeImage: (key: string) => void;
   createNewExplorer: () => void;
+  setItems: (actionType: ACTION_TYPE) => void;
   setOnTop: (id: string) => void;
 }
 
@@ -51,6 +52,7 @@ class WindowsManager extends React.Component<Props, {}> {
 
   componentDidMount() {
     this.props.createNewExplorer();
+    this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED);
   }
   render() {
     return (
@@ -80,6 +82,7 @@ const mapStateToProps = (state: AppState): StateProps => ({
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   closeImage: (key: string) => dispatch(closeImage(key)),
   createNewExplorer: () => dispatch(createNewExplorer()),
+  setItems: (actionType: ACTION_TYPE) => dispatch(setItems(actionType)),
   setOnTop: id => dispatch(setOnTop(id))
 });
 export default connect(
