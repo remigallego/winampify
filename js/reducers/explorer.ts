@@ -1,3 +1,4 @@
+import uuidv1 from "uuid/v1";
 import {
   SET_SELECTED_EXPLORER,
   SET_EXPLORER_METADATA,
@@ -7,13 +8,6 @@ import {
   SAVE_PREVIOUS_STATE,
   LOADING
 } from "../actionTypes";
-import { generateExplorerId } from "../utils/explorer";
-import {
-  ArtistData,
-  PlaylistData,
-  AlbumData,
-  TrackData
-} from "../SpotifyApi/types";
 
 export interface SingleExplorerState {
   selected: any;
@@ -100,7 +94,7 @@ const formatToFile = (item: any) => {
   };
   return {
     metaData: item,
-    id: "",
+    id: uuidv1(),
     isRenaming: false,
     title: getFileTitle(),
     x: 0,

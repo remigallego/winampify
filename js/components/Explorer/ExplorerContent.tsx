@@ -92,7 +92,7 @@ class ExplorerContent extends React.Component<Props> {
   }
 
   renderFile(file: GenericFile, index: string) {
-    const selected = this.props.explorer.selected === file.metaData.id;
+    const selected = this.props.explorer.selected === file.id;
     const getExtension = (type: string) => {
       if (type === "track") return ".mp3";
       if (type === "image") return ".jpg";
@@ -103,7 +103,7 @@ class ExplorerContent extends React.Component<Props> {
         key={index}
         file={file}
         selected={selected}
-        onClick={() => this.clickHandler(file.metaData.id)} // was -1 for image
+        onClick={() => this.props.selectFile(file.id)} // was -1 for image
         onDoubleClick={e => this.doubleClickHandler(file, e)}
       >
         {file.title}

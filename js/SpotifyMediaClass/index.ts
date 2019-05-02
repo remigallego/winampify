@@ -32,6 +32,7 @@ interface WebPlaybackState {
     skipping_prev: boolean; // `seeking` will be set to `true` when playing an
     // ad track.
   };
+  duration: number;
   paused: boolean; // Whether the current track is paused.
   position: number; // The position_ms of the current track.
   repeat_mode: number; // The repeat mode. No repeat mode is 0;
@@ -114,18 +115,30 @@ export default class SpotifyMediaClass {
           }
 
           // Error handling
-          player.addListener("initialization_error", ({ message }) => {
-            console.error(message);
-          });
-          player.addListener("authentication_error", ({ message }) => {
-            console.error(message);
-          });
-          player.addListener("account_error", ({ message }) => {
-            console.error(message);
-          });
-          player.addListener("playback_error", ({ message }) => {
-            console.error(message);
-          });
+          player.addListener(
+            "initialization_error",
+            ({ message }: { message: string }) => {
+              console.error(message);
+            }
+          );
+          player.addListener(
+            "authentication_error",
+            ({ message }: { message: string }) => {
+              console.error(message);
+            }
+          );
+          player.addListener(
+            "account_error",
+            ({ message }: { message: string }) => {
+              console.error(message);
+            }
+          );
+          player.addListener(
+            "playback_error",
+            ({ message }: { message: string }) => {
+              console.error(message);
+            }
+          );
 
           // Playback status updates
           player.addListener(
@@ -133,6 +146,16 @@ export default class SpotifyMediaClass {
             (state: WebPlaybackState) => {
               console.log("player_state_changed");
               console.log(state);
+
+              if (
+                state.paused &&
+                state.position === 0 &&
+                state.restrictions.disallow_resuming_reasons &&
+                state.restrictions.disallow_resuming_reasons[0] === "not_paused"
+              ) {
+                console.log("finished");
+                this._emitter.trigger("ended");
+              }
 
               if (!state.position && !state.paused) {
                 clearInterval(this._timeInterval);
@@ -184,15 +207,21 @@ export default class SpotifyMediaClass {
           );
 
           // Ready
-          player.addListener("ready", ({ device_id }) => {
-            this.device_id = device_id;
-            console.log("Ready with Device ID", device_id);
-          });
+          player.addListener(
+            "ready",
+            ({ device_id }: { device_id: string }) => {
+              this.device_id = device_id;
+              console.log("Ready with Device ID", device_id);
+            }
+          );
 
           // Not Ready
-          player.addListener("not_ready", ({ device_id }) => {
-            console.log("Device ID has gone offline", device_id);
-          });
+          player.addListener(
+            "not_ready",
+            ({ device_id }: { device_id: string }) => {
+              console.log("Device ID has gone offline", device_id);
+            }
+          );
 
           // Connect to the player!
           player.connect();
@@ -359,6 +388,8 @@ export default class SpotifyMediaClass {
 
   stop() {
     console.log("stop");
+    this.pause();
+    this.seekToPercentComplete(0);
     //this._source.stop();
   }
 

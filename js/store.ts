@@ -10,7 +10,7 @@ import { UPDATE_TIME_ELAPSED, STEP_MARQUEE, SET_MEDIA } from "./actionTypes";
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: ["desktop", "playlist", "user", "explorer", "windows", "images"]
+  whitelist: ["desktop", "playlist", "user"]
 };
 
 const compose = composeWithDevTools({
