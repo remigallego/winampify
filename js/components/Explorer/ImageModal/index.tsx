@@ -13,7 +13,7 @@ interface State {
   animation: string;
 }
 
-class ImagesModal extends React.Component<Props, State> {
+class ImageModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { animation: "" };
@@ -85,4 +85,4 @@ class ImagesModal extends React.Component<Props, State> {
     );
   }
 }
-export default ImagesModal;
+export default ImageModal;

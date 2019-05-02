@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { WindowType, Window } from "../reducers/windows";
-import ImagesModal from "./Explorer/ImagesModal";
+import ImageModal from "./Explorer/ImageModal";
 import Explorer from "./Explorer";
 import { Image } from "../types";
 import { selectImages } from "../selectors/explorer";
@@ -37,7 +37,7 @@ class WindowsManager extends React.Component<Props, {}> {
         const image = this.props.images.find(img => img.id === window.id);
         if (image !== undefined)
           return (
-            <ImagesModal
+            <ImageModal
               key={window.id}
               image={image}
               onDismiss={() => this.props.closeImage(window.id)}
