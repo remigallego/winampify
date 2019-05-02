@@ -1,3 +1,4 @@
+import ReactGA from "react-ga";
 import React from "react";
 import Desktop from "./Desktop";
 import InfosBar from "./InfosBar";
@@ -18,6 +19,10 @@ class App extends React.Component<{}, State> {
     this.state = {
       selectionBox: { target: [0, 0], origin: [0, 0] }
     };
+  }
+
+  componentDidMount() {
+    ReactGA.pageview("/app");
   }
 
   render() {
