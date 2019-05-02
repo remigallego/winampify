@@ -1,11 +1,10 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
-        "useBuiltIns": "usage",
+        "useBuiltIns": "entry",
         "targets": {
-          "uglify": true,
           "browsers": [
             "last 2 Chrome versions",
             "last 2 ChromeAndroid versions",
@@ -18,24 +17,25 @@
         }
       }
     ],
-    "react"
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "plugins": [
-    "transform-object-rest-spread"
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties"
   ],
   "env": {
     "test": {
-      "presets": [
-        "react"
-      ],
       "plugins": [
-        "transform-es2015-modules-commonjs"
+        "@babel/plugin-transform-modules-commonjs",
+        "@babel/plugin-syntax-dynamic-import"
       ]
     },
     "library": {
-      "plugins": [
-        "babel-plugin-transform-runtime"
-      ]
+      "plugins": ["@babel/plugin-transform-runtime"]
+    },
+    "production": {
+      "plugins": ["@babel/plugin-syntax-dynamic-import"]
     }
   }
 }

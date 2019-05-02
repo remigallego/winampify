@@ -11,10 +11,6 @@ const config = merge(common, {
         NODE_ENV: JSON.stringify("production")
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      // TODO: Is this needed with the devtool setting above?
-      sourceMap: true
-    }),
     new workboxPlugin.GenerateSW({
       // Note: CloudFlare is configued to not cache this file, as suggested in the:
       // "Avoid changing the URL of your service worker script" sectio of:

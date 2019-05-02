@@ -221,3 +221,9 @@ body {
   -webkit-user-select: none;
   -ms-user-select: none;
 }
+
+.react-h5-audio-player {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
