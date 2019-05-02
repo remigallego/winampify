@@ -39,7 +39,6 @@ class ImageModal extends React.Component<Props, State> {
           <div
             style={{
               position: "absolute",
-              transform: "translate(-50%, -50%)",
               width: "400px",
               resize: "both",
               overflow: "auto",
@@ -53,10 +52,11 @@ class ImageModal extends React.Component<Props, State> {
               <div
                 style={{
                   width: "100%",
-                  height: 20,
-                  backgroundColor: "rgba(15, 108, 229, 0.9)",
+                  height: 14,
+                  backgroundColor: "rgba(15, 108, 229, 0.7)",
                   display: "flex",
-                  flexDirection: "row-reverse"
+                  flexDirection: "row-reverse",
+                  fontSize: 12
                 }}
               >
                 <div
@@ -77,6 +77,11 @@ class ImageModal extends React.Component<Props, State> {
                 onMouseDown={e => e.preventDefault()}
                 height={400}
                 width={400}
+                style={{
+                  display: "block",
+                  height: 400,
+                  width: 400
+                }}
               />
             </div>
           </div>
