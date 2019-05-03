@@ -51,7 +51,7 @@ export default class SpotifyMediaClass {
   device_id: string;
   _emitter: Emitter;
 
-  player: any;
+  player: Spotify.SpotifyPlayer;
   _timeElapsed: number;
   _timeRemaining: number;
   _timeInterval: any;
@@ -75,7 +75,7 @@ export default class SpotifyMediaClass {
 
     this.device_id = "";
     this._emitter = new Emitter();
-
+    this.player = new Spotify.Player({ name: "", getOAuthToken: () => null });
     this._timeElapsed = 0;
     this._timeRemaining = 0;
     this._timeInterval = null;
@@ -88,11 +88,11 @@ export default class SpotifyMediaClass {
       document.body.appendChild(script);
 
       script.onload = () => {
-        (window as any).onSpotifyWebPlaybackSDKReady = () => {
-          // @ts-ignore
-          const player = new Spotify.Player({
+        window.onSpotifyWebPlaybackSDKReady = () => {
+          const player: Spotify.SpotifyPlayer = new Spotify.Player({
             name: "Web Playback SDK Quick Start Player",
             getOAuthToken: SpotifyApiService.getOauthToken()
+            // volume
           });
 
           this.player = player;
