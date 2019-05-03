@@ -75,7 +75,7 @@ export default class SpotifyMediaClass {
 
     this.device_id = "";
     this._emitter = new Emitter();
-    this.player = new Spotify.Player({ name: "", getOAuthToken: () => null });
+    this.player = null;
     this._timeElapsed = 0;
     this._timeRemaining = 0;
     this._timeInterval = null;
