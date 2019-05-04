@@ -1,16 +1,19 @@
 ## Overview
 
-Winampify is a work-in-progress project which started as a fork of winamp2-js. <br>
-It uses Spotify's WebPlaybackAPI and allows the user to interact with the Spotify catalog, through the original Winamp skins, all in the browser.<br><br>
-<a href="http://winampify.io/">Demo</a>
+<img src="./images/screenshot.png" />
 
-<img src="./images/winampify.PNG">
+<a href="http://winampify.io">Winampify</a> aims at providing an OS-like interface to interact with Spotify.
+
+Artists, albums and tracks are all rendered as files and folders and can easily be manipulated and played in the Winamp re-implementation <a href="https://github.com/captbaritone/webamp">Webamp</a>.
 
 ## Requirements
 
-- Spotify Premium Account
+You need a Spotify Premium Account to access Winampify.
+
+## Thank you
+
+Winamp's reimplementation is the work of <a href="https://github.com/captbaritone">captbaritone-js</a>. Couldn't have done it without your help.
 
 ## License
 
-Most of the excellent UI work has been done by <a href="https://github.com/captbaritone">captbaritone-js</a>.
 This project is released under the [MIT License](LICENSE.txt).
