@@ -1,6 +1,7 @@
 import React from "react";
 import ReactGA from "react-ga";
 import Signin from "./signin";
+import Logo from "../images/winampifylogo.png";
 import pkg from "./../package.json";
 class LandingPage extends React.Component {
   componentDidMount() {
@@ -10,7 +11,7 @@ class LandingPage extends React.Component {
   render() {
     return (
       <div className="landing-page">
-        <div className="landing-text">Winampify ⚡️</div>
+        <img src={Logo} />
         <Signin />
         <div className="description">
           Note: You need a Spotify Premium account to use Winampify. <br />
