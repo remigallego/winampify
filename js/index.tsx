@@ -31,13 +31,14 @@ if (url !== "") {
   const params = getQuery.split("&");
   if (params.length === 2)
     tokens = {
-      // access_token= is 13 characters
-      // refresh_token= is 14 characters
-      accessToken: params[0].slice(13),
-      refreshToken: params[1].slice(14)
+      accessToken: params[0].slice(13), // 13 characters
+      refreshToken: params[1].slice(14) // 14 characters
     };
   else tokens = 0;
 } else tokens = 0;
+
+// Clean URL from query params
+history.pushState(null, null, window.location.href.split("?")[0]);
 
 if (tokens) {
   const webamp = new Webamp(
