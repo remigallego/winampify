@@ -11,10 +11,17 @@ import {
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
-import { File, ImageFile, GenericFile, FILE_TYPE } from "../../types";
-import { ArtistData, AlbumData, TrackData } from "../../SpotifyApi/types";
+import {
+  File,
+  ImageFile,
+  GenericFile,
+  FILE_TYPE,
+  TrackFile
+} from "../../types";
+import { AlbumData, TrackData } from "../../SpotifyApi/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
+import { playTrack } from "../../actions/playback";
 
 const { container } = ExplorerContentStyle;
 
@@ -81,8 +88,7 @@ class ExplorerContent extends React.Component<Props> {
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
-    if (file.metaData.type === FILE_TYPE.TRACK)
-      this.props.playTrack(file.metaData.id);
+    if (file.metaData.type === FILE_TYPE.TRACK) this.props.playTrack(file);
     if (file.metaData.type === FILE_TYPE.ALBUM)
       this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id);
     if (file.metaData.type === FILE_TYPE.ARTIST)
@@ -257,8 +263,8 @@ const mapDispatchToProps = (dispatch: any, ownProps: Props) => ({
   selectFile: (id: number) => {
     dispatch(selectFile(id, ownProps.explorerId));
   },
-  playTrack: (id: string) => {
-    dispatch(playTrackFromExplorer(id, ownProps.explorerId));
+  playTrack: (file: TrackFile) => {
+    dispatch(playTrack(file));
   },
   getArtistInfo: (id: string) => {
     dispatch(getArtistFromId(id));

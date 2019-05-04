@@ -141,7 +141,7 @@ class ExplorerItem extends React.Component<Props> {
         className={thisClass}
         draggable="true"
         onDragStart={e => this.drag(e)}
-        id={"explorer-item"}
+        id={`file-${this.props.file.id}`}
       >
         {this.renderIcons(icons)}
         <div className="explorer-item-filename" style={fileName}>

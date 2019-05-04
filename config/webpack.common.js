@@ -49,5 +49,8 @@ module.exports = {
     chunkFilename: "[name]-[hash].js",
     publicPath: "/",
     path: path.resolve(__dirname, "../built")
+  },
+  node: {
+    fs: "empty"
   }
 };

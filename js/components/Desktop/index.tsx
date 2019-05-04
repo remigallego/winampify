@@ -12,11 +12,12 @@ import {
 } from "./../../actions/desktop";
 import FileItem from "./FileItem";
 import FileContextMenu from "./FileContextMenu";
-import { File, GenericFile } from "../../types";
+import { File, GenericFile, TrackFile } from "../../types";
 import { AppState } from "../../reducers";
 import { openImage } from "../../actions/images";
 import { formatToWebampMetaData } from "../../utils/drag";
 import { ACTION_TYPE, setItems } from "../../actions/explorer";
+import { playTrack } from "../../actions/playback";
 
 interface OwnProps {
   files: Array<File>;
@@ -39,6 +40,7 @@ interface DispatchProps {
     uri: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
+  playTrack: (track: TrackFile) => void;
 }
 
 type Props = DispatchProps & OwnProps;
@@ -93,6 +95,7 @@ class Desktop extends React.Component<Props, State> {
   }
 
   onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<File>) {
+    console.log("onDragStart");
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
     const tracks = files.map((file: any) => {
       return formatToWebampMetaData(file);
@@ -129,6 +132,7 @@ class Desktop extends React.Component<Props, State> {
   renderFile(file: GenericFile) {
     return (
       <div
+        id={`file-${file.id}`}
         draggable={!file.isRenaming}
         onDragStart={e => {
           const selectedFiles = this.props.files
@@ -170,8 +174,7 @@ class Desktop extends React.Component<Props, State> {
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
-    if (file.metaData.type === "track")
-      this.props.addTrackZeroAndPlay(file.metaData.uri);
+    if (file.metaData.type === "track") this.props.playTrack(file);
     if (file.metaData.type === "album")
       this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id, e);
     if (file.metaData.type === "artist")
@@ -282,7 +285,8 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   deleteFile: (fileId: string) => dispatch(deleteFile(fileId)),
   cancelRenaming: () => dispatch(cancelRenaming()),
   confirmRenameFile: (file: any, title: string) =>
-    dispatch(confirmRenameFile(file, title))
+    dispatch(confirmRenameFile(file, title)),
+  playTrack: (file: TrackFile) => dispatch(playTrack(file))
 });
 
 export default connect(
