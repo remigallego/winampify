@@ -11,6 +11,7 @@ import LandingPage from "./landingpage";
 import SpotifyApiService from "./SpotifyApi/api";
 import { PersistGate } from "redux-persist/integration/react";
 import SpotifyMediaClass from "./SpotifyMediaClass";
+import { setTokens } from "./actions/user";
 
 // TODO: Workaround, need to figure out how to import webamp types
 const Webamp: any = WebampInstance;
@@ -23,24 +24,24 @@ if (!Webamp.browserIsSupported()) {
 
 const store = getStore();
 const persistor = persistStore(store);
-let tokens;
+let accessToken;
+let refreshToken;
 
 const url = window.location.search;
-if (url !== "") {
+if (url) {
   const getQuery = url.split("?")[1];
   const params = getQuery.split("&");
-  if (params.length === 2)
-    tokens = {
-      accessToken: params[0].slice(13), // 13 characters
-      refreshToken: params[1].slice(14) // 14 characters
-    };
-  else tokens = 0;
-} else tokens = 0;
-
+  if (params.length === 2) {
+    accessToken = params[0].slice(13);
+    refreshToken = params[1].slice(14);
+  }
+}
 // Clean URL from query params
 history.pushState(null, null, window.location.href.split("?")[0]);
 
-if (tokens) {
+if (accessToken && refreshToken) {
+  SpotifyApiService.setAccessToken(accessToken);
+  store.dispatch(setTokens(accessToken, refreshToken));
   const webamp = new Webamp(
     {
       handleTrackDropEvent: e => {
@@ -54,14 +55,12 @@ if (tokens) {
         return null;
       },
       __customMediaClass: SpotifyMediaClass
-      // Optional. The default skin is included in the js bundle, and will be loaded by default.
     },
     {}
   );
 
   // Render after the skin has loaded.
   webamp.renderWhenReady(document.getElementById("winamp-container"));
-  SpotifyApiService.setAccessToken(tokens.accessToken);
   render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

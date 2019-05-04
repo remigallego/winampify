@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { setUserInfos } from "../actions/infosbar";
+import { setUserInfos } from "../actions/user";
 import { AppState } from "../reducers";
 
 interface DispatchProps {
