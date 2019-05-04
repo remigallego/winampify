@@ -1,6 +1,8 @@
+<center><img src="./images/winampifylogo.png" /></center>
+
 ## Overview
 
-<a href="http://winampify.io"><img src="./images/screenshot.png" /></a>
+<center><a href="http://winampify.io"><img src="./images/screenshot.png" /></a></center>
 
 <a href="http://winampify.io">Winampify</a> aims at providing an OS-like interface to interact with Spotify in the browser.
 
