@@ -1,6 +1,6 @@
 import Emitter from "./emitter";
 import SpotifyApiService from "../SpotifyApi/api";
-import PQueue from "p-queue";
+import PQueue from "./node_modules/p-queue";
 import {
   endOfTrack,
   beginningOfTrack,
@@ -16,7 +16,7 @@ export enum STATUS {
   STOPPED
 }
 
-export default class SpotifyMediaClass {
+export default class SpotifyMedia {
   _analyser: AnalyserNode;
   _context: AudioContext;
   _emitter: Emitter;

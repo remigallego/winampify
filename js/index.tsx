@@ -10,7 +10,7 @@ import App from "./components/App";
 import LandingPage from "./landingpage";
 import SpotifyApiService from "./SpotifyApi/api";
 import { PersistGate } from "redux-persist/integration/react";
-import SpotifyMediaClass from "./SpotifyMediaClass";
+import SpotifyMedia from "./spotifymedia";
 import { setTokens } from "./actions/user";
 
 // TODO: Workaround, need to figure out how to import webamp types
@@ -54,7 +54,7 @@ if (accessToken && refreshToken) {
         }
         return null;
       },
-      __customMediaClass: SpotifyMediaClass
+      __customMediaClass: SpotifyMedia
     },
     {}
   );

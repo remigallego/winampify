@@ -1,4 +1,4 @@
-import { STATUS } from "../SpotifyMediaClass";
+import { STATUS } from "../spotifymedia";
 
 export interface PlaybackState {
   status: STATUS;

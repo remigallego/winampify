@@ -1,5 +1,3 @@
-import SpotifyMediaClass from ".";
-import * as WebampInstance from "../../webamp/built/webamp.bundle";
 import dragMock from "drag-mock";
 
 export default class WebampControls {
