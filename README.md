@@ -1,4 +1,6 @@
-<center><img src="./images/winampifylogo.png" /></center>
+<p align="center">
+  <img width="534" src="./images/winampifylogo.png">
+</p>
 
 ## Overview
 
