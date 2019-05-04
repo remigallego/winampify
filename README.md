@@ -19,7 +19,7 @@ TODO:
 
 ## Motivation
 
-Building softwares should be fun. This project is mostly a sandbox for me to try and improve my knowledge of React and TypeScript. It is also the first large-scale project that I'm undertaking on my own, and is in constant need of refactoring.
+Building softwares should stay fun. This project is mostly a sandbox for me to try and improve my knowledge of React and TypeScript. It is also the first large-scale project that I'm undertaking on my own, and is in constant need of refactoring.
 
 ## Requirements
 
