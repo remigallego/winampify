@@ -1,6 +1,6 @@
 import Emitter from "./emitter";
 import SpotifyApiService from "../SpotifyApi/api";
-import PQueue from "./node_modules/p-queue";
+import PQueue from "p-queue";
 import {
   endOfTrack,
   beginningOfTrack,
