@@ -38,7 +38,7 @@ class SpotifyApiService {
   }
 
   put(endpoint: string, params: any): Promise<any> {
-    return new Promise(() => {
+    return new Promise(resolve => {
       fetch(`${this.apiEndpoint}/${endpoint}`, {
         method: "PUT",
         headers: {
@@ -46,7 +46,9 @@ class SpotifyApiService {
           Authorization: `Bearer ${this.accessToken}`
         },
         ...params
-      }).catch(console.error);
+      })
+        .then(e => resolve(e))
+        .catch(console.error);
     });
   }
 }
