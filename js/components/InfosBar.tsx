@@ -5,6 +5,7 @@ import { persistor } from "../.";
 import { UserState } from "../reducers/user";
 import { logOut, wipeTokens } from "../actions/auth";
 import { FaSignOutAlt, FaTrash, FaUserTimes } from "react-icons/fa";
+import { greenSpotify, greyLight } from "../colors";
 
 interface DispatchProps {
   logOut: () => void;
@@ -43,50 +44,69 @@ class InfosBar extends React.Component<Props, {}> {
     );
   }
 
+  renderControls() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          alignItems: "center"
+        }}
+      >
+        <FaSignOutAlt
+          style={{ cursor: "pointer" }}
+          color={"white"}
+          onClick={this.props.logOut}
+          size={12}
+        />
+        {/* <FaTrash
+          color={"white"}
+          onClick={this.props.wipeTokens}
+          style={{ marginLeft: 5 }}
+          size={12}
+        />
+        <FaUserTimes
+          onClick={persistor.flush}
+          color={"white"}
+          style={{ marginLeft: 5 }}
+          size={12}
+        /> */}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div
         className="infos-bar"
         style={{
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
+          backgroundColor: greenSpotify,
+          borderBottomLeftRadius: 3
         }}
       >
         <div
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center"
+            justifyContent: "center"
           }}
         >
           {this.renderProfilePicture()}
-          <h1 style={{ fontSize: 12 }}>{this.props.user.display_name}</h1>
-        </div>
-        <div
-          style={{
-            marginTop: 15,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            alignItems: "center"
-          }}
-        >
-          <FaSignOutAlt
-            onClick={this.props.logOut}
-            style={{ marginLeft: 5 }}
-            size={15}
-          />
-          <FaTrash
-            onClick={this.props.wipeTokens}
-            style={{ marginLeft: 5 }}
-            size={15}
-          />
-          <FaUserTimes
-            onClick={persistor.flush}
-            style={{ marginLeft: 5 }}
-            size={15}
-          />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-around"
+            }}
+          >
+            {this.renderControls()}
+            <h1 style={{ fontSize: 12, color: "white" }}>
+              {this.props.user.display_name}
+            </h1>
+          </div>
         </div>
       </div>
     );

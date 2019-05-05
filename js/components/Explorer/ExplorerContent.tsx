@@ -24,7 +24,7 @@ import { AlbumData, TrackData } from "../../api/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
-import { orangeDark, orangeLight } from "../../colors";
+import { orangeDark, orangeLight, greenSpotify } from "../../colors";
 
 const { container } = ExplorerContentStyle;
 
@@ -228,7 +228,7 @@ class ExplorerContent extends React.Component<Props> {
     return (
       <div
         style={{
-          color: orangeLight,
+          color: greenSpotify,
           margin: "0 auto",
           paddingTop: "100px"
         }}

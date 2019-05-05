@@ -153,6 +153,7 @@ class Desktop extends React.Component<Props, State> {
         }}
       >
         <FileItem
+          key={file.id}
           file={file}
           selected={this.state.selected.indexOf(file.id) !== -1}
           onDoubleClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
@@ -174,6 +175,8 @@ class Desktop extends React.Component<Props, State> {
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
+    if (file.isRenaming) return;
+
     if (file.metaData.type === "track") this.props.playTrack(file);
     if (file.metaData.type === "album")
       this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id, e);
@@ -189,10 +192,14 @@ class Desktop extends React.Component<Props, State> {
     if (e.target.id.split(" ").indexOf("dropzone") !== -1) {
       this.setState({ selected: [] });
       if (this.props.files.some(file => file.isRenaming)) {
-        const renamingInProgress = this.props.files.filter(
+        const filesInRenameMode = this.props.files.filter(
           file => file.isRenaming
         );
-        renamingInProgress.map(file => this.props.confirmRenameFile(file.id));
+
+        // TODO: Doesn't work right now. This will need refactoring of the File and Desktop components
+        filesInRenameMode.map(file =>
+          this.props.confirmRenameFile(file, file.title)
+        );
       }
     }
   }
