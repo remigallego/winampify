@@ -95,7 +95,6 @@ class Desktop extends React.Component<Props, State> {
   }
 
   onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<File>) {
-    console.log("onDragStart");
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
     const tracks = files.map((file: any) => {
       return formatToWebampMetaData(file);
