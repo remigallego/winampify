@@ -14,14 +14,15 @@ import ExplorerTree from "./ExplorerTree";
 import ExplorerContent from "./ExplorerContent";
 import TitleBar from "./TitleBar";
 import { FaChevronLeft } from "react-icons/fa";
-
+import "./index.css";
 class ExplorerWindow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       x: 0,
       y: 0,
-      searchText: ""
+      searchText: "",
+      isClosing: false
     };
   }
 
@@ -93,14 +94,22 @@ class ExplorerWindow extends React.Component {
             className="explorer-handle"
             style={{ position: "absolute", height: "100", width: "100%" }}
           />
-          <div className="explorer-wrapper" style={explorerWrapper}>
+          <div
+            className={`explorer-wrapper  ${
+              this.state.isClosing ? "explorer-fadeout" : "explorer-fadein"
+            }`}
+            style={explorerWrapper}
+          >
             <TitleBar
               title={this.props.explorer.title}
-              onClose={
-                this.props.explorerId !== 0
-                  ? () => this.props.closeExplorer()
-                  : null
-              }
+              onClose={() => {
+                if (!this.props.explorerId) return null;
+                this.setState({ isClosing: true }, () =>
+                  setTimeout(() => {
+                    this.props.closeExplorer();
+                  }, 200)
+                );
+              }}
             />
             <div className="explorer-toolbar" style={explorerToolbar}>
               <FaChevronLeft
