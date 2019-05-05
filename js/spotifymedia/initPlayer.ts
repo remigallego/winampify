@@ -10,7 +10,7 @@ export const initPlayer: (
       if (msg === "Script error.")
         reject({
           message:
-            '"<b>Oops, something went wrong! Please try again. (sdk_not_ready)</b>"'
+            "<b>Oops, something went wrong! Please try again. (sdk_not_ready)</b>"
         });
     };
 
