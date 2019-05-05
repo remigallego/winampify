@@ -87,16 +87,15 @@ class LandingPage extends React.Component<Props> {
             this.renderLoading()
           ) : (
             <>
-              <div style={{ height: 130, marginBottom: 15 }}>
+              <div style={{ marginBottom: 60 }}>
                 <img key="logo" src={Logo} />
+                <div className="description">
+                  A fun OS-looking interface to interact with Spotify and Winamp
+                  in the browser.
+                </div>
               </div>
               <Signin />
               {this.renderError()}
-              {/* <div className="description">
-                Note: You need a Spotify Premium account to use Winampify.{" "}
-                <br />
-                <br />
-              </div> */}
             </>
           )}
         </div>

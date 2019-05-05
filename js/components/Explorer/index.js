@@ -13,6 +13,7 @@ import backButton from "./images/Back.png";
 import ExplorerTree from "./ExplorerTree";
 import ExplorerContent from "./ExplorerContent";
 import TitleBar from "./TitleBar";
+import { FaChevronLeft } from "react-icons/fa";
 
 class ExplorerWindow extends React.Component {
   constructor(props) {
@@ -32,12 +33,12 @@ class ExplorerWindow extends React.Component {
     const { clientHeight, clientWidth } = document.documentElement;
     const getX = () => {
       if (d.x + Number(this.props.explorer.width) > clientWidth)
-        return clientWidth - Number(this.props.explorer.width) - 50;
+        return clientWidth - Number(this.props.explorer.width);
       return d.x;
     };
     const getY = () => {
       if (d.y + Number(this.props.explorer.height) > clientHeight)
-        return clientHeight - Number(this.props.explorer.height) - 50;
+        return clientHeight - Number(this.props.explorer.height);
       return d.y;
     };
 
@@ -102,10 +103,9 @@ class ExplorerWindow extends React.Component {
               }
             />
             <div className="explorer-toolbar" style={explorerToolbar}>
-              <img
-                className="explorer-toolbar-backbutton"
-                src={backButton}
-                style={backButtonStyle}
+              <FaChevronLeft
+                /*  className="explorer-toolbar-backbutton"
+                src={backButton} */
                 onClick={() => {
                   if (this.props.explorer.previousStates.length > 1) {
                     this.goBack();

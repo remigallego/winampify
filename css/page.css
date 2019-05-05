@@ -138,9 +138,11 @@ body {
 }
 
 .description {
+  font-family: "Cabin", sans-serif;
+  font-size: 15px;
   text-align: center;
   color: #fff;
-  opacity: 0.8;
+  opacity: 1;
 }
 .bold {
   color: rgb(255, 255, 255);

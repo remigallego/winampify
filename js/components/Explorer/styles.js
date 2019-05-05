@@ -1,3 +1,5 @@
+import { greyLight } from "../../colors";
+
 const ExplorerWindowStyle = {
   windowStyle: {
     position: "absolute",
@@ -19,7 +21,7 @@ const ExplorerWindowStyle = {
   },
 
   explorerToolbar: {
-    backgroundColor: "#EFEBD6",
+    backgroundColor: greyLight,
     height: "40px",
     flex: 1,
     minHeight: "40px",

@@ -14,7 +14,7 @@ const TitleBar = (props: Props) => {
     <div className="title">
       <div className="title-flex">
         <div>
-          <img src={magnifier} className="title-img" />
+          {/*  <img src={magnifier} className="title-img" /> */}
           <p className="title-text">{props.title}</p>
         </div>
         {props.onClose && <Icon src={close} onClick={props.onClose} />}

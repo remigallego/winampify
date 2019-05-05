@@ -1,6 +1,12 @@
 import { FaTimes } from "react-icons/fa";
 import React from "react";
-import { greyLight, greyDark, greyMedium } from "../../../colors";
+import {
+  greyLight,
+  greyDark,
+  greyMedium,
+  redError,
+  redErrorDark
+} from "../../../colors";
 
 interface Props {
   src: string;
@@ -8,8 +14,7 @@ interface Props {
 }
 
 interface State {
-  color: string;
-  scale: number;
+  backgroundColor: string;
 }
 
 class Icon extends React.Component<Props, State> {
@@ -17,8 +22,7 @@ class Icon extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      color: greyLight,
-      scale: 1
+      backgroundColor: "transparent"
     };
   }
 
@@ -28,31 +32,30 @@ class Icon extends React.Component<Props, State> {
         className="icon"
         onClick={this.props.onClick}
         style={{
-          color: this.state.color,
-          transform: `scale(${this.state.scale})`
+          color: "white",
+          backgroundColor: this.state.backgroundColor
         }}
       >
         <FaTimes
           onMouseEnter={() =>
             this.setState({
-              color: greyMedium
+              // color: greyMedium,
+              backgroundColor: redError
             })
           }
           onMouseLeave={() =>
             this.setState({
-              color: greyLight
+              backgroundColor: "transparent"
             })
           }
           onMouseDown={() =>
             this.setState({
-              color: greyDark,
-              scale: 0.8
+              backgroundColor: redErrorDark
             })
           }
           onMouseUp={() =>
             this.setState({
-              color: greyLight,
-              scale: 1
+              backgroundColor: redError
             })
           }
           id="disallow-on-top"
