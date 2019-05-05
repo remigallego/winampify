@@ -102,7 +102,7 @@ const ExplorerContentStyle = {
 
 const ExplorerItemStyle = {
   itemStyle: {
-    fontFamily: "Tahoma",
+    fontFamily: "Segoe UI",
     cursor: "default",
     userSelect: "none",
     boxSizing: "border-box",

@@ -17,7 +17,7 @@
 }
 .explorer-title p {
   display: inline-block;
-  font-family: Trebuchet MS Bold;
+  font-family: "Segoe UI";
   font-size: 16px;
   color: white;
   font-weight: 500;
@@ -104,7 +104,7 @@
   flex: 1;
 }
 .explorer-mainview .explorer-items-container .explorer-item {
-  font-family: "Tahoma";
+  font-family: "Segoe UI";
   cursor: default;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
