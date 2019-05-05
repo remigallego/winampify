@@ -132,6 +132,7 @@ class Desktop extends React.Component<Props, State> {
   renderFile(file: GenericFile) {
     return (
       <div
+        key={file.id}
         id={`file-${file.id}`}
         draggable={!file.isRenaming}
         onDragStart={e => {

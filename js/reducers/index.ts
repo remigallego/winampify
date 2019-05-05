@@ -5,6 +5,7 @@ import user, { UserState } from "./user";
 import windows, { WindowsState } from "./windows";
 import images, { ImagesState } from "./images";
 import playback, { PlaybackState } from "./playback";
+import auth, { AuthState } from "./auth";
 
 export interface AppState {
   explorer: ExplorerState;
@@ -13,6 +14,7 @@ export interface AppState {
   windows: WindowsState;
   images: ImagesState;
   playback: PlaybackState;
+  auth: AuthState;
 }
 
 const reducer = combineReducers<AppState>({
@@ -21,7 +23,8 @@ const reducer = combineReducers<AppState>({
   windows,
   desktop,
   user,
-  playback
+  playback,
+  auth
 });
 
 export default reducer;

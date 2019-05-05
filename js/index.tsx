@@ -8,7 +8,7 @@ import store from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import Winampify from "./components";
 
-const persistor = persistStore(store);
+export const persistor = persistStore(store);
 
 render(
   <Provider store={store}>

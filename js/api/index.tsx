@@ -19,7 +19,7 @@ class Api {
   }
 
   static get(endpoint: string): Promise<any> {
-    const { accessToken } = store.getState().user;
+    const { accessToken } = store.getState().auth;
     return new Promise((resolve, reject) => {
       fetch(`${apiendpoint}/${endpoint}`, {
         method: "GET",
@@ -37,7 +37,7 @@ class Api {
   }
 
   static put(endpoint: string, params: any): Promise<any> {
-    const { accessToken } = store.getState().user;
+    const { accessToken } = store.getState().auth;
     return new Promise(resolve => {
       fetch(`${apiendpoint}/${endpoint}`, {
         method: "PUT",

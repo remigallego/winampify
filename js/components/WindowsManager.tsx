@@ -35,7 +35,7 @@ class WindowsManager extends React.Component<Props, {}> {
       case WINDOW_TYPE.Webamp:
         return (
           <div id="window-instance-webamp">
-            <div key={window.id} zIndex={index * 5} id="winamp-container" />
+            <div key={window.id} zindex={index * 5} id="winamp-container" />
           </div>
         );
       case WINDOW_TYPE.Explorer:

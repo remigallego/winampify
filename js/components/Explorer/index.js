@@ -117,11 +117,11 @@ class ExplorerWindow extends React.Component {
                 style={searchbox}
                 onSubmit={e => {
                   e.preventDefault();
-                  this.props.searchOnSpotify(
+                  /*  this.props.searchOnSpotify(
                     e.target[0].value,
                     "album,artist,playlist,track",
                     "0"
-                  );
+                  ); */
                 }}
               >
                 <input

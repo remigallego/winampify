@@ -24,6 +24,7 @@ import { AlbumData, TrackData } from "../../api/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
+import { orangeDark, orangeLight } from "../../colors";
 
 const { container } = ExplorerContentStyle;
 
@@ -163,13 +164,13 @@ class ExplorerContent extends React.Component<Props> {
     return (
       <div
         style={ExplorerContentStyle.moreButton}
-        onClick={() =>
+        /* onClick={() =>
           this.props.searchOnSpotify(
             this.props.explorer.title,
             type,
             this.props.explorer.tracks.length.toString()
           )
-        }
+        } */
       >
         More...
       </div>
@@ -227,7 +228,7 @@ class ExplorerContent extends React.Component<Props> {
     return (
       <div
         style={{
-          color: "rgba(21, 108, 217, 0.5)",
+          color: orangeLight,
           margin: "0 auto",
           paddingTop: "100px"
         }}

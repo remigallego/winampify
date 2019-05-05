@@ -2,6 +2,8 @@ import React from "react";
 import "./index.css";
 import magnifier from "../images/magnifier.png";
 import close from "../images/close-red.png";
+import { FaTimes } from "react-icons/fa";
+import { greyLight } from "../../../colors";
 
 interface Props {
   onClose: () => void | null;
@@ -15,12 +17,11 @@ interface IconProps {
 
 const Icon = (props: IconProps) => (
   <div onClick={props.onClick}>
-    <img
+    <FaTimes
       id="disallow-on-top"
-      src={props.src}
       style={{ cursor: "pointer" }}
-      width={20}
-      height={20}
+      size={20}
+      color={greyLight}
     />
   </div>
 );

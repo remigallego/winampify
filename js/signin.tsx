@@ -13,7 +13,7 @@ const Signin = () => {
           className="signin-btn"
           onClick={() => (window.location.href = `${server}/login`)}
         >
-          SIGN IN WITH SPOTIFY
+          SIGN IN WITH SPOTIFY PREMIUM
         </div>
       </div>
     </div>

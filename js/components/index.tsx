@@ -6,13 +6,13 @@ import { Provider, connect } from "react-redux";
 import * as WebampInstance from "../../webamp/built/webamp.bundle";
 import App from "./App";
 import LandingPage from "../landingpage";
-import { authenticate } from "../actions/user";
+import { authenticate } from "../actions/auth";
 import { getParams } from "../utils/common";
 import { AppState } from "../reducers";
-import { UserState } from "../reducers/user";
+import { AuthState, LOADING } from "../reducers/auth";
 
 interface Props {
-  user: UserState;
+  auth: AuthState;
 }
 
 interface DispatchProps {
@@ -24,10 +24,9 @@ class Winampify extends React.Component<Props & DispatchProps> {
     super(props);
   }
   render() {
-    if (this.props.user.loading) return <LandingPage loading />;
-    /*  if (this.props.user.logged && !this.props.user.ready)
-      return <LandingPage loading />; */
-    if (this.props.user.logged) return <App />;
+    const { loading, logged } = this.props.auth;
+    if (loading !== LOADING.NONE) return <LandingPage loading={loading} />;
+    if (logged) return <App />;
 
     const Webamp: any = WebampInstance;
     if (!Webamp.browserIsSupported()) {
@@ -36,7 +35,8 @@ class Winampify extends React.Component<Props & DispatchProps> {
       throw new Error("What's the point of anything?");
     }
 
-    if (!window.location.search) return <LandingPage />;
+    if (!window.location.search)
+      return <LandingPage errorMessage={this.props.auth.errorMessage} />;
 
     let accessToken;
     let refreshToken;
@@ -46,7 +46,7 @@ class Winampify extends React.Component<Props & DispatchProps> {
       refreshToken = params[1].slice(14);
     }
     // Clean URL from query params
-    history.pushState(null, null, window.location.href.split("?")[0]);
+    history.pushState(null, "", window.location.href.split("?")[0]);
 
     if (accessToken && refreshToken) {
       this.props.authenticate(accessToken, refreshToken);
@@ -60,7 +60,7 @@ class Winampify extends React.Component<Props & DispatchProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  user: state.user
+  auth: state.auth
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
