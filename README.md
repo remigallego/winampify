@@ -2,10 +2,9 @@
   <img width="534" src="./images/winampifylogo.png">
 </p>
 
-## Overview
-
 <center><a href="http://winampify.io"><img src="./images/screenshot.png" /></a></center>
 
+## Overview
 <a href="http://winampify.io">Winampify</a> aims at providing an OS-like interface to interact with Spotify in the browser.
 
 Artists, albums and tracks are all rendered as files and folders and can easily be manipulated and played in the Winamp re-implementation <a href="https://github.com/captbaritone/webamp">Webamp</a>.
