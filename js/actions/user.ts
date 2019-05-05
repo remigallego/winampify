@@ -1,31 +1,78 @@
-import { getUserInfos } from "../SpotifyApi/apiFunctions";
+import { getUserInfos } from "../api/apiFunctions";
 import { Dispatch, Action } from "redux";
-import { SET_TOKENS, SET_USER_INFOS } from "../reducers/user";
-import { ThunkAction } from "redux-thunk";
+import {
+  SET_TOKENS,
+  SET_USER_INFOS,
+  LOG_OUT,
+  WIPE_TOKENS,
+  INVALID_TOKENS,
+  LOG_IN,
+  AUTHENTICATION,
+  AUTHENTICATION_SUCCESS,
+  AUTHENTICATION_FAILURE
+} from "../reducers/user";
+import Api from "../api";
+import { initPlayer } from "../spotifymedia/initPlayer";
 
-export function setTokens(accessToken: string, refreshToken: string): any {
+export const authenticate = (accessToken: string, refreshToken: string) => {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
-      type: SET_TOKENS,
+      type: AUTHENTICATION
+    });
+
+    Api.authenticate(accessToken)
+      .then(() => initPlayer(accessToken))
+      .then(() => {
+        // Useless timeout I know, the loading animation just looks like nice ;P
+        setTimeout(() => {
+          dispatch({
+            type: AUTHENTICATION_SUCCESS,
+            payload: {
+              accessToken,
+              refreshToken
+            }
+          });
+        }, 1000);
+      })
+      .catch(e => {
+        if (e && e.message && e.message === "Invalid access token") {
+          dispatch({
+            type: AUTHENTICATION_FAILURE
+          });
+        }
+      });
+  };
+};
+
+export function setUserInfos() {
+  return async (dispatch: Dispatch<Action>) => {
+    const infos = await getUserInfos();
+    dispatch({
+      type: SET_USER_INFOS,
       payload: {
-        accessToken,
-        refreshToken
+        name: infos.display_name,
+        image: infos.images[0].url,
+        uri: infos.uri
       }
     });
   };
 }
 
-export function setUserInfos() {
+export function logOut() {
   return (dispatch: Dispatch<Action>) => {
-    getUserInfos().then(res => {
-      dispatch({
-        type: SET_USER_INFOS,
-        payload: {
-          name: res.display_name,
-          image: res.images[0].url,
-          uri: res.uri
-        }
-      });
+    const webamp: HTMLElement | null = document.getElementById("webamp");
+    if (webamp) webamp.remove();
+
+    dispatch({
+      type: LOG_OUT
     });
   };
 }
+
+export const wipeTokens = () => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: WIPE_TOKENS
+    });
+  };
+};

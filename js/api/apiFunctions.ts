@@ -1,4 +1,4 @@
-import SpotifyApiService from "./api";
+import Api from ".";
 import {
   ArtistData,
   Items,
@@ -13,61 +13,57 @@ import {
 // input: URI of an artist (string)
 // output: name of artist (string)
 export const getArtistData = async (URI: string) => {
-  const response: ArtistData = await SpotifyApiService.get(`artists/${URI}`);
+  const response: ArtistData = await Api.get(`artists/${URI}`);
   return response;
 };
 
 // input: URI of a track
 // output: artist: string, name: string, duration: number
 export const getTrackData = async (URI: string) => {
-  const response: TrackData = await SpotifyApiService.get(`tracks/${URI}`);
+  const response: TrackData = await Api.get(`tracks/${URI}`);
   return response;
 };
 
 export const getAlbumData = async (id: string) => {
-  const response: AlbumData = await SpotifyApiService.get(`albums/${id}`);
+  const response: AlbumData = await Api.get(`albums/${id}`);
   return response;
 };
 
 export const getAlbumsFromArtist = async (artistId: string) => {
-  const response: AlbumItems = await SpotifyApiService.get(
+  const response: AlbumItems = await Api.get(
     `artists/${artistId}/albums?include_groups=album%2Csingle`
   );
   return response.items;
 };
 
 export const getTracksFromAlbum = async (albumId: string) => {
-  const response: TrackItems = await SpotifyApiService.get(
-    `albums/${albumId}/tracks`
-  );
+  const response: TrackItems = await Api.get(`albums/${albumId}/tracks`);
   return response.items;
 };
 
 export const getTopArtistsFromMe = async () => {
-  const response: ArtistItems = await SpotifyApiService.get("me/top/artists");
+  const response: ArtistItems = await Api.get("me/top/artists");
   return response.items;
 };
 
 export const getFollowedArtistsFromMe = async () => {
-  const response = await SpotifyApiService.get("me/following?type=artist");
+  const response = await Api.get("me/following?type=artist");
   const items: ArtistData[] = response.artists.items;
   return items;
 };
 
 export const getMyRecentlyPlayed = async () => {
-  const response: Items = await SpotifyApiService.get(
-    "me/player/recently-played"
-  );
+  const response: Items = await Api.get("me/player/recently-played");
   return response.items;
 };
 
 export const getMyLibraryAlbums = async () => {
-  const response: Items = await SpotifyApiService.get("me/albums");
+  const response: Items = await Api.get("me/albums");
   return response.items;
 };
 
 export const getMyLibraryTracks = async () => {
-  const response: Items = await SpotifyApiService.get("me/tracks");
+  const response: Items = await Api.get("me/tracks");
   return response.items;
 };
 
@@ -76,14 +72,14 @@ export const getSearchResult = async (
   scope: string,
   offset: string
 ) => {
-  const response: Search = await SpotifyApiService.get(
+  const response: Search = await Api.get(
     `search?q=${search}&type=${scope}&offset=${offset}`
   );
   return response;
 };
 
 export const getUserInfos = async () => {
-  const response: any = await SpotifyApiService.get("me");
+  const response: any = await Api.get("me");
   return response;
 };
 

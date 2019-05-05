@@ -16,7 +16,7 @@ import {
   getMyLibraryAlbums,
   getMyLibraryTracks,
   getArtistData
-} from "../SpotifyApi/apiFunctions";
+} from "../api/apiFunctions";
 import { generateExplorerId } from "../utils/explorer";
 import {
   OPEN_EXPLORER,
@@ -83,7 +83,7 @@ export function unsetFocusExplorer(explorerId: string) {
   };
 }
 
-export function searchOnSpotify(
+/* export function searchOnSpotify(
   search: string,
   type: string,
   offset: string,
@@ -144,7 +144,7 @@ export function searchOnSpotify(
       });
     });
   };
-}
+} */
 
 // what kind of folder was clicked on
 export enum ACTION_TYPE {
@@ -176,8 +176,8 @@ export function setItems(
         );
       } else dispatch(createNewExplorer(explorerId));
     } else dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({ type: LOADING, id: explorerId });
 
+    dispatch({ type: LOADING, id: explorerId });
     let files;
     let currentId;
     let title;

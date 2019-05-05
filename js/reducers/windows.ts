@@ -9,7 +9,8 @@ import { OPEN_IMAGE, CLOSE_IMAGE } from "../actions/images";
 
 export enum WINDOW_TYPE {
   Explorer,
-  Image
+  Image,
+  Webamp
 }
 
 export interface Window {
@@ -26,7 +27,7 @@ export interface WindowsState {
 }
 
 const initialState: WindowsState = {
-  windows: []
+  windows: [{ id: "webamp", type: WINDOW_TYPE.Webamp }]
 };
 
 const windows = (state: WindowsState = initialState, action: any) => {

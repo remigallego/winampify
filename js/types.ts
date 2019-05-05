@@ -4,7 +4,7 @@ import {
   TrackData,
   PlaylistData,
   ImageData
-} from "./SpotifyApi/types";
+} from "./api/types";
 import { ACTION_TYPE } from "./actions/explorer";
 
 export interface File {

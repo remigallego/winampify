@@ -1,37 +1,28 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, Store } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createLogger } from "redux-logger";
-import { persistReducer } from "redux-persist";
+import { persistReducer, createTransform } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import reducer from "./reducers";
-import { UPDATE_TIME_ELAPSED, STEP_MARQUEE, SET_MEDIA } from "./actionTypes";
+import reducer, { AppState } from "./reducers";
 
 const persistConfig = {
   key: "root",
   storage: storage,
-  whitelist: ["desktop", "playlist", "user"]
+  whitelist: ["desktop", "playlist"]
 };
 
-const compose = composeWithDevTools({
-  actionsBlacklist: [UPDATE_TIME_ELAPSED, STEP_MARQUEE]
-});
+const compose = composeWithDevTools({});
 
-const logger = createLogger({
-  predicate: (getState, action) =>
-    action.type !== STEP_MARQUEE &&
-    action.type !== UPDATE_TIME_ELAPSED &&
-    action.type !== SET_MEDIA
-});
+const logger = createLogger({});
 
-const getStore = () => {
-  let initialState;
-  const persistedReducer = persistReducer(persistConfig, reducer);
+let initialState;
+const persistedReducer = persistReducer(persistConfig, reducer);
 
-  return createStore(
-    persistedReducer,
-    initialState,
-    compose(applyMiddleware(thunk, logger))
-  );
-};
-export default getStore;
+const store = createStore<AppState>(
+  persistedReducer,
+  initialState,
+  compose(applyMiddleware(thunk, logger))
+);
+
+export default store;

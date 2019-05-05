@@ -19,6 +19,7 @@ import { SingleExplorerState } from "../../reducers/explorer";
 interface Props {
   explorer: SingleExplorerState;
   explorerId: string;
+  zIndex: number;
   goPreviousState: () => void;
   updatePosition: (x: number, y: number) => void;
   updateSize: (w: number, y: number) => void;
@@ -26,6 +27,7 @@ interface Props {
 }
 
 class ExplorerWindow extends React.Component<Props> {
+  ref: any = null;
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -78,6 +80,7 @@ class ExplorerWindow extends React.Component<Props> {
             bottomLeft: false,
             topLeft: false
           }}
+          ref={ref => (this.ref = ref)}
           width={this.props.explorer.width}
           height={this.props.explorer.height}
           default={{

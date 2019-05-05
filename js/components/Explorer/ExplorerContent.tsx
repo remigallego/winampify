@@ -16,9 +16,11 @@ import {
   ImageFile,
   GenericFile,
   FILE_TYPE,
-  TrackFile
+  TrackFile,
+  ArtistFile,
+  AlbumFile
 } from "../../types";
-import { AlbumData, TrackData } from "../../SpotifyApi/types";
+import { AlbumData, TrackData } from "../../api/types";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
@@ -52,7 +54,7 @@ class ExplorerContent extends React.Component<Props> {
     this.props.selectFile(id);
   }
 
-  renderAlbums(albums: AlbumData[]) {
+  renderAlbums(albums: GenericFile[]) {
     if (albums)
       return albums.map((album, index) => {
         return this.renderFile(album, `al${index}`);
@@ -60,7 +62,7 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderTracks(tracks: TrackData[]) {
+  renderTracks(tracks: GenericFile[]) {
     if (tracks)
       return tracks.map((track, index) => {
         return this.renderFile(track, `tr${index}`);
@@ -68,7 +70,7 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderArtists(artists: File[]) {
+  renderArtists(artists: GenericFile[]) {
     if (artists)
       return artists.map((artist, index) => {
         return this.renderFile(artist, `ar${index}`);
@@ -76,7 +78,7 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderImages(images: ImageFile[]) {
+  renderImages(images: GenericFile[]) {
     if (images)
       return images.map((image, index) => {
         return this.renderFile(image, `im${index}`);
@@ -181,24 +183,20 @@ class ExplorerContent extends React.Component<Props> {
     }
 
     const artists = files
-      .filter((file: File) => file.metaData.type === "artist")
-      .map((file: File) => file);
+      .filter((file: GenericFile) => file.metaData.type === "artist")
+      .map((file: GenericFile) => file);
 
     const albums = files
-      .filter((file: File) => file.metaData.type === "album")
-      .map((file: File) => file);
+      .filter((file: GenericFile) => file.metaData.type === "album")
+      .map((file: GenericFile) => file);
 
     const tracks = files
-      .filter((file: File) => file.metaData.type === "track")
-      .map((file: File) => file);
-
-    const playlists = files
-      .filter((file: File) => file.metaData.type === "playlist")
-      .map((file: File) => file);
+      .filter((file: GenericFile) => file.metaData.type === "track")
+      .map((file: GenericFile) => file);
 
     const images = files
-      .filter((file: File) => file.metaData.type === "image")
-      .map((file: File) => file);
+      .filter((file: GenericFile) => file.metaData.type === "image")
+      .map((file: GenericFile) => file);
 
     return (
       <div>

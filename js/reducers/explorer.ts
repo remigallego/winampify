@@ -8,6 +8,7 @@ import {
   SAVE_PREVIOUS_STATE,
   LOADING
 } from "../actionTypes";
+import { GenericFile } from "../types";
 
 export interface SingleExplorerState {
   selected: any;
@@ -20,7 +21,7 @@ export interface SingleExplorerState {
   height: number;
   x: number;
   y: number;
-  files: Array<File> | null;
+  files: Array<GenericFile> | null;
 }
 
 export interface ExplorerState {

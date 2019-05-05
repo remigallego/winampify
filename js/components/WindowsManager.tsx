@@ -11,6 +11,8 @@ import { closeImage } from "../actions/images";
 import { createNewExplorer, ACTION_TYPE, setItems } from "../actions/explorer";
 import { setOnTop } from "../actions/windows";
 import WindowInstance from "./WindowInstance";
+import * as WebampInstance from "../../webamp/built/webamp.bundle";
+import SpotifyMedia from "../spotifymedia";
 
 interface StateProps {
   explorersIds: Array<string>;
@@ -30,6 +32,12 @@ type Props = StateProps & DispatchProps;
 class WindowsManager extends React.Component<Props, {}> {
   getWindow(window: Window, index: number) {
     switch (window.type) {
+      case WINDOW_TYPE.Webamp:
+        return (
+          <div id="window-instance-webamp">
+            <div key={window.id} zIndex={index * 5} id="winamp-container" />
+          </div>
+        );
       case WINDOW_TYPE.Explorer:
         return (
           <Explorer key={window.id} explorerId={window.id} zIndex={index * 5} />
@@ -51,6 +59,36 @@ class WindowsManager extends React.Component<Props, {}> {
   }
 
   componentDidMount() {
+    const Webamp: any = WebampInstance;
+
+    const webamp = new Webamp(
+      {
+        handleTrackDropEvent: e => {
+          if (e.dataTransfer.getData("tracks").length > 0) {
+            const json = e.dataTransfer.getData("tracks");
+            try {
+              return JSON.parse(json);
+            } catch (err) {}
+          }
+          return null;
+        },
+        __customMediaClass: SpotifyMedia
+      },
+      {}
+    );
+
+    webamp.renderWhenReady(document.getElementById("winamp-container"));
+
+    document.addEventListener(
+      "click",
+      evt => {
+        if (evt.path.some(el => el.id === "winamp-container")) {
+          this.props.setOnTop("winamp-container");
+        }
+        // If the clicked element doesn't have the right selector, bail
+      },
+      false
+    );
     // this.props.createNewExplorer();
     // this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED);
   }
@@ -60,6 +98,7 @@ class WindowsManager extends React.Component<Props, {}> {
         {this.props.windows.map((window: Window, index) => {
           return (
             <WindowInstance
+              className={"instance-window"}
               key={window.id}
               zIndex={index * 10000}
               setOnTop={() => this.props.setOnTop(window.id)}

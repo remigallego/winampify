@@ -42,6 +42,8 @@ body {
   bottom: 0;
   padding-bottom: 20px;
   color: white;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .selection-box {
   z-index: 1;
@@ -69,7 +71,11 @@ body {
   justify-content: center;
   align-items: center;
   height: 100%;
-  margin-top: 150px;
+  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
 }
 
 .landing-text {
