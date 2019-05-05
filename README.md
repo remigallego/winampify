@@ -20,6 +20,7 @@ TODO:
 - [ ] Implement popover with track details
 - [ ] Improve style
 - [ ] Improve windows manager
+- [ ] Playlist discovery and playlist creation
 
 ## Motivation
 
