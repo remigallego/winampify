@@ -36,3 +36,7 @@
   user-select: none;
   width: 0px;
 }
+
+.icon {
+  transition: all 0.1s;
+}

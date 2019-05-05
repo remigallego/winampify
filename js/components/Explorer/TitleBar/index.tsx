@@ -2,29 +2,12 @@ import React from "react";
 import "./index.css";
 import magnifier from "../images/magnifier.png";
 import close from "../images/close-red.png";
-import { FaTimes } from "react-icons/fa";
-import { greyLight } from "../../../colors";
+import Icon from "./Icon";
 
 interface Props {
   onClose: () => void | null;
   title: string;
 }
-
-interface IconProps {
-  src: string;
-  onClick: () => void | null;
-}
-
-const Icon = (props: IconProps) => (
-  <div onClick={props.onClick}>
-    <FaTimes
-      id="disallow-on-top"
-      style={{ cursor: "pointer" }}
-      size={20}
-      color={greyLight}
-    />
-  </div>
-);
 
 const TitleBar = (props: Props) => {
   return (
