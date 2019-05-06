@@ -1,4 +1,4 @@
-@keyframes fadeIn {
+@keyframes explorerFadeIn {
   from {
     transform: scale(0.7);
     opacity: 0;
@@ -9,7 +9,7 @@
   }
 }
 
-@keyframes fadeOut {
+@keyframes explorerFadeOut {
   from {
     transform: scale(1);
     opacity: 1;
@@ -22,11 +22,11 @@
 
 .explorer-fadein {
   animation-duration: 0.15s;
-  animation-name: fadeIn;
+  animation-name: explorerFadeIn;
 }
 
 .explorer-fadeout {
   animation-duration: 0.15s;
-  animation-name: fadeOut;
+  animation-name: explorerFadeOut;
   animation-fill-mode: forwards;
 }
