@@ -46,7 +46,7 @@ const TitleBar = (props: Props) => {
         >
           {props.title}
         </div>
-        {props.onClose && <CloseIcon src={close} onClick={props.onClose} />}
+        {props.onClose && <CloseIcon onClick={props.onClose} />}
       </div>
     </div>
   );

@@ -9,7 +9,6 @@ import {
 } from "../../../colors";
 
 interface Props {
-  src: string;
   onClick: () => void | null;
 }
 

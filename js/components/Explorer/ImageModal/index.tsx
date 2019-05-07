@@ -2,6 +2,7 @@ import React from "react";
 import Draggable from "react-draggable";
 import "./ImageAnimation.css";
 import { Image } from "../../../types";
+import TitleBar from "../TitleBar";
 
 interface Props {
   image: Image;
@@ -49,27 +50,14 @@ class ImageModal extends React.Component<Props, State> {
             }}
           >
             <div className={this.state.animation}>
-              <div
-                style={{
-                  width: "100%",
-                  height: 14,
-                  backgroundColor: "rgba(15, 108, 229, 0.7)",
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                  fontSize: 12
+              <TitleBar
+                onClose={() => {
+                  this.setState({ animation: "shrink-animation" }, () =>
+                    setTimeout(() => this.props.onDismiss(), 250)
+                  );
                 }}
-              >
-                <div
-                  style={{ color: "white", paddingRight: 5 }}
-                  onClick={() => {
-                    this.setState({ animation: "shrink-animation" }, () =>
-                      setTimeout(() => this.props.onDismiss(), 250)
-                    );
-                  }}
-                >
-                  X
-                </div>
-              </div>
+                title={""}
+              />
               <img
                 draggable={false}
                 src={this.props.image.source}
