@@ -17,10 +17,9 @@ interface State {
   backgroundColor: string;
 }
 
-class Icon extends React.Component<Props, State> {
+class CloseIcon extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-
     this.state = {
       backgroundColor: "transparent"
     };
@@ -29,11 +28,13 @@ class Icon extends React.Component<Props, State> {
   render() {
     return (
       <div
-        className="icon"
+        className="close-icon"
         onClick={this.props.onClick}
         style={{
           color: "white",
-          backgroundColor: this.state.backgroundColor
+          backgroundColor: this.state.backgroundColor,
+          transition: "background-color 0.21s",
+          zIndex: 555555
         }}
       >
         <FaTimes
@@ -67,4 +68,4 @@ class Icon extends React.Component<Props, State> {
   }
 }
 
-export default Icon;
+export default CloseIcon;

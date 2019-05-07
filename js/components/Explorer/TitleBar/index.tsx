@@ -1,8 +1,8 @@
 import React from "react";
-import "./index.css";
-import magnifier from "../images/magnifier.png";
 import close from "../images/close-red.png";
-import Icon from "./Icon";
+import CloseIcon from "../Icons/CloseIcon";
+import { blueTitleBar } from "../../../colors";
+import { dragHandleClassName } from "../vars";
 
 interface Props {
   onClose: () => void | null;
@@ -11,13 +11,42 @@ interface Props {
 
 const TitleBar = (props: Props) => {
   return (
-    <div className="title">
-      <div className="title-flex">
-        <div>
-          {/*  <img src={magnifier} className="title-img" /> */}
-          <p className="title-text">{props.title}</p>
+    <div
+      className={dragHandleClassName}
+      style={{
+        backgroundColor: blueTitleBar,
+        background: 'linear-gradient("#026bfe", "#1a6cd0")',
+        width: "auto",
+        height: "auto",
+        cursor: "move",
+        borderTopLeftRadius: "inherit",
+        borderTopRightRadius: "inherit"
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          overflow: "hidden"
+        }}
+      >
+        <div
+          style={{
+            padding: 3,
+            fontFamily: "Open Sans",
+            fontSize: "16px",
+            color: "white",
+            fontWeight: 500,
+            whiteSpace: "nowrap",
+            userSelect: "none",
+            overflow: "hidden"
+          }}
+        >
+          {props.title}
         </div>
-        {props.onClose && <Icon src={close} onClick={props.onClose} />}
+        {props.onClose && <CloseIcon src={close} onClick={props.onClose} />}
       </div>
     </div>
   );
