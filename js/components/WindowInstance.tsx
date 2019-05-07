@@ -19,7 +19,11 @@ class WindowInstance extends React.Component<Props, State> {
     return (
       <div
         className="window-instance---"
-        style={{ backgroundColor: "red", zIndex: this.props.zIndex }}
+        style={{
+          backgroundColor: "red",
+          zIndex: this.props.zIndex,
+          position: "absolute"
+        }}
         onMouseDown={(e: any) => {
           if (e.target.id !== "disallow-on-top") this.props.setOnTop();
         }}

@@ -4,7 +4,7 @@ import { WINDOW_TYPE, Window } from "../reducers/windows";
 import ImageModal from "./Explorer/ImageModal";
 import Explorer from "./Explorer";
 import { Image } from "../types";
-import { selectImages } from "../selectors/explorer";
+import { selectImages, selectExplorers } from "../selectors/explorer";
 import { getWindows } from "../selectors/windows";
 import { AppState } from "../reducers";
 import { closeImage } from "../actions/images";
@@ -13,9 +13,10 @@ import { setOnTop } from "../actions/windows";
 import WindowInstance from "./WindowInstance";
 import * as WebampInstance from "../../webamp/built/webamp.bundle";
 import SpotifyMedia from "../spotifymedia";
+import { SingleExplorerState } from "../reducers/explorer";
 
 interface StateProps {
-  explorersIds: Array<string>;
+  explorers: Array<SingleExplorerState>;
   images: Array<Image>;
   windows: Array<Window>;
 }
@@ -30,18 +31,23 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps;
 
 class WindowsManager extends React.Component<Props, {}> {
+  webampNode!: HTMLDivElement;
+
   getWindow(window: Window, index: number) {
     switch (window.type) {
-      case WINDOW_TYPE.Webamp:
-        return (
-          <div id="window-instance-webamp">
-            <div key={window.id} zindex={index * 5} id="winamp-container" />
-          </div>
+      case WINDOW_TYPE.Webamp: {
+        if (this.webampNode) {
+          this.webampNode.style.zIndex = index.toString();
+        }
+        return null;
+      }
+      case WINDOW_TYPE.Explorer: {
+        const explorer = this.props.explorers.find(
+          explorer => explorer.id === window.id
         );
-      case WINDOW_TYPE.Explorer:
-        return (
-          <Explorer key={window.id} explorerId={window.id} zIndex={index * 5} />
-        );
+        if (explorer !== undefined)
+          return <Explorer key={window.id} explorer={explorer} />;
+      }
       case WINDOW_TYPE.Image: {
         const image = this.props.images.find(img => img.id === window.id);
         if (image !== undefined)
@@ -60,10 +66,9 @@ class WindowsManager extends React.Component<Props, {}> {
 
   componentDidMount() {
     const Webamp: any = WebampInstance;
-
     const webamp = new Webamp(
       {
-        handleTrackDropEvent: e => {
+        handleTrackDropEvent: (e: React.DragEvent<HTMLDivElement>) => {
           if (e.dataTransfer.getData("tracks").length > 0) {
             const json = e.dataTransfer.getData("tracks");
             try {
@@ -77,20 +82,26 @@ class WindowsManager extends React.Component<Props, {}> {
       {}
     );
 
-    webamp.renderWhenReady(document.getElementById("winamp-container"));
-
+    webamp.renderWhenReady(document.getElementById("webamp")).then();
+    document.addEventListener("load", e => console.log("load:", e));
     document.addEventListener(
-      "click",
-      evt => {
-        if (evt.path.some(el => el.id === "winamp-container")) {
-          this.props.setOnTop("winamp-container");
+      "mousedown",
+      (evt: MouseEvent) => {
+        if (
+          (evt as any).path.some((el: HTMLDivElement) => el.id === "webamp")
+        ) {
+          if (!this.webampNode) {
+            const webampNode: HTMLDivElement = (evt as any).path.find(
+              (el: HTMLDivElement) => el.id === "webamp"
+            );
+            this.webampNode = webampNode;
+          }
+          this.props.setOnTop("webamp");
         }
-        // If the clicked element doesn't have the right selector, bail
       },
+      // If the clicked element doesn't have the right selector, bail
       false
     );
-    // this.props.createNewExplorer();
-    // this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED);
   }
   render() {
     return (
@@ -98,9 +109,8 @@ class WindowsManager extends React.Component<Props, {}> {
         {this.props.windows.map((window: Window, index) => {
           return (
             <WindowInstance
-              className={"instance-window"}
               key={window.id}
-              zIndex={index * 10000}
+              zIndex={index}
               setOnTop={() => this.props.setOnTop(window.id)}
             >
               {this.getWindow(window, index)}
@@ -114,7 +124,7 @@ class WindowsManager extends React.Component<Props, {}> {
 
 const mapStateToProps = (state: AppState): StateProps => ({
   images: selectImages(state),
-  explorersIds: state.explorer.allIds,
+  explorers: selectExplorers(state),
   windows: getWindows(state)
 });
 
