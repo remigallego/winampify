@@ -11,6 +11,7 @@ import {
 import { GenericFile } from "../types";
 
 export interface SingleExplorerState {
+  id: string;
   selected: any;
   currentId: any;
   title: any;
@@ -32,6 +33,7 @@ export interface ExplorerState {
 }
 
 const initialStateExplorer: SingleExplorerState = {
+  id: "",
   selected: null,
   currentId: null,
   title: null,
@@ -80,7 +82,7 @@ const createNewExplorer = (state: ExplorerState, payload: any) => {
     ...state,
     byId: {
       ...state.byId,
-      [id]: { ...initialStateExplorer, x, y }
+      [id]: { ...initialStateExplorer, id, x, y }
     },
     allIds: [...state.allIds, id]
   };

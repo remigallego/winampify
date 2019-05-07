@@ -1,6 +1,10 @@
 import { greyLight } from "../../colors";
 
-const ExplorerWindowStyle = {
+interface StyleCollection {
+  [truc: string]: React.CSSProperties | undefined;
+}
+
+const ExplorerWindowStyle: StyleCollection = {
   windowStyle: {
     position: "absolute",
     border: "2px solid #026bfe",
@@ -19,7 +23,6 @@ const ExplorerWindowStyle = {
     "box-shadow":
       "0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.30)"
   },
-
   explorerToolbar: {
     backgroundColor: greyLight,
     height: "40px",
@@ -59,7 +62,7 @@ const ExplorerWindowStyle = {
   }
 };
 
-const ExplorerTreeStyle = {
+const ExplorerTreeStyle: StyleCollection = {
   explorerTree: {
     width: "150px",
     maxWidth: "150px",
@@ -79,7 +82,7 @@ const ExplorerTreeStyle = {
   }
 };
 
-const ExplorerContentStyle = {
+const ExplorerContentStyle: StyleCollection = {
   container: {
     overflow: "scroll",
     overflowX: "hidden",
@@ -102,7 +105,7 @@ const ExplorerContentStyle = {
   }
 };
 
-const ExplorerItemStyle = {
+const ExplorerItemStyle: StyleCollection = {
   itemStyle: {
     fontFamily: "Open Sans",
     cursor: "default",

@@ -59,6 +59,13 @@ export interface Image {
 
 export interface Artist {}
 
+export interface FILE_TYPE {
+  ARTIST: "artist";
+  ALBUM: "album";
+  TRACK: "track";
+  IMAGE: "image";
+}
+
 export const FILE_TYPE = {
   ARTIST: "artist",
   ALBUM: "album",

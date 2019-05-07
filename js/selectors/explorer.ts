@@ -9,7 +9,10 @@ export const selectImages = createSelector(
   }
 );
 
-export const getExplorers = createSelector(
+export const selectExplorers = createSelector(
   (state: AppState) => state.explorer.allIds,
-  allIds => allIds
+  (state: AppState) => state.explorer.byId,
+  (allIds, byId) => {
+    return allIds.map(id => byId[id]);
+  }
 );

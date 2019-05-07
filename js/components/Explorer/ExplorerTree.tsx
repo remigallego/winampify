@@ -11,12 +11,22 @@ import harddrive from "./images/7.ico";
 import newexplorer from "./images/319.ico";
 import recentdocuments from "./images/recentdocuments.png";
 import star from "./images/star.ico";
-import { ExplorerTreeStyle } from "./styles.js";
+import { ExplorerTreeStyle } from "./styles";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import { AppState } from "../../reducers";
+import { SingleExplorerState } from "../../reducers/explorer";
 
-interface Props {
-  setItems: (actionType: ACTION_TYPE, uri?: string) => void;
-  createNewExplorer: () => void;
+interface DispatchProps {
+  setItems(actionType: ACTION_TYPE, uri?: string): void;
+  createNewExplorer(): void;
 }
+
+interface OwnProps {
+  explorer: SingleExplorerState;
+}
+
+type Props = OwnProps & DispatchProps;
 
 class ExplorerTree extends React.Component<Props> {
   render() {
@@ -109,12 +119,17 @@ class ExplorerTree extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  setItems: (actionType: ACTION_TYPE, uri?: string) =>
-    dispatch(setItems(actionType, uri, ownProps.explorerId)),
-  createNewExplorer: () => dispatch(createNewExplorer())
-});
-
+const mapDispatchToProps = (
+  dispatch: ThunkDispatch<AppState, null, Action>,
+  ownProps: OwnProps
+): DispatchProps => {
+  const { id: explorerId } = ownProps.explorer;
+  return {
+    setItems: (actionType: ACTION_TYPE, uri?: string) =>
+      dispatch(setItems(actionType, uri, explorerId)),
+    createNewExplorer: () => dispatch(createNewExplorer())
+  };
+};
 export default connect(
   null,
   mapDispatchToProps

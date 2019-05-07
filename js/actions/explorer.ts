@@ -265,7 +265,7 @@ export function getArtistFromId(id: string) {
   };
 }
 
-export function selectFile(fileId: number, explorerId: string) {
+export function selectFile(fileId: string, explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "SET_SELECTED_EXPLORER",

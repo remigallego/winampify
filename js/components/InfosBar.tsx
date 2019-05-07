@@ -1,11 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { AppState } from "../reducers";
-import { persistor } from "../.";
 import { UserState } from "../reducers/user";
 import { logOut, wipeTokens } from "../actions/auth";
-import { FaSignOutAlt, FaTrash, FaUserTimes } from "react-icons/fa";
-import { greenSpotify, greyLight } from "../colors";
+import { FaSignOutAlt, FaChevronDown } from "react-icons/fa";
+import { greenSpotify } from "../colors";
 
 interface DispatchProps {
   logOut: () => void;
@@ -60,18 +59,6 @@ class InfosBar extends React.Component<Props, {}> {
           onClick={this.props.logOut}
           size={12}
         />
-        {/* <FaTrash
-          color={"white"}
-          onClick={this.props.wipeTokens}
-          style={{ marginLeft: 5 }}
-          size={12}
-        />
-        <FaUserTimes
-          onClick={persistor.flush}
-          color={"white"}
-          style={{ marginLeft: 5 }}
-          size={12}
-        /> */}
       </div>
     );
   }
@@ -91,22 +78,16 @@ class InfosBar extends React.Component<Props, {}> {
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "center"
+            justifyContent: "center",
+            alignItems: "center"
           }}
         >
           {this.renderProfilePicture()}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around"
-            }}
-          >
-            {this.renderControls()}
-            <h1 style={{ fontSize: 12, color: "white" }}>
-              {this.props.user.display_name}
-            </h1>
-          </div>
+
+          <h1 style={{ fontSize: 12, color: "white" }}>
+            {this.props.user.display_name}
+          </h1>
+          <FaChevronDown style={{ marginLeft: 8 }} color={"white"} />
         </div>
       </div>
     );

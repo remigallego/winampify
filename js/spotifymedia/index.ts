@@ -2,7 +2,6 @@ import Emitter from "./emitter";
 import Api from "../api";
 import PQueue from "p-queue";
 import { endOfTrack, beginningOfTrack, pauseTrack, resumeTrack } from "./utils";
-import { initPlayer } from "./initPlayer";
 
 export enum STATUS {
   PLAYING,
