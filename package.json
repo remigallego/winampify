@@ -64,6 +64,7 @@
     "@types/loadjs": "^3.5.0",
     "@types/lodash": "^4.14.121",
     "@types/react": "^16.8.4",
+    "@types/react-rnd": "^7.4.3",
     "@types/spotify-api": "0.0.0",
     "babel": "^6.23.0",
     "jszip": "^3.1.3",
