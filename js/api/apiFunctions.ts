@@ -1,85 +1,136 @@
 import Api from ".";
-import {
-  ArtistData,
-  Items,
-  Search,
-  AlbumData,
-  TrackItems,
-  AlbumItems,
-  TrackData,
-  ArtistItems
-} from "./types";
 
-// input: URI of an artist (string)
-// output: name of artist (string)
+/**
+ * Get an Artist
+ *
+ * GET /v1/artists/{id}
+ * https://developer.spotify.com/web-api/get-artist/
+ */
 export const getArtistData = async (URI: string) => {
-  const response: ArtistData = await Api.get(`artists/${URI}`);
+  const response: SpotifyApi.SingleArtistResponse = await Api.get(
+    `artists/${URI}`
+  );
   return response;
 };
 
-// input: URI of a track
-// output: artist: string, name: string, duration: number
+/**
+ * Get a track
+ *
+ * GET /v1/tracks/{id}
+ * https://developer.spotify.com/web-api/get-track/
+ */
 export const getTrackData = async (URI: string) => {
-  const response: TrackData = await Api.get(`tracks/${URI}`);
+  const response: SpotifyApi.SingleTrackResponse = await Api.get(
+    `tracks/${URI}`
+  );
   return response;
 };
 
+/**
+ * Get an Album
+ *
+ * GET /v1/albums/{id}
+ * https://developer.spotify.com/web-api/get-album/
+ */
 export const getAlbumData = async (id: string) => {
-  const response: AlbumData = await Api.get(`albums/${id}`);
+  const response: SpotifyApi.SingleAlbumResponse = await Api.get(
+    `albums/${id}`
+  );
   return response;
 };
 
+/**
+ * Get an Artist’s Albums
+ *
+ * GET /v1/artists/{id}/albums
+ * https://developer.spotify.com/web-api/get-artists-albums/
+ */
 export const getAlbumsFromArtist = async (artistId: string) => {
-  const response: AlbumItems = await Api.get(
+  const response: SpotifyApi.ArtistsAlbumsResponse = await Api.get(
     `artists/${artistId}/albums?include_groups=album%2Csingle`
   );
   return response.items;
 };
 
+/**
+ * Get an Album’s Tracks
+ *
+ * GET /v1/albums/{id}/tracks
+ * https://developer.spotify.com/web-api/get-albums-tracks/
+ */
 export const getTracksFromAlbum = async (albumId: string) => {
-  const response: TrackItems = await Api.get(`albums/${albumId}/tracks`);
+  const response: SpotifyApi.AlbumTracksResponse = await Api.get(
+    `albums/${albumId}/tracks`
+  );
   return response.items;
 };
 
+/**
+ * Get a User’s Top Artists and Tracks (Note: This is only Artists)
+ *
+ * GET /v1/me/top/{type}
+ * https://developer.spotify.com/web-api/get-users-top-artists-and-tracks/
+ */
 export const getTopArtistsFromMe = async () => {
-  const response: ArtistItems = await Api.get("me/top/artists");
+  const response: SpotifyApi.UsersTopArtistsResponse = await Api.get(
+    "me/top/artists"
+  );
   return response.items;
 };
 
+/**
+ * Get User’s Followed Artists
+ *
+ * GET /v1/me/following
+ * https://developer.spotify.com/web-api/get-followed-artists/
+ */
 export const getFollowedArtistsFromMe = async () => {
-  const response = await Api.get("me/following?type=artist");
-  const items: ArtistData[] = response.artists.items;
+  const response: SpotifyApi.UsersFollowedArtistsResponse = await Api.get(
+    "me/following?type=artist"
+  );
+  const items = response.artists.items;
   return items;
 };
 
 export const getMyRecentlyPlayed = async () => {
-  const response: Items = await Api.get("me/player/recently-played");
+  const response: any = await Api.get("me/player/recently-played");
   return response.items;
 };
 
+/**
+ * Get user's saved albums
+ *
+ * GET /v1/me/albums
+ * https://developer.spotify.com/web-api/get-users-saved-albums/
+ */
 export const getMyLibraryAlbums = async () => {
-  const response: Items = await Api.get("me/albums");
-  return response.items;
-};
-
-export const getMyLibraryTracks = async () => {
-  const response: Items = await Api.get("me/tracks");
-  return response.items;
-};
-
-export const getSearchResult = async (
-  search: string,
-  scope: string,
-  offset: string
-) => {
-  const response: Search = await Api.get(
-    `search?q=${search}&type=${scope}&offset=${offset}`
+  const response: SpotifyApi.UsersSavedAlbumsResponse = await Api.get(
+    "me/albums"
   );
-  return response;
+  return response.items;
 };
 
+/**
+ * Get user's saved tracks
+ *
+ * GET /v1/me/tracks
+ * https://developer.spotify.com/web-api/get-users-saved-tracks/
+ */
+export const getMyLibraryTracks = async () => {
+  const response: SpotifyApi.UsersSavedTracksResponse = await Api.get(
+    "me/tracks"
+  );
+  return response.items;
+};
+
+/**
+ * Get Current User’s Profile
+ *
+ * GET /v1/me
+ * https://developer.spotify.com/web-api/get-current-users-profile/
+ */
 export const getUserInfos = async () => {
-  const response: any = await Api.get("me");
+  const response: SpotifyApi.CurrentUsersProfileResponse = await Api.get("me");
   return response;
 };
 

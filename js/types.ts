@@ -1,17 +1,24 @@
-import {
-  AlbumData,
-  ArtistData,
-  TrackData,
-  PlaylistData,
-  ImageData,
-  ActionData
-} from "./api/types";
+import { ACTION_TYPE } from "./actions/explorer";
+
 export interface ImageModalType {
   id: string;
   source: string;
   x: number;
   y: number;
 }
+
+
+export interface ImageData {
+  name: string;
+  url: string;
+  type: "image";
+}
+
+export interface ActionData {
+  action: ACTION_TYPE;
+  type: "action";
+}
+
 
 export interface File<T> {
   id: string;
@@ -33,9 +40,16 @@ export interface File<T> {
 TODO: - A playlist
 TODO: - A custom folder
 */
-export type GenericFile = File<TrackData | ActionData | AlbumData | ArtistData | ImageData>;
-export type TrackFile = File<TrackData>;
-export type AlbumFile = File<AlbumData>;
-export type ArtistFile = File<ArtistData>;
+export type GenericFile = File<
+  | SpotifyApi.TrackObjectFull
+  | SpotifyApi.AlbumObjectFull
+  | SpotifyApi.ArtistObjectFull
+  | ActionData
+  | ImageData
+>;
+
+export type TrackFile = File<SpotifyApi.TrackObjectFull>;
+export type AlbumFile = File<SpotifyApi.AlbumObjectFull>;
+export type ArtistFile = File<SpotifyApi.ArtistObjectFull>;
 export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
