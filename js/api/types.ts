@@ -1,5 +1,4 @@
 import { ACTION_TYPE } from "../actions/explorer";
-import { TRACK_TYPE } from "../types";
 
 export interface Items {
   href: string;
@@ -37,7 +36,7 @@ export interface TrackData {
   is_local: boolean;
   name: string;
   track_number: number;
-  type: TRACKTYPE;
+  type: "track";
   uri: string;
 }
 
