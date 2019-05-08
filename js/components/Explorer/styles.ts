@@ -20,7 +20,7 @@ const ExplorerWindowStyle: StyleCollection = {
     flexDirection: "column",
     height: "100%",
     width: "100%",
-    "box-shadow":
+    boxShadow:
       "0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.30)"
   },
   explorerToolbar: {
@@ -57,8 +57,8 @@ const ExplorerWindowStyle: StyleCollection = {
     height: "100%",
     width: "100%",
     overflow: "auto",
-    "border-bottom-left-radius": "inherit",
-    "border-bottom-right-radius": "inherit"
+    borderBottomLeftRadius: "inherit",
+    borderBottomRightRadius: "inherit"
   }
 };
 
