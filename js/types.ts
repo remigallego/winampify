@@ -6,6 +6,12 @@ import {
   ImageData,
   ActionData
 } from "./api/types";
+export interface ImageModalType {
+  id: string;
+  source: string;
+  x: number;
+  y: number;
+}
 
 export interface File<T> {
   id: string;
@@ -17,34 +23,19 @@ export interface File<T> {
   metaData: T;
 }
 
-export type GenericFile = File<TrackData | AlbumData | ArtistData>;
+/*
+ A file can either be:
+- A track
+- An album
+- An artist
+- An image
+- An action (open Top Artists, open Webamp, ...)
+TODO: - A playlist
+TODO: - A custom folder
+*/
+export type GenericFile = File<TrackData | ActionData | AlbumData | ArtistData | ImageData>;
 export type TrackFile = File<TrackData>;
 export type AlbumFile = File<AlbumData>;
 export type ArtistFile = File<ArtistData>;
 export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
-
-export interface ImageModalType {
-  id: string;
-  source: string;
-  x: number;
-  y: number;
-}
-
-export interface Artist {}
-
-export interface FILE_TYPE {
-  ARTIST: "artist";
-  ALBUM: "album";
-  TRACK: "track";
-  IMAGE: "image";
-  ACTION: "action";
-}
-
-export const FILE_TYPE = {
-  ARTIST: "artist",
-  ALBUM: "album",
-  TRACK: "track",
-  IMAGE: "image",
-  ACTION: "action"
-};

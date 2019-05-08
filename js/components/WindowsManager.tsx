@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { WINDOW_TYPE, Window } from "../reducers/windows";
 import ImageModal from "./Explorer/ImageModal";
 import Explorer from "./Explorer";
-import { Image } from "../types";
+import { ImageModalType } from "../types";
 import { selectImages, selectExplorers } from "../selectors/explorer";
 import { getWindows } from "../selectors/windows";
 import { AppState } from "../reducers";
@@ -17,7 +17,7 @@ import { SingleExplorerState } from "../reducers/explorer";
 
 interface StateProps {
   explorers: Array<SingleExplorerState>;
-  images: Array<Image>;
+  images: Array<ImageModalType>;
   windows: Array<Window>;
 }
 

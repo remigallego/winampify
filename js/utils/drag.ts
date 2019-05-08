@@ -1,7 +1,8 @@
 import { GenericFile } from "../types";
+import { isTrack } from "../typecheckers";
 
 export const formatToWebampMetaData = (file: GenericFile) => {
-  if (file.metaData.type === "track") {
+  if (isTrack(file)) {
     const uri = file.metaData.uri.split(":");
     return {
       metaData: {

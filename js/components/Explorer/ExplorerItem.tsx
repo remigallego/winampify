@@ -5,6 +5,7 @@ import folderclosed from "./images/folder-closed.ico";
 import { ExplorerItemStyle } from "./styles";
 import { AlbumFile, TrackFile, ArtistFile, GenericFile } from "../../types";
 import { formatToWebampMetaData } from "../../utils/drag";
+import { isTrack } from "../../typecheckers";
 
 const {
   itemStyle,
@@ -85,7 +86,7 @@ class ExplorerItem extends React.Component<Props> {
       "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
     e.dataTransfer.setDragImage(emptyImage, 0, 0);
 
-    if (this.props.file.metaData.type === "track") {
+    if (isTrack(this.props.file)) {
       const track = formatToWebampMetaData(this.props.file);
       e.dataTransfer.setData("tracks", JSON.stringify([track])); // for winamp
     }

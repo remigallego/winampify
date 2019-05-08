@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect, MapDispatchToProps } from "react-redux";
 
 import {
   unsetFocusExplorer,
@@ -10,7 +10,13 @@ import {
 } from "../../actions/explorer";
 import { ExplorerContentStyle } from "./styles";
 import ExplorerItem from "./ExplorerItem";
-import { GenericFile, FILE_TYPE, TrackFile } from "../../types";
+import {
+  GenericFile,
+  TrackFile,
+  AlbumFile,
+  ArtistFile,
+  ImageFile
+} from "../../types";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
@@ -18,6 +24,7 @@ import { greenSpotify } from "../../colors";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { AppState } from "../../reducers";
+import { isTrack, isAlbum, isArtist, isImage } from "../../typecheckers";
 
 const { container } = ExplorerContentStyle;
 
@@ -47,7 +54,7 @@ class ExplorerContent extends React.Component<Props> {
     this.props.selectFile(id);
   }
 
-  renderAlbums(albums: GenericFile[]) {
+  renderAlbums(albums: AlbumFile[]) {
     if (albums)
       return albums.map((album, index) => {
         return this.renderFile(album, `al${index}`);
@@ -55,7 +62,7 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderTracks(tracks: GenericFile[]) {
+  renderTracks(tracks: TrackFile[]) {
     if (tracks)
       return tracks.map((track, index) => {
         return this.renderFile(track, `tr${index}`);
@@ -63,7 +70,7 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderArtists(artists: GenericFile[]) {
+  renderArtists(artists: ArtistFile[]) {
     if (artists)
       return artists.map((artist, index) => {
         return this.renderFile(artist, `ar${index}`);
@@ -71,7 +78,7 @@ class ExplorerContent extends React.Component<Props> {
     return null;
   }
 
-  renderImages(images: GenericFile[]) {
+  renderImages(images: ImageFile[]) {
     if (images)
       return images.map((image, index) => {
         return this.renderFile(image, `im${index}`);
@@ -83,14 +90,11 @@ class ExplorerContent extends React.Component<Props> {
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) {
-    if (file.metaData.type === FILE_TYPE.TRACK)
-      this.props.playTrack(file as TrackFile);
-    if (file.metaData.type === FILE_TYPE.ALBUM)
-      this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id);
-    if (file.metaData.type === FILE_TYPE.ARTIST)
+    if (isTrack(file)) this.props.playTrack(file);
+    if (isAlbum(file)) this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id);
+    if (isArtist(file))
       this.props.setItems(ACTION_TYPE.ARTIST, file.metaData.id);
-    if (file.metaData.type === FILE_TYPE.IMAGE)
-      this.props.openImage(file.metaData.url, e);
+    if (isImage(file)) this.props.openImage(file.metaData.url, e);
   }
 
   renderFile(file: GenericFile, index: string) {
@@ -123,25 +127,12 @@ class ExplorerContent extends React.Component<Props> {
 
   renderLoadedItems() {
     const { files } = this.props;
-    if (!files) {
-      return;
-    }
+    if (!files) return;
 
-    const artists = files
-      .filter((file: GenericFile) => file.metaData.type === "artist")
-      .map((file: GenericFile) => file);
-
-    const albums = files
-      .filter((file: GenericFile) => file.metaData.type === "album")
-      .map((file: GenericFile) => file);
-
-    const tracks = files
-      .filter((file: GenericFile) => file.metaData.type === "track")
-      .map((file: GenericFile) => file);
-
-    const images = files
-      .filter((file: GenericFile) => file.metaData.type === "image")
-      .map((file: GenericFile) => file);
+    const artists = files.filter(isArtist).map((file: ArtistFile) => file);
+    const albums = files.filter(isAlbum).map((file: AlbumFile) => file);
+    const tracks = files.filter(isTrack).map((file: TrackFile) => file);
+    const images = files.filter(isImage).map((file: ImageFile) => file);
 
     return (
       <div>
@@ -187,10 +178,10 @@ class ExplorerContent extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
   dispatch: ThunkDispatch<AppState, null, Action>,
-  ownProps: Props
-): DispatchProps => {
+  ownProps: OwnProps
+) => {
   const { id: explorerId } = ownProps.explorer;
   return {
     selectFile: (id: string) => {

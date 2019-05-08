@@ -5,7 +5,6 @@ import React from "react";
 interface Props {
   onRename: (e: any) => void;
   onDelete: (e: any) => void;
-  addToPlaylist: (e: any) => void;
   onCopy: (e: any) => void;
   onPaste: (e: any) => void;
   onTrackData: (e: any) => void;
@@ -14,9 +13,6 @@ interface Props {
 const FileContextMenu = (props: Props) => {
   const renameItem = () => <Item onClick={props.onRename}>Rename</Item>;
   const deleteItem = () => <Item onClick={props.onDelete}>Delete</Item>;
-  const addToPlaylistItem = () => (
-    <Item onClick={props.addToPlaylist}>Add To Playlist</Item>
-  );
   const copyItem = () => <Item onClick={props.onCopy}>Copy</Item>;
   const pasteItem = () => <Item onClick={props.onPaste}>Paste</Item>;
   const getTrackData = () => (
@@ -30,7 +26,6 @@ const FileContextMenu = (props: Props) => {
         {deleteItem()}
         {copyItem()}
         <Separator />
-        {addToPlaylistItem()}
         {getTrackData()}
       </ContextMenu>
 

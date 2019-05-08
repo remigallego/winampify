@@ -12,15 +12,30 @@ import {
 } from "./../../actions/desktop";
 import FileItem from "./FileItem";
 import FileContextMenu from "./FileContextMenu";
-import { File, GenericFile, TrackFile } from "../../types";
+import {
+  File,
+  GenericFile,
+  TrackFile,
+  ActionFile,
+  ImageFile,
+  ArtistFile,
+  AlbumFile
+} from "../../types";
 import { AppState } from "../../reducers";
 import { openImage } from "../../actions/images";
 import { formatToWebampMetaData } from "../../utils/drag";
 import { ACTION_TYPE, setItems } from "../../actions/explorer";
 import { playTrack } from "../../actions/playback";
+import {
+  isTrack,
+  isAlbum,
+  isArtist,
+  isImage,
+  isAction
+} from "../../typecheckers";
 
 interface OwnProps {
-  files: Array<File>;
+  files: Array<GenericFile>;
   selectionBox: any;
 }
 
@@ -33,7 +48,7 @@ interface DispatchProps {
   deleteFile: (fileId: string) => void;
   moveFile: (file: any) => void;
   cancelRenaming: () => void;
-  createFile: (file: File) => void;
+  createFile: (file: GenericFile) => void;
   renameFile: (id: string) => void;
   confirmRenameFile: (file: any, value?: any) => void;
   openImage: (
@@ -94,7 +109,7 @@ class Desktop extends React.Component<Props, State> {
     });
   }
 
-  onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<File>) {
+  onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<GenericFile>) {
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
     const tracks = files.map((file: any) => {
       return formatToWebampMetaData(file);
@@ -110,7 +125,7 @@ class Desktop extends React.Component<Props, State> {
     const files = JSON.parse(e.dataTransfer.getData("files"));
 
     if (!isFileMoving) {
-      files.map((file: File) => {
+      files.map((file: GenericFile) => {
         this.props.createFile({
           ...file,
           x: e.clientX - 50,
@@ -177,15 +192,20 @@ class Desktop extends React.Component<Props, State> {
   ) {
     if (file.isRenaming) return;
 
-    if (file.metaData.type === "track") this.props.playTrack(file);
-    if (file.metaData.type === "album")
+    if (isTrack(file)) this.props.playTrack(file);
+    if (isAlbum(file))
       this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id, e);
-    if (file.metaData.type === "artist")
-      this.props.setItems(ACTION_TYPE.ARTIST, file.metaData.id, e);
-    if (file.metaData.type === "image")
-      this.props.openImage(file.metaData.url, e);
-    if (file.metaData.type === "action")
-      this.props.setItems(file.metaData.action, null, e);
+    if (isArtist(file))
+      this.props.setItems(
+        ACTION_TYPE.ARTIST,
+        (file as ArtistFile).metaData.id,
+        e
+      );
+    if (isImage(file))
+      this.props.openImage((file as ImageFile).metaData.url, e);
+    if (isAction(file)) {
+      this.props.setItems((file as ActionFile).metaData.action, undefined, e);
+    }
   }
 
   handleDesktopClick(e: any) {
@@ -247,11 +267,7 @@ class Desktop extends React.Component<Props, State> {
               });
           }}
           onTrackData={e => {
-            console.log(e.ref.id);
-          }}
-          addToPlaylist={e => {
-            const track = this.props.files.find(file => file.id === e.ref.id);
-            if (track !== undefined) this.props.addTrackFromURI(track.uri);
+            // TODO:
           }}
         />
         <ContextMenuProvider id="desktop">
@@ -263,7 +279,6 @@ class Desktop extends React.Component<Props, State> {
               height: "100%"
             }}
             onMouseDown={e => this.handleDesktopClick(e)}
-            // onClick={e => this.handleDesktopClick(e)}
           />
         </ContextMenuProvider>
         {files.map(this.renderFile)}
@@ -277,15 +292,15 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  createFile: (file: File) => {
+  createFile: (file: GenericFile) => {
     dispatch(createFile(file));
   },
   setItems: (
     actionType: ACTION_TYPE,
     uri?: string,
     e?: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => dispatch(setItems(actionType, uri ? uri : null, null, e)),
-  moveFile: (file: File) => dispatch(moveFile(file)),
+  ) => dispatch(setItems(actionType, uri ? uri : undefined, undefined, e)),
+  moveFile: (file: GenericFile) => dispatch(moveFile(file)),
   openImage: (image: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
     dispatch(openImage(image, e)),
   renameFile: (id: string) => dispatch(renameFile(id)),

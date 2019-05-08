@@ -1,4 +1,5 @@
 import { ACTION_TYPE } from "../actions/explorer";
+import { TRACK_TYPE } from "../types";
 
 export interface Items {
   href: string;
@@ -21,9 +22,9 @@ export interface AlbumItems extends Items {
 export interface ArtistItems extends Items {
   items: ArtistData[];
 }
-
+type TRACKTYPE = "track";
 export interface TrackData {
-  artists: ArtistData[];
+  artists: any;
   available_markets: string[];
   disc_number: number;
   duration_ms: number;
@@ -36,7 +37,7 @@ export interface TrackData {
   is_local: boolean;
   name: string;
   track_number: number;
-  type: "track";
+  type: TRACKTYPE;
   uri: string;
 }
 
@@ -89,9 +90,8 @@ export interface PlaylistData {
 }
 
 export interface ImageData {
-  x: number;
-  y: number;
-  source: string;
+  name: string;
+  url: string;
   type: "image";
 }
 

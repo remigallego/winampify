@@ -1,11 +1,11 @@
 import React from "react";
 import Draggable from "react-draggable";
 import "./ImageAnimation.css";
-import { Image } from "../../../types";
+import { ImageModalType } from "../../../types";
 import TitleBar from "../TitleBar";
 
 interface Props {
-  image: Image;
+  image: ImageModalType;
   key: string;
   onDismiss: () => void;
 }
