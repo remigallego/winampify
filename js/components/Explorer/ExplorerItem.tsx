@@ -23,7 +23,6 @@ interface Props {
 }
 
 class ExplorerItem extends React.Component<Props> {
-  id: string | null;
   constructor(props: Props) {
     super(props);
   }
@@ -140,7 +139,7 @@ class ExplorerItem extends React.Component<Props> {
         onDoubleClick={onDoubleClick}
         style={thisStyle}
         className={thisClass}
-        draggable="true"
+        draggable={true}
         onDragStart={e => this.drag(e)}
         id={`file-${this.props.file.id}`}
       >
