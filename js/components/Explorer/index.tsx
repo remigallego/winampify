@@ -77,8 +77,7 @@ class ExplorerWindow extends React.Component<Props, State> {
 
     return (
       <div>
-        // @ts-ignore types are outdated?
-        <Rnd 
+        <Rnd
           enableResizing={{
             top: false,
             right: true,
