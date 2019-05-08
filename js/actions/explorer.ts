@@ -3,7 +3,8 @@ import {
   SAVE_PREVIOUS_STATE,
   SET_EXPLORER_METADATA,
   LOADING,
-  SET_ITEMS
+  SET_ITEMS,
+  GO_PREVIOUS_STATE
 } from "../actionTypes";
 import {
   getSearchResult,
@@ -274,5 +275,11 @@ export function selectFile(fileId: string, explorerId: string) {
         selected: fileId
       }
     });
+  };
+}
+
+export function goPreviousState(explorerId: string) {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: GO_PREVIOUS_STATE, payload: { id: explorerId } });
   };
 }

@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
-import { goPreviousState } from "../../actionCreators";
 import {
   closeExplorer,
   updatePosition,
-  updateSize
+  updateSize,
+  goPreviousState
 } from "../../actions/explorer";
 import { ExplorerWindowStyle } from "./styles";
 import ExplorerTree from "./ExplorerTree";
