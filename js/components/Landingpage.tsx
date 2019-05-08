@@ -41,7 +41,7 @@ class LandingPage extends React.Component<Props> {
           <div />
           <div />
         </div>
-        <div style={{ marginTop: 20, color: "white", fontFamily: "Segoe UI" }}>
+        <div style={{ marginTop: 20, color: "white" }}>
           {this.props.loading === LOADING.LOGGING_IN && "Logging in..."}
           {this.props.loading === LOADING.LOGGING_OUT && "Logging out.."}
         </div>
@@ -69,7 +69,6 @@ class LandingPage extends React.Component<Props> {
         <FaExclamationTriangle size={30} color={"white"} />
         <p
           style={{
-            fontFamily: "Segoe UI",
             marginLeft: 12,
             color: "white",
             fontSize: 13
