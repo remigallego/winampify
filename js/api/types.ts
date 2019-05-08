@@ -89,10 +89,9 @@ export interface PlaylistData {
 }
 
 export interface ImageData {
-  height: number;
-  width: number;
-  url: string;
-  name: string;
+  x: number;
+  y: number;
+  source: string;
   type: "image";
 }
 

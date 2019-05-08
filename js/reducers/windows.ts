@@ -53,7 +53,7 @@ const windows = (state: WindowsState = initialState, action: any) => {
     case OPEN_IMAGE: {
       const windows = state.windows;
       windows.push({
-        id: action.id,
+        id: action.payload.id,
         type: WINDOW_TYPE.Image
         /*  x: action.payload.x,
         y: action.payload.y,
@@ -65,7 +65,7 @@ const windows = (state: WindowsState = initialState, action: any) => {
     case CLOSE_IMAGE: {
       // TODO: Can be more generic and be called "CLOSE WINDOW"
       const windowToRemove = state.windows.find(
-        window => window.id === action.id
+        window => window.id === action.payload.id
       );
       return { windows: _.without(state.windows, windowToRemove) };
     }

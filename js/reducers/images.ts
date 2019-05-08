@@ -1,10 +1,10 @@
-import { Image } from "../types";
+import { ImageModalType } from "../types";
 import _ from "lodash";
 import { OPEN_IMAGE, CLOSE_IMAGE } from "../actions/images";
 
 export interface ImagesState {
   byId: {
-    [id: string]: Image;
+    [id: string]: ImageModalType;
   };
   allIds: string[];
 }
@@ -30,14 +30,14 @@ const openImage = (state: ImagesState, action: any) => {
     ...state,
     byId: {
       ...state.byId,
-      [action.id]: {
-        id: action.id,
-        source: action.source,
-        x: action.x,
-        y: action.y
+      [action.payload.id]: {
+        id: action.payload.id,
+        source: action.payload.source,
+        x: action.payload.x,
+        y: action.payload.y
       }
     },
-    allIds: [...new Set([...state.allIds, action.id])]
+    allIds: [...new Set([...state.allIds, action.payload.id])]
   };
 };
 
