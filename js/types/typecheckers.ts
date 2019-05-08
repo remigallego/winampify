@@ -5,7 +5,7 @@ import {
   ArtistFile,
   ImageFile,
   ActionFile
-} from "./types";
+} from ".";
 
 // user defined type guards
 export const isTrack = (file: GenericFile): file is TrackFile => {

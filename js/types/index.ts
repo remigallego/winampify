@@ -1,4 +1,4 @@
-import { ACTION_TYPE } from "./actions/explorer";
+import { ACTION_TYPE } from "../actions/explorer";
 
 export interface ImageModalType {
   id: string;

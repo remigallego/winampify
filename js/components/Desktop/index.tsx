@@ -32,7 +32,7 @@ import {
   isArtist,
   isImage,
   isAction
-} from "../../typecheckers";
+} from "../../types/typecheckers";
 
 interface OwnProps {
   files: Array<GenericFile>;

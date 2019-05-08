@@ -1,5 +1,5 @@
 import { GenericFile } from "../types";
-import { isTrack } from "../typecheckers";
+import { isTrack } from "../types/typecheckers";
 
 export const formatToWebampMetaData = (file: GenericFile) => {
   if (isTrack(file)) {

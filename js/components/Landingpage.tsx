@@ -1,11 +1,11 @@
 import React from "react";
 import ReactGA from "react-ga";
-import Signin from "./signin";
-import Logo from "../images/winampifylogo.png";
-import pkg from "./../package.json";
-import { orangeLight, redError, orangeDark } from "./colors";
+import Signin from "./Reusables/SigninButton";
+import Logo from "../../images/winampifylogo.png";
+import pkg from "../../package.json";
+import { orangeLight, redError } from "../styles/colors";
 import { FaExclamationTriangle } from "react-icons/fa";
-import { LOADING } from "./reducers/auth";
+import { LOADING } from "../reducers/auth";
 
 interface Props {
   loading?: LOADING;

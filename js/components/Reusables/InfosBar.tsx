@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { AppState } from "../reducers";
-import { UserState } from "../reducers/user";
-import { logOut, wipeTokens } from "../actions/auth";
+import { AppState } from "../../reducers";
+import { UserState } from "../../reducers/user";
+import { logOut, wipeTokens } from "../../actions/auth";
 import { FaSignOutAlt, FaChevronDown } from "react-icons/fa";
-import { greenSpotify } from "../colors";
+import { greenSpotify } from "../../styles/colors";
 
 interface DispatchProps {
   logOut: () => void;

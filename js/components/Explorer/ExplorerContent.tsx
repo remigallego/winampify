@@ -20,11 +20,11 @@ import {
 import { SingleExplorerState } from "../../reducers/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
-import { greenSpotify } from "../../colors";
+import { greenSpotify } from "../../styles/colors";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { AppState } from "../../reducers";
-import { isTrack, isAlbum, isArtist, isImage } from "../../typecheckers";
+import { isTrack, isAlbum, isArtist, isImage } from "../../types/typecheckers";
 
 const { container } = ExplorerContentStyle;
 

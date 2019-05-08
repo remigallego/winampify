@@ -5,7 +5,7 @@ import { render } from "react-dom";
 import { Provider, connect } from "react-redux";
 import * as WebampInstance from "../../webamp/built/webamp.bundle";
 import App from "./App";
-import LandingPage from "../landingpage";
+import LandingPage from "./Landingpage";
 import { authenticate } from "../actions/auth";
 import { getParams } from "../utils/common";
 import { AppState } from "../reducers";

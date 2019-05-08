@@ -6,7 +6,7 @@ import {
   greyMedium,
   redError,
   redErrorDark
-} from "../../../colors";
+} from "../../../styles/colors";
 
 interface Props {
   onClick: () => void | null;

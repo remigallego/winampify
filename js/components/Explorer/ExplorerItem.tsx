@@ -5,7 +5,7 @@ import folderclosed from "./images/folder-closed.ico";
 import { ExplorerItemStyle } from "./styles";
 import { AlbumFile, TrackFile, ArtistFile, GenericFile } from "../../types";
 import { formatToWebampMetaData } from "../../utils/drag";
-import { isTrack } from "../../typecheckers";
+import { isTrack } from "../../types/typecheckers";
 
 const {
   itemStyle,

@@ -1,19 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { WINDOW_TYPE, Window } from "../reducers/windows";
-import ImageModal from "./Explorer/ImageModal";
-import Explorer from "./Explorer";
-import { ImageModalType } from "../types";
-import { selectImages, selectExplorers } from "../selectors/explorer";
-import { getWindows } from "../selectors/windows";
-import { AppState } from "../reducers";
-import { closeImage } from "../actions/images";
-import { createNewExplorer, ACTION_TYPE, setItems } from "../actions/explorer";
-import { setOnTop } from "../actions/windows";
+import { WINDOW_TYPE, Window } from "../../reducers/windows";
+import ImageModal from "../Explorer/ImageModal";
+import Explorer from "../Explorer";
+import { ImageModalType } from "../../types";
+import { selectImages, selectExplorers } from "../../selectors/explorer";
+import { getWindows } from "../../selectors/windows";
+import { AppState } from "../../reducers";
+import { closeImage } from "../../actions/images";
+import { createNewExplorer, ACTION_TYPE, setItems } from "../../actions/explorer";
+import { setOnTop } from "../../actions/windows";
 import WindowInstance from "./WindowInstance";
-import * as WebampInstance from "../../webamp/built/webamp.bundle";
-import SpotifyMedia from "../spotifymedia";
-import { SingleExplorerState } from "../reducers/explorer";
+import * as WebampInstance from "../../../webamp/built/webamp.bundle";
+import SpotifyMedia from "../../spotifymedia";
+import { SingleExplorerState } from "../../reducers/explorer";
 
 interface StateProps {
   explorers: Array<SingleExplorerState>;

@@ -1,8 +1,8 @@
 import ReactGA from "react-ga";
 import React from "react";
 import Desktop from "./Desktop";
-import InfosBar from "./InfosBar";
-import SelectionBox from "./SelectionBox";
+import InfosBar from "./Reusables/InfosBar";
+import SelectionBox from "./Reusables/SelectionBox";
 import WindowsManager from "./WindowsManager";
 import AudioPlayer from "./AudioPlayer";
 

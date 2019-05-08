@@ -1,4 +1,4 @@
-import { greyLight } from "../../colors";
+import { greyLight } from "../../styles/colors";
 
 interface StyleCollection {
   [truc: string]: React.CSSProperties | undefined;
