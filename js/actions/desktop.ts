@@ -1,17 +1,18 @@
 import uuidv1 from "uuid/v1";
 import { createSelector } from "reselect";
 import { CREATE_FILE } from "../actionTypes";
-import { File } from "../types";
+import { File, GenericFile } from "../types";
 import { Dispatch, Action } from "redux";
 import { AppState } from "../reducers";
+import { searchFor } from "../api/apiFunctions";
 
-export function createFile(file: File) {
+export function createFile(file: GenericFile) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: CREATE_FILE, payload: { file, id: uuidv1() } });
   };
 }
 
-export const moveFile = (file: File) => (dispatch: Dispatch<Action>) => {
+export const moveFile = (file: GenericFile) => (dispatch: Dispatch<Action>) => {
   dispatch({
     type: "MOVE_FILE",
     payload: { id: file.id, x: file.x, y: file.y }
@@ -41,7 +42,7 @@ export const cancelRenaming = () => (dispatch: Dispatch<Action>) => {
   });
 };
 
-export const confirmRenameFile = (file: File, title: string) => (
+export const confirmRenameFile = (file: GenericFile, title: string) => (
   dispatch: Dispatch<Action>
 ) => {
   dispatch({
