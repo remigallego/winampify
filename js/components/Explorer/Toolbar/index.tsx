@@ -23,7 +23,7 @@ interface State {
 type Props = DispatchProps & OwnProps;
 
 class Toolbar extends React.Component<Props, State> {
-  startSearch: any;
+  startSearch: (() => void) & _.Cancelable;
 
   constructor(props: Props) {
     super(props);
@@ -43,7 +43,6 @@ class Toolbar extends React.Component<Props, State> {
     const { explorerToolbar, searchbox } = ExplorerWindowStyle;
     return (
       <div className="explorer-toolbar" style={explorerToolbar}>
-        {/* TODO: this.props.goPreviousState */}
         <FaChevronLeft onClick={() => this.props.goPreviousState()} />
         <form
           className="explorer-toolbar-searchbox"
