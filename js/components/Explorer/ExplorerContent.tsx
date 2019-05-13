@@ -133,15 +133,26 @@ class ExplorerContent extends React.Component<Props> {
     const albums = files.filter(isAlbum).map((file: AlbumFile) => file);
     const tracks = files.filter(isTrack).map((file: TrackFile) => file);
     const images = files.filter(isImage).map((file: ImageFile) => file);
-
-    return (
-      <div>
-        {this.renderArtists(artists)}
-        {this.renderAlbums(albums)}
-        {this.renderTracks(tracks)}
-        {this.renderImages(images)}
-      </div>
-    );
+    if (this.props.explorer.search) {
+      return (
+        <div>
+          {artists.length && <h1>**** Artists ****</h1>}
+          {this.renderArtists(artists)}
+          {albums.length && <h1>**** Albums ****</h1>}
+          {this.renderAlbums(albums)}
+          {tracks.length && <h1>**** Tracks ****</h1>}
+          {this.renderTracks(tracks)}
+        </div>
+      );
+    } else
+      return (
+        <div>
+          {this.renderArtists(artists)}
+          {this.renderAlbums(albums)}
+          {this.renderTracks(tracks)}
+          {this.renderImages(images)}
+        </div>
+      );
   }
 
   renderLoading() {

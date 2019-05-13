@@ -13,7 +13,7 @@ import { GenericFile } from "../types";
 export interface SingleExplorerState {
   id: string;
   selected: any;
-  currentId: any;
+  search: boolean;
   title: any;
   image: any;
   previousStates: Array<any>;
@@ -35,7 +35,7 @@ export interface ExplorerState {
 const initialStateExplorer: SingleExplorerState = {
   id: "",
   selected: null,
-  currentId: null,
+  search: false,
   title: null,
   image: null,
   previousStates: [],
@@ -131,7 +131,7 @@ const goPreviousStateUpdate = (state: ExplorerState, payload: any) => {
 
 const setExplorerMetadata = (
   state: ExplorerState,
-  payload: { id: string; currentId: string; title: string; image: any }
+  payload: { id: string; title: string; image: any; search: boolean }
 ) => {
   return {
     ...state,
@@ -139,9 +139,9 @@ const setExplorerMetadata = (
       ...state.byId,
       [payload.id]: {
         ...state.byId[payload.id],
-        currentId: payload.currentId,
         title: payload.title,
-        image: payload.image
+        image: payload.image,
+        search: payload.search
       }
     }
   };

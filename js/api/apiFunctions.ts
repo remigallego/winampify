@@ -134,6 +134,20 @@ export const getUserInfos = async () => {
   return response;
 };
 
+export const searchFor: (
+  query: string,
+  types: string[],
+  offset: number
+) => any = async (query, types, offset) => {
+  const searchQueries = types.map(queryType => {
+    return Api.get(`search?type=${queryType}&q=${query}&offset=${offset}`);
+  });
+
+  const response = await Promise.all(searchQueries);
+  console.log("response: ", response);
+  return response;
+};
+
 // TODO: Work In Progress
 /* export const getPlaylist = (tracks, user, URI, offset) => {
  fetch(

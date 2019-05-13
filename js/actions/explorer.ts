@@ -7,7 +7,6 @@ import {
   GO_PREVIOUS_STATE
 } from "../actionTypes";
 import {
-  getSearchResult,
   getAlbumsFromArtist,
   getTracksFromAlbum,
   getAlbumData,
@@ -16,9 +15,10 @@ import {
   getMyRecentlyPlayed,
   getMyLibraryAlbums,
   getMyLibraryTracks,
-  getArtistData
+  getArtistData,
+  searchFor
 } from "../api/apiFunctions";
-import { generateExplorerId } from "../utils/explorer";
+import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 import {
   OPEN_EXPLORER,
   CLOSE_EXPLORER,
@@ -97,7 +97,6 @@ export function unsetFocusExplorer(explorerId: string) {
       type: SET_EXPLORER_METADATA,
       payload: {
         id: explorerId,
-        currentId: "search",
         title: search,
         image: null
       }
@@ -180,15 +179,13 @@ export function setItems(
 
     dispatch({ type: LOADING, id: explorerId });
     let files;
-    let currentId;
     let title;
 
     switch (actionType) {
       case ACTION_TYPE.ARTIST: {
         if (!uri) return;
         files = await getAlbumsFromArtist(uri);
-        currentId = (await getArtistData(uri)).name;
-        title = currentId;
+        title = (await getArtistData(uri)).name;
         break;
       }
       case ACTION_TYPE.ALBUM: {
@@ -202,40 +199,34 @@ export function setItems(
         };
 
         files = [...tracks, imageFile];
-        currentId = albumData;
         title = `${albumData.artists[0].name} - ${albumData.name}`;
         break;
       }
       case ACTION_TYPE.TOP: {
         files = await getTopArtistsFromMe();
-        currentId = "top";
         title = "My Top Artists";
         break;
       }
       case ACTION_TYPE.FOLLOWING: {
         files = await getFollowedArtistsFromMe();
-        currentId = "following";
         title = "Following";
         break;
       }
       case ACTION_TYPE.RECENTLY_PLAYED: {
         const recentlyPlayed = await getMyRecentlyPlayed();
         files = recentlyPlayed.map(derivedTrack => derivedTrack.track);
-        currentId = "recently";
         title = "Recently Played";
         break;
       }
       case ACTION_TYPE.LIBRARY_TRACKS: {
         const items = await getMyLibraryTracks();
         files = items.map(item => item.track);
-        currentId = "savedtracks";
         title = "My Saved Tracks";
         break;
       }
       case ACTION_TYPE.LIBRARY_ALBUMS: {
         const items = await getMyLibraryAlbums();
         files = items.map(item => item.album);
-        currentId = "savedalbums";
         title = "My Saved Albums";
         break;
       }
@@ -245,8 +236,51 @@ export function setItems(
       type: SET_EXPLORER_METADATA,
       payload: {
         id: explorerId,
-        currentId,
-        title
+        title,
+        search: false
+      }
+    });
+
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
+        id: explorerId,
+        files
+      }
+    });
+  };
+}
+
+export function setSearchResults(query: string, types: string[]) {
+  return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    let explorerId = getActiveExplorerId(getState());
+
+    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
+    dispatch({ type: LOADING, id: explorerId });
+
+    let response = await searchFor(query, types, 0);
+
+    // TODO: Implement types
+    let files = response
+      .map((medias: any) => {
+        const keys = Object.keys(medias);
+        const nestedResponse: any = keys.map(key => {
+          return medias[key];
+        });
+        const items: any[] = nestedResponse.map(res => {
+          return res.items;
+        });
+
+        return items.flat();
+      })
+      .flat();
+
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      payload: {
+        id: explorerId,
+        title: `Search: ${query}`,
+        search: true
       }
     });
 
@@ -278,8 +312,9 @@ export function selectFile(fileId: string, explorerId: string) {
   };
 }
 
-export function goPreviousState(explorerId: string) {
-  return (dispatch: Dispatch<Action>) => {
+export function goPreviousState() {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    let explorerId = getActiveExplorerId(getState());
     dispatch({ type: GO_PREVIOUS_STATE, payload: { id: explorerId } });
   };
 }

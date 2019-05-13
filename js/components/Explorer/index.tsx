@@ -19,6 +19,7 @@ import { Action } from "redux";
 import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import { dragHandleClassName } from "./vars";
+import ExplorerToolbar from "./Toolbar";
 
 interface OwnProps {
   explorer: SingleExplorerState;
@@ -68,12 +69,7 @@ class ExplorerWindow extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      explorerToolbar,
-      explorerWrapper,
-      searchbox,
-      mainView
-    } = ExplorerWindowStyle;
+    const { explorerWrapper, mainView } = ExplorerWindowStyle;
 
     return (
       <div>
@@ -128,28 +124,7 @@ class ExplorerWindow extends React.Component<Props, State> {
                 this.props.closeExplorer();
               }}
             />
-            <div className="explorer-toolbar" style={explorerToolbar}>
-              <FaChevronLeft
-                onClick={() => {
-                  if (this.props.explorer.previousStates.length > 1) {
-                    this.props.goPreviousState();
-                  }
-                }}
-              />
-              <form
-                className="explorer-toolbar-searchbox"
-                style={searchbox}
-                onSubmit={e => {
-                  e.preventDefault();
-                }}
-              >
-                <input
-                  type="text"
-                  value={this.state.searchText}
-                  onChange={e => this.setState({ searchText: e.target.value })}
-                />
-              </form>
-            </div>
+            <ExplorerToolbar />
             <div className="explorer-mainview" style={mainView}>
               <ExplorerTree explorer={this.props.explorer} />
               <ExplorerContent
