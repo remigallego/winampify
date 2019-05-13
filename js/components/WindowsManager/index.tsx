@@ -5,7 +5,7 @@ import ImageModal from "../Explorer/ImageModal";
 import Explorer from "../Explorer";
 import { ImageModalType } from "../../types";
 import { selectImages, selectExplorers } from "../../selectors/explorer";
-import { getWindows } from "../../selectors/windows";
+import { selectWindows } from "../../selectors/windows";
 import { AppState } from "../../reducers";
 import { closeImage } from "../../actions/images";
 import { createNewExplorer, ACTION_TYPE, setItems } from "../../actions/explorer";
@@ -125,7 +125,7 @@ class WindowsManager extends React.Component<Props, {}> {
 const mapStateToProps = (state: AppState): StateProps => ({
   images: selectImages(state),
   explorers: selectExplorers(state),
-  windows: getWindows(state)
+  windows: selectWindows(state)
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
