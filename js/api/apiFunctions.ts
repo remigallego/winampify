@@ -134,17 +134,25 @@ export const getUserInfos = async () => {
   return response;
 };
 
+type SearchResponse =
+  | SpotifyApi.AlbumSearchResponse
+  | SpotifyApi.TrackSearchResponse
+  | SpotifyApi.ArtistSearchResponse;
+
+interface GenericSearchResponse {
+  [key: string]: SpotifyApi.PagingObject<SearchResponse>;
+}
+
 export const searchFor: (
   query: string,
   types: string[],
   offset: number
-) => any = async (query, types, offset) => {
+) => Promise<GenericSearchResponse[]> = async (query, types, offset) => {
   const searchQueries = types.map(queryType => {
     return Api.get(`search?type=${queryType}&q=${query}&offset=${offset}`);
   });
 
   const response = await Promise.all(searchQueries);
-  console.log("response: ", response);
   return response;
 };
 

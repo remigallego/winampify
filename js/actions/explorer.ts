@@ -198,22 +198,15 @@ export function setSearchResults(query: string, types: string[]) {
     dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
     dispatch({ type: LOADING, id: explorerId });
 
-    let response = await searchFor(query, types, 0);
+    let arrayOfSearchResponses = await searchFor(query, types, 0);
 
-    // TODO: Implement types
-    let files = response
-      .map((medias: any) => {
-        const keys = Object.keys(medias);
-        const nestedResponse: any = keys.map(key => {
-          return medias[key];
-        });
-        const items: any[] = nestedResponse.map(res => {
-          return res.items;
-        });
-
-        return items.flat();
-      })
-      .flat();
+    let files = arrayOfSearchResponses
+      .map(searchResponse =>
+        Object.keys(searchResponse)
+          .map(key => searchResponse[key])
+          .map(obj => obj.items)
+      )
+      .flat(2);
 
     dispatch({
       type: SET_EXPLORER_METADATA,
