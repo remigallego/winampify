@@ -7,7 +7,8 @@
     "deploy": "npm run build && cd built/ && now -e ENV=production && now alias",
     "lint": "eslint .",
     "build": "webpack --config=config/webpack.prod.js",
-    "start": "webpack-dev-server --config=config/webpack.dev.js --port 8888"
+    "start": "webpack-dev-server --config=config/webpack.dev.js --port 8888",
+    "now-build": "webpack --config=config/webpack.dev.js"
   },
   "repository": {
     "type": "git",

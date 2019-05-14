@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "winampify",
+  "name": "winampify-dev",
   "builds": [
     {
       "src": "package.json",
