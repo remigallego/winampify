@@ -188,9 +188,8 @@ export function setSearchResults(query: string, types: string[]) {
     dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
     dispatch({ type: LOADING, id: explorerId });
 
-    let arrayOfSearchResponses = await searchFor(query, types, 0);
-
-    let files = arrayOfSearchResponses
+    const arrayOfSearchResponses = await searchFor(query, types, 0);
+    const files = arrayOfSearchResponses
       .map(searchResponse =>
         Object.keys(searchResponse)
           .map(key => searchResponse[key])

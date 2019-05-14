@@ -1,34 +1,34 @@
 import React from "react";
 import { connect, MapDispatchToProps } from "react-redux";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import {
-  unsetFocusExplorer,
   getArtistFromId,
   selectFile,
-  setItems
+  setItems,
+  unsetFocusExplorer
 } from "../../../actions/explorer";
-import styles from "./styles";
-import ExplorerFile from "../ExplorerFile";
-import {
-  GenericFile,
-  TrackFile,
-  AlbumFile,
-  ArtistFile,
-  ImageFile,
-  ACTION_TYPE
-} from "../../../types";
-import { SingleExplorerState } from "../../../reducers/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
-import { greenSpotify } from "../../../styles/colors";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 import { AppState } from "../../../reducers";
+import { SingleExplorerState } from "../../../reducers/explorer";
+import { greenSpotify } from "../../../styles/colors";
 import {
-  isTrack,
+  ACTION_TYPE,
+  AlbumFile,
+  ArtistFile,
+  GenericFile,
+  ImageFile,
+  TrackFile
+} from "../../../types";
+import {
   isAlbum,
   isArtist,
-  isImage
+  isImage,
+  isTrack
 } from "../../../types/typecheckers";
+import ExplorerFile from "../ExplorerFile";
+import styles from "./styles";
 
 const { container } = styles;
 

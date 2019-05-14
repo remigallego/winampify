@@ -1,10 +1,10 @@
 import React from "react";
-import winampmp3 from "../images/winamp-mp3.png";
-import folderclosed from "../images/folder-closed.ico";
-import styles from "./styles";
 import { GenericFile } from "../../../types";
-import { formatToWebampMetaData } from "../../../utils/drag";
 import { isTrack } from "../../../types/typecheckers";
+import { formatToWebampMetaData } from "../../../utils/drag";
+import folderclosed from "../images/folder-closed.ico";
+import winampmp3 from "../images/winamp-mp3.png";
+import styles from "./styles";
 
 const { itemStyle, fileName, iconWrapper, iconBig, iconSmall } = styles;
 
@@ -20,7 +20,7 @@ class ExplorerFile extends React.Component<Props> {
     super(props);
   }
 
-  /* 
+  /*
   getDuration() {
     const seconds = `0${Math.floor(
       (this.props.file.metaData.duration_ms / 1000) % 60
@@ -41,10 +41,10 @@ class ExplorerFile extends React.Component<Props> {
     const rgx = /-/gi;
     const date = releaseDate.replace(rgx, "/");
     return date;
-  } 
+  }
   */
 
-  renderIcons(icons: Array<string>) {
+  renderIcons(icons: string[]) {
     if (icons.length > 1) {
       return (
         <div className="explorer-item-icon--wrapper" style={iconWrapper}>

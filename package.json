@@ -5,7 +5,7 @@
   "main": "built/winampify.bundle.js",
   "scripts": {
     "deploy": "npm run build && cd built/ && now -e ENV=production && now alias",
-    "lint": "eslint .", 
+    "lint": "tslint js/**/*.ts{,x}", 
     "format": "prettier --write \"**/*.{js,ts,tsx,d.ts,css}\"",
     "build": "webpack --config=config/webpack.prod.js",
     "start": "webpack-dev-server --config=config/webpack.dev.js --port 8888",
