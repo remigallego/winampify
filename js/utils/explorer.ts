@@ -1,14 +1,17 @@
 import uuidv1 from "uuid/v1";
 import { AppState } from "../reducers";
-import { selectWindows } from "../selectors/windows";
-import { selectExplorers } from "../selectors/explorer";
+import { WINDOW_TYPE } from "../reducers/windows";
 
 export const generateExplorerId = () => {
   return `explorer_${uuidv1()}`;
 };
 
 export const getActiveExplorerId = (state: AppState): string => {
-  const explorers = selectExplorers(state);
+  const activeExplorer = state.windows.windows
+    .slice()
+    .reverse()
+    .find(windowItem => windowItem.type === WINDOW_TYPE.Explorer);
 
-  return explorers[0].id; // TODO: Doesn't work right now, use Windows state
+  if (activeExplorer) return activeExplorer.id;
+  else throw new Error("No active explorer");
 };
