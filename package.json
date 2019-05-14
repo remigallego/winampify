@@ -5,7 +5,8 @@
   "main": "built/winampify.bundle.js",
   "scripts": {
     "deploy": "npm run build && cd built/ && now -e ENV=production && now alias",
-    "lint": "eslint .",
+    "lint": "eslint .", 
+    "format": "prettier --write \"**/*.{js,ts,tsx,d.ts,css}\"",
     "build": "webpack --config=config/webpack.prod.js",
     "start": "webpack-dev-server --config=config/webpack.dev.js --port 8888",
     "now-build": "webpack --config=config/webpack.dev.js"
@@ -46,6 +47,7 @@
     "eslint-plugin-react": "7.5.1",
     "file-loader": "^1.1.5",
     "html-webpack-plugin": "^3.0.6",
+    "husky": "^2.2.0",
     "react-test-renderer": "^16.7.0-alpha.0",
     "style-loader": "^0.19.1",
     "webpack-dev-server": "^2.7.1",

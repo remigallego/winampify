@@ -89,7 +89,8 @@ class LandingPage extends React.Component<Props> {
               <div style={{ marginBottom: 60 }}>
                 <img key="logo" src={Logo} />
                 <div className="description">
-                  A fun OS-like interface to listen to, browse and interact with Spotify in the browser.
+                  A fun OS-like interface to listen to, browse and interact with
+                  Spotify in the browser.
                 </div>
               </div>
               <Signin />

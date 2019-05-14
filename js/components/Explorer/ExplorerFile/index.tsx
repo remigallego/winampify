@@ -1,19 +1,12 @@
-import { isArray } from "util";
 import React from "react";
-import winampmp3 from "./images/winamp-mp3.png";
-import folderclosed from "./images/folder-closed.ico";
-import { ExplorerItemStyle } from "./styles";
-import { AlbumFile, TrackFile, ArtistFile, GenericFile } from "../../types";
-import { formatToWebampMetaData } from "../../utils/drag";
-import { isTrack } from "../../types/typecheckers";
+import winampmp3 from "../images/winamp-mp3.png";
+import folderclosed from "../images/folder-closed.ico";
+import styles from "./styles";
+import { GenericFile } from "../../../types";
+import { formatToWebampMetaData } from "../../../utils/drag";
+import { isTrack } from "../../../types/typecheckers";
 
-const {
-  itemStyle,
-  fileName,
-  iconWrapper,
-  iconBig,
-  iconSmall
-} = ExplorerItemStyle;
+const { itemStyle, fileName, iconWrapper, iconBig, iconSmall } = styles;
 
 interface Props {
   file: GenericFile;
@@ -22,7 +15,7 @@ interface Props {
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-class ExplorerItem extends React.Component<Props> {
+class ExplorerFile extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -152,4 +145,4 @@ class ExplorerItem extends React.Component<Props> {
   }
 }
 
-export default ExplorerItem;
+export default ExplorerFile;

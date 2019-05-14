@@ -1,15 +1,15 @@
 import "babel-polyfill";
-import "../../css/line-scale.css";
 import React from "react";
 import { render } from "react-dom";
-import { Provider, connect } from "react-redux";
+import { connect, Provider } from "react-redux";
+import "../../css/line-scale.css";
 import * as WebampInstance from "../../webamp/built/webamp.bundle";
-import App from "./App";
-import LandingPage from "./Landingpage";
 import { authenticate } from "../actions/auth";
-import { getParams } from "../utils/common";
 import { AppState } from "../reducers";
 import { AuthState, LOADING } from "../reducers/auth";
+import { getParams } from "../utils/common";
+import App from "./App";
+import LandingPage from "./Landingpage";
 
 interface Props {
   auth: AuthState;

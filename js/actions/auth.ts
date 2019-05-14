@@ -1,17 +1,17 @@
-import { Dispatch, Action } from "redux";
+import { Action, Dispatch } from "redux";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import Api from "../api";
+import { AppState } from "../reducers";
 import {
   AUTHENTICATION,
   AUTHENTICATION_FAILURE,
-  LOG_OUT,
   AUTHENTICATION_SUCCESS,
-  WIPE_TOKENS,
-  LOG_OUT_SUCCESS
+  LOG_OUT,
+  LOG_OUT_SUCCESS,
+  WIPE_TOKENS
 } from "../reducers/auth";
 import { initPlayer } from "../spotifymedia/initPlayer";
-import Api from "../api";
 import { setUserInfos } from "./user";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import { AppState } from "../reducers";
 
 // Just because the loading animation is so nice :P
 const FAKE_LOADING_TIME = 1600;
@@ -33,12 +33,14 @@ export const authenticate = (
     Api.authenticate(accessToken)
       .then(
         (user: any): Promise<void> => {
-          if (user.product !== "premium")
+          if (user.product !== "premium") {
             return Promise.reject({
               message:
                 "<b>Oh no! You don't have a Spotify Premium account. :(</b>"
             });
-          else return Promise.resolve();
+          } else {
+            return Promise.resolve();
+          }
         }
       )
       .then(() => {
@@ -82,7 +84,9 @@ export const authenticate = (
 export function logOut() {
   return (dispatch: Dispatch<Action>) => {
     const webamp: HTMLElement | null = document.getElementById("webamp");
-    if (webamp) webamp.remove();
+    if (webamp) {
+      webamp.remove();
+    }
 
     dispatch({
       type: LOG_OUT

@@ -1,31 +1,32 @@
+import { Action, Dispatch } from "redux";
 import {
-  UNSET_FOCUS_EXPLORER,
+  GO_PREVIOUS_STATE,
+  LOADING,
   SAVE_PREVIOUS_STATE,
   SET_EXPLORER_METADATA,
-  LOADING,
   SET_ITEMS,
-  GO_PREVIOUS_STATE
+  UNSET_FOCUS_EXPLORER
 } from "../actionTypes";
 import {
-  getAlbumsFromArtist,
-  getTracksFromAlbum,
   getAlbumData,
-  getTopArtistsFromMe,
+  getAlbumsFromArtist,
+  getArtistData,
   getFollowedArtistsFromMe,
-  getMyRecentlyPlayed,
   getMyLibraryAlbums,
   getMyLibraryTracks,
-  getArtistData,
+  getMyRecentlyPlayed,
+  getTopArtistsFromMe,
+  getTracksFromAlbum,
   searchFor
 } from "../api/apiFunctions";
-import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
+import { AppState } from "../reducers";
 import {
-  OPEN_EXPLORER,
   CLOSE_EXPLORER,
+  OPEN_EXPLORER,
   UPDATE_POSITION
 } from "../reducers/explorer";
-import { Dispatch, Action } from "redux";
-import { AppState } from "../reducers";
+import { ACTION_TYPE } from "../types";
+import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 
 export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
@@ -86,17 +87,6 @@ export function unsetFocusExplorer(explorerId: string) {
   };
 }
 
-// what kind of folder was clicked on
-export enum ACTION_TYPE {
-  ALBUM,
-  ARTIST,
-  TOP,
-  FOLLOWING,
-  RECENTLY_PLAYED,
-  LIBRARY_ALBUMS,
-  LIBRARY_TRACKS
-}
-
 export function setItems(
   actionType: ACTION_TYPE,
   uri?: string,
@@ -154,7 +144,7 @@ export function setItems(
       }
       case ACTION_TYPE.RECENTLY_PLAYED: {
         const recentlyPlayed = await getMyRecentlyPlayed();
-        files = recentlyPlayed.map(derivedTrack => derivedTrack.track);
+        files = recentlyPlayed.map(obj => obj.track);
         title = "Recently Played";
         break;
       }
@@ -193,7 +183,7 @@ export function setItems(
 
 export function setSearchResults(query: string, types: string[]) {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    let explorerId = getActiveExplorerId(getState());
+    const explorerId = getActiveExplorerId(getState());
 
     dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
     dispatch({ type: LOADING, id: explorerId });
@@ -247,7 +237,7 @@ export function selectFile(fileId: string, explorerId: string) {
 
 export function goPreviousState() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    let explorerId = getActiveExplorerId(getState());
+    const explorerId = getActiveExplorerId(getState());
     dispatch({ type: GO_PREVIOUS_STATE, payload: { id: explorerId } });
   };
 }

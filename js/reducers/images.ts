@@ -1,10 +1,10 @@
-import { ImageModalType } from "../types";
+import { ImageDialogType } from "../types";
 import _ from "lodash";
 import { OPEN_IMAGE, CLOSE_IMAGE } from "../actions/images";
 
 export interface ImagesState {
   byId: {
-    [id: string]: ImageModalType;
+    [id: string]: ImageDialogType;
   };
   allIds: string[];
 }

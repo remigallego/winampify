@@ -1,10 +1,9 @@
-import uuidv1 from "uuid/v1";
+import { Action, Dispatch } from "redux";
 import { createSelector } from "reselect";
+import uuidv1 from "uuid/v1";
 import { CREATE_FILE } from "../actionTypes";
-import { File, GenericFile } from "../types";
-import { Dispatch, Action } from "redux";
 import { AppState } from "../reducers";
-import { searchFor } from "../api/apiFunctions";
+import { GenericFile } from "../types";
 
 export function createFile(file: GenericFile) {
   return (dispatch: Dispatch<Action>) => {

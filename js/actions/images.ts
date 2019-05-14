@@ -1,4 +1,4 @@
-import { Dispatch, Action } from "redux";
+import { Action, Dispatch } from "redux";
 import { generateImagesId } from "../utils/images";
 export const OPEN_IMAGE = "OPEN_IMAGE";
 export const CLOSE_IMAGE = "CLOSE_IMAGE";

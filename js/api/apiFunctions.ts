@@ -93,7 +93,9 @@ export const getFollowedArtistsFromMe = async () => {
 };
 
 export const getMyRecentlyPlayed = async () => {
-  const response: any = await Api.get("me/player/recently-played");
+  const response: SpotifyApi.PagingObject<
+    SpotifyApi.SavedTrackObject // TODO: verify is type is correct
+  > = await Api.get("me/player/recently-played");
   return response.items;
 };
 

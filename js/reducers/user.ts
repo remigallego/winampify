@@ -1,19 +1,10 @@
-export interface UserState extends SpotifyApi.UserObjectPrivate {
-  explicit_content: {
-    filter_enabled: boolean;
-    filter_locked: boolean;
-  };
-}
+export type UserState = SpotifyApi.UserObjectPrivate;
 
 const initialState: UserState = {
   birthdate: "",
   country: "",
   display_name: "",
   email: "",
-  explicit_content: {
-    filter_enabled: false,
-    filter_locked: false
-  },
   external_urls: {
     spotify: ""
   },

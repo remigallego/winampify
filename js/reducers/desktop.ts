@@ -1,7 +1,5 @@
-import { CREATE_FILE, MOVE_FILE, DELETE_FILE } from "../actionTypes";
-import Desktop from "../components/Desktop";
-import { File, GenericFile } from "../types";
-import { ACTION_TYPE } from "../actions/explorer";
+import { CREATE_FILE, DELETE_FILE, MOVE_FILE } from "../actionTypes";
+import { ACTION_TYPE, File, GenericFile } from "../types";
 
 export interface DesktopState {
   byId: {
@@ -49,12 +47,12 @@ const cancelRenaming = (state: DesktopState) => {
       isRenaming: false
     };
   });
-  return { byId: byId, allIds: state.allIds };
+  return { byId, allIds: state.allIds };
 };
 
 const createFile = (
   state: DesktopState,
-  payload: { file: File; id: string }
+  payload: { file: GenericFile; id: string }
 ) => {
   return {
     ...state,

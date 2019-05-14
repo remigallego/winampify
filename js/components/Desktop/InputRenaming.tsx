@@ -1,5 +1,4 @@
 import React from "react";
-import { DesktopFileStyle } from "./styles";
 
 interface Props {
   initialValue: string;

@@ -1,41 +1,40 @@
 import React from "react";
 import { connect } from "react-redux";
 import { ContextMenuProvider } from "../../../node_modules/react-contexify";
-import {
-  createFile,
-  moveFile,
-  selectFiles,
-  renameFile,
-  confirmRenameFile,
-  cancelRenaming,
-  deleteFile
-} from "./../../actions/desktop";
-import FileItem from "./FileItem";
-import FileContextMenu from "./FileContextMenu";
-import {
-  File,
-  GenericFile,
-  TrackFile,
-  ActionFile,
-  ImageFile,
-  ArtistFile,
-  AlbumFile
-} from "../../types";
-import { AppState } from "../../reducers";
+import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
-import { formatToWebampMetaData } from "../../utils/drag";
-import { ACTION_TYPE, setItems } from "../../actions/explorer";
 import { playTrack } from "../../actions/playback";
+import { AppState } from "../../reducers";
 import {
-  isTrack,
+  ACTION_TYPE,
+  ActionFile,
+  ArtistFile,
+  GenericFile,
+  ImageFile,
+  TrackFile
+} from "../../types";
+import {
+  isAction,
   isAlbum,
   isArtist,
   isImage,
-  isAction
+  isTrack
 } from "../../types/typecheckers";
+import { formatToWebampMetaData } from "../../utils/drag";
+import {
+  cancelRenaming,
+  confirmRenameFile,
+  createFile,
+  deleteFile,
+  moveFile,
+  renameFile,
+  selectFiles
+} from "./../../actions/desktop";
+import FileContextMenu from "./FileContextMenu";
+import FileItem from "./FileItem";
 
 interface OwnProps {
-  files: Array<GenericFile>;
+  files: GenericFile[];
   selectionBox: any;
 }
 
@@ -61,7 +60,7 @@ interface DispatchProps {
 type Props = DispatchProps & OwnProps;
 
 interface State {
-  selected: Array<string>;
+  selected: string[];
   clipboard: string | null;
 }
 
@@ -109,7 +108,7 @@ class Desktop extends React.Component<Props, State> {
     });
   }
 
-  onDragStart(e: React.DragEvent<HTMLDivElement>, files: Array<GenericFile>) {
+  onDragStart(e: React.DragEvent<HTMLDivElement>, files: GenericFile[]) {
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
     const tracks = files.map((file: any) => {
       return formatToWebampMetaData(file);
@@ -151,14 +150,16 @@ class Desktop extends React.Component<Props, State> {
         draggable={!file.isRenaming}
         onDragStart={e => {
           const selectedFiles = this.props.files
-            .filter(_file => this.state.selected.indexOf(_file.id) > -1)
-            .map((_file: any) => {
-              _file.deltaX = _file.x - e.clientX;
-              _file.deltaY = _file.y - e.clientY;
-              _file.name = file.title; // TODO:
-              _file.duration = Math.floor(Math.random() * 306) + 201;
-              _file.defaultName = file.title;
-              return _file;
+            .filter(
+              derivedFile => this.state.selected.indexOf(derivedFile.id) > -1
+            )
+            .map((derivedFile: any) => {
+              derivedFile.deltaX = derivedFile.x - e.clientX;
+              derivedFile.deltaY = derivedFile.y - e.clientY;
+              derivedFile.name = file.title; // TODO:
+              derivedFile.duration = Math.floor(Math.random() * 306) + 201;
+              derivedFile.defaultName = file.title;
+              return derivedFile;
             });
           this.onDragStart(e, selectedFiles);
         }}
@@ -259,12 +260,13 @@ class Desktop extends React.Component<Props, State> {
             const copy = this.props.files.find(
               file => file.id === this.state.clipboard
             );
-            if (copy)
+            if (copy) {
               this.props.createFile({
                 ...copy,
                 x: e.event.clientX - 25,
                 y: e.event.clientY - 25
               });
+            }
           }}
           onTrackData={e => {
             // TODO:

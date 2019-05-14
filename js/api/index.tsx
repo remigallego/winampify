@@ -2,7 +2,7 @@ import store from "../store";
 import { apiendpoint } from "./settings";
 
 class Api {
-  static authenticate(accessToken: string) {
+  public static authenticate(accessToken: string) {
     return new Promise((resolve, reject) => {
       fetch(`${apiendpoint}/me`, {
         method: "GET",
@@ -18,7 +18,7 @@ class Api {
     });
   }
 
-  static get(endpoint: string): Promise<any> {
+  public static get(endpoint: string): Promise<any> {
     const { accessToken } = store.getState().auth;
     return new Promise((resolve, reject) => {
       fetch(`${apiendpoint}/${endpoint}`, {
@@ -29,14 +29,17 @@ class Api {
       })
         .then(response => response.json())
         .then(res => {
-          if (res.error && res.error.message) alert(res.error.message);
-          else resolve(res);
+          if (res.error && res.error.message) {
+            alert(res.error.message);
+          } else {
+            resolve(res);
+          }
         })
         .catch(reject);
     });
   }
 
-  static put(endpoint: string, params: any): Promise<any> {
+  public static put(endpoint: string, params: any): Promise<any> {
     const { accessToken } = store.getState().auth;
     return new Promise(resolve => {
       fetch(`${apiendpoint}/${endpoint}`, {
@@ -47,13 +50,13 @@ class Api {
         },
         ...params
       })
-        .then(response => {
-          console.log(response);
-          return response.json();
-        })
+        .then(response => response.json())
         .then(res => {
-          if (res.error && res.error.message) alert(res.error.message);
-          else resolve(res);
+          if (res.error && res.error.message) {
+            alert(res.error.message);
+          } else {
+            resolve(res);
+          }
         });
     });
   }

@@ -1,12 +1,12 @@
 import React from "react";
 import { FaChevronLeft } from "react-icons/fa";
-import { ExplorerWindowStyle } from "../styles";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../../../reducers";
 import { Action, bindActionCreators } from "redux";
 import { setSearchResults, goPreviousState } from "../../../actions/explorer";
 import { connect } from "react-redux";
 import _ from "lodash";
+import { greyLight } from "../../../styles/colors";
 
 interface OwnProps {}
 
@@ -40,13 +40,30 @@ class Toolbar extends React.Component<Props, State> {
   }
 
   render() {
-    const { explorerToolbar, searchbox } = ExplorerWindowStyle;
     return (
-      <div className="explorer-toolbar" style={explorerToolbar}>
+      <div
+        className="explorer-toolbar"
+        style={{
+          backgroundColor: greyLight,
+          height: "40px",
+          flex: 1,
+          minHeight: "40px",
+          maxHeight: "40px",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingLeft: "5px",
+          paddingRight: "5px"
+        }}
+      >
         <FaChevronLeft onClick={() => this.props.goPreviousState()} />
         <form
           className="explorer-toolbar-searchbox"
-          style={searchbox}
+          style={{
+            margin: 0,
+            width: "auto"
+          }}
           onSubmit={e => e.preventDefault()}
         >
           <input

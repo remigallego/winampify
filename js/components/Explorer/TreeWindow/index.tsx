@@ -1,21 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import {
-  createNewExplorer,
-  ACTION_TYPE,
-  setItems
-} from "../../actions/explorer";
-import hearts from "./images/hearts.ico";
-import harddrive from "./images/7.ico";
-import newexplorer from "./images/319.ico";
-import recentdocuments from "./images/recentdocuments.png";
-import star from "./images/star.ico";
-import { ExplorerTreeStyle } from "./styles";
+import { createNewExplorer, setItems } from "../../../actions/explorer";
+import hearts from "../images/hearts.ico";
+import harddrive from "../images/7.ico";
+import newexplorer from "../images/319.ico";
+import recentdocuments from "../images/recentdocuments.png";
+import star from "../images/star.ico";
+import styles from "./styles";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { AppState } from "../../reducers";
-import { SingleExplorerState } from "../../reducers/explorer";
+import { AppState } from "../../../reducers";
+import { SingleExplorerState } from "../../../reducers/explorer";
+import { ACTION_TYPE } from "../../../types";
 
 interface DispatchProps {
   setItems(actionType: ACTION_TYPE, uri?: string): void;
@@ -28,13 +25,10 @@ interface OwnProps {
 
 type Props = OwnProps & DispatchProps;
 
-class ExplorerTree extends React.Component<Props> {
+const { explorerTree, explorerTreeText, explorerTreeIcon } = styles;
+
+class TreeWindow extends React.Component<Props> {
   render() {
-    const {
-      explorerTree,
-      explorerTreeText,
-      explorerTreeIcon
-    } = ExplorerTreeStyle;
     return (
       <div
         className="explorer-tree"
@@ -133,4 +127,4 @@ const mapDispatchToProps = (
 export default connect(
   null,
   mapDispatchToProps
-)(ExplorerTree);
+)(TreeWindow);

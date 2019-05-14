@@ -1,11 +1,6 @@
 import _ from "lodash";
-import {
-  OPEN_EXPLORER,
-  CLOSE_EXPLORER,
-  UPDATE_POSITION,
-  UPDATE_SIZE
-} from "./explorer";
-import { OPEN_IMAGE, CLOSE_IMAGE } from "../actions/images";
+import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
+import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
 
 export enum WINDOW_TYPE {
   Explorer,
@@ -23,7 +18,7 @@ export interface Window {
 }
 
 export interface WindowsState {
-  windows: Array<Window>;
+  windows: Window[];
 }
 
 const initialState: WindowsState = {

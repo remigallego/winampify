@@ -1,11 +1,11 @@
 import React from "react";
 import { ContextMenuProvider } from "react-contexify";
-import folderclosed from "./images/folderclosed.png";
-import bigWinampIcon from "./images/bigWinampIcon.png";
-import { DesktopFileStyle } from "./styles";
-import InputRenaming from "./InputRenaming";
-import "./file.css";
 import { File, GenericFile } from "../../types";
+import "./file.css";
+import bigWinampIcon from "./images/bigWinampIcon.png";
+import folderclosed from "./images/folderclosed.png";
+import InputRenaming from "./InputRenaming";
+import { DesktopFileStyle } from "./styles";
 
 interface Props {
   file: GenericFile;

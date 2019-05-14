@@ -7,19 +7,17 @@ import {
   updateSize,
   goPreviousState
 } from "../../actions/explorer";
-import { ExplorerWindowStyle } from "./styles";
-import ExplorerTree from "./ExplorerTree";
-import ExplorerContent from "./ExplorerContent";
+import styles from "./styles";
+import TreeWindow from "./TreeWindow";
+import ContentWindow from "./ContentWindow";
 import TitleBar from "./TitleBar";
-
-import { FaChevronLeft } from "react-icons/fa";
-import "./index.css";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { Action } from "redux";
 import { AppState } from "../../reducers";
 import { ThunkDispatch } from "redux-thunk";
 import { dragHandleClassName } from "./vars";
 import ExplorerToolbar from "./Toolbar";
+import "./animations.css";
 
 interface OwnProps {
   explorer: SingleExplorerState;
@@ -69,7 +67,7 @@ class ExplorerWindow extends React.Component<Props, State> {
   }
 
   render() {
-    const { explorerWrapper, mainView } = ExplorerWindowStyle;
+    const { explorerWrapper, mainView } = styles;
 
     return (
       <div>
@@ -126,8 +124,8 @@ class ExplorerWindow extends React.Component<Props, State> {
             />
             <ExplorerToolbar />
             <div className="explorer-mainview" style={mainView}>
-              <ExplorerTree explorer={this.props.explorer} />
-              <ExplorerContent
+              <TreeWindow explorer={this.props.explorer} />
+              <ContentWindow
                 explorer={this.props.explorer}
                 files={this.props.explorer.files}
                 selected={this.props.explorer.selected}
@@ -146,7 +144,7 @@ const mapDispatchToProps = (
 ): DispatchProps => {
   const { id } = ownProps.explorer;
   return {
-    goPreviousState: () => dispatch(goPreviousState(id)),
+    goPreviousState: () => dispatch(goPreviousState()),
     closeExplorer: () => dispatch(closeExplorer(id)),
     updatePosition: (x: number, y: number) =>
       dispatch(updatePosition(x, y, id)),

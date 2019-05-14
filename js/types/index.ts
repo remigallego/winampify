@@ -1,12 +1,19 @@
-import { ACTION_TYPE } from "../actions/explorer";
-
-export interface ImageModalType {
+// what kind of folder was clicked on
+export enum ACTION_TYPE {
+  ALBUM,
+  ARTIST,
+  TOP,
+  FOLLOWING,
+  RECENTLY_PLAYED,
+  LIBRARY_ALBUMS,
+  LIBRARY_TRACKS
+}
+export interface ImageDialogType {
   id: string;
   source: string;
   x: number;
   y: number;
 }
-
 
 export interface ImageData {
   name: string;
@@ -18,7 +25,6 @@ export interface ActionData {
   action: ACTION_TYPE;
   type: "action";
 }
-
 
 export interface File<T> {
   id: string;
@@ -53,3 +59,7 @@ export type AlbumFile = File<SpotifyApi.AlbumObjectFull>;
 export type ArtistFile = File<SpotifyApi.ArtistObjectFull>;
 export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
+
+export interface StyleCollection {
+  [val: string]: React.CSSProperties | undefined;
+}

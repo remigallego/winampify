@@ -1,15 +1,15 @@
-import ReactGA from "react-ga";
 import React from "react";
+import ReactGA from "react-ga";
 import Desktop from "./Desktop";
 import InfosBar from "./Reusables/InfosBar";
 import SelectionBox from "./Reusables/SelectionBox";
 import WindowsManager from "./WindowsManager";
-import AudioPlayer from "./AudioPlayer";
+// import AudioPlayer from "./AudioPlayer";
 
 interface State {
   selectionBox: {
-    target: Array<number>;
-    origin: Array<number>;
+    target: number[];
+    origin: number[];
   };
 }
 

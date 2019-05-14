@@ -1,11 +1,11 @@
 import React from "react";
 import Draggable from "react-draggable";
-import "./ImageAnimation.css";
-import { ImageModalType } from "../../../types";
-import TitleBar from "../TitleBar";
+import { ImageDialogType } from "../../types";
+import TitleBar from "../Explorer/TitleBar";
+import "./animations.css";
 
 interface Props {
-  image: ImageModalType;
+  image: ImageDialogType;
   key: string;
   onDismiss: () => void;
 }
@@ -14,7 +14,7 @@ interface State {
   animation: string;
 }
 
-class ImageModal extends React.Component<Props, State> {
+class ImageDialog extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { animation: "" };
@@ -78,4 +78,4 @@ class ImageModal extends React.Component<Props, State> {
     );
   }
 }
-export default ImageModal;
+export default ImageDialog;

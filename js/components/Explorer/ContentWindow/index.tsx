@@ -1,32 +1,36 @@
 import React from "react";
 import { connect, MapDispatchToProps } from "react-redux";
-
 import {
   unsetFocusExplorer,
   getArtistFromId,
   selectFile,
-  setItems,
-  ACTION_TYPE
-} from "../../actions/explorer";
-import { ExplorerContentStyle } from "./styles";
-import ExplorerItem from "./ExplorerItem";
+  setItems
+} from "../../../actions/explorer";
+import styles from "./styles";
+import ExplorerFile from "../ExplorerFile";
 import {
   GenericFile,
   TrackFile,
   AlbumFile,
   ArtistFile,
-  ImageFile
-} from "../../types";
-import { SingleExplorerState } from "../../reducers/explorer";
-import { openImage } from "../../actions/images";
-import { playTrack } from "../../actions/playback";
-import { greenSpotify } from "../../styles/colors";
+  ImageFile,
+  ACTION_TYPE
+} from "../../../types";
+import { SingleExplorerState } from "../../../reducers/explorer";
+import { openImage } from "../../../actions/images";
+import { playTrack } from "../../../actions/playback";
+import { greenSpotify } from "../../../styles/colors";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { AppState } from "../../reducers";
-import { isTrack, isAlbum, isArtist, isImage } from "../../types/typecheckers";
+import { AppState } from "../../../reducers";
+import {
+  isTrack,
+  isAlbum,
+  isArtist,
+  isImage
+} from "../../../types/typecheckers";
 
-const { container } = ExplorerContentStyle;
+const { container } = styles;
 
 interface OwnProps {
   explorer: SingleExplorerState;
@@ -47,7 +51,7 @@ interface DispatchProps {
 }
 
 type Props = OwnProps & DispatchProps;
-class ExplorerContent extends React.Component<Props> {
+class ContentWindow extends React.Component<Props> {
   timer: any = null;
 
   clickHandler(id: string) {
@@ -105,7 +109,7 @@ class ExplorerContent extends React.Component<Props> {
       return null;
     };
     return (
-      <ExplorerItem
+      <ExplorerFile
         key={index}
         file={file}
         selected={selected}
@@ -114,7 +118,7 @@ class ExplorerContent extends React.Component<Props> {
       >
         {file.title}
         {getExtension(file.metaData.type)}
-      </ExplorerItem>
+      </ExplorerFile>
     );
   }
 
@@ -217,4 +221,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
 export default connect(
   null,
   mapDispatchToProps
-)(ExplorerContent);
+)(ContentWindow);

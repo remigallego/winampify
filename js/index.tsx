@@ -1,12 +1,12 @@
 import "babel-polyfill";
-import "../css/line-scale.css";
 import React from "react";
 import { render } from "react-dom";
-import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
-import store from "./store";
+import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
+import "../css/line-scale.css";
 import Winampify from "./components";
+import store from "./store";
 
 export const persistor = persistStore(store);
 

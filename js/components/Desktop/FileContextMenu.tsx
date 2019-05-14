@@ -1,6 +1,6 @@
+import React from "react";
 import { ContextMenu, Item, Separator } from "react-contexify";
 import "react-contexify/dist/ReactContexify.min.css";
-import React from "react";
 
 interface Props {
   onRename: (e: any) => void;
