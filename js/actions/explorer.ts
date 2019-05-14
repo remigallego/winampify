@@ -51,6 +51,7 @@ export function closeExplorer(explorerId: string) {
   };
 }
 
+// TODO: Should be Windows action
 export function updatePosition(x: number, y: number, explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
@@ -63,7 +64,7 @@ export function updatePosition(x: number, y: number, explorerId: string) {
     });
   };
 }
-
+// TODO: Should be Windows action
 export function updateSize(width: number, height: number, explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
@@ -75,6 +76,7 @@ export function updateSize(width: number, height: number, explorerId: string) {
   };
 }
 
+// TODO: Should be Windows action
 export function unsetFocusExplorer(explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
@@ -83,68 +85,6 @@ export function unsetFocusExplorer(explorerId: string) {
     });
   };
 }
-
-/* export function searchOnSpotify(
-  search: string,
-  type: string,
-  offset: string,
-  explorerId: string
-) {
-  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    dispatch({ type: "SEARCH", id: explorerId });
-    dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
-    dispatch({
-      type: SET_EXPLORER_METADATA,
-      payload: {
-        id: explorerId,
-        title: search,
-        image: null
-      }
-    });
-    if (offset === "0") dispatch({ type: LOADING, id: explorerId });
-    getSearchResult(search, type, offset).then(results => {
-      let albums = getState().explorer.byId[explorerId].albums;
-      let artists = getState().explorer.byId[explorerId].artists;
-      let playlists = getState().explorer.byId[explorerId].playlists;
-      let tracks = getState().explorer.byId[explorerId].tracks;
-      if (results.artists) {
-        artists = results.artists.items;
-        const stateArtists = getState().explorer.byId[explorerId].artists;
-        if (offset !== "0") {
-          artists.map((artist: any) => stateArtists.push(artist));
-          artists = stateArtists;
-        }
-      }
-      if (results.playlists) {
-        playlists = results.playlists.items;
-      }
-      if (results.tracks) {
-        tracks = results.tracks.items;
-        const stateTracks = getState().explorer.byId[explorerId].tracks;
-        if (offset !== "0") {
-          tracks.map((track: any) => stateTracks.push(track));
-          tracks = stateTracks;
-        }
-      }
-      if (results.albums) {
-        albums = results.albums.items;
-        const stateAlbums = getState().explorer.byId[explorerId].albums;
-        if (offset !== "0") {
-          albums.map((album: any) => stateAlbums.push(album));
-          albums = stateAlbums;
-        }
-      }
-      dispatch({
-        type: SET_ITEMS,
-        id: explorerId,
-        artists,
-        albums,
-        tracks,
-        playlists
-      });
-    });
-  };
-} */
 
 // what kind of folder was clicked on
 export enum ACTION_TYPE {
