@@ -20,10 +20,12 @@ import {
   searchFor
 } from "../api/apiFunctions";
 import { AppState } from "../reducers";
-import {
+import explorer, {
   CLOSE_EXPLORER,
   OPEN_EXPLORER,
-  UPDATE_POSITION
+  UPDATE_POSITION,
+  SET_MORE_ITEMS,
+  SET_SEARCH_METADATA
 } from "../reducers/explorer";
 import { ACTION_TYPE } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
@@ -188,8 +190,8 @@ export function setSearchResults(query: string, types: string[]) {
     dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
     dispatch({ type: LOADING, id: explorerId });
 
-    const arrayOfSearchResponses = await searchFor(query, types, 0);
-    const files = arrayOfSearchResponses
+    const results = await searchFor(query, types, 0);
+    const files = results
       .map(searchResponse =>
         Object.keys(searchResponse)
           .map(key => searchResponse[key])
@@ -207,7 +209,75 @@ export function setSearchResults(query: string, types: string[]) {
     });
 
     dispatch({
+      type: SET_SEARCH_METADATA,
+      payload: {
+        id: explorerId,
+        search: true,
+        searchMetadata: {
+          query,
+          pagination: {
+            album: 0,
+            artist: 0,
+            track: 0
+          },
+          predictions: {
+            album: 0,
+            artist: 0,
+            track: 0
+          }
+        }
+      }
+    });
+
+    dispatch({
       type: SET_ITEMS,
+      payload: {
+        id: explorerId,
+        files
+      }
+    });
+  };
+}
+
+export function setMoreSearchResults(type: "album" | "artist" | "track") {
+  return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const explorerId = getActiveExplorerId(getState());
+    const query = getState().explorer.byId[explorerId].searchMetadata.query;
+    const { pagination } = getState().explorer.byId[explorerId].searchMetadata;
+    pagination[type]++;
+
+    const arrayOfSearchResponses = await searchFor(
+      query,
+      [type],
+      pagination[type]
+    );
+
+    const files = arrayOfSearchResponses
+      .map(searchResponse =>
+        Object.keys(searchResponse)
+          .map(key => searchResponse[key])
+          .map(obj => obj.items)
+      )
+      .flat(2);
+
+    dispatch({
+      type: SET_SEARCH_METADATA,
+      payload: {
+        id: explorerId,
+        search: true,
+        searchMetadata: {
+          pagination,
+          predictions: {
+            album: 0,
+            artist: 0,
+            track: 0
+          }
+        }
+      }
+    });
+
+    dispatch({
+      type: SET_MORE_ITEMS,
       payload: {
         id: explorerId,
         files

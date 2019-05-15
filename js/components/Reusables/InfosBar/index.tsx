@@ -1,10 +1,11 @@
 import React from "react";
+import { FaChevronDown, FaSignOutAlt, FaCog } from "react-icons/fa";
 import { connect } from "react-redux";
-import { AppState } from "../../reducers";
-import { UserState } from "../../reducers/user";
-import { logOut, wipeTokens } from "../../actions/auth";
-import { FaSignOutAlt, FaChevronDown } from "react-icons/fa";
-import { greenSpotify } from "../../styles/colors";
+import { logOut, wipeTokens } from "../../../actions/auth";
+import { AppState } from "../../../reducers";
+import { UserState } from "../../../reducers/user";
+import { greenSpotify } from "../../../styles/colors";
+import styles from "./styles";
 
 interface DispatchProps {
   logOut: () => void;
@@ -43,7 +44,7 @@ class InfosBar extends React.Component<Props, {}> {
     );
   }
 
-  renderControls() {
+  /*   renderControls() {
     return (
       <div
         style={{
@@ -61,41 +62,32 @@ class InfosBar extends React.Component<Props, {}> {
         />
       </div>
     );
-  }
+  } */
 
   render() {
     return (
       <div
-        className="infos-bar"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: greenSpotify,
-          borderBottomLeftRadius: 3
-        }}
+        style={styles.container}
+        onClick={() => window.open(this.props.user.external_urls.spotify)}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
+        <div style={styles.rowContainer}>
           {this.renderProfilePicture()}
 
           <h1 style={{ fontSize: 12, color: "white" }}>
             {this.props.user.display_name}
           </h1>
-          <FaChevronDown style={{ marginLeft: 8 }} color={"white"} />
+
+          {/* TODO: Settings Menu <FaCog style={{ marginLeft: 8 }} color={"white"} /> */}
         </div>
       </div>
     );
   }
 }
+
 const mapStateToProps = (state: AppState) => ({
   user: state.user
 });
+
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   logOut: () => dispatch(logOut()),
   wipeTokens: () => dispatch(wipeTokens())

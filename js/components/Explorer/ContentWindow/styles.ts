@@ -1,3 +1,4 @@
+import { greenSpotify } from "../../../styles/colors";
 import { StyleCollection } from "../../../types";
 
 const styles: StyleCollection = {
@@ -17,9 +18,32 @@ const styles: StyleCollection = {
     borderBottom: "0.7px solid #415b8e"
   },
   moreButton: {
-    fontSize: "16px",
+    fontSize: "14px",
     cursor: "pointer",
-    color: "rgba(21, 108, 217, 0.78)"
+    backgroundColor: "aliceblue",
+    paddingLeft: 22,
+    marginTop: 2
+  },
+  searchCategory: {
+    userSelect: "none",
+    position: "relative",
+    display: "inline-block",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    width: "100%",
+    fontWeight: 300,
+    fontSize: 18,
+    marginLeft: 20
+    /*     backgroundColor: greenSpotify,
+    background:
+      // tslint:disable-next-line: max-line-length
+      "linear-gradient(to bottom, rgba(29,185,84,0) 0%,rgba(29,185,84,0) 78%,rgba(29,185,84,1) 79%,rgba(29,185,84,1) 100%)"
+ */
+  },
+  searchSeparator: {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    height: 1,
+    width: "100%"
   }
 };
 

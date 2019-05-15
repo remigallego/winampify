@@ -10,19 +10,34 @@ import {
 } from "../actionTypes";
 import { GenericFile } from "../types";
 
+interface SearchMetadata {
+  query: string;
+  pagination: {
+    album: number;
+    artist: number;
+    track: number;
+  };
+  predictions: {
+    album: number;
+    artist: number;
+    track: number;
+  };
+}
+
 export interface SingleExplorerState {
   id: string;
   selected: any;
   search: boolean;
+  searchMetadata: SearchMetadata;
   title: any;
   image: any;
-  previousStates: Array<any>;
+  previousStates: any[];
   loading: boolean;
   width: number;
   height: number;
   x: number;
   y: number;
-  files: Array<GenericFile> | null;
+  files: GenericFile[];
 }
 
 export interface ExplorerState {
@@ -35,13 +50,31 @@ export interface ExplorerState {
 const initialStateExplorer: SingleExplorerState = {
   id: "",
   selected: null,
-  search: false,
+
   title: null,
   image: null,
   previousStates: [],
+
+  // search
+  search: false,
+  searchMetadata: {
+    query: "",
+    pagination: {
+      album: 0,
+      artist: 0,
+      track: 0
+    },
+    predictions: {
+      album: 0,
+      artist: 0,
+      track: 0
+    }
+  },
+
   // items
-  files: null,
+  files: [],
   loading: false,
+
   // position
   width: 400,
   height: 500,
@@ -58,6 +91,8 @@ export const OPEN_EXPLORER = "OPEN_EXPLORER";
 export const CLOSE_EXPLORER = "CLOSE_EXPLORER";
 export const UPDATE_POSITION = "UPDATE_POSITION";
 export const UPDATE_SIZE = "UPDATE_SIZE";
+export const SET_MORE_ITEMS = "SET_MORE_ITEMS";
+export const SET_SEARCH_METADATA = "SET_SEARCH_METADATA";
 
 const setItems = (
   state: ExplorerState,
@@ -70,6 +105,26 @@ const setItems = (
       [payload.id]: {
         ...state.byId[payload.id],
         files: payload.files.map(formatToFile),
+        loading: false
+      }
+    }
+  };
+};
+
+const setMoreItems = (
+  state: ExplorerState,
+  payload: { id: string; files: File[] }
+) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...state.byId[payload.id],
+        files: [
+          ...state.byId[payload.id].files,
+          ...payload.files.map(formatToFile)
+        ],
         loading: false
       }
     }
@@ -129,19 +184,29 @@ const goPreviousStateUpdate = (state: ExplorerState, payload: any) => {
   };
 };
 
-const setExplorerMetadata = (
-  state: ExplorerState,
-  payload: { id: string; title: string; image: any; search: boolean }
-) => {
+const setExplorerMetadata = (state: ExplorerState, payload: any) => {
   return {
     ...state,
     byId: {
       ...state.byId,
       [payload.id]: {
         ...state.byId[payload.id],
-        title: payload.title,
-        image: payload.image,
-        search: payload.search
+        ...payload
+      }
+    }
+  };
+};
+const setSearchMetadata = (state: ExplorerState, payload: any) => {
+  return {
+    ...state,
+    byId: {
+      ...state.byId,
+      [payload.id]: {
+        ...state.byId[payload.id],
+        searchMetadata: {
+          ...state.byId[payload.id].searchMetadata,
+          ...payload.searchMetadata
+        }
       }
     }
   };
@@ -231,8 +296,12 @@ const explorer = (state = initialState, action: any) => {
       return goPreviousStateUpdate(state, action.payload);
     case SET_ITEMS:
       return setItems(state, action.payload);
+    case SET_MORE_ITEMS:
+      return setMoreItems(state, action.payload);
     case SET_EXPLORER_METADATA:
       return setExplorerMetadata(state, action.payload);
+    case SET_SEARCH_METADATA:
+      return setSearchMetadata(state, action.payload);
     default:
       return state;
   }

@@ -1,7 +1,6 @@
 import React from "react";
-import close from "../images/close-red.png";
-import CloseIcon from "../Icons/CloseIcon";
 import { blueTitleBar } from "../../../styles/colors";
+import CloseIcon from "../Icons/CloseIcon";
 import { dragHandleClassName } from "../vars";
 
 interface Props {

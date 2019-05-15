@@ -6,7 +6,8 @@ import {
   getArtistFromId,
   selectFile,
   setItems,
-  unsetFocusExplorer
+  unsetFocusExplorer,
+  setMoreSearchResults
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
@@ -29,6 +30,7 @@ import {
 } from "../../../types/typecheckers";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
+import { FaEllipsisH } from "react-icons/fa";
 
 const { container } = styles;
 
@@ -129,6 +131,15 @@ class ContentWindow extends React.Component<Props> {
     }
   }
 
+  renderSearchCategory(text: string) {
+    return (
+      <div style={styles.searchCategory}>
+        {text}
+        <div style={styles.searchSeparator} />
+      </div>
+    );
+  }
+
   renderLoadedItems() {
     const { files } = this.props;
     if (!files) return;
@@ -140,12 +151,37 @@ class ContentWindow extends React.Component<Props> {
     if (this.props.explorer.search) {
       return (
         <div>
-          {artists.length && <h1>**** Artists ****</h1>}
-          {this.renderArtists(artists)}
-          {albums.length && <h1>**** Albums ****</h1>}
-          {this.renderAlbums(albums)}
-          {tracks.length && <h1>**** Tracks ****</h1>}
-          {this.renderTracks(tracks)}
+          {artists.length && (
+            <>
+              {this.renderSearchCategory("Artists")}
+              {this.renderArtists(artists)}
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("artist")}
+              >
+                20 more results...
+              </div>
+              <div style={{ marginTop: 20 }} />
+            </>
+          )}
+
+          {albums.length && (
+            <>
+              {this.renderSearchCategory("Albums")}
+              {this.renderAlbums(albums)}
+              <div style={styles.moreButton}>20 more results...</div>
+              <div style={{ marginTop: 20 }} />
+            </>
+          )}
+
+          {tracks.length && (
+            <>
+              {this.renderSearchCategory("Tracks")}
+              {this.renderTracks(tracks)}
+              <div style={styles.moreButton}>20 more results...</div>
+              <div style={{ marginTop: 10 }} />
+            </>
+          )}
         </div>
       );
     } else
@@ -214,7 +250,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
       e: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => dispatch(openImage(image, e)),
     setItems: (uriType: ACTION_TYPE, uri: string) =>
-      dispatch(setItems(uriType, uri, explorerId))
+      dispatch(setItems(uriType, uri, explorerId)),
+    setMoreSearchResults: (type: "album" | "artist" | "track") =>
+      dispatch(setMoreSearchResults(type))
   };
 };
 

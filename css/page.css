@@ -72,24 +72,6 @@ body {
   overflow: hidden;
 }
 
-.infos-bar {
-  height: auto;
-  width: auto;
-  float: right;
-  background-color: rgba(255, 255, 255, 1);
-  padding-left: 14px;
-  padding-right: 14px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  transition: transform 0.2s;
-  transform-origin: right top;
-  -webkit-box-shadow: -11px 11px 29px -19px rgba(0, 0, 0, 0.79);
-  -moz-box-shadow: -11px 11px 29px -19px rgba(0, 0, 0, 0.79);
-  box-shadow: -11px 11px 29px -19px rgba(0, 0, 0, 0.79);
-}
-.infos-bar:hover {
-  transform: scale(1.3);
-}
 .footer {
   position: absolute;
   bottom: 0;
