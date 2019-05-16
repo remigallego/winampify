@@ -174,7 +174,7 @@ export function setItems(
       payload: {
         id: explorerId,
         title,
-        search: false
+        query: null
       }
     });
 
