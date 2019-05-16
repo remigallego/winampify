@@ -66,6 +66,48 @@ class Toolbar extends React.Component<Props, State> {
           }}
           onSubmit={e => e.preventDefault()}
         >
+          Album{" "}
+          <input
+            name="album"
+            type="checkbox"
+            checked={this.state.types.indexOf("album") !== -1}
+            onChange={() => {
+              if (this.state.types.indexOf("album") === -1)
+                this.setState({ types: [...this.state.types, "album"] });
+              else
+                this.setState({
+                  types: this.state.types.filter(t => t !== "album")
+                });
+            }}
+          />
+          Track{" "}
+          <input
+            name="track"
+            type="checkbox"
+            checked={this.state.types.indexOf("track") !== -1}
+            onChange={() => {
+              if (this.state.types.indexOf("track") === -1)
+                this.setState({ types: [...this.state.types, "track"] });
+              else
+                this.setState({
+                  types: this.state.types.filter(t => t !== "track")
+                });
+            }}
+          />
+          Artist{" "}
+          <input
+            name="artist"
+            type="checkbox"
+            checked={this.state.types.indexOf("artist") !== -1}
+            onChange={() => {
+              if (this.state.types.indexOf("artist") === -1)
+                this.setState({ types: [...this.state.types, "artist"] });
+              else
+                this.setState({
+                  types: this.state.types.filter(t => t !== "artist")
+                });
+            }}
+          />
           <input
             type="text"
             value={this.state.query}

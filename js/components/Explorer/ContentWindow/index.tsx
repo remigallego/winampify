@@ -1,18 +1,20 @@
 import React from "react";
-import { connect, MapDispatchToProps } from "react-redux";
+import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   getArtistFromId,
   selectFile,
   setItems,
-  unsetFocusExplorer,
-  setMoreSearchResults
+  setMoreSearchResults,
+  unsetFocusExplorer
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
+import { QueryState } from "../../../reducers/search";
+import { selectSearch } from "../../../selectors/search";
 import { greenSpotify } from "../../../styles/colors";
 import {
   ACTION_TYPE,
@@ -30,7 +32,6 @@ import {
 } from "../../../types/typecheckers";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { FaEllipsisH } from "react-icons/fa";
 
 const { container } = styles;
 
@@ -38,6 +39,10 @@ interface OwnProps {
   explorer: SingleExplorerState;
   selected: boolean;
   files: GenericFile[] | null;
+}
+
+interface StateProps {
+  search: QueryState;
 }
 
 interface DispatchProps {
@@ -50,9 +55,10 @@ interface DispatchProps {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ): void;
   setItems(uriType: ACTION_TYPE, uri: string): void;
+  setMoreSearchResults(type: string): void;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProps;
 class ContentWindow extends React.Component<Props> {
   timer: any = null;
 
@@ -148,19 +154,25 @@ class ContentWindow extends React.Component<Props> {
     const albums = files.filter(isAlbum).map((file: AlbumFile) => file);
     const tracks = files.filter(isTrack).map((file: TrackFile) => file);
     const images = files.filter(isImage).map((file: ImageFile) => file);
-    if (this.props.explorer.search) {
+    if (this.props.explorer.query) {
+      const { search } = this.props;
       return (
         <div>
           {artists.length && (
             <>
               {this.renderSearchCategory("Artists")}
               {this.renderArtists(artists)}
-              <div
-                style={styles.moreButton}
-                onClick={() => this.props.setMoreSearchResults("artist")}
-              >
-                20 more results...
-              </div>
+              {search.artist.total - search.artist.current > 0 && (
+                <div
+                  style={styles.moreButton}
+                  onClick={() => this.props.setMoreSearchResults("artist")}
+                >
+                  {search.artist.loading
+                    ? "Loading..."
+                    : `${search.artist.total -
+                        search.artist.current} more results...`}
+                </div>
+              )}
               <div style={{ marginTop: 20 }} />
             </>
           )}
@@ -229,6 +241,13 @@ class ContentWindow extends React.Component<Props> {
   }
 }
 
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (
+  state: AppState,
+  ownProps: OwnProps
+) => ({
+  search: selectSearch(state, ownProps)
+});
+
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
   dispatch: ThunkDispatch<AppState, null, Action>,
   ownProps: OwnProps
@@ -257,6 +276,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ContentWindow);

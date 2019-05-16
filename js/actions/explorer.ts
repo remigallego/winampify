@@ -23,10 +23,15 @@ import { AppState } from "../reducers";
 import explorer, {
   CLOSE_EXPLORER,
   OPEN_EXPLORER,
-  UPDATE_POSITION,
   SET_MORE_ITEMS,
-  SET_SEARCH_METADATA
+  SET_SEARCH_METADATA,
+  UPDATE_POSITION
 } from "../reducers/explorer";
+import {
+  SET_SEARCH,
+  UPDATE_PAGINATION,
+  LOADING_PAGINATION
+} from "../reducers/search";
 import { ACTION_TYPE } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 
@@ -191,6 +196,13 @@ export function setSearchResults(query: string, types: string[]) {
     dispatch({ type: LOADING, id: explorerId });
 
     const results = await searchFor(query, types, 0);
+
+    const albums = results.find(obj => obj.albums !== undefined);
+    const tracks = results.find(obj => obj.tracks !== undefined);
+    const artists = results.find(obj => obj.artists !== undefined);
+
+    // tslint:disable-next-line: no-unused-expression
+
     const files = results
       .map(searchResponse =>
         Object.keys(searchResponse)
@@ -204,28 +216,19 @@ export function setSearchResults(query: string, types: string[]) {
       payload: {
         id: explorerId,
         title: `Search: ${query}`,
-        search: true
+        query
       }
     });
 
     dispatch({
-      type: SET_SEARCH_METADATA,
+      type: SET_SEARCH,
       payload: {
         id: explorerId,
-        search: true,
-        searchMetadata: {
-          query,
-          pagination: {
-            album: 0,
-            artist: 0,
-            track: 0
-          },
-          predictions: {
-            album: 0,
-            artist: 0,
-            track: 0
-          }
-        }
+        query,
+        types,
+        album: albums ? { total: albums.albums.total, current: 20 } : {},
+        track: tracks ? { total: tracks.tracks.total, current: 20 } : {},
+        artist: artists ? { total: artists.artists.total, current: 20 } : {}
       }
     });
 
@@ -241,18 +244,18 @@ export function setSearchResults(query: string, types: string[]) {
 
 export function setMoreSearchResults(type: "album" | "artist" | "track") {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const explorerId = getActiveExplorerId(getState());
-    const query = getState().explorer.byId[explorerId].searchMetadata.query;
-    const { pagination } = getState().explorer.byId[explorerId].searchMetadata;
-    pagination[type]++;
+    const id = getActiveExplorerId(getState());
+    const query = getState().explorer.byId[id].query;
+    const search = getState().search[id];
 
-    const arrayOfSearchResponses = await searchFor(
-      query,
-      [type],
-      pagination[type]
-    );
+    dispatch({
+      type: LOADING_PAGINATION,
+      payload: { id, type }
+    });
 
-    const files = arrayOfSearchResponses
+    const results = await searchFor(query, [type], search[type].current);
+
+    const files = results
       .map(searchResponse =>
         Object.keys(searchResponse)
           .map(key => searchResponse[key])
@@ -261,25 +264,19 @@ export function setMoreSearchResults(type: "album" | "artist" | "track") {
       .flat(2);
 
     dispatch({
-      type: SET_SEARCH_METADATA,
+      type: UPDATE_PAGINATION,
       payload: {
-        id: explorerId,
-        search: true,
-        searchMetadata: {
-          pagination,
-          predictions: {
-            album: 0,
-            artist: 0,
-            track: 0
-          }
-        }
+        id,
+        query,
+        type,
+        current: search[type].current + files.length
       }
     });
 
     dispatch({
       type: SET_MORE_ITEMS,
       payload: {
-        id: explorerId,
+        id,
         files
       }
     });
