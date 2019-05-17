@@ -6,6 +6,7 @@ import pkg from "../../package.json";
 import { orangeLight, redError } from "../styles/colors";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { LOADING } from "../reducers/auth";
+import Explorer from "./Explorer";
 
 interface Props {
   loading?: LOADING;
