@@ -42,7 +42,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  search: QueryState;
+  searchPagination: QueryState;
 }
 
 interface DispatchProps {
@@ -101,6 +101,71 @@ class ContentWindow extends React.Component<Props> {
     }
   }
 
+  renderSearchResults() {
+    const artists = this.props.files.filter(isArtist);
+    const albums = this.props.files.filter(isAlbum);
+    const tracks = this.props.files.filter(isTrack);
+
+    const { searchPagination: pagination } = this.props;
+    const remainingArtists =
+      pagination.artist.total - pagination.artist.current;
+    const remainingAlbums = pagination.album.total - pagination.album.current;
+    const remainingTracks = pagination.track.total - pagination.track.current;
+    return (
+      <div
+        className="explorer-items-container"
+        onMouseDown={e => this.handleClickOutside(e)}
+        style={container}
+      >
+        {artists.length > 0 && (
+          <>
+            {this.renderSearchCategory("Artists")}
+            {artists.map(file => this.renderFile(file))}
+            {remainingArtists > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("artist")}
+              >
+                {`${remainingArtists}`} more results...
+              </div>
+            )}
+            <div style={{ marginTop: 20 }} />
+          </>
+        )}
+        {albums.length > 0 && (
+          <>
+            {this.renderSearchCategory("Albums")}
+            {albums.map(file => this.renderFile(file))}
+            {remainingAlbums > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("album")}
+              >
+                {`${remainingAlbums}`} more results...
+              </div>
+            )}
+            <div style={{ marginTop: 20 }} />
+          </>
+        )}
+        {tracks.length > 0 && (
+          <>
+            {this.renderSearchCategory("Tracks")}
+            {tracks.map(file => this.renderFile(file))}
+            {remainingTracks > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("track")}
+              >
+                {`${remainingTracks}`} more results...
+              </div>
+            )}
+            <div style={{ marginTop: 10 }} />
+          </>
+        )}
+      </div>
+    );
+  }
+
   renderSearchCategory(text: string) {
     return (
       <div style={styles.searchCategory}>
@@ -116,51 +181,8 @@ class ContentWindow extends React.Component<Props> {
 
     const { files } = this.props;
     if (!files) return;
-
-    const artists = files.filter(isArtist).map((file: ArtistFile) => file);
-    const albums = files.filter(isAlbum).map((file: AlbumFile) => file);
-    const tracks = files.filter(isTrack).map((file: TrackFile) => file);
-
     if (this.props.explorer.query) {
-      return (
-        <div
-          className="explorer-items-container"
-          onMouseDown={e => this.handleClickOutside(e)}
-          style={container}
-        >
-          {artists.length && (
-            <>
-              {this.renderSearchCategory("Artists")}
-              {artists.map(file => this.renderFile(file))}
-              <div
-                style={styles.moreButton}
-                onClick={() => this.props.setMoreSearchResults("artist")}
-              >
-                20 more results...
-              </div>
-              <div style={{ marginTop: 20 }} />
-            </>
-          )}
-
-          {albums.length && (
-            <>
-              {this.renderSearchCategory("Albums")}
-              {albums.map(file => this.renderFile(file))}
-              <div style={styles.moreButton}>20 more results...</div>
-              <div style={{ marginTop: 20 }} />
-            </>
-          )}
-
-          {tracks.length && (
-            <>
-              {this.renderSearchCategory("Tracks")}
-              {tracks.map(file => this.renderFile(file))}
-              <div style={styles.moreButton}>20 more results...</div>
-              <div style={{ marginTop: 10 }} />
-            </>
-          )}
-        </div>
-      );
+      return this.renderSearchResults();
     } else
       return (
         <div
@@ -178,7 +200,7 @@ const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (
   state: AppState,
   ownProps: OwnProps
 ) => ({
-  search: selectSearch(state, ownProps)
+  searchPagination: selectSearch(state, ownProps)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
