@@ -20,18 +20,17 @@ import {
   searchFor
 } from "../api/apiFunctions";
 import { AppState } from "../reducers";
-import explorer, {
+import {
   CLOSE_EXPLORER,
   OPEN_EXPLORER,
   SET_MORE_ITEMS,
-  SET_SEARCH_METADATA,
   UPDATE_POSITION
 } from "../reducers/explorer";
 import {
+  LOADING_PAGINATION,
   SET_SEARCH,
-  UPDATE_PAGINATION,
-  LOADING_PAGINATION
-} from "../reducers/search";
+  UPDATE_PAGINATION
+} from "../reducers/search-pagination";
 import { ACTION_TYPE } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 
@@ -246,7 +245,7 @@ export function setMoreSearchResults(type: "album" | "artist" | "track") {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const id = getActiveExplorerId(getState());
     const query = getState().explorer.byId[id].query;
-    const search = getState().search[id];
+    const search = getState().searchPagination[id];
 
     dispatch({
       type: LOADING_PAGINATION,

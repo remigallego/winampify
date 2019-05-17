@@ -13,7 +13,7 @@ import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
-import { QueryState } from "../../../reducers/search";
+import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
 import { greenSpotify } from "../../../styles/colors";
 import {

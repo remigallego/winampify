@@ -4,7 +4,7 @@ import desktop, { DesktopState } from "./desktop";
 import explorer, { ExplorerState } from "./explorer";
 import images, { ImagesState } from "./images";
 import playback, { PlaybackState } from "./playback";
-import search, { SearchState } from "./search";
+import searchPagination, { SearchPaginationState } from "./search-pagination";
 import user, { UserState } from "./user";
 import windows, { WindowsState } from "./windows";
 
@@ -16,7 +16,7 @@ export interface AppState {
   images: ImagesState;
   playback: PlaybackState;
   auth: AuthState;
-  search: SearchState;
+  searchPagination: SearchPaginationState;
 }
 
 const reducer = combineReducers<AppState>({
@@ -27,7 +27,7 @@ const reducer = combineReducers<AppState>({
   user,
   playback,
   auth,
-  search
+  searchPagination
 });
 
 export default reducer;
