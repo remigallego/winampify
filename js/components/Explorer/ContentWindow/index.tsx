@@ -6,8 +6,8 @@ import {
   getArtistFromId,
   selectFile,
   setItems,
-  unsetFocusExplorer,
-  setMoreSearchResults
+  setMoreSearchResults,
+  unsetFocusExplorer
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
@@ -19,7 +19,6 @@ import {
   AlbumFile,
   ArtistFile,
   GenericFile,
-  ImageFile,
   TrackFile
 } from "../../../types";
 import {
@@ -28,9 +27,9 @@ import {
   isImage,
   isTrack
 } from "../../../types/typecheckers";
+import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { FaEllipsisH } from "react-icons/fa";
 
 const { container } = styles;
 
@@ -50,47 +49,12 @@ interface DispatchProps {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ): void;
   setItems(uriType: ACTION_TYPE, uri: string): void;
+  setMoreSearchResults(type: string): void;
 }
 
 type Props = OwnProps & DispatchProps;
 class ContentWindow extends React.Component<Props> {
   timer: any = null;
-
-  clickHandler(id: string) {
-    this.props.selectFile(id);
-  }
-
-  renderAlbums(albums: AlbumFile[]) {
-    if (albums)
-      return albums.map((album, index) => {
-        return this.renderFile(album, `al${index}`);
-      });
-    return null;
-  }
-
-  renderTracks(tracks: TrackFile[]) {
-    if (tracks)
-      return tracks.map((track, index) => {
-        return this.renderFile(track, `tr${index}`);
-      });
-    return null;
-  }
-
-  renderArtists(artists: ArtistFile[]) {
-    if (artists)
-      return artists.map((artist, index) => {
-        return this.renderFile(artist, `ar${index}`);
-      });
-    return null;
-  }
-
-  renderImages(images: ImageFile[]) {
-    if (images)
-      return images.map((image, index) => {
-        return this.renderFile(image, `im${index}`);
-      });
-    return null;
-  }
 
   doubleClickHandler(
     file: GenericFile,
@@ -103,7 +67,7 @@ class ContentWindow extends React.Component<Props> {
     if (isImage(file)) this.props.openImage(file.metaData.url, e);
   }
 
-  renderFile(file: GenericFile, index: string) {
+  renderFile(file: GenericFile) {
     const selected = this.props.explorer.selected === file.id;
     const getExtension = (type: string) => {
       if (type === "track") return ".mp3";
@@ -112,7 +76,7 @@ class ContentWindow extends React.Component<Props> {
     };
     return (
       <ExplorerFile
-        key={index}
+        key={file.id}
         file={file}
         selected={selected}
         onClick={() => this.props.selectFile(file.id)} // was -1 for image
@@ -140,21 +104,28 @@ class ContentWindow extends React.Component<Props> {
     );
   }
 
-  renderLoadedItems() {
+  render() {
+    if (this.props.explorer.loading)
+      return <ContentLoading color={greenSpotify} />;
+
     const { files } = this.props;
     if (!files) return;
 
     const artists = files.filter(isArtist).map((file: ArtistFile) => file);
     const albums = files.filter(isAlbum).map((file: AlbumFile) => file);
     const tracks = files.filter(isTrack).map((file: TrackFile) => file);
-    const images = files.filter(isImage).map((file: ImageFile) => file);
+
     if (this.props.explorer.search) {
       return (
-        <div>
+        <div
+          className="explorer-items-container"
+          onMouseDown={e => this.handleClickOutside(e)}
+          style={container}
+        >
           {artists.length && (
             <>
               {this.renderSearchCategory("Artists")}
-              {this.renderArtists(artists)}
+              {artists.map(file => this.renderFile(file))}
               <div
                 style={styles.moreButton}
                 onClick={() => this.props.setMoreSearchResults("artist")}
@@ -168,7 +139,7 @@ class ContentWindow extends React.Component<Props> {
           {albums.length && (
             <>
               {this.renderSearchCategory("Albums")}
-              {this.renderAlbums(albums)}
+              {albums.map(file => this.renderFile(file))}
               <div style={styles.moreButton}>20 more results...</div>
               <div style={{ marginTop: 20 }} />
             </>
@@ -177,7 +148,7 @@ class ContentWindow extends React.Component<Props> {
           {tracks.length && (
             <>
               {this.renderSearchCategory("Tracks")}
-              {this.renderTracks(tracks)}
+              {tracks.map(file => this.renderFile(file))}
               <div style={styles.moreButton}>20 more results...</div>
               <div style={{ marginTop: 10 }} />
             </>
@@ -186,46 +157,14 @@ class ContentWindow extends React.Component<Props> {
       );
     } else
       return (
-        <div>
-          {this.renderArtists(artists)}
-          {this.renderAlbums(albums)}
-          {this.renderTracks(tracks)}
-          {this.renderImages(images)}
+        <div
+          className="explorer-items-container"
+          onMouseDown={e => this.handleClickOutside(e)}
+          style={container}
+        >
+          {files.map(file => this.renderFile(file))}
         </div>
       );
-  }
-
-  renderLoading() {
-    return (
-      <div
-        style={{
-          color: greenSpotify,
-          margin: "0 auto",
-          paddingTop: "100px"
-        }}
-        className="la-line-scale la-2x"
-      >
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <div
-        className="explorer-items-container"
-        onMouseDown={e => this.handleClickOutside(e)}
-        style={container}
-      >
-        {this.props.explorer.loading
-          ? this.renderLoading()
-          : this.renderLoadedItems()}
-      </div>
-    );
   }
 }
 
