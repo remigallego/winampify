@@ -55,8 +55,6 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 class ContentWindow extends React.Component<Props> {
-  timer: any = null;
-
   doubleClickHandler(
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -190,21 +188,17 @@ class ContentWindow extends React.Component<Props> {
     if (this.props.explorer.loading)
       return <ContentLoading color={greenSpotify} />;
 
-    const { files } = this.props;
-    if (!files) return;
-
-    if (this.props.explorer.query) {
-      return this.renderSearchResults();
-    } else
-      return (
-        <div
-          className="explorer-items-container"
-          onMouseDown={e => this.handleClickOutside(e)}
-          style={container}
-        >
-          {files.map(file => this.renderFile(file))}
-        </div>
-      );
+    if (!this.props.files) return null;
+    if (this.props.explorer.query) return this.renderSearchResults();
+    return (
+      <div
+        className="explorer-items-container"
+        onMouseDown={e => this.handleClickOutside(e)}
+        style={container}
+      >
+        {this.props.files.map(file => this.renderFile(file))}
+      </div>
+    );
   }
 }
 

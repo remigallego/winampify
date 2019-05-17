@@ -32,6 +32,7 @@ const initialState = {};
 export const SET_SEARCH = "SET_SEARCH";
 export const UPDATE_PAGINATION = "UPDATE_PAGINATION";
 export const LOADING_PAGINATION = "LOADING_PAGINATION";
+
 const searchPagination = (
   state: SearchPaginationState = initialState,
   action: SearchPaginationActionTypes
