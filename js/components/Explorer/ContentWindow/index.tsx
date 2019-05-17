@@ -1,5 +1,6 @@
 import React from "react";
 import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { BeatLoader } from "react-spinners";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
@@ -15,14 +16,8 @@ import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
-import { greenSpotify } from "../../../styles/colors";
-import {
-  ACTION_TYPE,
-  AlbumFile,
-  ArtistFile,
-  GenericFile,
-  TrackFile
-} from "../../../types";
+import { blueTitleBar, greenSpotify } from "../../../styles/colors";
+import { ACTION_TYPE, GenericFile, TrackFile } from "../../../types";
 import {
   isAlbum,
   isArtist,
@@ -102,15 +97,18 @@ class ContentWindow extends React.Component<Props> {
   }
 
   renderSearchResults() {
+    const { searchPagination } = this.props;
+
     const artists = this.props.files.filter(isArtist);
     const albums = this.props.files.filter(isAlbum);
     const tracks = this.props.files.filter(isTrack);
-
-    const { searchPagination: pagination } = this.props;
     const remainingArtists =
-      pagination.artist.total - pagination.artist.current;
-    const remainingAlbums = pagination.album.total - pagination.album.current;
-    const remainingTracks = pagination.track.total - pagination.track.current;
+      searchPagination.artist.total - searchPagination.artist.current;
+    const remainingAlbums =
+      searchPagination.album.total - searchPagination.album.current;
+    const remainingTracks =
+      searchPagination.track.total - searchPagination.track.current;
+
     return (
       <div
         className="explorer-items-container"
@@ -119,14 +117,19 @@ class ContentWindow extends React.Component<Props> {
       >
         {artists.length > 0 && (
           <>
-            {this.renderSearchCategory("Artists")}
+            {this.renderCategoryHeader("Artists")}
             {artists.map(file => this.renderFile(file))}
+
             {remainingArtists > 0 && (
               <div
                 style={styles.moreButton}
                 onClick={() => this.props.setMoreSearchResults("artist")}
               >
-                {`${remainingArtists}`} more results...
+                {searchPagination.artist.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingArtists} more results...`
+                )}
               </div>
             )}
             <div style={{ marginTop: 20 }} />
@@ -134,14 +137,18 @@ class ContentWindow extends React.Component<Props> {
         )}
         {albums.length > 0 && (
           <>
-            {this.renderSearchCategory("Albums")}
+            {this.renderCategoryHeader("Albums")}
             {albums.map(file => this.renderFile(file))}
             {remainingAlbums > 0 && (
               <div
                 style={styles.moreButton}
                 onClick={() => this.props.setMoreSearchResults("album")}
               >
-                {`${remainingAlbums}`} more results...
+                {searchPagination.album.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingAlbums} more results...`
+                )}
               </div>
             )}
             <div style={{ marginTop: 20 }} />
@@ -149,14 +156,18 @@ class ContentWindow extends React.Component<Props> {
         )}
         {tracks.length > 0 && (
           <>
-            {this.renderSearchCategory("Tracks")}
+            {this.renderCategoryHeader("Tracks")}
             {tracks.map(file => this.renderFile(file))}
             {remainingTracks > 0 && (
               <div
                 style={styles.moreButton}
                 onClick={() => this.props.setMoreSearchResults("track")}
               >
-                {`${remainingTracks}`} more results...
+                {searchPagination.track.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingTracks} more results...`
+                )}
               </div>
             )}
             <div style={{ marginTop: 10 }} />
@@ -166,7 +177,7 @@ class ContentWindow extends React.Component<Props> {
     );
   }
 
-  renderSearchCategory(text: string) {
+  renderCategoryHeader(text: string) {
     return (
       <div style={styles.searchCategory}>
         {text}
@@ -181,6 +192,7 @@ class ContentWindow extends React.Component<Props> {
 
     const { files } = this.props;
     if (!files) return;
+
     if (this.props.explorer.query) {
       return this.renderSearchResults();
     } else

@@ -63,3 +63,5 @@ export type ActionFile = File<ActionData>;
 export interface StyleCollection {
   [val: string]: React.CSSProperties | undefined;
 }
+
+export type SEARCH_CATEGORY = "album" | "artist" | "track";

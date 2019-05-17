@@ -266,7 +266,6 @@ export function setMoreSearchResults(type: "album" | "artist" | "track") {
       type: UPDATE_PAGINATION,
       payload: {
         id,
-        query,
         type,
         current: search[type].current + files.length
       }
