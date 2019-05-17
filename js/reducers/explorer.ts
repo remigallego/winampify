@@ -1,34 +1,19 @@
 import uuidv1 from "uuid/v1";
 import {
-  SET_SELECTED_EXPLORER,
-  SET_EXPLORER_METADATA,
-  UNSET_FOCUS_EXPLORER,
-  SET_ITEMS,
   GO_PREVIOUS_STATE,
+  LOADING,
   SAVE_PREVIOUS_STATE,
-  LOADING
+  SET_EXPLORER_METADATA,
+  SET_ITEMS,
+  SET_SELECTED_EXPLORER,
+  UNSET_FOCUS_EXPLORER
 } from "../actionTypes";
 import { GenericFile } from "../types";
-
-interface SearchMetadata {
-  query: string;
-  pagination: {
-    album: number;
-    artist: number;
-    track: number;
-  };
-  predictions: {
-    album: number;
-    artist: number;
-    track: number;
-  };
-}
 
 export interface SingleExplorerState {
   id: string;
   selected: any;
-  search: boolean;
-  searchMetadata: SearchMetadata;
+  query: string;
   title: any;
   image: any;
   previousStates: any[];
@@ -56,20 +41,7 @@ const initialStateExplorer: SingleExplorerState = {
   previousStates: [],
 
   // search
-  search: false,
-  searchMetadata: {
-    query: "",
-    pagination: {
-      album: 0,
-      artist: 0,
-      track: 0
-    },
-    predictions: {
-      album: 0,
-      artist: 0,
-      track: 0
-    }
-  },
+  query: null,
 
   // items
   files: [],
@@ -196,21 +168,6 @@ const setExplorerMetadata = (state: ExplorerState, payload: any) => {
     }
   };
 };
-const setSearchMetadata = (state: ExplorerState, payload: any) => {
-  return {
-    ...state,
-    byId: {
-      ...state.byId,
-      [payload.id]: {
-        ...state.byId[payload.id],
-        searchMetadata: {
-          ...state.byId[payload.id].searchMetadata,
-          ...payload.searchMetadata
-        }
-      }
-    }
-  };
-};
 
 const savePreviousState = (state: ExplorerState, payload: { id: string }) => {
   return {
@@ -300,8 +257,6 @@ const explorer = (state = initialState, action: any) => {
       return setMoreItems(state, action.payload);
     case SET_EXPLORER_METADATA:
       return setExplorerMetadata(state, action.payload);
-    case SET_SEARCH_METADATA:
-      return setSearchMetadata(state, action.payload);
     default:
       return state;
   }

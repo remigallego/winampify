@@ -1,5 +1,6 @@
 import React from "react";
-import { connect, MapDispatchToProps } from "react-redux";
+import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import { BeatLoader } from "react-spinners";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
@@ -13,14 +14,10 @@ import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
-import { greenSpotify } from "../../../styles/colors";
-import {
-  ACTION_TYPE,
-  AlbumFile,
-  ArtistFile,
-  GenericFile,
-  TrackFile
-} from "../../../types";
+import { QueryState } from "../../../reducers/search-pagination";
+import { selectSearch } from "../../../selectors/search";
+import { blueTitleBar, greenSpotify } from "../../../styles/colors";
+import { ACTION_TYPE, GenericFile, TrackFile } from "../../../types";
 import {
   isAlbum,
   isArtist,
@@ -39,6 +36,10 @@ interface OwnProps {
   files: GenericFile[] | null;
 }
 
+interface StateProps {
+  searchPagination: QueryState;
+}
+
 interface DispatchProps {
   selectFile(id: string): void;
   playTrack(file: TrackFile): void;
@@ -52,10 +53,8 @@ interface DispatchProps {
   setMoreSearchResults(type: string): void;
 }
 
-type Props = OwnProps & DispatchProps;
+type Props = OwnProps & StateProps & DispatchProps;
 class ContentWindow extends React.Component<Props> {
-  timer: any = null;
-
   doubleClickHandler(
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -95,7 +94,88 @@ class ContentWindow extends React.Component<Props> {
     }
   }
 
-  renderSearchCategory(text: string) {
+  renderSearchResults() {
+    const { searchPagination } = this.props;
+
+    const artists = this.props.files.filter(isArtist);
+    const albums = this.props.files.filter(isAlbum);
+    const tracks = this.props.files.filter(isTrack);
+    const remainingArtists =
+      searchPagination.artist.total - searchPagination.artist.current;
+    const remainingAlbums =
+      searchPagination.album.total - searchPagination.album.current;
+    const remainingTracks =
+      searchPagination.track.total - searchPagination.track.current;
+
+    return (
+      <div
+        className="explorer-items-container"
+        onMouseDown={e => this.handleClickOutside(e)}
+        style={container}
+      >
+        {artists.length > 0 && (
+          <>
+            {this.renderCategoryHeader("Artists")}
+            {artists.map(file => this.renderFile(file))}
+
+            {remainingArtists > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("artist")}
+              >
+                {searchPagination.artist.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingArtists} more results...`
+                )}
+              </div>
+            )}
+            <div style={{ marginTop: 20 }} />
+          </>
+        )}
+        {albums.length > 0 && (
+          <>
+            {this.renderCategoryHeader("Albums")}
+            {albums.map(file => this.renderFile(file))}
+            {remainingAlbums > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("album")}
+              >
+                {searchPagination.album.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingAlbums} more results...`
+                )}
+              </div>
+            )}
+            <div style={{ marginTop: 20 }} />
+          </>
+        )}
+        {tracks.length > 0 && (
+          <>
+            {this.renderCategoryHeader("Tracks")}
+            {tracks.map(file => this.renderFile(file))}
+            {remainingTracks > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => this.props.setMoreSearchResults("track")}
+              >
+                {searchPagination.track.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingTracks} more results...`
+                )}
+              </div>
+            )}
+            <div style={{ marginTop: 10 }} />
+          </>
+        )}
+      </div>
+    );
+  }
+
+  renderCategoryHeader(text: string) {
     return (
       <div style={styles.searchCategory}>
         {text}
@@ -108,65 +188,26 @@ class ContentWindow extends React.Component<Props> {
     if (this.props.explorer.loading)
       return <ContentLoading color={greenSpotify} />;
 
-    const { files } = this.props;
-    if (!files) return;
-
-    const artists = files.filter(isArtist).map((file: ArtistFile) => file);
-    const albums = files.filter(isAlbum).map((file: AlbumFile) => file);
-    const tracks = files.filter(isTrack).map((file: TrackFile) => file);
-
-    if (this.props.explorer.search) {
-      return (
-        <div
-          className="explorer-items-container"
-          onMouseDown={e => this.handleClickOutside(e)}
-          style={container}
-        >
-          {artists.length && (
-            <>
-              {this.renderSearchCategory("Artists")}
-              {artists.map(file => this.renderFile(file))}
-              <div
-                style={styles.moreButton}
-                onClick={() => this.props.setMoreSearchResults("artist")}
-              >
-                20 more results...
-              </div>
-              <div style={{ marginTop: 20 }} />
-            </>
-          )}
-
-          {albums.length && (
-            <>
-              {this.renderSearchCategory("Albums")}
-              {albums.map(file => this.renderFile(file))}
-              <div style={styles.moreButton}>20 more results...</div>
-              <div style={{ marginTop: 20 }} />
-            </>
-          )}
-
-          {tracks.length && (
-            <>
-              {this.renderSearchCategory("Tracks")}
-              {tracks.map(file => this.renderFile(file))}
-              <div style={styles.moreButton}>20 more results...</div>
-              <div style={{ marginTop: 10 }} />
-            </>
-          )}
-        </div>
-      );
-    } else
-      return (
-        <div
-          className="explorer-items-container"
-          onMouseDown={e => this.handleClickOutside(e)}
-          style={container}
-        >
-          {files.map(file => this.renderFile(file))}
-        </div>
-      );
+    if (!this.props.files) return null;
+    if (this.props.explorer.query) return this.renderSearchResults();
+    return (
+      <div
+        className="explorer-items-container"
+        onMouseDown={e => this.handleClickOutside(e)}
+        style={container}
+      >
+        {this.props.files.map(file => this.renderFile(file))}
+      </div>
+    );
   }
 }
+
+const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (
+  state: AppState,
+  ownProps: OwnProps
+) => ({
+  searchPagination: selectSearch(state, ownProps)
+});
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
   dispatch: ThunkDispatch<AppState, null, Action>,
@@ -196,6 +237,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ContentWindow);

@@ -1,11 +1,12 @@
 import { combineReducers } from "redux";
+import auth, { AuthState } from "./auth";
 import desktop, { DesktopState } from "./desktop";
 import explorer, { ExplorerState } from "./explorer";
-import user, { UserState } from "./user";
-import windows, { WindowsState } from "./windows";
 import images, { ImagesState } from "./images";
 import playback, { PlaybackState } from "./playback";
-import auth, { AuthState } from "./auth";
+import searchPagination, { SearchPaginationState } from "./search-pagination";
+import user, { UserState } from "./user";
+import windows, { WindowsState } from "./windows";
 
 export interface AppState {
   explorer: ExplorerState;
@@ -15,6 +16,7 @@ export interface AppState {
   images: ImagesState;
   playback: PlaybackState;
   auth: AuthState;
+  searchPagination: SearchPaginationState;
 }
 
 const reducer = combineReducers<AppState>({
@@ -24,7 +26,8 @@ const reducer = combineReducers<AppState>({
   desktop,
   user,
   playback,
-  auth
+  auth,
+  searchPagination
 });
 
 export default reducer;
