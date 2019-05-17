@@ -86,6 +86,7 @@
     "react-icons": "^3.6.1",
     "react-redux": "^5.0.6",
     "react-rnd": "^7.4.3",
+    "react-spinners": "^0.5.4",
     "redux": "^3.5.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
