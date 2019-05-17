@@ -27,7 +27,7 @@ Building softwares should stay fun. This project is mostly a sandbox for me to t
 
 ## Development
 
-`npm run build-webamp`
+`npm run build-webamp`  
 `npm run start`
 
 ## Requirements
