@@ -1,15 +1,17 @@
+// this comment tells babel to convert jsx to calls to a function called jsx instead of React.createElement
+/** @jsx jsx */
+
+import { css, jsx } from "@emotion/core";
 import _ from "lodash";
 import React from "react";
-import { Form } from "react-bootstrap";
-import { FaChevronLeft, FaSearch } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 import { connect } from "react-redux";
 import { Action, bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { goPreviousState, setSearchResults } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
-import styles from "./styles";
 import SearchInput from "./SearchInput";
-
+import styles from "./styles";
 interface OwnProps {}
 
 interface DispatchProps {
@@ -18,33 +20,41 @@ interface DispatchProps {
 }
 
 interface State {
-  query: string;
   types: string[];
 }
 
 type Props = DispatchProps & OwnProps;
 
 class Toolbar extends React.Component<Props, State> {
-  startSearch: (() => void) & _.Cancelable;
+  startSearch: ((query: string) => void) & _.Cancelable;
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      query: "",
       types: ["album", "artist", "track"]
     };
 
-    this.startSearch = _.debounce(this.search, 550);
+    this.startSearch = _.debounce((query: string) => this.search(query), 400);
   }
 
-  search() {
-    this.props.setSearchResults(this.state.query, this.state.types);
+  search(query: string) {
+    this.props.setSearchResults(query, this.state.types);
   }
 
   render() {
     return (
       <div className="explorer-toolbar" style={styles.container}>
-        <FaChevronLeft onClick={() => this.props.goPreviousState()} />
+        <FaChevronLeft
+          css={css`
+            &:hover {
+              color: rgba(0, 0, 0, 0.5);
+            }
+            &:active {
+              transform: scale(0.8);
+            }
+          `}
+          onClick={() => this.props.goPreviousState()}
+        />
         <form
           className="explorer-toolbar-searchbox"
           style={{
@@ -83,45 +93,7 @@ class Toolbar extends React.Component<Props, State> {
           />
           Artist{" "}
           */}
-          {/*
-          .input {
-	
-	// needs to be relative so the :focus span is positioned correctly
-	position:relative;
-	
-	// bigger font size for demo purposes
-	font-size: 1.5em;
-	
-	// the border gradient
-	background: linear-gradient(21deg, #10abff, #1beabd);
-	
-	// the width of the input border
-	padding: 3px;
-	
-	// we want inline fields by default
-	display: inline-block;
-	
-	// we want rounded corners no matter the size of the field
-	border-radius: 9999em;
-	
-	// style of the actual input field
-	*:not(span) {
-		position: relative;
-		display: inherit;
-		border-radius: inherit;
-		margin: 0;
-		border: none;
-		outline: none;
-		padding: 0 .325em;
-		z-index: 1; // needs to be above the :focus span
-		
-		// summon fancy shadow styles when focussed
-		&:focus + span {
-			opacity: 1;
-			transform: scale(1);
-		}
-  }
-  */}
+
           {/* <input
             name="artist"
             type="checkbox"
@@ -135,7 +107,11 @@ class Toolbar extends React.Component<Props, State> {
                 });
             }}
           />*/}
-          <SearchInput />
+          <SearchInput
+            onChange={query => {
+              if (query.length) this.startSearch(query);
+            }}
+          />
         </form>
       </div>
     );

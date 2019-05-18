@@ -7,6 +7,8 @@ import { orangeLight, redError } from "../styles/colors";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { LOADING } from "../reducers/auth";
 import Explorer from "./Explorer";
+import SearchInput from "./Explorer/Toolbar/SearchInput";
+import Toolbar from "./Explorer/Toolbar";
 
 interface Props {
   loading?: LOADING;
@@ -89,6 +91,7 @@ class LandingPage extends React.Component<Props> {
             <>
               <div style={{ marginBottom: 60 }}>
                 <img key="logo" src={Logo} />
+                <Toolbar />
                 <div className="description">
                   A fun OS-like interface to listen to, browse and interact with
                   Spotify in the browser.

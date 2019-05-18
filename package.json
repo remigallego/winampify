@@ -80,6 +80,7 @@
     "prettier": "^1.10.2",
     "qs": "^6.5.1",
     "react": "16.8.6",
+    "react-tiny-popover": "^3.4.2",
     "react-contexify": "^3.0.2",
     "react-dom": "16.8.6",
     "react-draggable": "^3.0.5",

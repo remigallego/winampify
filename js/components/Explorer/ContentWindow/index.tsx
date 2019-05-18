@@ -55,6 +55,9 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 class ContentWindow extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+  }
   doubleClickHandler(
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -89,7 +92,7 @@ class ContentWindow extends React.Component<Props> {
 
   handleClickOutside(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if ((e as any).target.className === "explorer-items-container") {
-      e.preventDefault();
+      // e.preventDefault();
       this.props.unsetFocusExplorer();
     }
   }
