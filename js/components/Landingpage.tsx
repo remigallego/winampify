@@ -2,6 +2,8 @@ import React from "react";
 import ReactGA from "react-ga";
 import { FaExclamationTriangle } from "react-icons/fa";
 import Logo from "../../images/winampifylogo.png";
+import GithubLogo from "../../images/githublogo.png";
+import TwitterLogo from "../../images/twitterlogo.png";
 import pkg from "../../package.json";
 import { LOADING } from "../reducers/auth";
 import { blueTitleBar, orangeLight, redError } from "../styles/colors";
@@ -135,7 +137,8 @@ class LandingPage extends React.Component<Props> {
                       style={{
                         marginBottom: 60,
                         display: "flex",
-                        flexDirection: "column"
+                        flexDirection: "column",
+                        alignItems: "center"
                       }}
                     >
                       <img key="logo" src={Logo} />
@@ -154,6 +157,46 @@ class LandingPage extends React.Component<Props> {
                     </div>
                     <Signin />
                     {this.renderError()}
+
+                    <div
+                      style={{
+                        margin: "0 auto",
+                        display: "inline-block",
+                        marginTop: 10
+                      }}
+                    >
+                      <img
+                        onClick={() =>
+                          window.open(
+                            "https://github.com/remigallego/Winampify",
+                            "_blank"
+                          )
+                        }
+                        src={GithubLogo}
+                        style={{
+                          height: 41,
+                          objectFit: "contain",
+                          cursor: "pointer",
+                          width: 100
+                        }}
+                      />
+                      <img
+                        onClick={() =>
+                          window.open(
+                            "https://twitter.com/remigallego",
+                            "_blank"
+                          )
+                        }
+                        src={TwitterLogo}
+                        style={{
+                          marginLeft: 10,
+                          height: 41,
+                          cursor: "pointer",
+                          width: 140,
+                          objectFit: "contain"
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
