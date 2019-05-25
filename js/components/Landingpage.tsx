@@ -4,7 +4,7 @@ import { FaExclamationTriangle } from "react-icons/fa";
 import Logo from "../../images/winampifylogo.png";
 import pkg from "../../package.json";
 import { LOADING } from "../reducers/auth";
-import { orangeLight, redError } from "../styles/colors";
+import { blueTitleBar, orangeLight, redError } from "../styles/colors";
 import TitleBar from "./Explorer/TitleBar";
 import Toolbar from "./Explorer/Toolbar";
 import Signin from "./Reusables/SigninButton";
@@ -142,7 +142,8 @@ class LandingPage extends React.Component<Props> {
                       <div
                         className="description"
                         style={{
-                          color: "black",
+                          color: blueTitleBar,
+                          fontWeight: 600,
                           fontFamily: "Open Sans",
                           fontSize: 14
                         }}
