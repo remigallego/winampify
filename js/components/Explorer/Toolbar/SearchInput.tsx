@@ -3,37 +3,19 @@
 
 import { css, jsx, keyframes } from "@emotion/core";
 import { ChangeEvent, useState } from "react";
-import { FaAccusoft, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { GiSettingsKnobs } from "react-icons/gi";
-import Popover, { ArrowContainer } from "react-tiny-popover";
+import Popover from "react-tiny-popover";
 
 import { blueTitleBar } from "../../../styles/colors";
-import FilterIcon from "../Icons/FilterIcon";
 import FilterPopover from "../FilterPopover";
-import { connect } from "react-redux";
-import { selectSearch } from "../../../selectors/search";
-import { AppState } from "../../../reducers";
-import { toggleFilterMenu } from "../../../actions/search-pagination";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
-import {
-  SearchPaginationState,
-  QueryState
-} from "../../../reducers/search-pagination";
 
 interface OwnProps {
   onChange: (text: string, e: ChangeEvent<HTMLInputElement>) => void;
   id: string;
 }
 
-interface DispatchProps {
-  toggleFilterMenu: typeof toggleFilterMenu;
-}
-interface StateProps {
-  isFilterOpen: boolean;
-}
-
-type Props = OwnProps & DispatchProps & StateProps;
+type Props = OwnProps;
 const fadeOut = keyframes`0% { opacity: 1; } 100% { opacity: 0; }`;
 const fadeIn = keyframes`0% { opacity: 0; } 100% { opacity: 1; }`;
 
@@ -63,11 +45,11 @@ const SearchInput = (props: Props) => {
         isOpen={isFilterOpen}
         position={"right"}
         windowBorderPadding={5}
-        content={props => <FilterPopover {...props} />}
+        content={(popoverProps: any) => <FilterPopover {...popoverProps} />}
         containerStyle={{
           overflow: "unset",
           minWidth: "200px",
-          "z-index": 9999,
+          zIndex: 9999,
           boxShadow:
             "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
         }}
@@ -130,17 +112,4 @@ const SearchInput = (props: Props) => {
   );
 };
 
-const mapDispatchToProps = (
-  dispatch: ThunkDispatch<AppState, null, Action>,
-  ownProps: OwnProps
-) => {
-  return {
-    toggleFilterMenu: () => {
-      dispatch(toggleFilterMenu(ownProps.id));
-    }
-  };
-};
-export default connect(
-  undefined,
-  mapDispatchToProps
-)(SearchInput);
+export default SearchInput;
