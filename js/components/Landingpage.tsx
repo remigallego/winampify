@@ -127,8 +127,8 @@ class LandingPage extends React.Component<Props> {
                   <div
                     style={{
                       padding: 30,
-                      paddingTop: 70,
-                      paddingBottom: 70,
+                      paddingTop: 30,
+                      paddingBottom: 30,
                       display: "flex",
                       flexDirection: "column"
                     }}
@@ -147,7 +147,7 @@ class LandingPage extends React.Component<Props> {
                         style={{
                           color: blueTitleBar,
                           fontWeight: 600,
-                          fontFamily: "Open Sans",
+                          fontFamily: "Doppio One",
                           fontSize: 14
                         }}
                       >
