@@ -33,9 +33,33 @@ const initialState: DesktopState = {
         type: "action",
         action: ACTION_TYPE.TOP
       }
+    },
+    my_albums: {
+      id: "my_albums",
+      title: "My albums",
+      isRenaming: false,
+      locked: true,
+      x: 20,
+      y: 220,
+      metaData: {
+        type: "action",
+        action: ACTION_TYPE.LIBRARY_ALBUMS
+      }
+    },
+    my_tracks: {
+      id: "my_tracks",
+      title: "My tracks",
+      isRenaming: false,
+      locked: true,
+      x: 20,
+      y: 300,
+      metaData: {
+        type: "action",
+        action: ACTION_TYPE.LIBRARY_TRACKS
+      }
     }
   },
-  allIds: ["recently_played", "top_artists"]
+  allIds: ["recently_played", "top_artists", "my_albums", "my_tracks"]
 };
 
 const cancelRenaming = (state: DesktopState) => {

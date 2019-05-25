@@ -68,6 +68,20 @@ class WindowsManager extends React.Component<Props, {}> {
     const Webamp: any = WebampInstance;
     const webamp = new Webamp(
       {
+        __initialWindowLayout: {
+          main: {
+            position: {
+              x: Math.floor(window.innerWidth / 2 - 125),
+              y: Math.floor(window.innerHeight / 2 - 150)
+            }
+          },
+          playlist: {
+            position: {
+              x: Math.floor(window.innerWidth / 2 - 125),
+              y: Math.floor(window.innerHeight / 2 - 150 + 116)
+            }
+          }
+        },
         handleTrackDropEvent: (e: React.DragEvent<HTMLDivElement>) => {
           if (e.dataTransfer.getData("tracks").length > 0) {
             const json = e.dataTransfer.getData("tracks");
@@ -82,7 +96,11 @@ class WindowsManager extends React.Component<Props, {}> {
       {}
     );
 
-    webamp.renderWhenReady(document.getElementById("webamp")).then();
+    webamp.renderWhenReady(document.getElementById("webamp")).then(() => {
+      const mainWindow = document.getElementById("main-window");
+      const playlistWindow = document.getElementById("playlist-window");
+    });
+
     document.addEventListener("load", e => console.log("load:", e));
     document.addEventListener(
       "mousedown",
