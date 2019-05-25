@@ -33,15 +33,28 @@ import {
 } from "../reducers/search-pagination";
 import { ACTION_TYPE } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
+import { Filter } from "./search-pagination";
 
 export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
+    const explorerId = id ? id : generateExplorerId();
     dispatch({
       type: OPEN_EXPLORER,
       payload: {
-        id: id ? id : generateExplorerId(),
+        id: explorerId,
         x: x && x - 100 > 0 ? x - 100 : 0,
         y: y && y - 100 > 0 ? y - 100 : 0
+      }
+    });
+    dispatch({
+      type: SET_SEARCH,
+      payload: {
+        id: explorerId,
+        query: "",
+        types: ["album", "track", "artist"],
+        album: {},
+        track: {},
+        artist: {}
       }
     });
   };
@@ -187,14 +200,20 @@ export function setItems(
   };
 }
 
-export function setSearchResults(query: string, types: string[]) {
+export function setSearchResults(inputQuery?: string) {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const explorerId = getActiveExplorerId(getState());
+    const query =
+      inputQuery !== undefined
+        ? inputQuery
+        : getState().searchPagination[explorerId].query;
+    if (!query) return;
+    const filter: Filter = getState().searchPagination[explorerId].filter;
 
     dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
     dispatch({ type: LOADING, id: explorerId });
 
-    const results = await searchFor(query, types, 0);
+    const results = await searchFor(query, filter.types, 0);
 
     const albums = results.find(obj => obj.albums !== undefined);
     const tracks = results.find(obj => obj.tracks !== undefined);
@@ -224,7 +243,7 @@ export function setSearchResults(query: string, types: string[]) {
       payload: {
         id: explorerId,
         query,
-        types,
+        types: filter.types,
         album: albums ? { total: albums.albums.total, current: 20 } : {},
         track: tracks ? { total: tracks.tracks.total, current: 20 } : {},
         artist: artists ? { total: artists.artists.total, current: 20 } : {}

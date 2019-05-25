@@ -34,13 +34,15 @@ const TitleBar = (props: Props) => {
         <div
           style={{
             padding: 3,
+            paddingLeft: 10,
             fontFamily: "Open Sans",
             fontSize: "16px",
             color: "white",
             fontWeight: 500,
             whiteSpace: "nowrap",
             userSelect: "none",
-            overflow: "hidden"
+            overflow: "hidden",
+            textOverflow: "ellipsis"
           }}
         >
           {props.title}

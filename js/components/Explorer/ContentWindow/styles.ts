@@ -6,7 +6,8 @@ const styles: StyleCollection = {
     overflow: "scroll",
     overflowX: "hidden",
     backgroundColor: "white",
-    width: "100%"
+    width: "100%",
+    padding: 2
   },
   resultCategories: {
     fontSize: "18px",
@@ -44,6 +45,13 @@ const styles: StyleCollection = {
     backgroundColor: "rgba(0, 0, 0, 0.2)",
     height: 1,
     width: "100%"
+  },
+  noResults: {
+    marginLeft: 20,
+    opacity: 0.7,
+    color: "grey",
+    textAlign: "center",
+    fontSize: 14
   }
 };
 

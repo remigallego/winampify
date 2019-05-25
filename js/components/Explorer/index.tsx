@@ -122,9 +122,9 @@ class ExplorerWindow extends React.Component<Props, State> {
                 this.props.closeExplorer();
               }}
             />
-            <ExplorerToolbar />
+            <ExplorerToolbar id={this.props.explorer.id} />
             <div className="explorer-mainview" style={mainView}>
-              <TreeWindow explorer={this.props.explorer} />
+              {/* <TreeWindow explorer={this.props.explorer} /> */}
               <ContentWindow
                 explorer={this.props.explorer}
                 files={this.props.explorer.files}

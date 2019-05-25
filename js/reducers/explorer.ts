@@ -193,7 +193,7 @@ const explorer = (state = initialState, action: any) => {
       const { [action.payload.id]: omit, ...byId } = state.byId;
       return {
         ...state,
-        byId: byId,
+        byId,
         allIds: state.allIds.filter(id => id !== action.payload.id)
       };
     case LOADING:

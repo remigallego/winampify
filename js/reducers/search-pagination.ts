@@ -32,6 +32,7 @@ const initialState = {};
 export const SET_SEARCH = "SET_SEARCH";
 export const UPDATE_PAGINATION = "UPDATE_PAGINATION";
 export const LOADING_PAGINATION = "LOADING_PAGINATION";
+export const UPDATE_FILTER = "UPDATE_FILTER";
 
 const searchPagination = (
   state: SearchPaginationState = initialState,
@@ -82,6 +83,16 @@ const searchPagination = (
           track: {
             ...track,
             loading: false
+          }
+        }
+      };
+    case UPDATE_FILTER:
+      return {
+        ...state,
+        [action.payload.id]: {
+          ...state[action.payload.id],
+          filter: {
+            ...action.payload.filter
           }
         }
       };

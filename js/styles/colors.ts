@@ -12,3 +12,4 @@ export const greyDark = "#808080";
 export const greenSpotify = "rgb(29, 185, 84)";
 
 export const blueTitleBar = "#0055e5";
+export const blueTitleBarDark = "#002e7c";

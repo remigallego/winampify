@@ -30,7 +30,7 @@ class ImageDialog extends React.Component<Props, State> {
     return (
       <>
         <Draggable
-          onMouseDown={e => e.preventDefault()}
+          onMouseDown={e => null /*  e.preventDefault() */}
           key={this.props.key}
           defaultPosition={{
             x: this.props.image.x - 200,

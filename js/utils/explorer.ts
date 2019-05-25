@@ -13,5 +13,9 @@ export const getActiveExplorerId = (state: AppState): string => {
     .find(windowItem => windowItem.type === WINDOW_TYPE.Explorer);
 
   if (activeExplorer) return activeExplorer.id;
-  else throw new Error("No active explorer");
+  else {
+    // tslint:disable-next-line: no-console
+    console.error("No active explorer");
+    return undefined;
+  }
 };
