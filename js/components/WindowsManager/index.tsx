@@ -105,11 +105,12 @@ class WindowsManager extends React.Component<Props, {}> {
     document.addEventListener(
       "mousedown",
       (evt: MouseEvent) => {
-        if (
-          (evt as any).path.some((el: HTMLDivElement) => el.id === "webamp")
-        ) {
+        // @ts-ignore
+        const path = evt.path || (evt.composedPath && evt.composedPath());
+
+        if (path.some((el: HTMLDivElement) => el.id === "webamp")) {
           if (!this.webampNode) {
-            const webampNode: HTMLDivElement = (evt as any).path.find(
+            const webampNode: HTMLDivElement = path.find(
               (el: HTMLDivElement) => el.id === "webamp"
             );
             this.webampNode = webampNode;
