@@ -1,17 +1,17 @@
 // this comment tells babel to convert jsx to calls to a function called jsx instead of React.createElement
 /** @jsx jsx */
-import { css, jsx, keyframes } from "@emotion/core";
-import { ChangeEvent, useState } from "react";
-import { ArrowContainer, ContentRendererArgs } from "react-tiny-popover";
-import { blueTitleBar } from "../../../styles/colors";
-import Separator from "../../Reusables/Separator";
+import { jsx } from "@emotion/core";
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { AppState } from "../../../reducers";
+import Select from "react-select";
+import { ContentRendererArgs } from "react-tiny-popover";
 import { Action, bindActionCreators } from "redux";
-import { updateFilter, Filter } from "../../../actions/search-pagination";
+import { ThunkDispatch } from "redux-thunk";
+import { Filter, updateFilter } from "../../../actions/search-pagination";
+import { AppState } from "../../../reducers";
+import { selectFilter } from "../../../selectors/search";
 import { SEARCH_CATEGORY } from "../../../types";
-import { selectSearch, selectFilter } from "../../../selectors/search";
+import { ValueType } from "react-select/lib/types";
+import { blueTitleBar } from "../../../styles/colors";
 
 interface StateProps {
   filter: Filter;
@@ -22,71 +22,68 @@ interface DispatchProps {
 }
 
 type Props = DispatchProps & ContentRendererArgs & StateProps;
+const options = [
+  { value: "artist", label: "Artists" },
+  { value: "album", label: "Albums" },
+  { value: "track", label: "Tracks" }
+];
 
 const FilterPopover = (props: Props) => {
-  const toggleType = (newType: SEARCH_CATEGORY) => {
-    if (props.filter.types.includes(newType))
-      props.updateFilter({
-        types: props.filter.types.filter(type => type !== newType)
-      });
-    else props.updateFilter({ types: [...props.filter.types, newType] });
-  };
-
   return (
-    <ArrowContainer // if you'd like an arrow, you can import the ArrowContainer!
-      position={props.position}
-      targetRect={props.targetRect}
-      popoverRect={props.popoverRect}
-      arrowColor={blueTitleBar}
-      arrowSize={10}
-      arrowStyle={{ opacity: 0.9 }}
+    <div
+      id="filter-popover" // Required for onClickOutside
+      style={{
+        backgroundColor: "white",
+        padding: 17,
+        borderRadius: 3,
+        minWidth: 200
+      }}
     >
       <div
         style={{
-          backgroundColor: blueTitleBar,
-          opacity: 0.9,
-          color: "white",
-          padding: 20
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between"
         }}
       >
-        <div style={{ display: "flex", flexDirection: "row " }}>
-          <div>Artist</div>
-          <input
-            name="artist"
-            type="checkbox"
-            checked={props.filter.types.indexOf("artist") !== -1}
-            onChange={() => toggleType("artist")}
-          />
-        </div>
-        <div style={{ display: "flex", flexDirection: "row " }}>
-          <div>Album</div>
-          <input
-            name="album"
-            type="checkbox"
-            checked={props.filter.types.indexOf("album") !== -1}
-            onChange={() => toggleType("album")}
-          />
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "row " }}>
-          <div>Track</div>
-          <input
-            name="track"
-            type="checkbox"
-            checked={props.filter.types.indexOf("track") !== -1}
-            onChange={() => toggleType("track")}
-          />
-        </div>
-        <Separator
-          color={"white"}
-          style={{ marginTop: 10, marginBottom: 10 }}
+        <Select
+          openMenuOnFocus
+          onChange={(
+            e: ValueType<{
+              value: string;
+              label: string;
+            }>
+          ) => props.updateFilter({ types: e.map((val: any) => val.value) })}
+          closeMenuOnSelect={false}
+          defaultValue={options.filter(option =>
+            props.filter.types.includes(option.value)
+          )}
+          placeholder={"Type..."}
+          isMulti
+          styles={{
+            control: style => ({
+              ...style,
+              minWidth: 200
+            }),
+            option: (styles, { data, isDisabled, isFocused, isSelected }) => ({
+              ...styles,
+              color: isFocused ? "white" : "black"
+            })
+          }}
+          theme={theme => {
+            return {
+              ...theme,
+              borderRadius: 4,
+              colors: {
+                ...theme.colors,
+                primary25: blueTitleBar
+              }
+            };
+          }}
+          options={options}
         />
-        <div>Rock</div>
-        <div>Reggae</div>
-        <div>Metal</div>
-        <div>Electro</div>
       </div>
-    </ArrowContainer>
+    </div>
   );
 };
 

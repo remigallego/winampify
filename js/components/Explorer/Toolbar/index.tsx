@@ -4,7 +4,7 @@
 import { css, jsx } from "@emotion/core";
 import _ from "lodash";
 import React from "react";
-import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronLeft, FaSpotify } from "react-icons/fa";
 import { connect } from "react-redux";
 import { Action, bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -12,7 +12,12 @@ import { goPreviousState, setSearchResults } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
 import SearchInput from "./SearchInput";
 import styles from "./styles";
-interface OwnProps {}
+import { selectSearch } from "../../../selectors/search";
+import { greenSpotify } from "../../../styles/colors";
+import { ContextMenuProvider, ContextMenu, Item } from "react-contexify";
+interface OwnProps {
+  id: string;
+}
 
 interface DispatchProps {
   setSearchResults(query: string, types: string[]): void;
@@ -24,6 +29,18 @@ interface State {
 }
 
 type Props = DispatchProps & OwnProps;
+
+const ICON_SIZE = 20;
+
+const ContextMenus = () => {
+  return (
+    <ContextMenu id="spotify-menu" style={{ zIndex: 9999 }}>
+      <Item onClick={() => null}>TODO</Item>
+      <Item onClick={() => null}>TODO</Item>
+      <Item onClick={() => null}>TODO</Item>
+    </ContextMenu>
+  );
+};
 
 class Toolbar extends React.Component<Props, State> {
   startSearch: ((query: string) => void) & _.Cancelable;
@@ -44,17 +61,36 @@ class Toolbar extends React.Component<Props, State> {
   render() {
     return (
       <div className="explorer-toolbar" style={styles.container}>
-        <FaChevronLeft
-          css={css`
-            &:hover {
-              color: rgba(0, 0, 0, 0.5);
-            }
-            &:active {
-              transform: scale(0.8);
-            }
-          `}
-          onClick={() => this.props.goPreviousState()}
-        />
+        <div style={{ flexDirection: "row", display: "flex" }}>
+          <FaChevronLeft
+            size={ICON_SIZE}
+            css={css`
+              &:hover {
+                color: rgba(0, 0, 0, 0.5);
+              }
+              &:active {
+                transform: scale(0.8);
+              }
+            `}
+            onClick={() => this.props.goPreviousState()}
+          />
+
+          <ContextMenus />
+          <ContextMenuProvider id="spotify-menu" event="onClick">
+            <FaSpotify
+              size={ICON_SIZE}
+              css={css`
+                padding-left: 10px;
+                &:hover {
+                  fill: ${greenSpotify};
+                }
+                &:active {
+                  transform: scale(0.8);
+                }
+              `}
+            />
+          </ContextMenuProvider>
+        </div>
         <form
           className="explorer-toolbar-searchbox"
           style={{
@@ -63,51 +99,8 @@ class Toolbar extends React.Component<Props, State> {
           }}
           onSubmit={e => e.preventDefault()}
         >
-          {/* Album{" "}
-          <input
-            name="album"
-            type="checkbox"
-            checked={this.state.types.indexOf("album") !== -1}
-            onChange={() => {
-              if (this.state.types.indexOf("album") === -1)
-                this.setState({ types: [...this.state.types, "album"] });
-              else
-                this.setState({
-                  types: this.state.types.filter(t => t !== "album")
-                });
-            }}
-          />
-          Track{" "}
-          <input
-            name="track"
-            type="checkbox"
-            checked={this.state.types.indexOf("track") !== -1}
-            onChange={() => {
-              if (this.state.types.indexOf("track") === -1)
-                this.setState({ types: [...this.state.types, "track"] });
-              else
-                this.setState({
-                  types: this.state.types.filter(t => t !== "track")
-                });
-            }}
-          />
-          Artist{" "}
-          */}
-
-          {/* <input
-            name="artist"
-            type="checkbox"
-            checked={this.state.types.indexOf("artist") !== -1}
-            onChange={() => {
-              if (this.state.types.indexOf("artist") === -1)
-                this.setState({ types: [...this.state.types, "artist"] });
-              else
-                this.setState({
-                  types: this.state.types.filter(t => t !== "artist")
-                });
-            }}
-          />*/}
           <SearchInput
+            id={this.props.id}
             onChange={query => {
               if (query.length) this.startSearch(query);
             }}
@@ -124,6 +117,6 @@ const mapDispatchToProps = (
   bindActionCreators({ setSearchResults, goPreviousState }, dispatch);
 
 export default connect(
-  null,
+  undefined,
   mapDispatchToProps
 )(Toolbar);

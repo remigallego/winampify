@@ -2,13 +2,16 @@ import {
   LOADING_PAGINATION,
   SET_SEARCH,
   UPDATE_PAGINATION,
-  UPDATE_FILTER
+  UPDATE_FILTER,
+  OPEN_FILTER,
+  TOGGLE_FILTER_MENU
 } from "../reducers/search-pagination";
 import { SEARCH_CATEGORY } from "../types";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../reducers";
 import { Action } from "redux";
 import { getActiveExplorerId } from "../utils/explorer";
+import { setSearchResults } from "./explorer";
 
 export interface Filter {
   types: string[];
@@ -59,5 +62,6 @@ export const updateFilter = (filter: Filter) => {
         filter
       }
     });
+    dispatch(setSearchResults());
   };
 };

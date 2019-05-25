@@ -10,27 +10,44 @@ import Popover, { ArrowContainer } from "react-tiny-popover";
 import { blueTitleBar } from "../../../styles/colors";
 import FilterIcon from "../Icons/FilterIcon";
 import FilterPopover from "../FilterPopover";
+import { connect } from "react-redux";
+import { selectSearch } from "../../../selectors/search";
+import { AppState } from "../../../reducers";
+import { toggleFilterMenu } from "../../../actions/search-pagination";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
+import {
+  SearchPaginationState,
+  QueryState
+} from "../../../reducers/search-pagination";
 
-interface Props {
+interface OwnProps {
   onChange: (text: string, e: ChangeEvent<HTMLInputElement>) => void;
+  id: string;
 }
 
+interface DispatchProps {
+  toggleFilterMenu: typeof toggleFilterMenu;
+}
+interface StateProps {
+  isFilterOpen: boolean;
+}
+
+type Props = OwnProps & DispatchProps & StateProps;
 const fadeOut = keyframes`0% { opacity: 1; } 100% { opacity: 0; }`;
 const fadeIn = keyframes`0% { opacity: 0; } 100% { opacity: 1; }`;
 
 const SearchInput = (props: Props) => {
-  let trigger = null;
   const [query, setQuery] = useState("");
+  const [isFilterOpen, toggleFilter] = useState(false);
   const [fadeAnim, setFadeAnim] = useState(
     css`
       animation: none;
     `
   );
-  const [filterEnabled, setFilter] = useState(false);
-  const [isMenuOpen, toggleMenu] = useState(false);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div key={props.id} style={{ position: "relative" }}>
       <FaSearch
         size={14}
         color={"grey"}
@@ -42,15 +59,27 @@ const SearchInput = (props: Props) => {
         `}
       />
       <Popover
-        isOpen={isMenuOpen}
-        position={"bottom"}
+        key={props.id}
+        isOpen={isFilterOpen}
+        position={"right"}
+        windowBorderPadding={5}
         content={props => <FilterPopover {...props} />}
-        containerStyle={{ "z-index": 9999 }}
-        onClickOutside={() => toggleMenu(false)} // handle
+        containerStyle={{
+          overflow: "unset",
+          minWidth: "200px",
+          "z-index": 9999,
+          boxShadow:
+            "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+        }}
+        onClickOutside={(e: React.MouseEvent<HTMLDivElement>) => {
+          if (e.path.some(node => node.id === "filter-popover")) return;
+          else toggleFilter(!isFilterOpen);
+        }} // handle
       >
         <GiSettingsKnobs
-          onClick={() => toggleMenu(!isMenuOpen)}
-          color={"black"}
+          key={props.id}
+          onClick={() => toggleFilter(!isFilterOpen)}
+          color={props.isFilterOpen ? blueTitleBar : "black"}
           size={16}
           css={css`
             position: absolute;
@@ -58,7 +87,6 @@ const SearchInput = (props: Props) => {
             top: 4px;
             width: 14px;
             height: 14px;
-            color: red;
           `}
         />
       </Popover>
@@ -102,4 +130,17 @@ const SearchInput = (props: Props) => {
   );
 };
 
-export default SearchInput;
+const mapDispatchToProps = (
+  dispatch: ThunkDispatch<AppState, null, Action>,
+  ownProps: OwnProps
+) => {
+  return {
+    toggleFilterMenu: () => {
+      dispatch(toggleFilterMenu(ownProps.id));
+    }
+  };
+};
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(SearchInput);

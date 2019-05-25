@@ -97,6 +97,10 @@ class ContentWindow extends React.Component<Props> {
     }
   }
 
+  renderNoResults() {
+    return <div style={styles.noResults}>No results found</div>;
+  }
+
   renderSearchResults() {
     const { searchPagination } = this.props;
 
@@ -116,11 +120,11 @@ class ContentWindow extends React.Component<Props> {
         onMouseDown={e => this.handleClickOutside(e)}
         style={container}
       >
-        {artists.length > 0 && (
+        {searchPagination.filter.types.includes("artist") && (
           <>
             {this.renderCategoryHeader("Artists")}
             {artists.map(file => this.renderFile(file))}
-
+            {artists.length === 0 && this.renderNoResults()}
             {remainingArtists > 0 && (
               <div
                 style={styles.moreButton}
@@ -136,10 +140,11 @@ class ContentWindow extends React.Component<Props> {
             <div style={{ marginTop: 20 }} />
           </>
         )}
-        {albums.length > 0 && (
+        {searchPagination.filter.types.includes("album") && (
           <>
             {this.renderCategoryHeader("Albums")}
             {albums.map(file => this.renderFile(file))}
+            {albums.length === 0 && this.renderNoResults()}
             {remainingAlbums > 0 && (
               <div
                 style={styles.moreButton}
@@ -155,10 +160,11 @@ class ContentWindow extends React.Component<Props> {
             <div style={{ marginTop: 20 }} />
           </>
         )}
-        {tracks.length > 0 && (
+        {searchPagination.filter.types.includes("track") && (
           <>
             {this.renderCategoryHeader("Tracks")}
             {tracks.map(file => this.renderFile(file))}
+            {tracks.length === 0 && this.renderNoResults()}
             {remainingTracks > 0 && (
               <div
                 style={styles.moreButton}
