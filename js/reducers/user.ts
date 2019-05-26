@@ -1,6 +1,6 @@
 export type UserState = SpotifyApi.UserObjectPrivate;
 
-const initialState: UserState = {
+export const initialStateUser: UserState = {
   birthdate: "",
   country: "",
   display_name: "",
@@ -22,7 +22,7 @@ const initialState: UserState = {
 
 export const SET_USER_INFOS = "SET_USER_INFOS";
 
-const user = (state: UserState = initialState, action: any) => {
+const user = (state: UserState = initialStateUser, action: any) => {
   switch (action.type) {
     case SET_USER_INFOS:
       return {

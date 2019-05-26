@@ -8,7 +8,7 @@ export interface DesktopState {
   allIds: string[];
 }
 
-const initialState: DesktopState = {
+export const initialStateDesktop: DesktopState = {
   byId: {
     recently_played: {
       id: "recently_played",
@@ -91,7 +91,7 @@ const createFile = (
   };
 };
 
-const desktop = (state: DesktopState = initialState, action: any) => {
+const desktop = (state: DesktopState = initialStateDesktop, action: any) => {
   switch (action.type) {
     case CREATE_FILE:
       return createFile(state, action.payload);

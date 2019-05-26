@@ -4,13 +4,13 @@ export interface PlaybackState {
   status: STATUS;
 }
 
-const initialState: PlaybackState = {
+export const initialStatePlayback: PlaybackState = {
   status: STATUS.STOPPED
 };
 
 export const PLAY = "PLAY";
 
-const playback = (state: PlaybackState = initialState, action: any) => {
+const playback = (state: PlaybackState = initialStatePlayback, action: any) => {
   switch (action.type) {
     case PLAY:
       return {

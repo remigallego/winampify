@@ -1,12 +1,15 @@
 import { combineReducers } from "redux";
-import auth, { AuthState } from "./auth";
-import desktop, { DesktopState } from "./desktop";
-import explorer, { ExplorerState } from "./explorer";
-import images, { ImagesState } from "./images";
-import playback, { PlaybackState } from "./playback";
-import searchPagination, { SearchPaginationState } from "./search-pagination";
-import user, { UserState } from "./user";
-import windows, { WindowsState } from "./windows";
+import auth, { AuthState, initialStateAuth } from "./auth";
+import desktop, { DesktopState, initialStateDesktop } from "./desktop";
+import explorer, { ExplorerState, initialStateExplorerState } from "./explorer";
+import images, { ImagesState, initialStateImages } from "./images";
+import playback, { initialStatePlayback, PlaybackState } from "./playback";
+import searchPagination, {
+  initialStateSearchPagination,
+  SearchPaginationState
+} from "./search-pagination";
+import user, { initialStateUser, UserState } from "./user";
+import windows, { initialStateWindows, WindowsState } from "./windows";
 
 export interface AppState {
   explorer: ExplorerState;
@@ -18,6 +21,17 @@ export interface AppState {
   auth: AuthState;
   searchPagination: SearchPaginationState;
 }
+
+export const initialStateApp: AppState = {
+  explorer: initialStateExplorerState,
+  desktop: initialStateDesktop,
+  user: initialStateUser,
+  windows: initialStateWindows,
+  images: initialStateImages,
+  playback: initialStatePlayback,
+  auth: initialStateAuth,
+  searchPagination: initialStateSearchPagination
+};
 
 const reducer = combineReducers<AppState>({
   explorer,

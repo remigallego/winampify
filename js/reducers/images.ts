@@ -9,12 +9,12 @@ export interface ImagesState {
   allIds: string[];
 }
 
-const initialState: ImagesState = {
+export const initialStateImages: ImagesState = {
   byId: {},
   allIds: []
 };
 
-const images = (state: ImagesState = initialState, action: any) => {
+const images = (state: ImagesState = initialStateImages, action: any) => {
   switch (action.type) {
     case OPEN_IMAGE:
       return openImage(state, action);

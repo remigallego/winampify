@@ -27,7 +27,7 @@ export interface SearchPaginationState {
   [explorerId: string]: QueryState;
 }
 
-const initialState = {};
+export const initialStateSearchPagination = {};
 
 export const SET_SEARCH = "SET_SEARCH";
 export const UPDATE_PAGINATION = "UPDATE_PAGINATION";
@@ -35,7 +35,7 @@ export const LOADING_PAGINATION = "LOADING_PAGINATION";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 
 const searchPagination = (
-  state: SearchPaginationState = initialState,
+  state: SearchPaginationState = initialStateSearchPagination,
   action: SearchPaginationActionTypes
 ) => {
   switch (action.type) {

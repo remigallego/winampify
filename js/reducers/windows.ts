@@ -21,11 +21,11 @@ export interface WindowsState {
   windows: Window[];
 }
 
-const initialState: WindowsState = {
+export const initialStateWindows: WindowsState = {
   windows: [{ id: "webamp", type: WINDOW_TYPE.Webamp }]
 };
 
-const windows = (state: WindowsState = initialState, action: any) => {
+const windows = (state: WindowsState = initialStateWindows, action: any) => {
   switch (action.type) {
     case OPEN_EXPLORER: {
       const { windows } = state;

@@ -54,7 +54,7 @@ const initialStateExplorer: SingleExplorerState = {
   y: 0
 };
 
-const initialState: ExplorerState = {
+export const initialStateExplorerState: ExplorerState = {
   byId: {},
   allIds: []
 };
@@ -185,7 +185,7 @@ const savePreviousState = (state: ExplorerState, payload: { id: string }) => {
   };
 };
 
-const explorer = (state = initialState, action: any) => {
+const explorer = (state = initialStateExplorerState, action: any) => {
   switch (action.type) {
     case OPEN_EXPLORER:
       return createNewExplorer(state, action.payload);

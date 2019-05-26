@@ -13,7 +13,7 @@ export interface AuthState {
   refreshToken: string;
 }
 
-const initialState: AuthState = {
+export const initialStateAuth: AuthState = {
   logged: false,
   loading: LOADING.NONE,
   error: false,
@@ -29,7 +29,7 @@ export const AUTHENTICATION = "AUTHENTICATION";
 export const AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
 export const AUTHENTICATION_FAILURE = "AUTHENTICATION_FAILURE";
 
-const auth = (state: AuthState = initialState, action: any) => {
+const auth = (state: AuthState = initialStateAuth, action: any) => {
   switch (action.type) {
     case AUTHENTICATION:
       return { ...state, loading: LOADING.LOGGING_IN, errorMessage: "" };
