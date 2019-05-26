@@ -25,7 +25,6 @@ class WindowInstance extends React.Component<Props, State> {
           position: "absolute"
         }}
         onMouseDown={(e: any) => {
-          console.log("eeeeee");
           if (e.target.id !== "disallow-on-top") this.props.setOnTop();
         }}
       >

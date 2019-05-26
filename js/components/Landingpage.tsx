@@ -1,12 +1,12 @@
 import React from "react";
 import ReactGA from "react-ga";
 import { FaExclamationTriangle } from "react-icons/fa";
-import Logo from "../../images/winampifylogo.png";
 import GithubLogo from "../../images/githublogo.png";
 import TwitterLogo from "../../images/twitterlogo.png";
+import Logo from "../../images/winampifylogo.png";
 import pkg from "../../package.json";
 import { LOADING } from "../reducers/auth";
-import { blueTitleBar, orangeLight, redError } from "../styles/colors";
+import { orangeDark, orangeLight, redError } from "../styles/colors";
 import TitleBar from "./Explorer/TitleBar";
 import Toolbar from "./Explorer/Toolbar";
 import Signin from "./Reusables/SigninButton";
@@ -145,7 +145,7 @@ class LandingPage extends React.Component<Props> {
                       <div
                         className="description"
                         style={{
-                          color: blueTitleBar,
+                          color: orangeDark,
                           fontWeight: 600,
                           fontFamily: "Doppio One",
                           fontSize: 14
@@ -192,7 +192,7 @@ class LandingPage extends React.Component<Props> {
                           marginLeft: 10,
                           height: 41,
                           cursor: "pointer",
-                          width: 140,
+                          width: 40,
                           objectFit: "contain"
                         }}
                       />
