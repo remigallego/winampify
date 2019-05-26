@@ -59,8 +59,13 @@ class Toolbar extends React.Component<Props, State> {
   }
 
   render() {
+    console.log("explorer Id", this.props.id);
     return (
-      <div className="explorer-toolbar" style={styles.container}>
+      <div
+        key={this.props.id}
+        className="explorer-toolbar"
+        style={styles.container}
+      >
         <div style={{ flexDirection: "row", display: "flex", paddingTop: 2 }}>
           <FaChevronLeft
             size={ICON_SIZE}
@@ -76,7 +81,10 @@ class Toolbar extends React.Component<Props, State> {
           />
 
           {this.props.id !== "landing-page" && (
-            <ContextMenu id="spotify-menu" style={{ zIndex: 9999 }}>
+            <ContextMenu
+              id={`spotify-menu-${this.props.id}`}
+              style={{ zIndex: 9999 }}
+            >
               <Item onClick={() => this.props.setItems(ACTION_TYPE.TOP)}>
                 Top Artists
               </Item>
@@ -106,7 +114,10 @@ class Toolbar extends React.Component<Props, State> {
               </Submenu>
             </ContextMenu>
           )}
-          <ContextMenuProvider id="spotify-menu" event="onClick">
+          <ContextMenuProvider
+            id={`spotify-menu-${this.props.id}`}
+            event="onClick"
+          >
             <FaSpotify
               size={ICON_SIZE}
               css={css`
