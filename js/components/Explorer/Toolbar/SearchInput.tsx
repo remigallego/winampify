@@ -11,7 +11,6 @@ import { blueTitleBar } from "../../../styles/colors";
 import FilterPopover from "../FilterPopover";
 
 interface OwnProps {
-  isFilterOpen: any;
   onChange: (text: string, e: ChangeEvent<HTMLInputElement>) => void;
   id: string;
 }
@@ -66,7 +65,7 @@ const SearchInput = (props: Props) => {
         <GiSettingsKnobs
           key={props.id}
           onClick={() => toggleFilter(!isFilterOpen)}
-          color={props.isFilterOpen ? blueTitleBar : "black"}
+          color={isFilterOpen ? blueTitleBar : "black"}
           size={16}
           css={css`
             position: absolute;

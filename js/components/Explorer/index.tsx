@@ -1,23 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import {
   closeExplorer,
+  goPreviousState,
   updatePosition,
-  updateSize,
-  goPreviousState
+  updateSize
 } from "../../actions/explorer";
-import styles from "./styles";
-import TreeWindow from "./TreeWindow";
-import ContentWindow from "./ContentWindow";
-import TitleBar from "./TitleBar";
-import { SingleExplorerState } from "../../reducers/explorer";
-import { Action } from "redux";
 import { AppState } from "../../reducers";
-import { ThunkDispatch } from "redux-thunk";
-import { dragHandleClassName } from "./vars";
-import ExplorerToolbar from "./Toolbar";
+import { SingleExplorerState } from "../../reducers/explorer";
 import "./animations.css";
+import ContentWindow from "./ContentWindow";
+import styles from "./styles";
+import TitleBar from "./TitleBar";
+import ExplorerToolbar from "./Toolbar";
+import TreeWindow from "./TreeWindow";
+import { dragHandleClassName } from "./vars";
 
 interface OwnProps {
   explorer: SingleExplorerState;
