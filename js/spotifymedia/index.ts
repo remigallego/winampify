@@ -1,7 +1,7 @@
-import Emitter from "./emitter";
-import Api from "../api";
 import PQueue from "p-queue";
-import { endOfTrack, beginningOfTrack, pauseTrack, resumeTrack } from "./utils";
+import Api from "../api";
+import Emitter from "./emitter";
+import { beginningOfTrack, endOfTrack, pauseTrack, resumeTrack } from "./utils";
 
 export enum STATUS {
   PLAYING,
@@ -10,120 +10,120 @@ export enum STATUS {
 }
 
 export default class SpotifyMedia {
-  _analyser: AnalyserNode;
-  _context: AudioContext;
-  _emitter: Emitter;
+  analyser: AnalyserNode;
+  context: AudioContext;
+  emitter: Emitter;
 
-  _queue: PQueue;
+  queue: PQueue;
 
-  _device_id: string;
+  deviceId: string;
+  // tslint:disable-next-line: variable-name
   _timeElapsed: number;
+  // tslint:disable-next-line: variable-name
   _timeRemaining: number;
-  _timeElapsedInterval: any;
-  _status: STATUS;
-  _player!: Spotify.SpotifyPlayer;
-  truc!: Spotify.AddListenerFn;
+  timeElapsedInterval: any;
+  status: STATUS;
+  player!: Spotify.SpotifyPlayer;
 
   constructor() {
     this.init();
 
     // @ts-ignore Typescript does not know about webkitAudioContext
-    this._context = new (window.AudioContext || window.webkitAudioContext)();
-    this._analyser = this._context.createAnalyser();
-    this._analyser.fftSize = 2048;
-    this._analyser.smoothingTimeConstant = 0.0;
-    this._emitter = new Emitter();
+    this.context = new (window.AudioContext || window.webkitAudioContext)();
+    this.analyser = this.context.createAnalyser();
+    this.analyser.fftSize = 2048;
+    this.analyser.smoothingTimeConstant = 0.0;
+    this.emitter = new Emitter();
 
-    this._status = STATUS.STOPPED;
+    this.status = STATUS.STOPPED;
 
-    this._device_id = "";
+    this.deviceId = "";
     this._timeElapsed = 0;
     this._timeRemaining = 0;
-    this._timeElapsedInterval = null;
+    this.timeElapsedInterval = null;
 
-    this._queue = new PQueue();
+    this.queue = new PQueue();
 
     this.loadFromUrl = this.loadFromUrl.bind(this);
   }
 
   init() {
-    this._player = window.player;
-    this._player.addListener(
-      "ready",
-      ({ device_id }: { device_id: string }) => {
-        this._device_id = device_id;
-        console.log("Ready with Device ID", device_id);
-      }
-    );
+    this.player = window.player;
+    this.player.addListener("ready", ({ device_id }: { device_id: string }) => {
+      this.deviceId = device_id;
+      // tslint:disable-next-line: no-console
+      console.log("Ready with Device ID", device_id);
+    });
 
-    this._player.addListener(
+    this.player.addListener(
       "not_ready",
       ({ device_id }: { device_id: string }) => {
+        // tslint:disable-next-line: no-console
         console.log("Device ID has gone offline", device_id);
       }
     );
 
-    /* 
-      The reason why we're not handling all of this in the class is in case 
-        Spotify is being controlled from an external source 
+    /*
+      The reason why we're not handling all of this in the class is in case
+        Spotify is being controlled from an external source
       */
-    this._player.addListener(
+    this.player.addListener(
       "player_state_changed",
       (state: Spotify.PlaybackState) => {
         if (beginningOfTrack(state)) {
           this._timeRemaining = Math.floor(state.duration / 1000);
-          clearInterval(this._timeElapsedInterval);
-          this._timeElapsedInterval = null;
+          clearInterval(this.timeElapsedInterval);
+          this.timeElapsedInterval = null;
           this._timeElapsed = Math.floor(0);
           this.setElapsedInterval();
-          this._emitter.trigger("playing");
-          this._emitter.trigger("timeupdate");
-          this._status = STATUS.PLAYING;
+          this.emitter.trigger("playing");
+          this.emitter.trigger("timeupdate");
+          this.status = STATUS.PLAYING;
           return;
         }
 
         if (pauseTrack(state)) {
-          clearInterval(this._timeElapsedInterval);
-          this._timeElapsedInterval = null;
+          clearInterval(this.timeElapsedInterval);
+          this.timeElapsedInterval = null;
           this._timeElapsed = Math.floor(state.position / 1000);
-          this._emitter.trigger("timeupdate");
-          this._status = STATUS.PAUSED;
+          this.emitter.trigger("timeupdate");
+          this.status = STATUS.PAUSED;
           return;
         }
 
-        if (resumeTrack(state, this._timeElapsed * 1000, this._status)) {
-          clearInterval(this._timeElapsedInterval);
-          this._timeElapsedInterval = null;
+        if (resumeTrack(state, this._timeElapsed * 1000, this.status)) {
+          clearInterval(this.timeElapsedInterval);
+          this.timeElapsedInterval = null;
           this._timeElapsed = Math.floor(state.position / 1000);
-          this._emitter.trigger("timeupdate");
+          this.emitter.trigger("timeupdate");
           this.setElapsedInterval();
-          this._status = STATUS.PLAYING;
+          this.status = STATUS.PLAYING;
           return;
         }
 
         if (endOfTrack(state)) {
-          if (this._status === STATUS.STOPPED) return;
-          this._emitter.trigger("ended");
-          this._status = STATUS.STOPPED;
+          if (this.status === STATUS.STOPPED) return;
+          this.emitter.trigger("ended");
+          this.status = STATUS.STOPPED;
           return;
         }
 
         // If all else fails, just update the position
-        clearInterval(this._timeElapsedInterval);
-        this._timeElapsedInterval = null;
+        clearInterval(this.timeElapsedInterval);
+        this.timeElapsedInterval = null;
         this._timeElapsed = Math.floor(state.position / 1000);
-        this._emitter.trigger("timeupdate");
+        this.emitter.trigger("timeupdate");
         this.setElapsedInterval();
-        this._status = STATUS.PLAYING;
+        this.status = STATUS.PLAYING;
       }
     );
-    this._player.connect();
+    this.player.connect();
   }
 
   setElapsedInterval() {
-    this._timeElapsedInterval = setInterval(() => {
+    this.timeElapsedInterval = setInterval(() => {
       this._timeElapsed = this._timeElapsed + 1;
-      this._emitter.trigger("timeupdate");
+      this.emitter.trigger("timeupdate");
     }, 1000);
   }
 
@@ -146,11 +146,11 @@ export default class SpotifyMedia {
 
   /* Actions */
   async play() {
-    if (this._player) this._player.resume().then(() => {});
+    if (this.player) this.player.resume();
   }
 
   pause() {
-    if (this._player) this._player.pause().then(() => {});
+    if (this.player) this.player.pause();
   }
 
   stop() {
@@ -161,21 +161,18 @@ export default class SpotifyMedia {
   /* Actions with arguments */
   seekToPercentComplete(percent: number) {
     const seekTime = this.duration() * (percent / 100);
-    this._player.seek(seekTime * 1000).then(() => {});
+    this.player.seek(seekTime * 1000);
   }
 
   // From 0-1
   setVolume(volume: number) {
     // Doesn't work when player not init already, find a better solution
-    if (this._player)
-      this._player.setVolume(volume / 100).then(() => {
-        console.log("Volume :", volume / 100);
-      });
+    if (this.player) this.player.setVolume(volume / 100);
   }
 
   async loadFromUrl(url: string) {
-    this._queue.add(async () =>
-      Api.put(`me/player/play?device_id=${this._device_id}`, {
+    this.queue.add(async () =>
+      Api.put(`me/player/play?device_id=${this.deviceId}`, {
         body: JSON.stringify({
           uris: [`spotify:track:${url}`]
         })
@@ -185,25 +182,40 @@ export default class SpotifyMedia {
 
   /* Listeners */
   on(event: string, callback: (...args: any[]) => void) {
-    this._emitter.on(event, callback);
+    this.emitter.on(event, callback);
   }
 
   /* All of these don't work with Spotify but are needed by Webamp */
 
   getAnalyser() {
-    return this._analyser;
+    return this.analyser;
   }
-  setPreamp(value: number) {}
 
-  setBalance(balance: number) {}
+  setPreamp(value: number) {
+    return;
+  }
 
-  setEqBand(band: any, value: number) {}
+  setBalance(balance: number) {
+    return;
+  }
 
-  disableEq() {}
+  setEqBand(band: any, value: number) {
+    return;
+  }
 
-  enableEq() {}
+  disableEq() {
+    return;
+  }
 
-  seekToTime(time: number) {}
+  enableEq() {
+    return;
+  }
 
-  dispose() {}
+  seekToTime(time: number) {
+    return;
+  }
+
+  dispose() {
+    return;
+  }
 }
