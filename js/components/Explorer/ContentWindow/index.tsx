@@ -215,7 +215,7 @@ const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (
   state: AppState,
   ownProps: OwnProps
 ) => ({
-  searchPagination: selectSearch(state, ownProps)
+  searchPagination: selectSearch(state, ownProps.explorer.id)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
