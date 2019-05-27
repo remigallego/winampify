@@ -70,9 +70,7 @@ export default class SpotifyMedia {
     this._player.addListener(
       "player_state_changed",
       (state: Spotify.PlaybackState) => {
-        console.log("player state changed: ", state);
         if (beginningOfTrack(state)) {
-          console.log("%cbeginningOfTrack", "background: #222; color: #bada55");
           this._timeRemaining = Math.floor(state.duration / 1000);
           clearInterval(this._timeElapsedInterval);
           this._timeElapsedInterval = null;
@@ -85,7 +83,6 @@ export default class SpotifyMedia {
         }
 
         if (pauseTrack(state)) {
-          console.log("%cpauseTrack", "background: #222; color: #bada55");
           clearInterval(this._timeElapsedInterval);
           this._timeElapsedInterval = null;
           this._timeElapsed = Math.floor(state.position / 1000);
@@ -95,7 +92,6 @@ export default class SpotifyMedia {
         }
 
         if (resumeTrack(state, this._timeElapsed * 1000, this._status)) {
-          console.log("%cresumeTrack", "background: #222; color: #bada55");
           clearInterval(this._timeElapsedInterval);
           this._timeElapsedInterval = null;
           this._timeElapsed = Math.floor(state.position / 1000);
@@ -106,7 +102,6 @@ export default class SpotifyMedia {
         }
 
         if (endOfTrack(state)) {
-          console.log("%cend of track", "background: #222; color: #bada55");
           if (this._status === STATUS.STOPPED) return;
           this._emitter.trigger("ended");
           this._status = STATUS.STOPPED;
@@ -114,10 +109,6 @@ export default class SpotifyMedia {
         }
 
         // If all else fails, just update the position
-        console.log(
-          "%cupdate the position ",
-          "background: #222; color: #bada55"
-        );
         clearInterval(this._timeElapsedInterval);
         this._timeElapsedInterval = null;
         this._timeElapsed = Math.floor(state.position / 1000);
@@ -126,7 +117,7 @@ export default class SpotifyMedia {
         this._status = STATUS.PLAYING;
       }
     );
-    player.connect();
+    this._player.connect();
   }
 
   setElapsedInterval() {
@@ -143,7 +134,6 @@ export default class SpotifyMedia {
 
   timeElapsed() {
     return this._timeElapsed;
-    /*   return this._source.getTimeElapsed(); */
   }
 
   timeRemaining() {
@@ -189,8 +179,6 @@ export default class SpotifyMedia {
         body: JSON.stringify({
           uris: [`spotify:track:${url}`]
         })
-      }).then(res => {
-        if (res.status === 204) Promise.resolve();
       })
     );
   }
