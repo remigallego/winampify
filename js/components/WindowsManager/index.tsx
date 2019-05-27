@@ -1,24 +1,24 @@
 import React from "react";
 import { connect } from "react-redux";
-import { WINDOW_TYPE, Window } from "../../reducers/windows";
-import ImageModal from "../ImageDialog";
-import Explorer from "../Explorer";
-import { ImageDialogType, ACTION_TYPE } from "../../types";
-import { selectImages, selectExplorers } from "../../selectors/explorer";
-import { selectWindows } from "../../selectors/windows";
-import { AppState } from "../../reducers";
-import { closeImage } from "../../actions/images";
-import { createNewExplorer, setItems } from "../../actions/explorer";
-import { setOnTop } from "../../actions/windows";
-import WindowInstance from "./WindowInstance";
 import * as WebampInstance from "../../../webamp/built/webamp.bundle";
-import SpotifyMedia from "../../spotifymedia";
+import { createNewExplorer, setItems } from "../../actions/explorer";
+import { closeImage } from "../../actions/images";
+import { setOnTop } from "../../actions/windows";
+import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
+import { Window, WINDOW_TYPE } from "../../reducers/windows";
+import { selectExplorers, selectImages } from "../../selectors/explorer";
+import { selectWindows } from "../../selectors/windows";
+import SpotifyMedia from "../../spotifymedia";
+import { ACTION_TYPE, ImageDialogType } from "../../types";
+import Explorer from "../Explorer";
+import ImageModal from "../ImageDialog";
+import WindowInstance from "./WindowInstance";
 
 interface StateProps {
-  explorers: Array<SingleExplorerState>;
-  images: Array<ImageDialogType>;
-  windows: Array<Window>;
+  explorers: SingleExplorerState[];
+  images: ImageDialogType[];
+  windows: Window[];
 }
 
 interface DispatchProps {
@@ -43,7 +43,7 @@ class WindowsManager extends React.Component<Props, {}> {
       }
       case WINDOW_TYPE.Explorer: {
         const explorer = this.props.explorers.find(
-          explorer => explorer.id === window.id
+          explorerElement => explorerElement.id === window.id
         );
         if (explorer !== undefined)
           return <Explorer key={window.id} explorer={explorer} />;
@@ -87,7 +87,10 @@ class WindowsManager extends React.Component<Props, {}> {
             const json = e.dataTransfer.getData("tracks");
             try {
               return JSON.parse(json);
-            } catch (err) {}
+            } catch (err) {
+              // tslint:disable-next-line: no-console
+              console.error(err);
+            }
           }
           return null;
         },
@@ -96,11 +99,9 @@ class WindowsManager extends React.Component<Props, {}> {
       {}
     );
 
-    webamp.renderWhenReady(document.getElementById("webamp")).then(() => {
-      const mainWindow = document.getElementById("main-window");
-      const playlistWindow = document.getElementById("playlist-window");
-    });
+    webamp.renderWhenReady(document.getElementById("webamp"));
 
+    // tslint:disable-next-line: no-console
     document.addEventListener("load", e => console.log("load:", e));
     document.addEventListener(
       "mousedown",
