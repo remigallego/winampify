@@ -12,7 +12,7 @@ import {
 } from "react-contexify";
 import { FaChevronLeft, FaSpotify } from "react-icons/fa";
 import { connect } from "react-redux";
-import { Action, bindActionCreators } from "redux";
+import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   goPreviousState,
@@ -29,7 +29,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-  setSearchResults(query: string, types: string[]): void;
+  setSearchResults(query: string): void;
   setItems(actionType: ACTION_TYPE, uri?: string): void;
   goPreviousState(): void;
 }
@@ -55,7 +55,7 @@ class Toolbar extends React.Component<Props, State> {
   }
 
   search(query: string) {
-    this.props.setSearchResults(query, this.state.types);
+    this.props.setSearchResults(query);
   }
 
   render() {
@@ -156,16 +156,16 @@ class Toolbar extends React.Component<Props, State> {
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<AppState, null, Action>,
   ownProps: OwnProps
-): DispatchProps =>
-  bindActionCreators(
-    {
-      setSearchResults,
-      goPreviousState,
-      setItems: (actionType: ACTION_TYPE, uri?: string) =>
-        dispatch(setItems(actionType, uri, ownProps.id))
-    },
-    dispatch
-  );
+): DispatchProps => {
+  return {
+    // Using bindActionCreators here always generates an error in the setItems() call.
+    // Let's keep this verbose syntax instead.
+    setSearchResults: (query: string) => dispatch(setSearchResults(query)),
+    goPreviousState: () => dispatch(goPreviousState()),
+    setItems: (actionType: ACTION_TYPE, uri?: string) =>
+      dispatch(setItems(actionType, uri, ownProps.id))
+  };
+};
 
 export default connect(
   undefined,
