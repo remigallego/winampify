@@ -29,7 +29,7 @@ const logger = createLogger({});
 const persistedReducer = persistReducer(persistConfig, reducer);
 let middlewares;
 
-if (process.env.NODE_ENV !== "development") {
+if (process.env.NODE_ENV === "development") {
   middlewares = compose(applyMiddleware(thunk, logger));
 } else {
   middlewares = applyMiddleware(thunk);
