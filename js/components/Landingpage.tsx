@@ -215,7 +215,19 @@ class LandingPage extends React.Component<Props> {
             </>
           )}
         </div>
-        <div className="footer">{pkg.version} (pre-alpha)</div>
+        <div className="footer">
+          {pkg.version} -{" "}
+          <a
+            onClick={() =>
+              window.open(
+                "https://github.com/remigallego/winampify/blob/master/CHANGELOG.md",
+                "_blank"
+              )
+            }
+          >
+            CHANGELOG
+          </a>
+        </div>
       </div>
     );
   }
