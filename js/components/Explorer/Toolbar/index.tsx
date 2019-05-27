@@ -59,7 +59,6 @@ class Toolbar extends React.Component<Props, State> {
   }
 
   render() {
-    console.log("explorer Id", this.props.id);
     return (
       <div
         key={this.props.id}
@@ -118,18 +117,20 @@ class Toolbar extends React.Component<Props, State> {
             id={`spotify-menu-${this.props.id}`}
             event="onClick"
           >
-            <FaSpotify
-              size={ICON_SIZE}
-              css={css`
-                padding-left: 10px;
-                &:hover {
-                  fill: ${greenSpotify};
-                }
-                &:active {
-                  transform: scale(0.8);
-                }
-              `}
-            />
+            <>
+              <FaSpotify
+                size={ICON_SIZE}
+                css={css`
+                  padding-left: 10px;
+                  &:hover {
+                    fill: ${greenSpotify};
+                  }
+                  &:active {
+                    transform: scale(0.8);
+                  }
+                `}
+              />
+            </>
           </ContextMenuProvider>
         </div>
         <form
