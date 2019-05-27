@@ -104,6 +104,18 @@ class ContentWindow extends React.Component<Props> {
   renderSearchResults() {
     const { searchPagination } = this.props;
 
+    if (!searchPagination.filter.types.length)
+      return (
+        <div
+          className="explorer-items-container"
+          onMouseDown={e => this.handleClickOutside(e)}
+          style={container}
+        >
+          <div style={styles.noResults}>
+            Search filter is empty, please select at least one type.
+          </div>
+        </div>
+      );
     const artists = this.props.files.filter(isArtist);
     const albums = this.props.files.filter(isAlbum);
     const tracks = this.props.files.filter(isTrack);
