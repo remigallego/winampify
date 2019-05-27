@@ -49,15 +49,13 @@ class Api {
           Authorization: `Bearer ${accessToken}`
         },
         ...params
-      })
-        .then(response => response.json())
-        .then(res => {
-          if (res.error && res.error.message) {
-            alert(res.error.message);
-          } else {
-            resolve(res);
+      }).then(response => {
+        if (!response.ok) {
+          if (response.statusText) {
+            alert(response.statusText);
           }
-        });
+        } else Promise.resolve();
+      });
     });
   }
 }
