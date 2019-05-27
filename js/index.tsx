@@ -8,6 +8,9 @@ import "../css/line-scale.css";
 import Winampify from "./components";
 import store from "./store";
 
+// tslint:disable-next-line: no-console
+console.log(`ENV = ${process.env.NODE_ENV}`);
+
 export const persistor = persistStore(store);
 
 render(

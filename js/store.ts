@@ -27,11 +27,18 @@ const compose = composeWithDevTools({});
 const logger = createLogger({});
 
 const persistedReducer = persistReducer(persistConfig, reducer);
+let middlewares;
+
+if (process.env.NODE_ENV !== "development") {
+  middlewares = compose(applyMiddleware(thunk, logger));
+} else {
+  middlewares = applyMiddleware(thunk);
+}
 
 const store = createStore<AppState>(
   persistedReducer,
   initialStateApp,
-  compose(applyMiddleware(thunk, logger))
+  middlewares
 );
 
 export default store;
