@@ -1,6 +1,6 @@
 {
   "name": "winampify",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Winampify is a Web Client for Spotify using Winamp 2 skins",
   "main": "built/winampify.bundle.js",
   "scripts": {
