@@ -141,10 +141,22 @@ class LandingPage extends React.Component<Props> {
                         alignItems: "center"
                       }}
                     >
-                      <img key="logo" src={Logo} />
+                      <div
+                        style={{
+                          width: 513,
+                          height: 104
+                        }}
+                      >
+                        <img
+                          key="logo"
+                          src={Logo}
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      </div>
                       <div
                         className="description"
                         style={{
+                          marginTop: 10,
                           color: orangeDark,
                           fontWeight: 600,
                           fontFamily: "Doppio One",
