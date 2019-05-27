@@ -45,13 +45,10 @@ export const initPlayer: (
 
       window.player = player;
     };
-    // TODO: Can't fix this for now... :(
     window.onerror = msg => {
-      if (msg === "Script error.") {
-        reject({
-          message: msg
-        });
-      }
+      reject({
+        message: msg
+      });
     };
 
     loadJs([sdkpath], "sdk_ready");
