@@ -7,7 +7,8 @@ export const initPlayer: (
   return new Promise((resolve, reject) => {
     window.onSpotifyWebPlaybackSDKReady = () => {
       const logMessage = ({ message }: { message: string }) => {
-        console.error(message);
+        // tslint:disable-next-line: no-console
+        console.info(message);
       };
       const getOauthToken = () => {
         return (cb: (accessToken: string) => void) => {
