@@ -38,23 +38,16 @@ class Winampify extends React.Component<Props & DispatchProps> {
     if (!window.location.search)
       return <LandingPage errorMessage={this.props.auth.errorMessage} />;
 
-    let accessToken;
-    let refreshToken;
     const params = getParams(window.location.search);
-    if (params.length === 2) {
-      accessToken = params[0].slice(13);
-      refreshToken = params[1].slice(14);
-    }
-    // Clean URL from query params
     history.pushState(null, "", window.location.href.split("?")[0]);
 
-    if (accessToken && refreshToken) {
-      this.props.authenticate(accessToken, refreshToken);
-    } else {
-      render(<LandingPage />, document.getElementById("app"));
-      return;
-    }
+    if (params.length === 2) {
+      const accessToken = params[0].slice(13);
+      const refreshToken = params[1].slice(14);
 
+      if (accessToken && refreshToken)
+        this.props.authenticate(accessToken, refreshToken);
+    }
     return <LandingPage />;
   }
 }
