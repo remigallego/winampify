@@ -11,7 +11,15 @@ const Signin = () => {
       <div className="signin-btn-flex">
         <div
           className="signin-btn"
-          onClick={() => (window.location.href = `${server}/login`)}
+          // onClick={() => (window.location.href = `${server}/login`)}
+          onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            window.open(
+              `${server}/login`,
+              "PopupWindow",
+              `width=500,height=700,left=${e.screenX - 250},top=${e.screenY -
+                350}`
+            );
+          }}
         >
           SIGN IN WITH SPOTIFY PREMIUM
         </div>

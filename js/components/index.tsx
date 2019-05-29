@@ -20,8 +20,24 @@ interface DispatchProps {
 }
 
 class Winampify extends React.Component<Props & DispatchProps> {
+  listener: any;
   constructor(props: Props & DispatchProps) {
     super(props);
+    this.state = {
+      open: false
+    };
+    this.listener = (event: MessageEvent) => {
+      if (
+        (event.data && typeof event.data === "string") ||
+        event.data instanceof String
+      )
+        if (event.data.split(":").length === 2) {
+          const tokens = event.data.split(":");
+          window.removeEventListener("message", this.listener);
+          this.props.authenticate(tokens[0], tokens[1]);
+        }
+    };
+    window.addEventListener("message", this.listener, false);
   }
   render() {
     const { loading, logged } = this.props.auth;
@@ -38,16 +54,8 @@ class Winampify extends React.Component<Props & DispatchProps> {
     if (!window.location.search)
       return <LandingPage errorMessage={this.props.auth.errorMessage} />;
 
-    const params = getParams(window.location.search);
     history.pushState(null, "", window.location.href.split("?")[0]);
 
-    if (params.length === 2) {
-      const accessToken = params[0].slice(13);
-      const refreshToken = params[1].slice(14);
-
-      if (accessToken && refreshToken)
-        this.props.authenticate(accessToken, refreshToken);
-    }
     return <LandingPage />;
   }
 }
