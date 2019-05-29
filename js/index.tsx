@@ -6,11 +6,21 @@ import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import "../css/line-scale.css";
+import { authenticate } from "./actions/auth";
 import Winampify from "./components";
 import store from "./store";
 import { getParams } from "./utils/common";
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store, null, () => {
+  if (store.getState().auth.accessToken && store.getState().auth.refreshToken) {
+    store.dispatch(
+      authenticate(
+        store.getState().auth.accessToken,
+        store.getState().auth.refreshToken
+      )
+    );
+  }
+});
 
 Sentry.init({
   dsn: "https://6ee628e2853b493ca3872c3b9daf766d@sentry.io/1469964"

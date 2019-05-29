@@ -16,11 +16,14 @@ import { setUserInfos } from "./user";
 // Just because the loading animation is so nice :P
 const FAKE_LOADING_TIME = 1600;
 
-export const authenticate = (
+export const authenticate: any = (
   accessToken: string,
   refreshToken: string
-): ThunkAction<any, AppState, any, Action> => {
-  return (dispatch: ThunkDispatch<AppState, any, Action>) => {
+): ThunkAction<void, AppState, any, Action> => {
+  return (
+    dispatch: ThunkDispatch<AppState, any, Action>,
+    getState: () => AppState
+  ) => {
     dispatch({
       type: AUTHENTICATION
     });
@@ -32,8 +35,12 @@ export const authenticate = (
 
     Api.authenticate(accessToken)
       .then(
-        (user: any): Promise<void> => {
-          if (user.product !== "premium") {
+        (result: any): Promise<void> => {
+          if (result.error)
+            return Promise.reject({
+              message: result.error.message
+            });
+          if (result.product !== "premium") {
             return Promise.reject({
               message:
                 "<b>Oh no! You don't have a Spotify Premium account. :(</b>"
