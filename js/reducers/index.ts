@@ -11,6 +11,8 @@ import searchPagination, {
 import user, { initialStateUser, UserState } from "./user";
 import windows, { initialStateWindows, WindowsState } from "./windows";
 
+export const APPLY_SNAPSHOT = "APPLY_SNAPSHOT";
+
 export interface AppState {
   explorer: ExplorerState;
   desktop: DesktopState;

@@ -1,3 +1,5 @@
+import { APPLY_SNAPSHOT } from "./index";
+
 export enum LOADING {
   NONE,
   LOGGING_IN,

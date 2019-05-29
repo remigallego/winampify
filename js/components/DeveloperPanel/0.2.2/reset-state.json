@@ -1,0 +1,48 @@
+{
+  "explorer": { "byId": {}, "allIds": [] },
+  "images": { "byId": {}, "allIds": [] },
+  "windows": { "windows": [{ "id": "webamp", "type": 2 }] },
+  "desktop": {
+    "byId": {
+      "recently_played": {
+        "id": "recently_played",
+        "title": "Recently Played",
+        "isRenaming": false,
+        "locked": true,
+        "x": 20,
+        "y": 40,
+        "metaData": { "type": "action", "action": 4 }
+      },
+      "top_artists": {
+        "id": "top_artists",
+        "title": "Top Artists",
+        "isRenaming": false,
+        "locked": true,
+        "x": 20,
+        "y": 140,
+        "metaData": { "type": "action", "action": 2 }
+      },
+      "my_albums": {
+        "id": "my_albums",
+        "title": "My albums",
+        "isRenaming": false,
+        "locked": true,
+        "x": 20,
+        "y": 220,
+        "metaData": { "type": "action", "action": 5 }
+      },
+      "my_tracks": {
+        "id": "my_tracks",
+        "title": "My tracks",
+        "isRenaming": false,
+        "locked": true,
+        "x": 20,
+        "y": 300,
+        "metaData": { "type": "action", "action": 6 }
+      }
+    },
+    "allIds": ["recently_played", "top_artists", "my_albums", "my_tracks"]
+  },
+  "playback": { "status": 2 },
+  "searchPagination": {}
+}

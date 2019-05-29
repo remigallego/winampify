@@ -1,5 +1,6 @@
 import { CREATE_FILE, DELETE_FILE, MOVE_FILE } from "../actionTypes";
 import { ACTION_TYPE, File, GenericFile } from "../types";
+import { APPLY_SNAPSHOT } from "./index";
 
 export interface DesktopState {
   byId: {
@@ -145,6 +146,8 @@ const desktop = (state: DesktopState = initialStateDesktop, action: any) => {
       };
     case "RENAMING_CANCEL":
       return cancelRenaming(state);
+    case APPLY_SNAPSHOT:
+      return action.payload.snapshot.desktop;
     default:
       return state;
   }

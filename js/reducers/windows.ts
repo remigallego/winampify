@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
 import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
+import { APPLY_SNAPSHOT } from "./";
 
 export enum WINDOW_TYPE {
   Explorer,
@@ -92,6 +93,8 @@ const windows = (state: WindowsState = initialStateWindows, action: any) => {
           }
         }
       }; */
+    case APPLY_SNAPSHOT:
+      return { ...action.payload.snapshot.windows };
     default:
       return state;
   }
