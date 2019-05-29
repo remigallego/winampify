@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 29th May 2019
+### Added
+- Error tracking with [Sentry](sentry.io)
+- Login window opens as popup
+- Auto login upon refresh
+
+### Fixed
+- Check valid url query params
+
 ## [0.2.1] - 28th May 2019
 ### Added
 - Text on empty filter types search
