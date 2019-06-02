@@ -1,4 +1,7 @@
 import Api from ".";
+import store from "../store";
+
+const getCountry = () => store.getState().user.country;
 
 /**
  * Get an Artist
@@ -47,7 +50,7 @@ export const getAlbumData = async (id: string) => {
  */
 export const getAlbumsFromArtist = async (artistId: string) => {
   const response: SpotifyApi.ArtistsAlbumsResponse = await Api.get(
-    `artists/${artistId}/albums?include_groups=album%2Csingle`
+    `artists/${artistId}/albums?include_groups=album%2Csingle&market=${getCountry()}`
   );
   return response.items;
 };
@@ -60,7 +63,7 @@ export const getAlbumsFromArtist = async (artistId: string) => {
  */
 export const getTracksFromAlbum = async (albumId: string) => {
   const response: SpotifyApi.AlbumTracksResponse = await Api.get(
-    `albums/${albumId}/tracks`
+    `albums/${albumId}/tracks?market=${getCountry()}`
   );
   return response.items;
 };
