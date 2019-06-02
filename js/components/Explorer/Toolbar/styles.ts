@@ -1,9 +1,9 @@
-import { greyLight } from "../../../styles/colors";
+import { secondaryLight } from "../../../styles/themes";
 import { StyleCollection } from "../../../types";
 
 const styles: StyleCollection = {
   container: {
-    backgroundColor: greyLight,
+    backgroundColor: secondaryLight,
     height: "40px",
     flex: 1,
     minHeight: "40px",

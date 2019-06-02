@@ -1,10 +1,8 @@
 import React from "react";
-import { FaChevronDown, FaSignOutAlt, FaCog } from "react-icons/fa";
 import { connect } from "react-redux";
 import { logOut, wipeTokens } from "../../../actions/auth";
 import { AppState } from "../../../reducers";
 import { UserState } from "../../../reducers/user";
-import { greenSpotify } from "../../../styles/colors";
 import styles from "./styles";
 
 interface DispatchProps {
@@ -35,9 +33,9 @@ class InfosBar extends React.Component<Props, {}> {
       <img
         src={this.props.user.images[0].url}
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
+          width: 15,
+          height: 15,
+          borderRadius: 10,
           marginRight: 10
         }}
       />

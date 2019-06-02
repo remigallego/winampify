@@ -1,11 +1,12 @@
 import React from "react";
-import { blueTitleBar } from "../../../styles/colors";
+import { withTheme } from "../../../hoc/withTheme";
+import { Theme } from "../../../styles/themes";
 import CloseIcon from "../Icons/CloseIcon";
 import { dragHandleClassName } from "../vars";
-
 interface Props {
   onClose: () => void | null;
   title: string;
+  theme: Theme;
 }
 
 const TitleBar = (props: Props) => {
@@ -13,7 +14,7 @@ const TitleBar = (props: Props) => {
     <div
       className={dragHandleClassName}
       style={{
-        backgroundColor: blueTitleBar,
+        backgroundColor: props.theme.titleBar,
         background: 'linear-gradient("#026bfe", "#1a6cd0")',
         width: "auto",
         height: "auto",
@@ -53,4 +54,4 @@ const TitleBar = (props: Props) => {
   );
 };
 
-export default TitleBar;
+export default withTheme(TitleBar);

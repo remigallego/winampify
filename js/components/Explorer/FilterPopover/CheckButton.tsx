@@ -3,7 +3,7 @@
 import { css, jsx, keyframes } from "@emotion/core";
 import React from "react";
 import { FaCheck } from "react-icons/fa";
-import { blueTitleBar, blueTitleBarDark } from "../../../styles/colors";
+import { titleBar, titleDark } from "../../../styles/themes";
 
 interface Props {
   title: string;
@@ -18,14 +18,14 @@ const CheckButton = (props: Props) => {
       onClick={() => props.onClick()}
       css={css`
         display: inline-block;
-        background-color: ${blueTitleBar};
+        background-color: ${titleBar};
         color: white;
         position: relative;
         padding: 2px 7px 5px 10px;
         border-radius: 4px;
         transition: background-color 0.1s, transform 0.2s;
         &:hover {
-          background-color: ${blueTitleBarDark};
+          background-color: ${titleDark};
         }
         &:active {
           transform: scale(0.94);

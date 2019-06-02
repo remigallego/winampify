@@ -16,7 +16,7 @@ import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
-import { blueTitleBar, greenSpotify } from "../../../styles/colors";
+import { titleBar, thirdLight } from "../../../styles/themes";
 import { ACTION_TYPE, GenericFile, TrackFile } from "../../../types";
 import {
   isAlbum,
@@ -143,7 +143,7 @@ class ContentWindow extends React.Component<Props> {
                 onClick={() => this.props.setMoreSearchResults("artist")}
               >
                 {searchPagination.artist.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
+                  <BeatLoader color={titleBar} size={5} />
                 ) : (
                   `${remainingArtists} more results...`
                 )}
@@ -163,7 +163,7 @@ class ContentWindow extends React.Component<Props> {
                 onClick={() => this.props.setMoreSearchResults("album")}
               >
                 {searchPagination.album.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
+                  <BeatLoader color={titleBar} size={5} />
                 ) : (
                   `${remainingAlbums} more results...`
                 )}
@@ -183,7 +183,7 @@ class ContentWindow extends React.Component<Props> {
                 onClick={() => this.props.setMoreSearchResults("track")}
               >
                 {searchPagination.track.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
+                  <BeatLoader color={titleBar} size={5} />
                 ) : (
                   `${remainingTracks} more results...`
                 )}
@@ -207,7 +207,7 @@ class ContentWindow extends React.Component<Props> {
 
   render() {
     if (this.props.explorer.loading)
-      return <ContentLoading color={greenSpotify} />;
+      return <ContentLoading color={thirdLight} />;
 
     if (!this.props.files) return null;
     if (this.props.explorer.query) return this.renderSearchResults();

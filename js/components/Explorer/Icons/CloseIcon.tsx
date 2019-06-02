@@ -1,12 +1,6 @@
-import { FaTimes } from "react-icons/fa";
 import React from "react";
-import {
-  greyLight,
-  greyDark,
-  greyMedium,
-  redError,
-  redErrorDark
-} from "../../../styles/colors";
+import { FaTimes } from "react-icons/fa";
+import { dangerDark, dangerLight } from "../../../styles/themes";
 
 interface Props {
   onClick: () => void | null;
@@ -40,7 +34,7 @@ class CloseIcon extends React.Component<Props, State> {
           onMouseEnter={() =>
             this.setState({
               // color: greyMedium,
-              backgroundColor: redError
+              backgroundColor: dangerLight
             })
           }
           onMouseLeave={() =>
@@ -50,12 +44,12 @@ class CloseIcon extends React.Component<Props, State> {
           }
           onMouseDown={() =>
             this.setState({
-              backgroundColor: redErrorDark
+              backgroundColor: dangerDark
             })
           }
           onMouseUp={() =>
             this.setState({
-              backgroundColor: redError
+              backgroundColor: dangerLight
             })
           }
           id="disallow-on-top"

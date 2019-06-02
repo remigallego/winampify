@@ -20,12 +20,15 @@ import {
   setSearchResults
 } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
-import { blueTitleBar, greenSpotify } from "../../../styles/colors";
+import { titleBar, thirdLight, Theme } from "../../../styles/themes";
 import { ACTION_TYPE } from "../../../types";
 import SearchInput from "./SearchInput";
 import styles from "./styles";
+import { ThemeContext } from "../../..";
+import { withTheme } from "../../../hoc/withTheme";
 interface OwnProps {
   id: string;
+  theme: Theme;
 }
 
 interface DispatchProps {
@@ -59,6 +62,7 @@ class Toolbar extends React.Component<Props, State> {
   }
 
   render() {
+    const { theme } = this.props;
     return (
       <div
         key={this.props.id}
@@ -70,7 +74,7 @@ class Toolbar extends React.Component<Props, State> {
             size={ICON_SIZE}
             css={css`
               &:hover {
-                color: ${blueTitleBar};
+                color: ${titleBar};
               }
               &:active {
                 transform: scale(0.8);
@@ -123,7 +127,7 @@ class Toolbar extends React.Component<Props, State> {
                 css={css`
                   padding-left: 10px;
                   &:hover {
-                    fill: ${greenSpotify};
+                    fill: ${thirdLight};
                   }
                   &:active {
                     transform: scale(0.8);
@@ -170,4 +174,4 @@ const mapDispatchToProps = (
 export default connect(
   undefined,
   mapDispatchToProps
-)(Toolbar);
+)(withTheme(Toolbar));

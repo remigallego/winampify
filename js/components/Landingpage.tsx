@@ -6,7 +6,7 @@ import TwitterLogo from "../../images/twitterlogo.png";
 import Logo from "../../images/winampifylogo.png";
 import pkg from "../../package.json";
 import { LOADING } from "../reducers/auth";
-import { orangeDark, orangeLight, redError } from "../styles/colors";
+import { primaryDark, primaryLight, dangerLight } from "../styles/themes";
 import TitleBar from "./Explorer/TitleBar";
 import Toolbar from "./Explorer/Toolbar";
 import Signin from "./Reusables/SigninButton";
@@ -35,7 +35,7 @@ class LandingPage extends React.Component<Props> {
       >
         <div
           style={{
-            color: orangeLight
+            color: primaryLight
           }}
           className="la-line-scale la-2x"
         >
@@ -58,7 +58,7 @@ class LandingPage extends React.Component<Props> {
     return (
       <div
         style={{
-          backgroundColor: redError,
+          backgroundColor: dangerLight,
           display: "flex",
           flexDirection: "row",
           alignItems: "center",
@@ -157,7 +157,7 @@ class LandingPage extends React.Component<Props> {
                         className="description"
                         style={{
                           marginTop: 10,
-                          color: orangeDark,
+                          color: primaryDark,
                           fontWeight: 600,
                           fontFamily: "Doppio One",
                           fontSize: 14

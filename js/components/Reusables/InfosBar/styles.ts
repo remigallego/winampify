@@ -1,11 +1,11 @@
-import { greenSpotify } from "../../../styles/colors";
+import { thirdLight } from "../../../styles/themes";
 import { StyleCollection } from "../../../types";
 
 const styles: StyleCollection = {
   container: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: greenSpotify,
+    backgroundColor: thirdLight,
     borderBottomLeftRadius: 3,
     height: "auto",
     width: "auto",

@@ -4,6 +4,8 @@ import store from "../../store";
 import snapshotOne from "./0.2.2/desktop-files.json";
 import reset from "./0.2.2/reset-state.json";
 import snapshotTwo from "./0.2.2/snapshotTwo.json";
+import { THEMES } from "../../styles/themes";
+import { APPLY_THEME } from "../../reducers/settings";
 
 const DeveloperPanel = () => {
   return (
@@ -53,6 +55,26 @@ const DeveloperPanel = () => {
         }
       >
         Reset state
+      </button>
+      <button
+        onClick={() =>
+          store.dispatch({
+            type: APPLY_THEME,
+            payload: { theme: THEMES.DEFAULT }
+          })
+        }
+      >
+        Default Theme
+      </button>
+      <button
+        onClick={() =>
+          store.dispatch({
+            type: APPLY_THEME,
+            payload: { theme: THEMES.DARK }
+          })
+        }
+      >
+        Dark Theme
       </button>
     </div>
   );

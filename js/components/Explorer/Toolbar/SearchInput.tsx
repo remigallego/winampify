@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 import { GiSettingsKnobs } from "react-icons/gi";
 import Popover from "react-tiny-popover";
 
-import { blueTitleBar } from "../../../styles/colors";
+import { titleBar } from "../../../styles/themes";
 import FilterPopover from "../FilterPopover";
 
 interface OwnProps {
@@ -65,7 +65,7 @@ const SearchInput = (props: Props) => {
         <GiSettingsKnobs
           key={props.id}
           onClick={() => toggleFilter(!isFilterOpen)}
-          color={isFilterOpen ? blueTitleBar : "black"}
+          color={isFilterOpen ? titleBar : "black"}
           size={16}
           css={css`
             position: absolute;

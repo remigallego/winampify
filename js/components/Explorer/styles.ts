@@ -1,4 +1,3 @@
-import { greyLight } from "../../styles/colors";
 import { StyleCollection } from "../../types";
 
 const styles: StyleCollection = {

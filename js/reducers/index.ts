@@ -8,6 +8,7 @@ import searchPagination, {
   initialStateSearchPagination,
   SearchPaginationState
 } from "./search-pagination";
+import settings, { initialStateSettings, SettingsState } from "./settings";
 import user, { initialStateUser, UserState } from "./user";
 import windows, { initialStateWindows, WindowsState } from "./windows";
 
@@ -22,6 +23,7 @@ export interface AppState {
   playback: PlaybackState;
   auth: AuthState;
   searchPagination: SearchPaginationState;
+  settings: SettingsState;
 }
 
 export const initialStateApp: AppState = {
@@ -32,7 +34,8 @@ export const initialStateApp: AppState = {
   images: initialStateImages,
   playback: initialStatePlayback,
   auth: initialStateAuth,
-  searchPagination: initialStateSearchPagination
+  searchPagination: initialStateSearchPagination,
+  settings: initialStateSettings
 };
 
 const reducer = combineReducers<AppState>({
@@ -43,7 +46,8 @@ const reducer = combineReducers<AppState>({
   user,
   playback,
   auth,
-  searchPagination
+  searchPagination,
+  settings
 });
 
 export default reducer;
