@@ -16,7 +16,6 @@ export interface SingleExplorerState {
   selected: any;
   query: string;
   title: any;
-  image: any;
   previousStates: any[];
   loading: boolean;
   width: number;
@@ -38,7 +37,6 @@ const initialStateExplorer: SingleExplorerState = {
   selected: null,
 
   title: null,
-  image: null,
   previousStates: [],
 
   // search
