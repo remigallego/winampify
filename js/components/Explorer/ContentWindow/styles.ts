@@ -4,7 +4,6 @@ import { StyleCollection } from "../../../types";
 const styles: StyleCollection = {
   container: {
     backgroundColor: "white",
-    width: "100%",
     padding: 2
   },
   resultCategories: {
