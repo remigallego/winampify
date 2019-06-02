@@ -219,8 +219,6 @@ export function setSearchResults(inputQuery?: string) {
     const tracks = results.find(obj => obj.tracks !== undefined);
     const artists = results.find(obj => obj.artists !== undefined);
 
-    // tslint:disable-next-line: no-unused-expression
-
     const files = results
       .map(searchResponse =>
         Object.keys(searchResponse)
