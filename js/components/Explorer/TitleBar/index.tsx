@@ -4,7 +4,7 @@ import CloseIcon from "../Icons/CloseIcon";
 import { dragHandleClassName } from "../vars";
 
 interface Props {
-  onClose: () => void | null;
+  onClose?: () => void | null;
   title: string;
 }
 

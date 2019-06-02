@@ -105,11 +105,8 @@ class LandingPage extends React.Component<Props> {
                     "0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.30)"
                 }}
               >
-                <TitleBar
-                  title={`winampify.io ${pkg.version}`}
-                  onClose={() => null}
-                />
-                <Toolbar id="landing-page" />
+                <TitleBar title={`winampify.io ${pkg.version}`} />
+                {/* <Toolbar id="landing-page" /> */}
                 <div
                   className="explorer-mainview"
                   style={{

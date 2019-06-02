@@ -28,6 +28,10 @@ interface OwnProps {
   id: string;
 }
 
+interface StateProps {
+  previousStatesLength: number;
+}
+
 interface DispatchProps {
   setSearchResults(query: string): void;
   setItems(actionType: ACTION_TYPE, uri?: string): void;
@@ -38,7 +42,7 @@ interface State {
   types: string[];
 }
 
-type Props = DispatchProps & OwnProps;
+type Props = DispatchProps & OwnProps & StateProps;
 
 const ICON_SIZE = 20;
 
@@ -68,15 +72,24 @@ class Toolbar extends React.Component<Props, State> {
         <div style={{ flexDirection: "row", display: "flex", paddingTop: 2 }}>
           <FaChevronLeft
             size={ICON_SIZE}
+            color={
+              this.props.previousStatesLength > 0 ? "black" : "rgba(0,0,0,0.2)"
+            }
             css={css`
               &:hover {
                 color: ${blueTitleBar};
               }
               &:active {
-                transform: scale(0.8);
+                transform: ${this.props.previousStatesLength > 0
+                  ? "scale(0.8)"
+                  : "scale(1)"};
               }
             `}
-            onClick={() => this.props.goPreviousState()}
+            onClick={() => {
+              return this.props.previousStatesLength > 0
+                ? this.props.goPreviousState()
+                : null;
+            }}
           />
 
           {this.props.id !== "landing-page" && (
@@ -153,6 +166,10 @@ class Toolbar extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: AppState, ownprops: OwnProps) => ({
+  previousStatesLength: state.explorer.byId[ownprops.id].previousStates.length
+});
+
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<AppState, null, Action>,
   ownProps: OwnProps
@@ -168,6 +185,6 @@ const mapDispatchToProps = (
 };
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(Toolbar);
