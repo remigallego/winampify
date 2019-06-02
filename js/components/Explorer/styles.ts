@@ -29,15 +29,6 @@ const styles: StyleCollection = {
     borderRadius: "10px",
     border: "1px solid rgba(0, 0, 0, 0.2)",
     transition: "all 500ms"
-  },
-  mainView: {
-    display: "flex",
-    backgroundColor: "white",
-    height: "100%",
-    width: "100%",
-    overflow: "auto",
-    borderBottomLeftRadius: "inherit",
-    borderBottomRightRadius: "inherit"
   }
 };
 

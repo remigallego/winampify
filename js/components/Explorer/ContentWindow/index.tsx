@@ -207,7 +207,15 @@ class ContentWindow extends React.Component<Props> {
 
   render() {
     if (this.props.explorer.loading)
-      return <ContentLoading color={greenSpotify} />;
+      return (
+        <div
+          className="explorer-items-container"
+          onMouseDown={e => this.handleClickOutside(e)}
+          style={container}
+        >
+          <ContentLoading color={greenSpotify} />
+        </div>
+      );
 
     if (!this.props.files) return null;
     if (this.props.explorer.query) return this.renderSearchResults();

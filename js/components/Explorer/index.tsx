@@ -67,7 +67,7 @@ class ExplorerWindow extends React.Component<Props, State> {
   }
 
   render() {
-    const { explorerWrapper, mainView } = styles;
+    const { explorerWrapper } = styles;
 
     return (
       <div>
@@ -91,10 +91,11 @@ class ExplorerWindow extends React.Component<Props, State> {
             height: this.props.explorer.height
           }}
           position={{ x: this.props.explorer.x, y: this.props.explorer.y }}
-          minWidth={400}
-          minHeight={200}
+          minWidth={290}
+          minHeight={95}
+          maxWidth={window.innerWidth - this.props.explorer.x}
           onResizeStop={(e: any, direction: any, ref: HTMLDivElement) => {
-            if (ref.style.width && ref.style.height)
+            if (ref.style.width && ref.style.height) {
               this.props.updateSize(
                 Number(
                   ref.style.width.substring(0, ref.style.width.length - 2)
@@ -103,6 +104,7 @@ class ExplorerWindow extends React.Component<Props, State> {
                   ref.style.height.substring(0, ref.style.height.length - 2)
                 )
               );
+            }
           }}
           onDragStop={(e: MouseEvent | TouchEvent, data: DraggableData) =>
             this.onDragStop(data)
@@ -116,14 +118,22 @@ class ExplorerWindow extends React.Component<Props, State> {
           />
           <div className={`explorer-wrapper`} style={explorerWrapper}>
             <TitleBar
-              title={this.props.explorer.title}
+              title={this.props.explorer.title || "Loading..."}
               onClose={() => {
                 if (!this.props.explorer.id) return null;
                 this.props.closeExplorer();
               }}
             />
             <ExplorerToolbar id={this.props.explorer.id} />
-            <div className="explorer-mainview" style={mainView}>
+            <div
+              style={{
+                display: "flex",
+                overflow: "auto",
+                backgroundColor: "white",
+                height: "100%",
+                width: "100%"
+              }}
+            >
               {/* <TreeWindow explorer={this.props.explorer} /> */}
               <ContentWindow
                 explorer={this.props.explorer}
