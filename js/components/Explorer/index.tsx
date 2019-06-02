@@ -9,8 +9,10 @@ import {
   updatePosition,
   updateSize
 } from "../../actions/explorer";
+import { withTheme } from "../../hoc/withTheme";
 import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
+import { Theme } from "../../styles/themes";
 import "./animations.css";
 import ContentWindow from "./ContentWindow";
 import styles from "./styles";
@@ -21,6 +23,7 @@ import { dragHandleClassName } from "./vars";
 
 interface OwnProps {
   explorer: SingleExplorerState;
+  theme?: Theme;
 }
 
 interface DispatchProps {
@@ -123,7 +126,18 @@ class ExplorerWindow extends React.Component<Props, State> {
               }}
             />
             <ExplorerToolbar id={this.props.explorer.id} />
-            <div className="explorer-mainview" style={mainView}>
+            <div
+              className="explorer-mainview"
+              style={{
+                display: "flex",
+                height: "100%",
+                width: "100%",
+                overflow: "auto",
+                borderBottomLeftRadius: "inherit",
+                borderBottomRightRadius: "inherit",
+                ...this.props.theme.contentWindow
+              }}
+            >
               {/* <TreeWindow explorer={this.props.explorer} /> */}
               <ContentWindow
                 explorer={this.props.explorer}
@@ -156,4 +170,4 @@ const mapDispatchToProps = (
 export default connect(
   null,
   mapDispatchToProps
-)(ExplorerWindow);
+)(withTheme(ExplorerWindow));

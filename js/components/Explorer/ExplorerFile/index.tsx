@@ -1,4 +1,6 @@
 import React from "react";
+import { withTheme } from "../../../hoc/withTheme";
+import { Theme } from "../../../styles/themes";
 import { GenericFile } from "../../../types";
 import { isTrack } from "../../../types/typecheckers";
 import { formatToWebampMetaData } from "../../../utils/drag";
@@ -13,6 +15,7 @@ interface Props {
   selected: boolean;
   onClick: () => void;
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  theme: Theme;
 }
 
 class ExplorerFile extends React.Component<Props> {
@@ -80,7 +83,8 @@ class ExplorerFile extends React.Component<Props> {
 
     if (isTrack(this.props.file)) {
       const track = formatToWebampMetaData(this.props.file);
-      e.dataTransfer.setData("tracks", JSON.stringify([track])); // for winamp
+      backgroundColor: "white",
+        e.dataTransfer.setData("tracks", JSON.stringify([track])); // for winamp
     }
     e.dataTransfer.setData("files", JSON.stringify([this.props.file])); // for desktop
   }
@@ -88,7 +92,18 @@ class ExplorerFile extends React.Component<Props> {
     if (!this.props.file) return null;
     const { selected, onClick, onDoubleClick, children } = this.props;
 
-    let thisStyle = { ...itemStyle };
+    let thisStyle = {
+      fontFamily: "Open Sans",
+      cursor: "default",
+      userSelect: "none",
+      boxSizing: "border-box",
+      height: "23px",
+      width: "100%",
+      whiteSpace: "nowrap",
+      backgroundColor: "transparent",
+      display: "inline-block",
+      ...this.props.theme.explorerFile
+    };
     let thisClass = "explorer-item";
     const icons = [];
 
@@ -145,4 +160,4 @@ class ExplorerFile extends React.Component<Props> {
   }
 }
 
-export default ExplorerFile;
+export default withTheme(ExplorerFile);

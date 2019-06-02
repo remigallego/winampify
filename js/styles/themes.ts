@@ -1,6 +1,12 @@
 export interface Theme {
   titleBar: string;
-  [key: string]: string;
+  contentWindow: {
+    backgroundColor: string;
+  };
+  explorerFile: {
+    color: string;
+  };
+  [key: string]: string | {};
 }
 
 export enum THEMES {
@@ -10,10 +16,9 @@ export enum THEMES {
 
 export const selectTheme = (selected: THEMES) => {
   switch (selected) {
-    case THEMES.DEFAULT:
-      return defaultTheme;
     case THEMES.DARK:
       return darkTheme;
+    case THEMES.DEFAULT:
     default:
       return defaultTheme;
   }
@@ -31,8 +36,20 @@ export const titleDark = "#002e7c";
 export const titleBar = "blue";
 
 export const defaultTheme: Theme = {
-  titleBar: "#0055e5"
+  titleBar: "#0055e5",
+  contentWindow: {
+    backgroundColor: "white"
+  },
+  explorerFile: {
+    color: "black"
+  }
 };
 export const darkTheme: Theme = {
-  titleBar: "black"
+  titleBar: "black",
+  contentWindow: {
+    backgroundColor: "black"
+  },
+  explorerFile: {
+    color: "white"
+  }
 };

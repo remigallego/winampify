@@ -19,16 +19,15 @@ import {
   setItems,
   setSearchResults
 } from "../../../actions/explorer";
+import { withTheme } from "../../../hoc/withTheme";
 import { AppState } from "../../../reducers";
-import { titleBar, thirdLight, Theme } from "../../../styles/themes";
+import { Theme, thirdLight, titleBar } from "../../../styles/themes";
 import { ACTION_TYPE } from "../../../types";
 import SearchInput from "./SearchInput";
 import styles from "./styles";
-import { ThemeContext } from "../../..";
-import { withTheme } from "../../../hoc/withTheme";
 interface OwnProps {
   id: string;
-  theme: Theme;
+  theme?: Theme;
 }
 
 interface DispatchProps {
