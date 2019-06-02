@@ -12,10 +12,10 @@ Artists, albums and tracks are all rendered as files and folders and can easily 
 
 TODO:
 
-- [ ] Fix search feature
-- [ ] Error middleware
+- [x] Fix search feature
 - [x] Implement better login logic
 - [x] Hide URL params after tokens are consumed
+- [ ] Error middleware
 - [ ] Extends explorer content with track details
 - [ ] Implement popover with track details
 - [ ] Improve windows manager
