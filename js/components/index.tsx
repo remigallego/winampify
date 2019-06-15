@@ -3,7 +3,6 @@ import React from "react";
 import { render } from "react-dom";
 import { connect, Provider } from "react-redux";
 import "../../css/line-scale.css";
-import * as WebampInstance from "../../webamp/built/webamp.bundle";
 import { authenticate } from "../actions/auth";
 import { AppState } from "../reducers";
 import { AuthState, LOADING } from "../reducers/auth";
@@ -43,13 +42,6 @@ class Winampify extends React.Component<Props & DispatchProps> {
     const { loading, logged } = this.props.auth;
     if (loading !== LOADING.NONE) return <LandingPage loading={loading} />;
     if (logged) return <App />;
-
-    const Webamp: any = WebampInstance;
-    if (!Webamp.browserIsSupported()) {
-      // eslint-disable-next-line
-      alert("Oh no! Webamp does not work!");
-      throw new Error("What's the point of anything?");
-    }
 
     if (!window.location.search)
       return <LandingPage errorMessage={this.props.auth.errorMessage} />;

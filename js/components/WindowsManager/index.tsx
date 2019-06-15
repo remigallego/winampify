@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import * as WebampInstance from "../../../webamp/built/webamp.bundle";
+import * as WebampInstance from "webamp";
 import { createNewExplorer, setItems } from "../../actions/explorer";
 import { closeImage } from "../../actions/images";
 import { setOnTop } from "../../actions/windows";
