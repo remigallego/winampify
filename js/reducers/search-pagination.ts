@@ -1,5 +1,5 @@
 import { SearchPaginationActionTypes } from "../actions/search-pagination";
-import {APPLY_SNAPSHOT} from './index'
+import { APPLY_SNAPSHOT } from "./index";
 
 export interface QueryState {
   query: string;
@@ -98,7 +98,7 @@ const searchPagination = (
         }
       };
     case APPLY_SNAPSHOT:
-        return { ...action.payload.snapshot.searchPagination }
+      return { ...action.payload.snapshot.searchPagination };
     default:
       return state;
   }

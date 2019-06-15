@@ -4,15 +4,15 @@ interface Props {
   selectZoneId: string;
   onSelect: (
     e: any,
-    selectionBoxOrigin: Array<number>,
-    selectionBoxTarget: Array<number>
+    selectionBoxOrigin: number[],
+    selectionBoxTarget: number[]
   ) => void;
 }
 
 interface State {
   selectionBox: boolean;
-  selectionBoxOrigin: Array<number>;
-  selectionBoxTarget: Array<number>;
+  selectionBoxOrigin: number[];
+  selectionBoxTarget: number[];
 }
 
 export default class SelectionBox extends React.Component<Props, State> {

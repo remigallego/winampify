@@ -1,6 +1,6 @@
-import { ImageDialogType } from "../types";
 import _ from "lodash";
-import { OPEN_IMAGE, CLOSE_IMAGE } from "../actions/images";
+import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
+import { ImageDialogType } from "../types";
 
 export interface ImagesState {
   byId: {

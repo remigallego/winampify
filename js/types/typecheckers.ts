@@ -1,10 +1,10 @@
 import {
-  GenericFile,
-  TrackFile,
+  ActionFile,
   AlbumFile,
   ArtistFile,
+  GenericFile,
   ImageFile,
-  ActionFile
+  TrackFile
 } from ".";
 
 // user defined type guards

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaChevronDown, FaSignOutAlt, FaCog } from "react-icons/fa";
+import { FaChevronDown, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { connect } from "react-redux";
 import { logOut, wipeTokens } from "../../../actions/auth";
 import { AppState } from "../../../reducers";

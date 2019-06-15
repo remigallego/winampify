@@ -117,17 +117,16 @@ class ContentWindow extends React.Component<Props, State> {
       }
       if (isAlbum(item)) {
         if (item.metaData.tracks) {
-          return item.metaData.tracks.items.map(item =>
-            formattedFilesForWebamp.push(formatToWebampMetaData(item))
+          return item.metaData.tracks.items.map((trackItem: any) =>
+            formattedFilesForWebamp.push(formatToWebampMetaData(trackItem))
           );
         } else {
           const tracks = await getTracksFromAlbum(
             item.metaData.uri.split(":")[2]
           );
-          tracks.forEach(item =>
-            formattedFilesForWebamp.push(formatToWebampMetaData(item))
+          tracks.forEach(trackItem =>
+            formattedFilesForWebamp.push(formatToWebampMetaData(trackItem))
           );
-          console.log(formattedFilesForWebamp.flat());
 
           window.dataTransferObject = JSON.stringify(
             formattedFilesForWebamp.flat()
@@ -141,8 +140,8 @@ class ContentWindow extends React.Component<Props, State> {
         );
         const promises = albums.map(async album => {
           const tracks = await getTracksFromAlbum(album.uri.split(":")[2]);
-          tracks.forEach(item =>
-            formattedFilesForWebamp.push(formatToWebampMetaData(item))
+          tracks.forEach(trackItem =>
+            formattedFilesForWebamp.push(formatToWebampMetaData(trackItem))
           );
         });
         Promise.all(promises).then(() => {

@@ -19,7 +19,7 @@ const DeveloperPanel = () => {
     >
       <button
         onClick={() => {
-          console.log(JSON.stringify(store.getState()));
+          // TODO:
         }}
       >
         Print state to console

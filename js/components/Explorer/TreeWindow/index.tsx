@@ -1,18 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { createNewExplorer, setItems } from "../../../actions/explorer";
-import hearts from "../images/hearts.ico";
-import harddrive from "../images/7.ico";
-import newexplorer from "../images/319.ico";
-import recentdocuments from "../images/recentdocuments.png";
-import star from "../images/star.ico";
-import styles from "./styles";
-import { ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { createNewExplorer, setItems } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
 import { ACTION_TYPE } from "../../../types";
+import newexplorer from "../images/319.ico";
+import harddrive from "../images/7.ico";
+import hearts from "../images/hearts.ico";
+import recentdocuments from "../images/recentdocuments.png";
+import star from "../images/star.ico";
+import styles from "./styles";
 
 interface DispatchProps {
   setItems(actionType: ACTION_TYPE, uri?: string): void;

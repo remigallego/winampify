@@ -34,9 +34,9 @@ const styles: StyleCollection = {
     marginLeft: 20
     /*     backgroundColor: greenSpotify,
     background:
-      // tslint:disable-next-line: max-line-length
-      "linear-gradient(to bottom, rgba(29,185,84,0) 0%,rgba(29,185,84,0) 78%,rgba(29,185,84,1) 79%,rgba(29,185,84,1) 100%)"
- */
+      */
+    // tslint:disable-next-line: max-line-length
+    // "linear-gradient(to bottom, rgba(29,185,84,0) 0%,rgba(29,185,84,0) 78%,rgba(29,185,84,1) 79%,rgba(29,185,84,1) 100%)"
   },
   searchSeparator: {
     backgroundColor: "rgba(0, 0, 0, 0.2)",

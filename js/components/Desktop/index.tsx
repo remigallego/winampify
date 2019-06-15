@@ -5,6 +5,7 @@ import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
 import { AppState } from "../../reducers";
+import { formatToFile } from "../../reducers/explorer";
 import {
   ACTION_TYPE,
   ActionFile,
@@ -32,7 +33,6 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
-import { formatToFile } from "../../reducers/explorer";
 
 interface OwnProps {
   files: GenericFile[];

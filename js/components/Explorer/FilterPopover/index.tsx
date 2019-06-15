@@ -3,15 +3,15 @@
 import { jsx } from "@emotion/core";
 import { connect } from "react-redux";
 import Select from "react-select";
+import { ValueType } from "react-select/lib/types";
 import { ContentRendererArgs } from "react-tiny-popover";
 import { Action, bindActionCreators } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Filter, updateFilter } from "../../../actions/search-pagination";
 import { AppState } from "../../../reducers";
 import { selectFilter } from "../../../selectors/search";
-import { SEARCH_CATEGORY } from "../../../types";
-import { ValueType } from "react-select/lib/types";
 import { blueTitleBar } from "../../../styles/colors";
+import { SEARCH_CATEGORY } from "../../../types";
 
 interface StateProps {
   filter: Filter;

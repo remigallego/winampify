@@ -1,10 +1,10 @@
 import React from "react";
 import ReactGA from "react-ga";
 import Desktop from "./Desktop";
+import DeveloperPanel from "./DeveloperPanel";
 import InfosBar from "./Reusables/InfosBar";
 import SelectionBox from "./Reusables/SelectionBox";
 import WindowsManager from "./WindowsManager";
-import DeveloperPanel from "./DeveloperPanel";
 // import AudioPlayer from "./AudioPlayer";
 
 interface State {

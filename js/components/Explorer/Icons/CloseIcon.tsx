@@ -1,8 +1,8 @@
-import { FaTimes } from "react-icons/fa";
 import React from "react";
+import { FaTimes } from "react-icons/fa";
 import {
-  greyLight,
   greyDark,
+  greyLight,
   greyMedium,
   redError,
   redErrorDark

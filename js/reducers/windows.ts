@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
-import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
 import { APPLY_SNAPSHOT } from "./";
+import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
 
 export enum WINDOW_TYPE {
   Explorer,
