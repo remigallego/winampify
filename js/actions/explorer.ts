@@ -304,13 +304,13 @@ export function getArtistFromId(id: string) {
   };
 }
 
-export function selectFile(fileId: string, explorerId: string) {
+export function selectFile(fileIds: string[], explorerId: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: "SET_SELECTED_EXPLORER",
       payload: {
         id: explorerId,
-        selected: fileId
+        selectedFiles: fileIds
       }
     });
   };

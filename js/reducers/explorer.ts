@@ -13,7 +13,7 @@ import { APPLY_SNAPSHOT } from "./index";
 
 export interface SingleExplorerState {
   id: string;
-  selected: any;
+  selectedFiles: string[];
   query: string;
   title: any;
   previousStates: any[];
@@ -34,7 +34,7 @@ export interface ExplorerState {
 
 const initialStateExplorer: SingleExplorerState = {
   id: "",
-  selected: null,
+  selectedFiles: [],
 
   title: null,
   previousStates: [],
@@ -114,7 +114,7 @@ const createNewExplorer = (state: ExplorerState, payload: any) => {
   };
 };
 
-const formatToFile = (item: any) => {
+export const formatToFile = (item: any) => {
   const getFileTitle = () => {
     if (item.type === "track") {
       return `${item.artists[0].name} - ${item.name}`;
@@ -234,7 +234,7 @@ const explorer = (state = initialStateExplorerState, action: any) => {
           ...state.byId,
           [action.payload.id]: {
             ...state.byId[action.payload.id],
-            selected: action.payload.selected
+            selectedFiles: action.payload.selectedFiles
           }
         }
       };

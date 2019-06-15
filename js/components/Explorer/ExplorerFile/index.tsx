@@ -13,6 +13,7 @@ interface Props {
   selected: boolean;
   onClick: () => void;
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onDrag(e: React.DragEvent<HTMLDivElement>): void;
 }
 
 class ExplorerFile extends React.Component<Props> {
@@ -72,18 +73,6 @@ class ExplorerFile extends React.Component<Props> {
     );
   }
 
-  drag(e: any) {
-    const emptyImage = document.createElement("img");
-    emptyImage.src =
-      "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-    e.dataTransfer.setDragImage(emptyImage, 0, 0);
-
-    if (isTrack(this.props.file)) {
-      const track = formatToWebampMetaData(this.props.file);
-      e.dataTransfer.setData("tracks", JSON.stringify([track])); // for winamp
-    }
-    e.dataTransfer.setData("files", JSON.stringify([this.props.file])); // for desktop
-  }
   render() {
     if (!this.props.file) return null;
     const { selected, onClick, onDoubleClick, children } = this.props;
@@ -133,7 +122,7 @@ class ExplorerFile extends React.Component<Props> {
         style={thisStyle}
         className={thisClass}
         draggable={true}
-        onDragStart={e => this.drag(e)}
+        onDragStart={e => this.props.onDrag(e)}
         id={`file-${this.props.file.id}`}
       >
         {this.renderIcons(icons)}

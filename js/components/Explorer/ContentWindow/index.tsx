@@ -27,21 +27,29 @@ import {
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
+import { formatToWebampMetaData } from "../../../utils/drag";
+import {
+  getTracksFromAlbum,
+  getAlbumsFromArtist
+} from "../../../api/apiFunctions";
 
 const { container } = styles;
 
+interface State {
+  holdShift: boolean;
+}
 interface OwnProps {
   explorer: SingleExplorerState;
-  selected: boolean;
   files: GenericFile[] | null;
 }
 
 interface StateProps {
+  selectedFiles: string[];
   searchPagination: QueryState;
 }
 
 interface DispatchProps {
-  selectFile(id: string): void;
+  selectFile(ids: string[]): void;
   playTrack(file: TrackFile): void;
   getArtistInfo(id: string): void;
   unsetFocusExplorer(): void;
@@ -54,10 +62,23 @@ interface DispatchProps {
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
-class ContentWindow extends React.Component<Props> {
+class ContentWindow extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    this.state = {
+      holdShift: false
+    };
   }
+
+  componentDidMount() {
+    document.addEventListener("keydown", e => {
+      if (e.keyCode === 16) this.setState({ holdShift: true });
+    });
+    document.addEventListener("keyup", e => {
+      if (e.keyCode === 16) this.setState({ holdShift: false });
+    });
+  }
+
   doubleClickHandler(
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -69,8 +90,76 @@ class ContentWindow extends React.Component<Props> {
     if (isImage(file)) this.props.openImage(file.metaData.url, e);
   }
 
+  async onDrag(e: any, files: GenericFile[]) {
+    e.persist();
+
+    e.dataTransfer.setData("tracks", window.dataTransferObject);
+
+    const dataTransferObject = e.dataTransfer;
+
+    const emptyImage = document.createElement("img");
+    emptyImage.src =
+      "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    dataTransferObject.setDragImage(emptyImage, 0, 0);
+
+    const formattedFilesForWebamp: any[] = [];
+    const filesForDesktop: any[] = [];
+    files.forEach(async item => {
+      filesForDesktop.push(item);
+      if (isTrack(item)) {
+        formattedFilesForWebamp.push(formatToWebampMetaData(item.metaData));
+      }
+      if (isAlbum(item)) {
+        if (item.metaData.tracks) {
+          return item.metaData.tracks.items.map(item =>
+            formattedFilesForWebamp.push(formatToWebampMetaData(item))
+          );
+        } else {
+          const tracks = await getTracksFromAlbum(
+            item.metaData.uri.split(":")[2]
+          );
+          tracks.forEach(item =>
+            formattedFilesForWebamp.push(formatToWebampMetaData(item))
+          );
+          console.log(formattedFilesForWebamp.flat());
+
+          window.dataTransferObject = JSON.stringify(
+            formattedFilesForWebamp.flat()
+          );
+          dataTransferObject.setData("tracks", window.dataTransferObject); // for winamp
+        }
+      }
+      if (isArtist(item)) {
+        const albums = await getAlbumsFromArtist(
+          item.metaData.uri.split(":")[2]
+        );
+        const promises = albums.map(async album => {
+          const tracks = await getTracksFromAlbum(album.uri.split(":")[2]);
+          tracks.forEach(item =>
+            formattedFilesForWebamp.push(formatToWebampMetaData(item))
+          );
+        });
+        Promise.all(promises).then(() => {
+          console.log(formattedFilesForWebamp.flat());
+          window.dataTransferObject = JSON.stringify(
+            formattedFilesForWebamp.flat()
+          );
+          dataTransferObject.setData("tracks", window.dataTransferObject); // for winamp
+        });
+      }
+    });
+
+    window.dataTransferObject = JSON.stringify(formattedFilesForWebamp.flat());
+
+    e.dataTransfer.setData(
+      "tracks",
+      JSON.stringify(formattedFilesForWebamp.flat())
+    ); // for winamp
+    e.dataTransfer.setData("files", JSON.stringify(filesForDesktop)); // for desktop
+  }
+
   renderFile(file: GenericFile) {
-    const selected = this.props.explorer.selected === file.id;
+    const selected = this.props.explorer.selectedFiles.includes(file.id);
     const getExtension = (type: string) => {
       if (type === "track") return ".mp3";
       if (type === "image") return ".jpg";
@@ -81,7 +170,48 @@ class ContentWindow extends React.Component<Props> {
         key={file.id}
         file={file}
         selected={selected}
-        onClick={() => this.props.selectFile(file.id)} // was -1 for image
+        onDrag={(e: any) =>
+          this.onDrag(
+            e,
+            this.props.files.filter(item =>
+              this.props.selectedFiles.includes(item.id)
+            )
+          )
+        }
+        onClick={() => {
+          if (this.state.holdShift && this.props.selectedFiles.length === 1) {
+            const indexOfFileSelected = this.props.files.indexOf(file);
+            const indexOfFilePreviouslySelected = this.props.files.indexOf(
+              this.props.files.find(
+                item => this.props.selectedFiles[0] === item.id
+              )
+            );
+            if (indexOfFileSelected >= indexOfFilePreviouslySelected) {
+              this.props.selectFile(
+                this.props.files
+                  .filter(
+                    (omit, index) =>
+                      index >= indexOfFilePreviouslySelected &&
+                      index <= indexOfFileSelected
+                  )
+                  .map(item => item.id)
+              );
+            }
+            if (indexOfFileSelected <= indexOfFilePreviouslySelected) {
+              this.props.selectFile(
+                this.props.files
+                  .filter(
+                    (omit, index) =>
+                      index >= indexOfFileSelected &&
+                      index <= indexOfFilePreviouslySelected
+                  )
+                  .map(item => item.id)
+              );
+            }
+          } else if (this.props.selectedFiles.includes(file.id)) {
+            return;
+          } else this.props.selectFile([file.id]);
+        }} // was -1 for image
         onDoubleClick={e => this.doubleClickHandler(file, e)}
       >
         {file.title}
@@ -227,6 +357,7 @@ const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (
   state: AppState,
   ownProps: OwnProps
 ) => ({
+  selectedFiles: state.explorer.byId[ownProps.explorer.id].selectedFiles,
   searchPagination: selectSearch(state, ownProps.explorer.id)
 });
 
@@ -236,7 +367,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
 ) => {
   const { id: explorerId } = ownProps.explorer;
   return {
-    selectFile: (id: string) => {
+    selectFile: (id: string[]) => {
       dispatch(selectFile(id, explorerId));
     },
     playTrack: (file: TrackFile) => {
