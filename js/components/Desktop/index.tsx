@@ -32,6 +32,7 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
+import { formatToFile } from "../../reducers/explorer";
 
 interface OwnProps {
   files: GenericFile[];
@@ -110,12 +111,17 @@ class Desktop extends React.Component<Props, State> {
 
   onDragStart(e: React.DragEvent<HTMLDivElement>, files: GenericFile[]) {
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
+
     const tracks = files.map((file: any) => {
-      return formatToWebampMetaData(file);
+      if (isTrack(file)) return formatToWebampMetaData(file.metaData);
+      if (isAlbum(file))
+        return file.metaData.tracks.items.map(item =>
+          formatToWebampMetaData(item)
+        );
     });
 
     e.dataTransfer.setData("files", JSON.stringify(files)); // for desktop
-    e.dataTransfer.setData("tracks", JSON.stringify(tracks)); // for winamp
+    e.dataTransfer.setData("tracks", JSON.stringify(tracks.flat())); // for winamp
   }
 
   onDrop(e: React.DragEvent<HTMLElement>) {
@@ -124,12 +130,18 @@ class Desktop extends React.Component<Props, State> {
     const files = JSON.parse(e.dataTransfer.getData("files"));
 
     if (!isFileMoving) {
-      files.map((file: GenericFile) => {
+      let offsetX = 0;
+      let offsetY = 0;
+      files.map((file: GenericFile, index: number) => {
         this.props.createFile({
           ...file,
-          x: e.clientX - 50,
-          y: e.clientY - 50
+          x: e.clientX - 50 + offsetX,
+          y: e.clientY - 50 + offsetY
         });
+        if (e.clientX + offsetX > window.innerWidth - 100) {
+          offsetY += 100;
+          offsetX = 0;
+        } else offsetX += 100;
       });
     } else {
       files.map((file: any) =>

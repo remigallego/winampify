@@ -1,16 +1,15 @@
 import { GenericFile } from "../types";
-import { isTrack } from "../types/typecheckers";
+import { isAlbum, isTrack } from "../types/typecheckers";
 
-export const formatToWebampMetaData = (file: GenericFile) => {
-  if (isTrack(file)) {
-    const uri = file.metaData.uri.split(":");
+export const formatToWebampMetaData = (file: any) => {
+  const uri = file.uri.split(":");
+  if (file.type === "track")
     return {
       metaData: {
-        artist: file.metaData.artists[0].name,
-        title: file.metaData.name
+        artist: file.artists[0].name,
+        title: file.name
       },
       url: uri[2],
-      duration: file.metaData.duration_ms / 1000
+      duration: file.duration_ms / 1000
     };
-  }
 };

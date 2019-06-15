@@ -83,10 +83,10 @@ class WindowsManager extends React.Component<Props, {}> {
           }
         },
         handleTrackDropEvent: (e: React.DragEvent<HTMLDivElement>) => {
-          if (e.dataTransfer.getData("tracks").length > 0) {
-            const json = e.dataTransfer.getData("tracks");
+          if (window.dataTransferObject.length > 0) {
+            const json = window.dataTransferObject;
             try {
-              return JSON.parse(json);
+              return JSON.parse(window.dataTransferObject);
             } catch (err) {
               // tslint:disable-next-line: no-console
               console.error(err);
