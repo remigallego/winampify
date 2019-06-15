@@ -35,6 +35,12 @@ import styles from "./styles";
 
 const { container } = styles;
 
+declare global {
+  interface Window {
+    dataTransferObject?: any;
+  }
+}
+
 interface State {
   holdShift: boolean;
 }
