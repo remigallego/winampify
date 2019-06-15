@@ -12,6 +12,10 @@ import {
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
+import {
+  getAlbumsFromArtist,
+  getTracksFromAlbum
+} from "../../../api/apiFunctions";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
@@ -24,14 +28,10 @@ import {
   isImage,
   isTrack
 } from "../../../types/typecheckers";
+import { formatToWebampMetaData } from "../../../utils/drag";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { formatToWebampMetaData } from "../../../utils/drag";
-import {
-  getTracksFromAlbum,
-  getAlbumsFromArtist
-} from "../../../api/apiFunctions";
 
 const { container } = styles;
 
@@ -140,7 +140,6 @@ class ContentWindow extends React.Component<Props, State> {
           );
         });
         Promise.all(promises).then(() => {
-          console.log(formattedFilesForWebamp.flat());
           window.dataTransferObject = JSON.stringify(
             formattedFilesForWebamp.flat()
           );

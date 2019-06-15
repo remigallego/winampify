@@ -28,7 +28,7 @@ const styles: StyleCollection = {
     display: "inline-block",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    width: "100%",
+    width: "95%",
     fontWeight: 300,
     fontSize: 18,
     marginLeft: 20
