@@ -50,7 +50,7 @@ export const getAlbumData = async (id: string) => {
  */
 export const getAlbumsFromArtist = async (artistId: string) => {
   const response: SpotifyApi.ArtistsAlbumsResponse = await Api.get(
-    `artists/${artistId}/albums?include_groups=album%2Csingle&market=${getCountry()}`
+    `artists/${artistId}/albums?include_groups=album&market=${getCountry()}`
   );
   return response.items;
 };
