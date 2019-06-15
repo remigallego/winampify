@@ -12,6 +12,12 @@
     "pretty": true,
     "strictNullChecks": false
   },
-  "include": ["index.d.ts", "**/*.js", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "**/*.spec.ts", "./js/index.tsx", "./webamp/*"]
+  "include": ["index.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "./js/index.tsx",
+    "built",
+    "config/*"
+  ]
 }
