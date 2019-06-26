@@ -83,7 +83,10 @@ class WindowsManager extends React.Component<Props, {}> {
           }
         },
         handleTrackDropEvent: (e: React.DragEvent<HTMLDivElement>) => {
-          if (window.dataTransferObject.length > 0) {
+          if (
+            window.dataTransferObject &&
+            window.dataTransferObject.length > 0
+          ) {
             const json = window.dataTransferObject;
             try {
               return JSON.parse(window.dataTransferObject);
