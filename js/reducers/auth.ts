@@ -27,6 +27,7 @@ export const initialStateAuth: AuthState = {
 export const LOG_OUT = "LOG_OUT";
 export const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
 export const WIPE_TOKENS = "WIPE_TOKENS";
+export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const AUTHENTICATION = "AUTHENTICATION";
 export const AUTHENTICATION_SUCCESS = "AUTHENTICATION_SUCCESS";
 export const AUTHENTICATION_FAILURE = "AUTHENTICATION_FAILURE";
@@ -59,6 +60,11 @@ const auth = (state: AuthState = initialStateAuth, action: any) => {
         ...state,
         accessToken: "",
         refreshToken: ""
+      };
+    case SET_ACCESS_TOKEN: // For testing/developer purposes
+      return {
+        ...state,
+        accessToken: action.payload.accessToken
       };
     default:
       return state;

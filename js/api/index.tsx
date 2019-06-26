@@ -1,3 +1,5 @@
+import environments from "../environments";
+import { SET_ACCESS_TOKEN } from "../reducers/auth";
 import store from "../store";
 import { apiendpoint } from "./settings";
 
@@ -9,6 +11,37 @@ class Api {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
+      })
+        .then(response => response.json())
+        .then(res => {
+          if (res.error && res.error.message) {
+            if (res.error.message === "Invalid access token") {
+              return this.refreshToken().then(response => {
+                store.dispatch({
+                  type: SET_ACCESS_TOKEN,
+                  payload: {
+                    accessToken: response.access_token
+                  }
+                });
+                resolve(this.authenticate(response.access_token));
+              });
+            }
+          }
+          resolve({ ...res, accessToken });
+        })
+        .catch(reject);
+    });
+  }
+
+  public static refreshToken(): Promise<any> {
+    const { refreshToken } = store.getState().auth;
+    const endpoint =
+      process.env.NODE_ENV === "production"
+        ? environments.prod.authServer
+        : environments.dev.authServer;
+    return new Promise((resolve, reject) => {
+      fetch(`${endpoint}/refresh_token?refresh_token=${refreshToken}`, {
+        method: "GET"
       })
         .then(response => response.json())
         .then(json => {
@@ -30,12 +63,21 @@ class Api {
         .then(response => response.json())
         .then(res => {
           if (res.error && res.error.message) {
-            alert(res.error.message);
+            if (res.error.message === "Invalid access token") {
+              return this.refreshToken().then(response => {
+                store.dispatch({
+                  type: SET_ACCESS_TOKEN,
+                  payload: {
+                    accessToken: response.access_token
+                  }
+                });
+                resolve(this.get(endpoint));
+              });
+            }
           } else {
             resolve(res);
           }
-        })
-        .catch(reject);
+        });
     });
   }
 
@@ -51,8 +93,16 @@ class Api {
         ...params
       }).then(response => {
         if (!response.ok) {
-          if (response.statusText) {
-            alert(response.statusText);
+          if (response.status === 401) {
+            return this.refreshToken().then(res => {
+              store.dispatch({
+                type: SET_ACCESS_TOKEN,
+                payload: {
+                  accessToken: res.access_token
+                }
+              });
+              resolve(this.put(endpoint, params));
+            });
           }
         } else Promise.resolve();
       });

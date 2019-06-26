@@ -35,7 +35,7 @@ export const authenticate: any = (
 
     Api.authenticate(accessToken)
       .then(
-        (result: any): Promise<void> => {
+        (result: any): Promise<string> => {
           if (result.error)
             return Promise.reject({
               message: result.error.message
@@ -46,12 +46,12 @@ export const authenticate: any = (
                 "<b>Oh no! You don't have a Spotify Premium account. :(</b>"
             });
           } else {
-            return Promise.resolve();
+            return Promise.resolve(result.accessToken);
           }
         }
       )
-      .then(() => {
-        return initPlayer(accessToken);
+      .then(validAccessToken => {
+        return initPlayer(validAccessToken);
       })
       .then(
         (): Promise<void> => {

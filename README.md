@@ -15,7 +15,7 @@ TODO:
 - [x] Fix search feature
 - [x] Implement better login logic
 - [x] Hide URL params after tokens are consumed
-- [ ] Error middleware
+- [x] Error middleware
 - [ ] Extends explorer content with track details
 - [ ] Implement popover with track details
 - [ ] Improve windows manager

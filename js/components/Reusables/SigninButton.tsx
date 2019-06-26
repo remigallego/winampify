@@ -1,9 +1,10 @@
 import React from "react";
+import environments from "../../environments";
 
 const server =
   process.env.NODE_ENV === "production"
-    ? "https://spotifyauth.now.sh"
-    : "https://spotifyauthdev.now.sh";
+    ? environments.prod.authServer
+    : environments.dev.authServer;
 
 const Signin = () => {
   return (

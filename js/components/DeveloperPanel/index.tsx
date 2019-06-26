@@ -1,4 +1,5 @@
 import React from "react";
+import { SET_ACCESS_TOKEN } from "../../reducers/auth";
 import { APPLY_SNAPSHOT, initialStateApp } from "../../reducers/index";
 import store from "../../store";
 import snapshotOne from "./0.2.2/desktop-files.json";
@@ -53,6 +54,18 @@ const DeveloperPanel = () => {
         }
       >
         Reset state
+      </button>
+      <button
+        onClick={() =>
+          store.dispatch({
+            type: SET_ACCESS_TOKEN,
+            payload: {
+              accessToken: "xxxxxxx"
+            }
+          })
+        }
+      >
+        Poison access token
       </button>
     </div>
   );
