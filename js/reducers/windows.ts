@@ -93,8 +93,6 @@ const windows = (state: WindowsState = initialStateWindows, action: any) => {
           }
         }
       }; */
-    case APPLY_SNAPSHOT:
-      return { ...action.payload.snapshot.windows };
     default:
       return state;
   }

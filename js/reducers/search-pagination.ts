@@ -97,8 +97,6 @@ const searchPagination = (
           }
         }
       };
-    case APPLY_SNAPSHOT:
-      return { ...action.payload.snapshot.searchPagination };
     default:
       return state;
   }

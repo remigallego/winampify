@@ -256,8 +256,6 @@ const explorer = (state = initialStateExplorerState, action: any) => {
       return setMoreItems(state, action.payload);
     case SET_EXPLORER_METADATA:
       return setExplorerMetadata(state, action.payload);
-    case APPLY_SNAPSHOT:
-      return { ...action.payload.snapshot.explorer };
     default:
       return state;
   }
