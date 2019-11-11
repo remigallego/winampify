@@ -37,6 +37,7 @@
   "license": "MIT",
   "homepage": "https://winampify.io",
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "babel": "^6.23.0",
     "emotion": "^10.0.9",
     "jszip": "^3.1.3",

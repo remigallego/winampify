@@ -1,7 +1,7 @@
-import { GenericFile } from "../types";
+import { GenericFile, WebampTrackFormat } from "../types";
 import { isAlbum, isTrack } from "../types/typecheckers";
 
-export const formatToWebampMetaData = (file: any) => {
+export const formatMetaToWebampMeta = (file: any): WebampTrackFormat => {
   const uri = file.uri.split(":");
   if (file.type === "track")
     return {

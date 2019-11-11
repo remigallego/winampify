@@ -21,17 +21,23 @@ import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
 import { blueTitleBar, greenSpotify } from "../../../styles/colors";
-import { ACTION_TYPE, GenericFile, TrackFile } from "../../../types";
+import {
+  ACTION_TYPE,
+  GenericFile,
+  TrackFile,
+  WebampTrackFormat
+} from "../../../types";
 import {
   isAlbum,
   isArtist,
   isImage,
   isTrack
 } from "../../../types/typecheckers";
-import { formatToWebampMetaData } from "../../../utils/drag";
+import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
+import { setDataTransferArray } from "../../../actions/dataTransfer";
 
 const { container } = styles;
 
@@ -65,6 +71,7 @@ interface DispatchProps {
   ): void;
   setItems(uriType: ACTION_TYPE, uri: string): void;
   setMoreSearchResults(type: string): void;
+  setDataTransferArray(arr: WebampTrackFormat[]): void;
 }
 
 type Props = OwnProps & StateProps & DispatchProps;
@@ -99,7 +106,7 @@ class ContentWindow extends React.Component<Props, State> {
   async onDrag(e: any, files: GenericFile[]) {
     e.persist();
 
-    e.dataTransfer.setData("tracks", window.dataTransferObject);
+    // e.dataTransfer.setData("tracks", window.dataTransferObject);
 
     const dataTransferObject = e.dataTransfer;
 
@@ -113,21 +120,22 @@ class ContentWindow extends React.Component<Props, State> {
     files.forEach(async item => {
       filesForDesktop.push(item);
       if (isTrack(item)) {
-        formattedFilesForWebamp.push(formatToWebampMetaData(item.metaData));
+        formattedFilesForWebamp.push(formatMetaToWebampMeta(item.metaData));
       }
       if (isAlbum(item)) {
         if (item.metaData.tracks) {
           return item.metaData.tracks.items.map((trackItem: any) =>
-            formattedFilesForWebamp.push(formatToWebampMetaData(trackItem))
+            formattedFilesForWebamp.push(formatMetaToWebampMeta(trackItem))
           );
         } else {
           const tracks = await getTracksFromAlbum(
             item.metaData.uri.split(":")[2]
           );
           tracks.forEach(trackItem =>
-            formattedFilesForWebamp.push(formatToWebampMetaData(trackItem))
+            formattedFilesForWebamp.push(formatMetaToWebampMeta(trackItem))
           );
 
+          this.props.setDataTransferArray(formattedFilesForWebamp.flat());
           window.dataTransferObject = JSON.stringify(
             formattedFilesForWebamp.flat()
           );
@@ -141,10 +149,11 @@ class ContentWindow extends React.Component<Props, State> {
         const promises = albums.map(async album => {
           const tracks = await getTracksFromAlbum(album.uri.split(":")[2]);
           tracks.forEach(trackItem =>
-            formattedFilesForWebamp.push(formatToWebampMetaData(trackItem))
+            formattedFilesForWebamp.push(formatMetaToWebampMeta(trackItem))
           );
         });
         Promise.all(promises).then(() => {
+          this.props.setDataTransferArray(formattedFilesForWebamp.flat());
           window.dataTransferObject = JSON.stringify(
             formattedFilesForWebamp.flat()
           );
@@ -152,7 +161,7 @@ class ContentWindow extends React.Component<Props, State> {
         });
       }
     });
-
+    this.props.setDataTransferArray(formattedFilesForWebamp.flat());
     window.dataTransferObject = JSON.stringify(formattedFilesForWebamp.flat());
 
     e.dataTransfer.setData(
@@ -387,7 +396,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
     setItems: (uriType: ACTION_TYPE, uri: string) =>
       dispatch(setItems(uriType, uri, explorerId)),
     setMoreSearchResults: (type: "album" | "artist" | "track") =>
-      dispatch(setMoreSearchResults(type))
+      dispatch(setMoreSearchResults(type)),
+    setDataTransferArray: (obj: any) => dispatch(setDataTransferArray(obj))
   };
 };
 

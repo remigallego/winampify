@@ -21,7 +21,7 @@ import {
   isImage,
   isTrack
 } from "../../types/typecheckers";
-import { formatToWebampMetaData } from "../../utils/drag";
+import { formatMetaToWebampMeta } from "../../utils/dataTransfer";
 import {
   cancelRenaming,
   confirmRenameFile,
@@ -113,10 +113,10 @@ class Desktop extends React.Component<Props, State> {
     e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
 
     const tracks = files.map((file: any) => {
-      if (isTrack(file)) return formatToWebampMetaData(file.metaData);
+      if (isTrack(file)) return formatMetaToWebampMeta(file.metaData);
       if (isAlbum(file))
         return file.metaData.tracks.items.map(item =>
-          formatToWebampMetaData(item)
+          formatMetaToWebampMeta(item)
         );
     });
 

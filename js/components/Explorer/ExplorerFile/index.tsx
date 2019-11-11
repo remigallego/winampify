@@ -1,7 +1,5 @@
 import React from "react";
 import { GenericFile } from "../../../types";
-import { isTrack } from "../../../types/typecheckers";
-import { formatToWebampMetaData } from "../../../utils/drag";
 import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
 import styles from "./styles";

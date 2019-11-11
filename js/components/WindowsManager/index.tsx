@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import * as WebampInstance from "webamp";
+import Webamp, * as WebampInstance from "webamp";
 import { createNewExplorer, setItems } from "../../actions/explorer";
 import { closeImage } from "../../actions/images";
 import { setOnTop } from "../../actions/windows";
@@ -10,15 +10,17 @@ import { Window, WINDOW_TYPE } from "../../reducers/windows";
 import { selectExplorers, selectImages } from "../../selectors/explorer";
 import { selectWindows } from "../../selectors/windows";
 import SpotifyMedia from "../../spotifymedia";
-import { ACTION_TYPE, ImageDialogType } from "../../types";
+import { ACTION_TYPE, ImageDialogType, GenericFile } from "../../types";
 import Explorer from "../Explorer";
 import ImageModal from "../ImageDialog";
 import WindowInstance from "./WindowInstance";
+import ExplorerFile from "../Explorer/ExplorerFile";
 
 interface StateProps {
   explorers: SingleExplorerState[];
   images: ImageDialogType[];
   windows: Window[];
+  dataTransferArray: any;
 }
 
 interface DispatchProps {
@@ -66,7 +68,7 @@ class WindowsManager extends React.Component<Props, {}> {
 
   componentDidMount() {
     const Webamp: any = WebampInstance;
-    const webamp = new Webamp(
+    const webamp: Webamp = new Webamp(
       {
         __initialWindowLayout: {
           main: {
@@ -83,13 +85,9 @@ class WindowsManager extends React.Component<Props, {}> {
           }
         },
         handleTrackDropEvent: (e: React.DragEvent<HTMLDivElement>) => {
-          if (
-            window.dataTransferObject &&
-            window.dataTransferObject.length > 0
-          ) {
-            const json = window.dataTransferObject;
+          if (this.props.dataTransferArray?.length > 0) {
             try {
-              return JSON.parse(window.dataTransferObject);
+              return this.props.dataTransferArray;
             } catch (err) {
               // tslint:disable-next-line: no-console
               console.error(err);
@@ -102,6 +100,7 @@ class WindowsManager extends React.Component<Props, {}> {
       {}
     );
 
+    // TODO: Save Webamp to redux state
     webamp.renderWhenReady(document.getElementById("webamp"));
 
     // tslint:disable-next-line: no-console
@@ -148,7 +147,8 @@ class WindowsManager extends React.Component<Props, {}> {
 const mapStateToProps = (state: AppState): StateProps => ({
   images: selectImages(state),
   explorers: selectExplorers(state),
-  windows: selectWindows(state)
+  windows: selectWindows(state),
+  dataTransferArray: state.dataTransfer.dataTransferArray
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
