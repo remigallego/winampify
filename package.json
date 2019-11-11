@@ -76,7 +76,7 @@
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.0.0",
+    "@babel/preset-typescript": "7.7.2",
     "@babel/runtime": "^7.3.1",
     "@emotion/core": "^10.0.10",
     "@sentry/browser": "^5.3.0",
