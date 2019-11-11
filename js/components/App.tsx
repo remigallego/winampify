@@ -40,7 +40,6 @@ class App extends React.Component<{}, State> {
           <WindowsManager />
           {process.env.NODE_ENV === "development" && <DeveloperPanel />}
         </SelectionBox>
-        {/* <AudioPlayer onPlay={() => console.log("onPlay!")} /> */}
       </div>
     );
   }
