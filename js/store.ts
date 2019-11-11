@@ -7,12 +7,12 @@ import thunk from "redux-thunk";
 import reducer, { AppState, initialStateApp } from "./reducers";
 
 const transform = createTransform(
-  (inboundState, key) => {
+  (inboundState: any) => {
     return { ...inboundState };
   },
 
   // transform state being rehydrated
-  (outboundState, key) => {
+  (outboundState: any) => {
     // convert mySet back to a Set.
     return { ...outboundState, logged: false };
   },
@@ -32,7 +32,7 @@ const persistConfig = {
   key: "root",
   version: 0,
   storage,
-  whitelist: ["desktop", "auth"],
+  whitelist: ["auth"],
   transforms: [transform],
   // @ts-ignore
   migrate: createMigrate(migrations, { debug: false })
