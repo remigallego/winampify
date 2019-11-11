@@ -203,10 +203,9 @@ export function setItems(
 export function setSearchResults(inputQuery?: string) {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const explorerId = getActiveExplorerId(getState());
-    const query =
-      inputQuery !== undefined
-        ? inputQuery
-        : getState().searchPagination[explorerId].query;
+
+    const query = inputQuery ?? getState().searchPagination[explorerId].query;
+
     if (!query) return;
     const filter: Filter = getState().searchPagination[explorerId].filter;
 

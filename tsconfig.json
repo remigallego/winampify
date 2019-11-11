@@ -10,7 +10,7 @@
     "strict": true,
     "jsx": "preserve",
     "pretty": true,
-    "strictNullChecks": false
+    "strictNullChecks": false,
   },
   "include": ["index.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": [
