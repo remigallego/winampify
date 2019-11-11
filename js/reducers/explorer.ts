@@ -243,7 +243,7 @@ const explorer = (state = initialStateExplorerState, action: any) => {
         ...state,
         byId: {
           ...state.byId,
-          [action.id]: { ...state.byId[action.id], selected: null }
+          [action.id]: { ...state.byId[action.id], selectedFiles: [] }
         }
       };
     case SAVE_PREVIOUS_STATE:

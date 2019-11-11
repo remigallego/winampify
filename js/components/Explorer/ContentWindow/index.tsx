@@ -226,7 +226,6 @@ class ContentWindow extends React.Component<Props, State> {
 
   handleClickOutside(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     if ((e as any).target.className === "explorer-items-container") {
-      // e.preventDefault();
       this.props.unsetFocusExplorer();
     }
   }

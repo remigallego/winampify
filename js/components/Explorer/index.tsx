@@ -138,7 +138,6 @@ class ExplorerWindow extends React.Component<Props, State> {
               <ContentWindow
                 explorer={this.props.explorer}
                 files={this.props.explorer.files}
-                selected={this.props.explorer.selected}
               />
             </div>
           </div>
