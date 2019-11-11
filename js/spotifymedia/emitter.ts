@@ -1,4 +1,5 @@
 export default class Emitter {
+  // tslint:disable-next-line: variable-name
   _listeners: { [event: string]: Array<(...args: any[]) => void> };
 
   constructor() {

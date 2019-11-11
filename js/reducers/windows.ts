@@ -26,7 +26,10 @@ export const initialStateWindows: WindowsState = {
   windows: [{ id: "webamp", type: WINDOW_TYPE.Webamp }]
 };
 
-const windows = (state: WindowsState = initialStateWindows, action: any) => {
+const windowsReducer = (
+  state: WindowsState = initialStateWindows,
+  action: any
+) => {
   switch (action.type) {
     case OPEN_EXPLORER: {
       const { windows } = state;
@@ -98,4 +101,4 @@ const windows = (state: WindowsState = initialStateWindows, action: any) => {
   }
 };
 
-export default windows;
+export default windowsReducer;

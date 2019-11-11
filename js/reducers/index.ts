@@ -9,7 +9,7 @@ import searchPagination, {
   SearchPaginationState
 } from "./search-pagination";
 import user, { initialStateUser, UserState } from "./user";
-import windows, { initialStateWindows, WindowsState } from "./windows";
+import windowsReducer, { initialStateWindows, WindowsState } from "./windows";
 
 export const APPLY_SNAPSHOT = "APPLY_SNAPSHOT";
 
@@ -38,7 +38,7 @@ export const initialStateApp: AppState = {
 const reducer = combineReducers<AppState>({
   explorer,
   images,
-  windows,
+  windows: windowsReducer,
   desktop,
   user,
   playback,
