@@ -148,7 +148,7 @@ const mapStateToProps = (state: AppState): StateProps => ({
   images: selectImages(state),
   explorers: selectExplorers(state),
   windows: selectWindows(state),
-  dataTransferArray: state.dataTransfer.dataTransferArray
+  dataTransferArray: state.dataTransfer.data
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({

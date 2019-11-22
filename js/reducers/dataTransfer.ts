@@ -1,11 +1,11 @@
 import { WebampTrackFormat } from "../types";
 
 export interface DataTransferState {
-  dataTransferArray: WebampTrackFormat[];
+  data: WebampTrackFormat[];
 }
 
 export const initialStateDataTransfer: DataTransferState = {
-  dataTransferArray: []
+  data: []
 };
 
 export const SET_DATA_TRANSFER_ARRAY = "SET_DATA_TRANSFER_ARRAY";
@@ -18,7 +18,7 @@ const dataTransfer = (
     case SET_DATA_TRANSFER_ARRAY:
       return {
         ...state,
-        dataTransferArray: action.payload.dataTransferArray
+        data: action.payload.dataTransferArray
       };
     default:
       return state;

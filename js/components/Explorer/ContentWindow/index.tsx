@@ -37,7 +37,7 @@ import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { setDataTransferArray } from "../../../actions/dataTransfer";
+import { setDataTransfer } from "../../../actions/dataTransfer";
 
 const { container } = styles;
 
@@ -397,7 +397,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
       dispatch(setItems(uriType, uri, explorerId)),
     setMoreSearchResults: (type: "album" | "artist" | "track") =>
       dispatch(setMoreSearchResults(type)),
-    setDataTransferArray: (obj: any) => dispatch(setDataTransferArray(obj))
+    setDataTransferArray: (obj: any) => dispatch(setDataTransfer(obj))
   };
 };
 

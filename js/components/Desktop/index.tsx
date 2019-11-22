@@ -5,14 +5,14 @@ import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
 import { AppState } from "../../reducers";
-import { formatToFile } from "../../reducers/explorer";
 import {
   ACTION_TYPE,
   ActionFile,
   ArtistFile,
   GenericFile,
   ImageFile,
-  TrackFile
+  TrackFile,
+  WebampTrackFormat
 } from "../../types";
 import {
   isAction,
@@ -33,6 +33,7 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
+import { setDataTransfer } from "../../actions/dataTransfer";
 
 interface OwnProps {
   files: GenericFile[];
@@ -56,6 +57,7 @@ interface DispatchProps {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
   playTrack: (track: TrackFile) => void;
+  setDataTransferArray: (dataTransferArray: WebampTrackFormat[]) => void;
 }
 
 type Props = DispatchProps & OwnProps;
@@ -120,8 +122,8 @@ class Desktop extends React.Component<Props, State> {
         );
     });
 
-    e.dataTransfer.setData("files", JSON.stringify(files)); // for desktop
-    e.dataTransfer.setData("tracks", JSON.stringify(tracks.flat())); // for winamp
+    this.props.setDataTransferArray(tracks.flat());
+    e.dataTransfer.setData("files", JSON.stringify(files)); // TODO: Refactor to use dataTransferArray
   }
 
   onDrop(e: React.DragEvent<HTMLElement>) {
@@ -322,7 +324,9 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
   cancelRenaming: () => dispatch(cancelRenaming()),
   confirmRenameFile: (file: any, title: string) =>
     dispatch(confirmRenameFile(file, title)),
-  playTrack: (file: TrackFile) => dispatch(playTrack(file))
+  playTrack: (file: TrackFile) => dispatch(playTrack(file)),
+  setDataTransferArray: (dataTransferArray: WebampTrackFormat[]) =>
+    dispatch(setDataTransfer(dataTransferArray))
 });
 
 export default connect(
