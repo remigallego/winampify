@@ -47,7 +47,7 @@
     "prettier": "^1.10.2",
     "qs": "^6.5.1",
     "react": "16.11.0",
-    "react-contexify": "^3.0.2",
+    "react-contexify": "4.1.1",
     "react-dom": "16.11.0",
     "react-draggable": "^3.0.5",
     "react-ga": "^2.5.7",

@@ -1,5 +1,5 @@
 import React from "react";
-import { ContextMenu, Item, Separator } from "react-contexify";
+import { Menu, Item, Separator } from "react-contexify";
 import "react-contexify/dist/ReactContexify.min.css";
 
 interface Props {
@@ -21,33 +21,33 @@ const FileContextMenu = (props: Props) => {
 
   return (
     <div>
-      <ContextMenu id="track">
+      <Menu id="track">
         {renameItem()}
         {deleteItem()}
         {copyItem()}
         <Separator />
         {getTrackData()}
-      </ContextMenu>
+      </Menu>
 
-      <ContextMenu id="artist">
+      <Menu id="artist">
         {renameItem()}
         {deleteItem()}
         {copyItem()}
-      </ContextMenu>
+      </Menu>
 
-      <ContextMenu id="album">
+      <Menu id="album">
         {renameItem()}
         {deleteItem()}
         {copyItem()}
-      </ContextMenu>
+      </Menu>
 
-      <ContextMenu id="image">
+      <Menu id="image">
         {renameItem()}
         {deleteItem()}
         {copyItem()}
-      </ContextMenu>
+      </Menu>
 
-      <ContextMenu id="desktop">{pasteItem()}</ContextMenu>
+      <Menu id="desktop">{pasteItem()}</Menu>
     </div>
   );
 };

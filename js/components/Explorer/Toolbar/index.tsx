@@ -4,12 +4,7 @@
 import { css, jsx } from "@emotion/core";
 import _ from "lodash";
 import React from "react";
-import {
-  ContextMenu,
-  ContextMenuProvider,
-  Item,
-  Submenu
-} from "react-contexify";
+import { Menu, MenuProvider, Item, Submenu } from "react-contexify";
 import { FaChevronLeft, FaSpotify } from "react-icons/fa";
 import { connect } from "react-redux";
 import { Action } from "redux";
@@ -93,10 +88,7 @@ class Toolbar extends React.Component<Props, State> {
           />
 
           {this.props.id !== "landing-page" && (
-            <ContextMenu
-              id={`spotify-menu-${this.props.id}`}
-              style={{ zIndex: 9999 }}
-            >
+            <Menu id={`spotify-menu-${this.props.id}`} style={{ zIndex: 9999 }}>
               <Item onClick={() => this.props.setItems(ACTION_TYPE.TOP)}>
                 Top Artists
               </Item>
@@ -124,12 +116,9 @@ class Toolbar extends React.Component<Props, State> {
                   Tracks
                 </Item>
               </Submenu>
-            </ContextMenu>
+            </Menu>
           )}
-          <ContextMenuProvider
-            id={`spotify-menu-${this.props.id}`}
-            event="onClick"
-          >
+          <MenuProvider id={`spotify-menu-${this.props.id}`} event="onClick">
             <>
               <FaSpotify
                 size={ICON_SIZE}
@@ -144,7 +133,7 @@ class Toolbar extends React.Component<Props, State> {
                 `}
               />
             </>
-          </ContextMenuProvider>
+          </MenuProvider>
         </div>
         <form
           className="explorer-toolbar-searchbox"

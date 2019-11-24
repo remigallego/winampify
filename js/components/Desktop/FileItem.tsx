@@ -1,6 +1,6 @@
 import React from "react";
-import { ContextMenuProvider } from "react-contexify";
-import { File, GenericFile } from "../../types";
+import { MenuProvider } from "react-contexify";
+import { GenericFile } from "../../types";
 import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import folderclosed from "./images/folderclosed.png";
@@ -34,7 +34,7 @@ const FileItem = (props: Props) => {
   };
 
   return (
-    <ContextMenuProvider id={file.metaData.type}>
+    <MenuProvider id={file.metaData.type}>
       <div
         className="file-fadein"
         style={{
@@ -75,7 +75,7 @@ const FileItem = (props: Props) => {
           </div>
         )}
       </div>
-    </ContextMenuProvider>
+    </MenuProvider>
   );
 };
 
