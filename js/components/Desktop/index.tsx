@@ -116,10 +116,6 @@ class Desktop extends React.Component<Props, State> {
   onDragStart(e: React.DragEvent<HTMLDivElement>, files: GenericFile[]) {
     const tracks = files.map((file: any) => {
       if (isTrack(file)) return formatMetaToWebampMeta(file.metaData);
-      if (isAlbum(file))
-        return file.metaData.tracks.items.map(item =>
-          formatMetaToWebampMeta(item)
-        );
     });
 
     this.props.setDataTransferArray(tracks.flat());
