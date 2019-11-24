@@ -34,10 +34,12 @@ import {
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
 import { setDataTransfer } from "../../actions/dataTransfer";
+import { DesktopState } from "../../reducers/desktop";
 
 interface OwnProps {
   files: GenericFile[];
   selectionBox: any;
+  desktop: DesktopState;
 }
 
 interface DispatchProps {
@@ -112,8 +114,6 @@ class Desktop extends React.Component<Props, State> {
   }
 
   onDragStart(e: React.DragEvent<HTMLDivElement>, files: GenericFile[]) {
-    e.dataTransfer.setData("isFileMoving", "true"); // TODO: Maybe revert to boolean if this breaks
-
     const tracks = files.map((file: any) => {
       if (isTrack(file)) return formatMetaToWebampMeta(file.metaData);
       if (isAlbum(file))
@@ -128,13 +128,18 @@ class Desktop extends React.Component<Props, State> {
 
   onDrop(e: React.DragEvent<HTMLElement>) {
     e.preventDefault();
-    const isFileMoving = e.dataTransfer.getData("isFileMoving");
-    const files = JSON.parse(e.dataTransfer.getData("files"));
+    const files: GenericFile[] = JSON.parse(e.dataTransfer.getData("files")); // TODO: Refactor to use dataTransferArray
 
-    if (!isFileMoving) {
-      let offsetX = 0;
-      let offsetY = 0;
-      files.map((file: GenericFile, index: number) => {
+    const isNewFile = (file: GenericFile) =>
+      this.props.desktop.byId[file.id] === undefined ||
+      this.props.desktop.byId[file.id] === null;
+
+    let offsetX = 0,
+      offsetY = 0;
+
+    // We check if the file already exists on the Desktop. If not, we create it. If yes, we move the existing.
+    files.forEach((file: GenericFile) => {
+      if (isNewFile(file)) {
         this.props.createFile({
           ...file,
           x: e.clientX - 50 + offsetX,
@@ -144,16 +149,14 @@ class Desktop extends React.Component<Props, State> {
           offsetY += 100;
           offsetX = 0;
         } else offsetX += 100;
-      });
-    } else {
-      files.map((file: any) =>
+      } else {
         this.props.moveFile({
           id: file.id,
           x: e.clientX + file.deltaX,
           y: e.clientY + file.deltaY
-        })
-      );
-    }
+        });
+      }
+    });
   }
 
   renderFile(file: GenericFile) {
