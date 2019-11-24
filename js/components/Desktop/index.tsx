@@ -1,6 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
-import { ContextMenuProvider } from "../../../node_modules/react-contexify";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { MenuProvider } from "../../../node_modules/react-contexify";
 import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
@@ -11,8 +11,6 @@ import {
   ArtistFile,
   GenericFile,
   ImageFile,
-  TrackFile,
-  WebampTrackFormat
 } from "../../types";
 import {
   isAction,
@@ -36,299 +34,233 @@ import FileItem from "./FileItem";
 import { setDataTransfer } from "../../actions/dataTransfer";
 import { DesktopState } from "../../reducers/desktop";
 
-interface OwnProps {
+interface Props {
   files: GenericFile[];
   selectionBox: any;
-  desktop: DesktopState;
 }
 
-interface DispatchProps {
-  setItems: (
-    actionType: ACTION_TYPE,
-    uri?: string,
-    e?: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => void;
-  deleteFile: (fileId: string) => void;
-  moveFile: (file: any) => void;
-  cancelRenaming: () => void;
-  createFile: (file: GenericFile) => void;
-  renameFile: (id: string) => void;
-  confirmRenameFile: (file: any, value?: any) => void;
-  openImage: (
-    uri: string,
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => void;
-  playTrack: (track: TrackFile) => void;
-  setDataTransferArray: (dataTransferArray: WebampTrackFormat[]) => void;
-}
+const Desktop = function(props: Props) {
+  const [selectedFilesIds, setSelectedFiles] = useState<string[]>([]);
+  const [clipboard, setClipboard] = useState(null);
+  const desktop = useSelector<AppState, DesktopState>(state => state.desktop);
+  const allFiles = useSelector(selectFiles);
+  const dispatch = useDispatch();
 
-type Props = DispatchProps & OwnProps;
-
-interface State {
-  selected: string[];
-  clipboard: string | null;
-}
-
-class Desktop extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      selected: [],
-      clipboard: null
-    };
-    this.doubleClickHandler = this.doubleClickHandler.bind(this);
-    this.renderFile = this.renderFile.bind(this);
-  }
-
-  componentWillMount() {
-    addEventListener("contextmenu", e => {
-      e.preventDefault();
-    });
+  useEffect(() => {
+    addEventListener("contextmenu", e => e.preventDefault());
     addEventListener("keydown", e => {
       if (e.keyCode === 46) {
-        // SUPPR
-        if (!this.props.files.some(file => file.isRenaming))
-          this.state.selected.map(fileId => this.props.deleteFile(fileId));
+        if (!allFiles.some(file => file.isRenaming))
+          selectedFilesIds.map(fileId => dispatch(deleteFile(fileId)));
       }
     });
-  }
+  }, []);
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.selectionBox === this.props.selectionBox) return;
-    const selected = nextProps.files
+  // Handles chaning the selected files based on the selection box.
+  useEffect(() => {
+    const selected = allFiles
       .filter(
         file =>
-          ((file.x + 50 < nextProps.selectionBox.target[0] &&
-            file.x + 50 > nextProps.selectionBox.origin[0]) ||
-            (file.x + 50 > nextProps.selectionBox.target[0] &&
-              file.x + 50 < nextProps.selectionBox.origin[0])) &&
-          ((file.y + 50 < nextProps.selectionBox.target[1] &&
-            file.y + 50 > nextProps.selectionBox.origin[1]) ||
-            (file.y + 50 > nextProps.selectionBox.target[1] &&
-              file.y + 50 < nextProps.selectionBox.origin[1]))
+          ((file.x + 50 < props.selectionBox.target[0] &&
+            file.x + 50 > props.selectionBox.origin[0]) ||
+            (file.x + 50 > props.selectionBox.target[0] &&
+              file.x + 50 < props.selectionBox.origin[0])) &&
+          ((file.y + 50 < props.selectionBox.target[1] &&
+            file.y + 50 > props.selectionBox.origin[1]) ||
+            (file.y + 50 > props.selectionBox.target[1] &&
+              file.y + 50 < props.selectionBox.origin[1]))
       )
       .map(file => file.id);
-    this.setState({
-      selected
-    });
-  }
+    setSelectedFiles(selected);
+  }, [props.selectionBox]);
 
-  onDragStart(e: React.DragEvent<HTMLDivElement>, files: GenericFile[]) {
-    const tracks = files.map((file: any) => {
+  const onDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    files: GenericFile[]
+  ) => {
+    const tracks = allFiles.map((file: any) => {
       if (isTrack(file)) return formatMetaToWebampMeta(file.metaData);
     });
-
-    this.props.setDataTransferArray(tracks.flat());
+    dispatch(setDataTransfer(tracks.flat()));
     e.dataTransfer.setData("files", JSON.stringify(files)); // TODO: Refactor to use dataTransferArray
-  }
+  };
 
-  onDrop(e: React.DragEvent<HTMLElement>) {
+  const onDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     const files: GenericFile[] = JSON.parse(e.dataTransfer.getData("files")); // TODO: Refactor to use dataTransferArray
 
     const isNewFile = (file: GenericFile) =>
-      this.props.desktop.byId[file.id] === undefined ||
-      this.props.desktop.byId[file.id] === null;
+      desktop.byId[file.id] === undefined || desktop.byId[file.id] === null;
 
     let offsetX = 0,
       offsetY = 0;
 
-    // We check if the file already exists on the Desktop. If not, we create it. If yes, we move the existing.
+    // Checking if the file already exists on the Desktop. If not, we create it. If yes, we move the existing.
     files.forEach((file: GenericFile) => {
       if (isNewFile(file)) {
-        this.props.createFile({
-          ...file,
-          x: e.clientX - 50 + offsetX,
-          y: e.clientY - 50 + offsetY
-        });
+        dispatch(
+          createFile({
+            ...file,
+            x: e.clientX - 50 + offsetX,
+            y: e.clientY - 50 + offsetY
+          })
+        );
         if (e.clientX + offsetX > window.innerWidth - 100) {
           offsetY += 100;
           offsetX = 0;
         } else offsetX += 100;
       } else {
-        this.props.moveFile({
-          id: file.id,
-          x: e.clientX + file.deltaX,
-          y: e.clientY + file.deltaY
-        });
+        dispatch(
+          moveFile({
+            ...file,
+            id: file.id,
+            x: e.clientX + file.deltaX,
+            y: e.clientY + file.deltaY
+          })
+        );
       }
     });
-  }
+  };
 
-  renderFile(file: GenericFile) {
+  const renderFile = (file: GenericFile) => {
     return (
       <div
         key={file.id}
         id={`file-${file.id}`}
         draggable={!file.isRenaming}
         onDragStart={e => {
-          const selectedFiles = this.props.files
-            .filter(
-              derivedFile => this.state.selected.indexOf(derivedFile.id) > -1
-            )
-            .map((derivedFile: any) => {
+          const selectedFilesWithDerivedData = allFiles
+            .filter(file => selectedFilesIds.indexOf(file.id) > -1)
+            .map((file: GenericFile) => {
+              const derivedFile: any = file;
               derivedFile.deltaX = derivedFile.x - e.clientX;
               derivedFile.deltaY = derivedFile.y - e.clientY;
-              derivedFile.name = file.title; // TODO:
+              derivedFile.name = derivedFile.title;
               derivedFile.duration = Math.floor(Math.random() * 306) + 201;
-              derivedFile.defaultName = file.title;
+              derivedFile.defaultName = derivedFile.title;
               return derivedFile;
             });
-          this.onDragStart(e, selectedFiles);
+          onDragStart(e, selectedFilesWithDerivedData);
         }}
         onMouseDown={() => {
-          if (this.state.selected.length <= 1)
-            this.setState({ selected: [file.id] });
+          if (selectedFilesIds.length <= 1) setSelectedFiles([file.id]);
         }}
       >
         <FileItem
           key={file.id}
           file={file}
-          selected={this.state.selected.indexOf(file.id) !== -1}
+          selected={selectedFilesIds.indexOf(file.id) !== -1}
           onDoubleClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-            this.doubleClickHandler(file, e)
+            doubleClickHandler(file, e)
           }
           confirmRenameFile={e => {
             e.preventDefault();
             if (e.target[0].value.length === 0) {
               return;
             }
-            this.props.confirmRenameFile(file, e.target[0].value);
+            dispatch(confirmRenameFile(file, e.target[0].value));
           }}
         />
       </div>
     );
-  }
+  };
 
-  doubleClickHandler(
+  const doubleClickHandler = (
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) {
+  ) => {
     if (file.isRenaming) return;
-
-    if (isTrack(file)) this.props.playTrack(file);
+    if (isTrack(file)) dispatch(playTrack(file));
     if (isAlbum(file))
-      this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id, e);
+      dispatch(setItems(ACTION_TYPE.ALBUM, file.metaData.id ?? file.metaData.id, undefined, e));
     if (isArtist(file))
-      this.props.setItems(
-        ACTION_TYPE.ARTIST,
-        (file as ArtistFile).metaData.id,
-        e
+      dispatch(
+        setItems(
+          ACTION_TYPE.ARTIST,
+          (file as ArtistFile).metaData.id ??  (file as ArtistFile).metaData.id,
+          undefined,
+          e
+        )
       );
-    if (isImage(file))
-      this.props.openImage((file as ImageFile).metaData.url, e);
+    if (isImage(file)) dispatch(openImage((file as ImageFile).metaData.url, e));
     if (isAction(file)) {
-      this.props.setItems((file as ActionFile).metaData.action, undefined, e);
+      dispatch(
+        setItems((file as ActionFile).metaData.action, undefined, undefined, e)
+      );
     }
-  }
+  };
 
-  handleDesktopClick(e: any) {
+  const handleDesktopClick = (e: any) => {
     if (e.target.id.split(" ").indexOf("dropzone") !== -1) {
-      this.setState({ selected: [] });
-      if (this.props.files.some(file => file.isRenaming)) {
-        const filesInRenameMode = this.props.files.filter(
-          file => file.isRenaming
-        );
+      setSelectedFiles([]);
+      if (allFiles.some(file => file.isRenaming)) {
+        const filesInRenameMode = allFiles.filter(file => file.isRenaming);
 
         // TODO: Doesn't work right now. This will need refactoring of the File and Desktop components
         filesInRenameMode.map(file =>
-          this.props.confirmRenameFile(file, file.title)
+          dispatch(confirmRenameFile(file, file.title))
         );
       }
     }
-  }
-  render() {
-    const { files } = this.props;
+  };
 
-    return (
-      <div
-        style={{
-          position: "fixed",
-          width: "100%",
-          height: "100%",
-          padding: 0,
-          margin: 0,
-          overflow: "hidden",
-          zIndex: -777
+  return (
+    <div
+      style={{
+        position: "fixed",
+        width: "100%",
+        height: "100%",
+        padding: 0,
+        margin: 0,
+        overflow: "hidden",
+        zIndex: -777
+      }}
+      id="dropzone"
+      className="selectzone"
+      onDrop={e => onDrop(e)}
+      onDragOver={e => {
+        e.preventDefault();
+      }}
+    >
+      <FileContextMenu
+        onRename={e => {
+          dispatch(cancelRenaming());
+          dispatch(renameFile(e.event.target.id));
         }}
-        id="dropzone"
-        className="selectzone"
-        onDrop={e => this.onDrop(e)}
-        onDragOver={e => {
-          e.preventDefault();
+        onDelete={() => {
+          selectedFilesIds.forEach(id => dispatch(deleteFile(id)));
         }}
-      >
-        <FileContextMenu
-          onRename={e => {
-            this.props.cancelRenaming();
-            this.props.renameFile(e.ref.id);
+        onCopy={e => {
+          setClipboard(e.event.target.id);
+        }}
+        onPaste={e => {
+          const copy = allFiles.find(file => file.id === clipboard);
+          if (copy) {
+            dispatch(createFile({
+              ...copy,
+              x: e.event.clientX - 25,
+              y: e.event.clientY - 25
+            }));
+          }
+        }}
+        onTrackData={e => {
+          // TODO:
+        }}
+      />
+      <MenuProvider id="desktop">
+        <div
+          id="dropzone selectzone"
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%"
           }}
-          onDelete={() => {
-            this.state.selected.forEach(id => this.props.deleteFile(id));
-          }}
-          onCopy={e => {
-            this.setState({ clipboard: e.ref.id });
-          }}
-          onPaste={e => {
-            const copy = this.props.files.find(
-              file => file.id === this.state.clipboard
-            );
-            if (copy) {
-              this.props.createFile({
-                ...copy,
-                x: e.event.clientX - 25,
-                y: e.event.clientY - 25
-              });
-            }
-          }}
-          onTrackData={e => {
-            // TODO:
-          }}
+          onMouseDown={e => handleDesktopClick(e)}
         />
-        <ContextMenuProvider id="desktop">
-          <div
-            id="dropzone selectzone"
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%"
-            }}
-            onMouseDown={e => this.handleDesktopClick(e)}
-          />
-        </ContextMenuProvider>
-        {files.map(this.renderFile)}
-      </div>
-    );
-  }
-}
-const mapStateToProps = (state: AppState) => ({
-  desktop: state.desktop,
-  files: selectFiles(state)
-});
+      </MenuProvider>
+      {allFiles.map(renderFile)}
+    </div>
+  );
+};
 
-const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  createFile: (file: GenericFile) => {
-    dispatch(createFile(file));
-  },
-  setItems: (
-    actionType: ACTION_TYPE,
-    uri?: string,
-    e?: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => dispatch(setItems(actionType, uri ? uri : undefined, undefined, e)),
-  moveFile: (file: GenericFile) => dispatch(moveFile(file)),
-  openImage: (image: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-    dispatch(openImage(image, e)),
-  renameFile: (id: string) => dispatch(renameFile(id)),
-  deleteFile: (fileId: string) => dispatch(deleteFile(fileId)),
-  cancelRenaming: () => dispatch(cancelRenaming()),
-  confirmRenameFile: (file: any, title: string) =>
-    dispatch(confirmRenameFile(file, title)),
-  playTrack: (file: TrackFile) => dispatch(playTrack(file)),
-  setDataTransferArray: (dataTransferArray: WebampTrackFormat[]) =>
-    dispatch(setDataTransfer(dataTransferArray))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Desktop);
+ export default Desktop;
