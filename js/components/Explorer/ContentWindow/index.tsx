@@ -1,14 +1,11 @@
-import React from "react";
-import { connect, MapDispatchToProps, MapStateToProps } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
 import {
-  getArtistFromId,
   selectFile,
   setItems,
-  setMoreSearchResults,
-  unsetFocusExplorer
+  unsetFocusExplorer,
+  setMoreSearchResults
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
@@ -21,12 +18,7 @@ import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
 import { blueTitleBar, greenSpotify } from "../../../styles/colors";
-import {
-  ACTION_TYPE,
-  GenericFile,
-  TrackFile,
-  WebampTrackFormat
-} from "../../../types";
+import { ACTION_TYPE, GenericFile } from "../../../types";
 import {
   isAlbum,
   isArtist,
@@ -47,69 +39,50 @@ declare global {
   }
 }
 
-interface State {
-  holdShift: boolean;
-}
-interface OwnProps {
+interface Props {
   explorer: SingleExplorerState;
   files: GenericFile[] | null;
 }
 
-interface StateProps {
-  selectedFiles: string[];
-  searchPagination: QueryState;
-}
+export default function(props: Props) {
+  const explorerId = props.explorer.id;
 
-interface DispatchProps {
-  selectFile(ids: string[]): void;
-  playTrack(file: TrackFile): void;
-  getArtistInfo(id: string): void;
-  unsetFocusExplorer(): void;
-  openImage(
-    image: string,
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ): void;
-  setItems(uriType: ACTION_TYPE, uri: string): void;
-  setMoreSearchResults(type: string): void;
-  setDataTransferArray(arr: WebampTrackFormat[]): void;
-}
+  // State
+  const [holdShift, toggleHoldShift] = useState(false);
+  // Selectors
+  const selectedFiles = useSelector<AppState, string[]>(
+    state => state.explorer.byId[explorerId].selectedFiles
+  );
+  const searchPagination = useSelector<AppState, QueryState>(state =>
+    selectSearch(state, explorerId)
+  );
+  // Dispatch
+  const dispatch = useDispatch();
 
-type Props = OwnProps & StateProps & DispatchProps;
-class ContentWindow extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      holdShift: false
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     document.addEventListener("keydown", e => {
-      if (e.keyCode === 16) this.setState({ holdShift: true });
+      if (e.keyCode === 16) toggleHoldShift(true);
     });
     document.addEventListener("keyup", e => {
-      if (e.keyCode === 16) this.setState({ holdShift: false });
+      if (e.keyCode === 16) toggleHoldShift(false);
     });
-  }
+  }, []);
 
-  doubleClickHandler(
+  const doubleClickHandler = (
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) {
-    if (isTrack(file)) this.props.playTrack(file);
-    if (isAlbum(file)) this.props.setItems(ACTION_TYPE.ALBUM, file.metaData.id);
+  ) => {
+    if (isTrack(file)) dispatch(playTrack(file));
+    if (isAlbum(file))
+      dispatch(setItems(ACTION_TYPE.ALBUM, file.metaData.id, explorerId));
     if (isArtist(file))
-      this.props.setItems(ACTION_TYPE.ARTIST, file.metaData.id);
-    if (isImage(file)) this.props.openImage(file.metaData.url, e);
-  }
+      dispatch(setItems(ACTION_TYPE.ARTIST, file.metaData.id, explorerId));
+    if (isImage(file)) dispatch(openImage(file.metaData.url, e));
+  };
 
-  async onDrag(e: any, files: GenericFile[]) {
+  const onDrag = async (e: any, files: GenericFile[]) => {
     e.persist();
-
-    // e.dataTransfer.setData("tracks", window.dataTransferObject);
-
     const dataTransferObject = e.dataTransfer;
-
     const emptyImage = document.createElement("img");
     emptyImage.src =
       "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
@@ -135,7 +108,7 @@ class ContentWindow extends React.Component<Props, State> {
             formattedFilesForWebamp.push(formatMetaToWebampMeta(trackItem))
           );
 
-          this.props.setDataTransferArray(formattedFilesForWebamp.flat());
+          dispatch(setDataTransfer(formattedFilesForWebamp.flat()));
           window.dataTransferObject = JSON.stringify(
             formattedFilesForWebamp.flat()
           );
@@ -153,7 +126,7 @@ class ContentWindow extends React.Component<Props, State> {
           );
         });
         Promise.all(promises).then(() => {
-          this.props.setDataTransferArray(formattedFilesForWebamp.flat());
+          dispatch(setDataTransfer(formattedFilesForWebamp.flat()));
           window.dataTransferObject = JSON.stringify(
             formattedFilesForWebamp.flat()
           );
@@ -161,7 +134,7 @@ class ContentWindow extends React.Component<Props, State> {
         });
       }
     });
-    this.props.setDataTransferArray(formattedFilesForWebamp.flat());
+    dispatch(setDataTransfer(formattedFilesForWebamp.flat()));
     window.dataTransferObject = JSON.stringify(formattedFilesForWebamp.flat());
 
     e.dataTransfer.setData(
@@ -169,14 +142,49 @@ class ContentWindow extends React.Component<Props, State> {
       JSON.stringify(formattedFilesForWebamp.flat())
     ); // for winamp
     e.dataTransfer.setData("files", JSON.stringify(filesForDesktop)); // for desktop
-  }
+  };
 
-  renderFile(file: GenericFile) {
-    const selected = this.props.explorer.selectedFiles.includes(file.id);
+  const renderFile = (file: GenericFile) => {
+    const selected = props.explorer.selectedFiles.includes(file.id);
     const getExtension = (type: string) => {
       if (type === "track") return ".mp3";
       if (type === "image") return ".jpg";
       return null;
+    };
+
+    const handleShiftSelect = () => {
+      const indexOfFileSelected = props.files.indexOf(file);
+      const indexOfFilePreviouslySelected = props.files.indexOf(
+        props.files.find(item => selectedFiles[0] === item.id)
+      );
+      if (indexOfFileSelected >= indexOfFilePreviouslySelected) {
+        dispatch(
+          selectFile(
+            props.files
+              .filter(
+                (omit, index) =>
+                  index >= indexOfFilePreviouslySelected &&
+                  index <= indexOfFileSelected
+              )
+              .map(item => item.id),
+            explorerId
+          )
+        );
+      }
+      if (indexOfFileSelected <= indexOfFilePreviouslySelected) {
+        dispatch(
+          selectFile(
+            props.files
+              .filter(
+                (omit, index) =>
+                  index >= indexOfFileSelected &&
+                  index <= indexOfFilePreviouslySelected
+              )
+              .map(item => item.id),
+            explorerId
+          )
+        );
+      }
     };
     return (
       <ExplorerFile
@@ -184,73 +192,42 @@ class ContentWindow extends React.Component<Props, State> {
         file={file}
         selected={selected}
         onDrag={(e: any) =>
-          this.onDrag(
-            e,
-            this.props.files.filter(item =>
-              this.props.selectedFiles.includes(item.id)
-            )
-          )
+          onDrag(e, props.files.filter(item => selectedFiles.includes(item.id)))
         }
         onClick={() => {
-          if (this.state.holdShift && this.props.selectedFiles.length === 1) {
-            const indexOfFileSelected = this.props.files.indexOf(file);
-            const indexOfFilePreviouslySelected = this.props.files.indexOf(
-              this.props.files.find(
-                item => this.props.selectedFiles[0] === item.id
-              )
-            );
-            if (indexOfFileSelected >= indexOfFilePreviouslySelected) {
-              this.props.selectFile(
-                this.props.files
-                  .filter(
-                    (omit, index) =>
-                      index >= indexOfFilePreviouslySelected &&
-                      index <= indexOfFileSelected
-                  )
-                  .map(item => item.id)
-              );
-            }
-            if (indexOfFileSelected <= indexOfFilePreviouslySelected) {
-              this.props.selectFile(
-                this.props.files
-                  .filter(
-                    (omit, index) =>
-                      index >= indexOfFileSelected &&
-                      index <= indexOfFilePreviouslySelected
-                  )
-                  .map(item => item.id)
-              );
-            }
-          } else if (this.props.selectedFiles.includes(file.id)) {
+          if (holdShift && selectedFiles.length === 1) {
+            handleShiftSelect();
             return;
-          } else this.props.selectFile([file.id]);
-        }} // was -1 for image
-        onDoubleClick={e => this.doubleClickHandler(file, e)}
+          } else if (selectedFiles.includes(file.id)) {
+            return;
+          } else dispatch(selectFile([file.id], explorerId));
+        }}
+        onDoubleClick={e => doubleClickHandler(file, e)}
       >
         {file.title}
         {getExtension(file.metaData.type)}
       </ExplorerFile>
     );
-  }
+  };
 
-  handleClickOutside(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  const handleClickOutside = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     if ((e as any).target.className === "explorer-items-container") {
-      this.props.unsetFocusExplorer();
+      dispatch(unsetFocusExplorer(props.explorer.id));
     }
-  }
+  };
 
-  renderNoResults() {
+  const renderNoResults = () => {
     return <div style={styles.noResults}>No results found</div>;
-  }
+  };
 
-  renderSearchResults() {
-    const { searchPagination } = this.props;
-
+  const renderSearchResults = () => {
     if (!searchPagination.filter.types.length)
       return (
         <div
           className="explorer-items-container"
-          onMouseDown={e => this.handleClickOutside(e)}
+          onMouseDown={handleClickOutside}
           style={container}
         >
           <div style={styles.noResults}>
@@ -258,9 +235,9 @@ class ContentWindow extends React.Component<Props, State> {
           </div>
         </div>
       );
-    const artists = this.props.files.filter(isArtist);
-    const albums = this.props.files.filter(isAlbum);
-    const tracks = this.props.files.filter(isTrack);
+    const artists = props.files.filter(isArtist);
+    const albums = props.files.filter(isAlbum);
+    const tracks = props.files.filter(isTrack);
     const remainingArtists =
       searchPagination.artist.total - searchPagination.artist.current;
     const remainingAlbums =
@@ -271,18 +248,18 @@ class ContentWindow extends React.Component<Props, State> {
     return (
       <div
         className="explorer-items-container"
-        onMouseDown={e => this.handleClickOutside(e)}
+        onMouseDown={handleClickOutside}
         style={container}
       >
         {searchPagination.filter.types.includes("artist") && (
           <>
-            {this.renderCategoryHeader("Artists")}
-            {artists.map(file => this.renderFile(file))}
-            {artists.length === 0 && this.renderNoResults()}
+            {renderCategoryHeader("Artists")}
+            {artists.map(renderFile)}
+            {artists.length === 0 && renderNoResults()}
             {remainingArtists > 0 && (
               <div
                 style={styles.moreButton}
-                onClick={() => this.props.setMoreSearchResults("artist")}
+                onClick={() => dispatch(setMoreSearchResults("artist"))}
               >
                 {searchPagination.artist.loading ? (
                   <BeatLoader color={blueTitleBar} size={5} />
@@ -296,13 +273,13 @@ class ContentWindow extends React.Component<Props, State> {
         )}
         {searchPagination.filter.types.includes("album") && (
           <>
-            {this.renderCategoryHeader("Albums")}
-            {albums.map(file => this.renderFile(file))}
-            {albums.length === 0 && this.renderNoResults()}
+            {renderCategoryHeader("Albums")}
+            {albums.map(renderFile)}
+            {albums.length === 0 && renderNoResults()}
             {remainingAlbums > 0 && (
               <div
                 style={styles.moreButton}
-                onClick={() => this.props.setMoreSearchResults("album")}
+                onClick={() => dispatch(setMoreSearchResults("album"))}
               >
                 {searchPagination.album.loading ? (
                   <BeatLoader color={blueTitleBar} size={5} />
@@ -316,13 +293,13 @@ class ContentWindow extends React.Component<Props, State> {
         )}
         {searchPagination.filter.types.includes("track") && (
           <>
-            {this.renderCategoryHeader("Tracks")}
-            {tracks.map(file => this.renderFile(file))}
-            {tracks.length === 0 && this.renderNoResults()}
+            {renderCategoryHeader("Tracks")}
+            {tracks.map(renderFile)}
+            {tracks.length === 0 && renderNoResults()}
             {remainingTracks > 0 && (
               <div
                 style={styles.moreButton}
-                onClick={() => this.props.setMoreSearchResults("track")}
+                onClick={() => dispatch(setMoreSearchResults("track"))}
               >
                 {searchPagination.track.loading ? (
                   <BeatLoader color={blueTitleBar} size={5} />
@@ -336,72 +313,26 @@ class ContentWindow extends React.Component<Props, State> {
         )}
       </div>
     );
-  }
-
-  renderCategoryHeader(text: string) {
-    return (
-      <div style={styles.searchCategory}>
-        {text}
-        <div style={styles.searchSeparator} />
-      </div>
-    );
-  }
-
-  render() {
-    if (this.props.explorer.loading)
-      return <ContentLoading color={greenSpotify} />;
-
-    if (!this.props.files) return null;
-    if (this.props.explorer.query) return this.renderSearchResults();
-    return (
-      <div
-        className="explorer-items-container"
-        onMouseDown={e => this.handleClickOutside(e)}
-        style={container}
-      >
-        {this.props.files.map(file => this.renderFile(file))}
-      </div>
-    );
-  }
-}
-
-const mapStateToProps: MapStateToProps<StateProps, OwnProps, AppState> = (
-  state: AppState,
-  ownProps: OwnProps
-) => ({
-  selectedFiles: state.explorer.byId[ownProps.explorer.id].selectedFiles,
-  searchPagination: selectSearch(state, ownProps.explorer.id)
-});
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, OwnProps> = (
-  dispatch: ThunkDispatch<AppState, null, Action>,
-  ownProps: OwnProps
-) => {
-  const { id: explorerId } = ownProps.explorer;
-  return {
-    selectFile: (id: string[]) => {
-      dispatch(selectFile(id, explorerId));
-    },
-    playTrack: (file: TrackFile) => {
-      dispatch(playTrack(file));
-    },
-    getArtistInfo: (id: string) => {
-      dispatch(getArtistFromId(id));
-    },
-    unsetFocusExplorer: () => dispatch(unsetFocusExplorer(explorerId)),
-    openImage: (
-      image: string,
-      e: React.MouseEvent<HTMLDivElement, MouseEvent>
-    ) => dispatch(openImage(image, e)),
-    setItems: (uriType: ACTION_TYPE, uri: string) =>
-      dispatch(setItems(uriType, uri, explorerId)),
-    setMoreSearchResults: (type: "album" | "artist" | "track") =>
-      dispatch(setMoreSearchResults(type)),
-    setDataTransferArray: (obj: any) => dispatch(setDataTransfer(obj))
   };
-};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ContentWindow);
+  const renderCategoryHeader = (text: string) => (
+    <div style={styles.searchCategory}>
+      {text}
+      <div style={styles.searchSeparator} />
+    </div>
+  );
+
+  if (props.explorer.loading) return <ContentLoading color={greenSpotify} />;
+  if (!props.files) return null;
+  if (props.explorer.query) return renderSearchResults();
+
+  return (
+    <div
+      className="explorer-items-container"
+      onMouseDown={handleClickOutside}
+      style={container}
+    >
+      {props.files.map(renderFile)}
+    </div>
+  );
+}

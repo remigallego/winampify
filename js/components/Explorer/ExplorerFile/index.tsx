@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactNode } from "react";
 import { GenericFile } from "../../../types";
 import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
@@ -12,7 +12,7 @@ interface Props {
   onClick: () => void;
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onDrag(e: React.DragEvent<HTMLDivElement>): void;
-  children: ReactElement;
+  children: ReactNode;
 }
 
 export default function(props: Props) {
