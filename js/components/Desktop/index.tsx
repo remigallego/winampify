@@ -31,7 +31,7 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
-import { setDataTransfer } from "../../actions/dataTransfer";
+import { setWebampDataTransfer } from "../../actions/dataTransfer";
 import { DesktopState } from "../../reducers/desktop";
 
 interface Props {
@@ -76,18 +76,15 @@ const Desktop = function(props: Props) {
 
   const onDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    files: GenericFile[]
+    draggedFiles: GenericFile[]
   ) => {
-    const tracks = allFiles.map((file: any) => {
-      if (isTrack(file)) return formatMetaToWebampMeta(file.metaData);
-    });
-    dispatch(setDataTransfer(tracks.flat()));
-    e.dataTransfer.setData("files", JSON.stringify(files)); // TODO: Refactor to use dataTransferArray
+    dispatch(setWebampDataTransfer(draggedFiles.filter(isTrack).map(file => formatMetaToWebampMeta(file.metaData)).flat()));
+    e.dataTransfer.setData("dragged_files", JSON.stringify(draggedFiles)); 
   };
 
   const onDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
-    const files: GenericFile[] = JSON.parse(e.dataTransfer.getData("files")); // TODO: Refactor to use dataTransferArray
+    const files: GenericFile[] = JSON.parse(e.dataTransfer.getData("dragged_files"));
 
     const isNewFile = (file: GenericFile) =>
       desktop.byId[file.id] === undefined || desktop.byId[file.id] === null;

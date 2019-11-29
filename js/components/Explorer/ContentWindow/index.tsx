@@ -29,7 +29,7 @@ import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { setDataTransfer } from "../../../actions/dataTransfer";
+import { setWebampDataTransfer } from "../../../actions/dataTransfer";
 
 const { container } = styles;
 
@@ -108,11 +108,7 @@ export default function(props: Props) {
             formattedFilesForWebamp.push(formatMetaToWebampMeta(trackItem))
           );
 
-          dispatch(setDataTransfer(formattedFilesForWebamp.flat()));
-          window.dataTransferObject = JSON.stringify(
-            formattedFilesForWebamp.flat()
-          );
-          dataTransferObject.setData("tracks", window.dataTransferObject); // for winamp
+          dispatch(setWebampDataTransfer(formattedFilesForWebamp.flat()));
         }
       }
       if (isArtist(item)) {
@@ -126,22 +122,13 @@ export default function(props: Props) {
           );
         });
         Promise.all(promises).then(() => {
-          dispatch(setDataTransfer(formattedFilesForWebamp.flat()));
-          window.dataTransferObject = JSON.stringify(
-            formattedFilesForWebamp.flat()
-          );
-          dataTransferObject.setData("tracks", window.dataTransferObject); // for winamp
+          dispatch(setWebampDataTransfer(formattedFilesForWebamp.flat()));
         });
       }
     });
-    dispatch(setDataTransfer(formattedFilesForWebamp.flat()));
-    window.dataTransferObject = JSON.stringify(formattedFilesForWebamp.flat());
 
-    e.dataTransfer.setData(
-      "tracks",
-      JSON.stringify(formattedFilesForWebamp.flat())
-    ); // for winamp
-    e.dataTransfer.setData("files", JSON.stringify(filesForDesktop)); // for desktop
+    dispatch(setWebampDataTransfer(formattedFilesForWebamp.flat()));
+    e.dataTransfer.setData("dragged_files", JSON.stringify(filesForDesktop)); // for desktop
   };
 
   const renderFile = (file: GenericFile) => {
