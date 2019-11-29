@@ -94,6 +94,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) =>
   bindActionCreators({ updateFilter }, dispatch);
 
+// Can't refactor this component to Hooks, it throws an out-of-the-store error.
 export default connect(
   mapStateToProps,
   mapDispatchToProps

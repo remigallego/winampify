@@ -9,6 +9,8 @@ import Popover from "react-tiny-popover";
 
 import { blueTitleBar } from "../../../styles/colors";
 import FilterPopover from "../FilterPopover";
+import { Provider } from "react-redux";
+import store from "../../../store";
 
 interface OwnProps {
   onChange: (text: string, e: ChangeEvent<HTMLInputElement>) => void;
@@ -45,7 +47,9 @@ const SearchInput = (props: Props) => {
         isOpen={isFilterOpen}
         position={"right"}
         windowBorderPadding={5}
-        content={(popoverProps: any) => <FilterPopover {...popoverProps} />}
+        content={(popoverProps: any) => (
+          <FilterPopover store={store} {...popoverProps} />
+        )}
         containerStyle={{
           overflow: "unset",
           minWidth: "200px",
