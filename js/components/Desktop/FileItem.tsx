@@ -5,7 +5,7 @@ import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import folderclosed from "./images/folderclosed.png";
 import InputRenaming from "./InputRenaming";
-import { DesktopFileStyle } from "./styles";
+import styled, { keyframes } from "styled-components";
 
 interface Props {
   file: GenericFile;
@@ -35,48 +35,63 @@ const FileItem = (props: Props) => {
 
   return (
     <MenuProvider id={file.metaData.type}>
-      <div
-        className="file-fadein"
-        style={{
-          width: "100px",
-          position: "absolute",
-          left: file.x,
-          top: file.y,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
+      <Container
+        file={file}
         id={file.id}
         onMouseDown={props.onClick}
         onDoubleClick={props.onDoubleClick}
       >
-        <img src={getIcon()} style={DesktopFileStyle.image} />
+        <Image src={getIcon()} />
         {file.isRenaming ? (
           <InputRenaming
             initialValue={file.title}
             confirmRenameFile={props.confirmRenameFile}
           />
         ) : (
-          <div
-            style={{
-              fontSize: "14px",
-              textAlign: "center",
-              color: "white",
-              textShadow: "1px 1px black",
-              backgroundColor: props.selected ? "#3064BD" : "transparent",
-              border: props.selected
-                ? "1px dotted white"
-                : "1px dotted transparent",
-              borderStyle: "dotted",
-              boxSizing: "border-box"
-            }}
-          >
-            {file.title}
-          </div>
+          <Title selected={props.selected}>{file.title}</Title>
         )}
-      </div>
+      </Container>
     </MenuProvider>
   );
 };
 
 export default FileItem;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const Container = styled.div<{ file: GenericFile }>`
+  width: 100px;
+  position: absolute;
+  left: ${props => props.file.x}px;
+  top: ${props => props.file.y}px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation-duration: 0.18s;
+  animation-name: ${fadeIn};
+`;
+
+const Image = styled.img`
+  width: 50px;
+  height: 50px;
+  z-index: -4;
+`;
+
+const Title = styled.div<{ selected: boolean }>`
+  font-size: 14px;
+  text-align: center;
+  color: white;
+  text-shadow: 1px 1px black;
+  background-color: ${props => (props.selected ? "#3064BD" : "transparent")};
+  border: ${props =>
+    props.selected ? "1px dotted white" : "1px dotted transparent"};
+  border-style: dotted;
+  box-sizing: border-box;
+`;
