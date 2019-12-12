@@ -4,13 +4,14 @@
     "module": "commonjs",
     "target": "esnext",
     "allowJs": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "strict": true,
     "jsx": "preserve",
     "pretty": true,
-    "strictNullChecks": false,
+    "strictNullChecks": false
   },
   "include": ["index.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": [
