@@ -1,12 +1,10 @@
 import "babel-polyfill";
 import React from "react";
-import { render } from "react-dom";
-import { connect, Provider } from "react-redux";
+import { connect } from "react-redux";
 import "../../css/line-scale.css";
 import { authenticate } from "../actions/auth";
 import { AppState } from "../reducers";
 import { AuthState, LOADING } from "../reducers/auth";
-import { getParams } from "../utils/common";
 import App from "./App";
 import LandingPage from "./Landingpage";
 
@@ -61,7 +59,4 @@ const mapDispatchToProps = (dispatch: any): DispatchProps => ({
     dispatch(authenticate(accessToken, refreshToken))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Winampify);
+export default connect(mapStateToProps, mapDispatchToProps)(Winampify);
