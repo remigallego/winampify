@@ -38,7 +38,7 @@ interface Props {
   selectionBox: any;
 }
 
-const Desktop = function(props: Props) {
+export default (props: Props) => {
   const [selectedFilesIds, setSelectedFiles] = useState<string[]>([]);
   const [clipboard, setClipboard] = useState(null);
   const desktop = useSelector<AppState, DesktopState>(state => state.desktop);
@@ -274,5 +274,3 @@ const Desktop = function(props: Props) {
     </div>
   );
 };
-
-export default Desktop;
