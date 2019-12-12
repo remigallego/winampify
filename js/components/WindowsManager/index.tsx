@@ -1,7 +1,6 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Webamp, * as WebampInstance from "webamp";
-import { createNewExplorer, setItems } from "../../actions/explorer";
 import { closeImage } from "../../actions/images";
 import { setOnTop } from "../../actions/windows";
 import { AppState } from "../../reducers";
@@ -10,63 +9,57 @@ import { Window, WINDOW_TYPE } from "../../reducers/windows";
 import { selectExplorers, selectImages } from "../../selectors/explorer";
 import { selectWindows } from "../../selectors/windows";
 import SpotifyMedia from "../../spotifymedia";
-import { ACTION_TYPE, ImageDialogType, GenericFile } from "../../types";
+import { ImageDialogType } from "../../types";
 import Explorer from "../Explorer";
 import ImageModal from "../ImageDialog";
 import WindowInstance from "./WindowInstance";
-import ExplorerFile from "../Explorer/ExplorerFile";
 
-interface StateProps {
-  explorers: SingleExplorerState[];
-  images: ImageDialogType[];
-  windows: Window[];
-  dataTransferArray: any;
-}
+export default () => {
+  const [webampNode, setWebampNode] = useState(null);
 
-interface DispatchProps {
-  closeImage: (key: string) => void;
-  createNewExplorer: () => void;
-  setItems: (actionType: ACTION_TYPE) => void;
-  setOnTop: (id: string) => void;
-}
+  const images = useSelector<AppState, ImageDialogType[]>(selectImages);
+  const explorers = useSelector<AppState, SingleExplorerState[]>(
+    selectExplorers
+  );
+  const windows = useSelector<AppState, Window[]>(selectWindows);
+  const dataTransferArray = useSelector<AppState, any>(
+    state => state.dataTransfer.data
+  );
 
-type Props = StateProps & DispatchProps;
+  const dispatch = useDispatch();
 
-class WindowsManager extends React.Component<Props, {}> {
-  webampNode!: HTMLDivElement;
-
-  getWindow(window: Window, index: number) {
+  const getWindow = (window: Window, index: number) => {
     switch (window.type) {
       case WINDOW_TYPE.Webamp: {
-        if (this.webampNode) {
-          this.webampNode.style.zIndex = index.toString();
+        if (webampNode) {
+          webampNode.style.zIndex = index.toString();
         }
         return null;
       }
       case WINDOW_TYPE.Explorer: {
-        const explorer = this.props.explorers.find(
+        const explorer = explorers.find(
           explorerElement => explorerElement.id === window.id
         );
         if (explorer !== undefined)
           return <Explorer key={window.id} explorer={explorer} />;
       }
       case WINDOW_TYPE.Image: {
-        const image = this.props.images.find(img => img.id === window.id);
+        const image = images.find(img => img.id === window.id);
         if (image !== undefined)
           return (
             <ImageModal
               key={window.id}
               image={image}
-              onDismiss={() => this.props.closeImage(window.id)}
+              onDismiss={() => dispatch(closeImage(window.id))}
             />
           );
       }
       default:
         return null;
     }
-  }
+  };
 
-  componentDidMount() {
+  useEffect(() => {
     const Webamp: any = WebampInstance;
     const webamp: Webamp = new Webamp(
       {
@@ -84,10 +77,10 @@ class WindowsManager extends React.Component<Props, {}> {
             }
           }
         },
-        handleTrackDropEvent: (e: React.DragEvent<HTMLDivElement>) => {
-          if (this.props.dataTransferArray?.length > 0) {
+        handleTrackDropEvent: () => {
+          if (dataTransferArray?.length > 0) {
             try {
-              return this.props.dataTransferArray;
+              return dataTransferArray;
             } catch (err) {
               // tslint:disable-next-line: no-console
               console.error(err);
@@ -112,52 +105,33 @@ class WindowsManager extends React.Component<Props, {}> {
         const path = evt.path || (evt.composedPath && evt.composedPath());
 
         if (path.some((el: HTMLDivElement) => el.id === "webamp")) {
-          if (!this.webampNode) {
-            const webampNode: HTMLDivElement = path.find(
+          if (!webampNode) {
+            const newNode: HTMLDivElement = path.find(
               (el: HTMLDivElement) => el.id === "webamp"
             );
-            this.webampNode = webampNode;
+            setWebampNode(newNode);
           }
-          this.props.setOnTop("webamp");
+          dispatch(setOnTop("webamp"));
         }
       },
       // If the clicked element doesn't have the right selector, bail
       false
     );
-  }
-  render() {
-    return (
-      <>
-        {this.props.windows.map((window: Window, index) => {
-          return (
-            <WindowInstance
-              key={window.id}
-              zIndex={index}
-              setOnTop={() => this.props.setOnTop(window.id)}
-            >
-              {this.getWindow(window, index)}
-            </WindowInstance>
-          );
-        })}
-      </>
-    );
-  }
-}
+  }, []);
 
-const mapStateToProps = (state: AppState): StateProps => ({
-  images: selectImages(state),
-  explorers: selectExplorers(state),
-  windows: selectWindows(state),
-  dataTransferArray: state.dataTransfer.data
-});
-
-const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  closeImage: (key: string) => dispatch(closeImage(key)),
-  createNewExplorer: () => dispatch(createNewExplorer()),
-  setItems: (actionType: ACTION_TYPE) => dispatch(setItems(actionType)),
-  setOnTop: id => dispatch(setOnTop(id))
-});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WindowsManager);
+  return (
+    <>
+      {windows.map((window: Window, index) => {
+        return (
+          <WindowInstance
+            key={window.id}
+            zIndex={index}
+            setOnTop={() => dispatch(setOnTop(window.id))}
+          >
+            {getWindow(window, index)}
+          </WindowInstance>
+        );
+      })}
+    </>
+  );
+};
