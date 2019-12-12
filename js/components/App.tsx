@@ -2,7 +2,6 @@ import React from "react";
 import ReactGA from "react-ga";
 import Desktop from "./Desktop";
 import DeveloperPanel from "./DeveloperPanel";
-import InfosBar from "./Reusables/InfosBar";
 import SelectionBox from "./Reusables/SelectionBox";
 import WindowsManager from "./WindowsManager";
 // import AudioPlayer from "./AudioPlayer";
@@ -35,7 +34,6 @@ class App extends React.Component<{}, State> {
             this.setState({ selectionBox: { target, origin } })
           }
         >
-          <InfosBar />
           <Desktop selectionBox={this.state.selectionBox} />
           <WindowsManager />
           {process.env.NODE_ENV === "development" && <DeveloperPanel />}

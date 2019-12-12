@@ -6,14 +6,14 @@ import styled from "styled-components";
 
 interface Props {
   onClose?: () => void | null;
-  title: string;
+  title?: string;
 }
 
 const TitleBar = (props: Props) => {
   return (
     <Bar className={dragHandleClassName}>
       <FlexRowContainer>
-        <Title>{props.title}</Title>
+        <Title>{props.title || ""}</Title>
         {props.onClose && <CloseIcon onClick={props.onClose} />}
       </FlexRowContainer>
     </Bar>

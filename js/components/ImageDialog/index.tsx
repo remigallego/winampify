@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Draggable from "react-draggable";
 import { ImageDialogType } from "../../types";
 import TitleBar from "../Explorer/TitleBar";
-import "./animations.css";
+import styled, { css, keyframes } from "styled-components";
 
 interface Props {
   image: ImageDialogType;
@@ -10,72 +10,88 @@ interface Props {
   onDismiss: () => void;
 }
 
-interface State {
-  animation: string;
-}
+export default (props: Props) => {
+  const [animation, setAnimation] = useState<"grow" | "shrink" | "">("");
 
-class ImageDialog extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { animation: "" };
-  }
+  useEffect(() => {
+    setAnimation("grow");
+    setTimeout(() => setAnimation(""), 250);
+  }, []);
 
-  componentWillMount() {
-    this.setState({ animation: "growing-animation" }, () =>
-      setTimeout(() => this.setState({ animation: "" }), 250)
-    );
-  }
+  return (
+    <>
+      <Draggable
+        key={props.key}
+        defaultPosition={{
+          x: props.image.x - 200,
+          y: props.image.y - 200
+        }}
+      >
+        <Container enableShadow={animation.length === 0}>
+          <Animated animation={animation}>
+            <TitleBar
+              onClose={() => {
+                setAnimation("shrink");
+                setTimeout(() => props.onDismiss(), 250);
+              }}
+            />
+            <Image
+              draggable={false}
+              src={props.image.source}
+              className={"unselectable-image"}
+              onMouseDown={e => e.preventDefault()}
+              height={400}
+              width={400}
+            />
+          </Animated>
+        </Container>
+      </Draggable>
+    </>
+  );
+};
 
-  render() {
-    return (
-      <>
-        <Draggable
-          onMouseDown={e => null /*  e.preventDefault() */}
-          key={this.props.key}
-          defaultPosition={{
-            x: this.props.image.x - 200,
-            y: this.props.image.y - 200
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              width: "400px",
-              resize: "both",
-              overflow: "auto",
-              "box-shadow":
-                this.state.animation.length === 0
-                  ? "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                  : ""
-            }}
-          >
-            <div className={this.state.animation}>
-              <TitleBar
-                onClose={() => {
-                  this.setState({ animation: "shrink-animation" }, () =>
-                    setTimeout(() => this.props.onDismiss(), 250)
-                  );
-                }}
-                title={""}
-              />
-              <img
-                draggable={false}
-                src={this.props.image.source}
-                className={"unselectable-image"}
-                onMouseDown={e => e.preventDefault()}
-                height={400}
-                width={400}
-                style={{
-                  display: "block",
-                  height: 400,
-                  width: 400
-                }}
-              />
-            </div>
-          </div>
-        </Draggable>
-      </>
-    );
+const Container = styled.div<{ enableShadow: boolean }>`
+  position: absolute;
+  width: 400px;
+  resize: both;
+  overflow: auto;
+  ${props =>
+    props.enableShadow &&
+    css`
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    `}
+`;
+
+const Image = styled.img`
+  display: block;
+  height: 400;
+  width: 400;
+`;
+
+const Animated = styled.div<{ animation: "grow" | "shrink" | "" }>`
+  ${props =>
+    props.animation === "grow" &&
+    css`
+      animation: ${growBox} 0.26s;
+      animation-timing-function: ease-out;
+    `}
+  ${props =>
+    props.animation === "shrink" &&
+    css`
+      animation: ${growBox} 0.17s forwards;
+      animation-timing-function: ease-out;
+      animation-direction: reverse;
+    `}
+`;
+
+const growBox = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0);
   }
-}
-export default ImageDialog;
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
