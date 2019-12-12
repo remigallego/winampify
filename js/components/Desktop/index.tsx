@@ -10,7 +10,7 @@ import {
   ActionFile,
   ArtistFile,
   GenericFile,
-  ImageFile,
+  ImageFile
 } from "../../types";
 import {
   isAction,
@@ -35,7 +35,6 @@ import { setWebampDataTransfer } from "../../actions/dataTransfer";
 import { DesktopState } from "../../reducers/desktop";
 
 interface Props {
-  files: GenericFile[];
   selectionBox: any;
 }
 
@@ -56,19 +55,17 @@ const Desktop = function(props: Props) {
     });
   }, []);
 
-  // Handles chaning the selected files based on the selection box.
+  // Handles changing the selected files based on the selection box.
   useEffect(() => {
+    const { target, origin } = props.selectionBox;
+
     const selected = allFiles
       .filter(
         file =>
-          ((file.x + 50 < props.selectionBox.target[0] &&
-            file.x + 50 > props.selectionBox.origin[0]) ||
-            (file.x + 50 > props.selectionBox.target[0] &&
-              file.x + 50 < props.selectionBox.origin[0])) &&
-          ((file.y + 50 < props.selectionBox.target[1] &&
-            file.y + 50 > props.selectionBox.origin[1]) ||
-            (file.y + 50 > props.selectionBox.target[1] &&
-              file.y + 50 < props.selectionBox.origin[1]))
+          ((file.x + 50 < target.x && file.x + 50 > origin.x) ||
+            (file.x + 50 > target.x && file.x + 50 < origin.x)) &&
+          ((file.y + 50 < target.y && file.y + 50 > origin.y) ||
+            (file.y + 50 > target.y && file.y + 50 < origin.y))
       )
       .map(file => file.id);
     setSelectedFiles(selected);
@@ -78,13 +75,22 @@ const Desktop = function(props: Props) {
     e: React.DragEvent<HTMLDivElement>,
     draggedFiles: GenericFile[]
   ) => {
-    dispatch(setWebampDataTransfer(draggedFiles.filter(isTrack).map(file => formatMetaToWebampMeta(file.metaData)).flat()));
-    e.dataTransfer.setData("dragged_files", JSON.stringify(draggedFiles)); 
+    dispatch(
+      setWebampDataTransfer(
+        draggedFiles
+          .filter(isTrack)
+          .map(file => formatMetaToWebampMeta(file.metaData))
+          .flat()
+      )
+    );
+    e.dataTransfer.setData("dragged_files", JSON.stringify(draggedFiles));
   };
 
   const onDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
-    const files: GenericFile[] = JSON.parse(e.dataTransfer.getData("dragged_files"));
+    const files: GenericFile[] = JSON.parse(
+      e.dataTransfer.getData("dragged_files")
+    );
 
     const isNewFile = (file: GenericFile) =>
       desktop.byId[file.id] === undefined || desktop.byId[file.id] === null;
@@ -169,12 +175,19 @@ const Desktop = function(props: Props) {
     if (file.isRenaming) return;
     if (isTrack(file)) dispatch(playTrack(file));
     if (isAlbum(file))
-      dispatch(setItems(ACTION_TYPE.ALBUM, file.metaData.id ?? file.metaData.id, undefined, e));
+      dispatch(
+        setItems(
+          ACTION_TYPE.ALBUM,
+          file.metaData.id ?? file.metaData.id,
+          undefined,
+          e
+        )
+      );
     if (isArtist(file))
       dispatch(
         setItems(
           ACTION_TYPE.ARTIST,
-          (file as ArtistFile).metaData.id ??  (file as ArtistFile).metaData.id,
+          (file as ArtistFile).metaData.id ?? (file as ArtistFile).metaData.id,
           undefined,
           e
         )
@@ -233,11 +246,13 @@ const Desktop = function(props: Props) {
         onPaste={e => {
           const copy = allFiles.find(file => file.id === clipboard);
           if (copy) {
-            dispatch(createFile({
-              ...copy,
-              x: e.event.clientX - 25,
-              y: e.event.clientY - 25
-            }));
+            dispatch(
+              createFile({
+                ...copy,
+                x: e.event.clientX - 25,
+                y: e.event.clientY - 25
+              })
+            );
           }
         }}
         onTrackData={e => {
@@ -260,4 +275,4 @@ const Desktop = function(props: Props) {
   );
 };
 
- export default Desktop;
+export default Desktop;

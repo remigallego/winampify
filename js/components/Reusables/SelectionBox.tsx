@@ -1,97 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface Props {
   selectZoneId: string;
   onSelect: (
-    e: any,
-    selectionBoxOrigin: number[],
-    selectionBoxTarget: number[]
+    origin: { x: number; y: number },
+    target: { x: number; y: number }
   ) => void;
+  children: JSX.Element[];
 }
 
-interface State {
-  selectionBox: boolean;
-  selectionBoxOrigin: number[];
-  selectionBoxTarget: number[];
-}
+export default (props: Props) => {
+  const [isActive, toggle] = useState(false);
+  const [origin, setOrigin] = useState({ x: 0, y: 0 });
+  const [target, setTarget] = useState({ x: 0, y: 0 });
 
-export default class SelectionBox extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      selectionBox: false,
-      selectionBoxOrigin: [0, 0],
-      selectionBoxTarget: [0, 0]
-    };
-  }
-  handleTransformBox() {
-    const { selectionBoxOrigin, selectionBoxTarget } = this.state;
-    if (
-      selectionBoxOrigin[1] > selectionBoxTarget[1] &&
-      selectionBoxOrigin[0] > selectionBoxTarget[0]
-    )
+  const handleTransformBox = () => {
+    if (origin.y > target.y && origin.x > target.x)
       return "scaleY(-1) scaleX(-1)";
-
-    if (selectionBoxOrigin[1] > selectionBoxTarget[1]) return "scaleY(-1)";
-    if (selectionBoxOrigin[0] > selectionBoxTarget[0]) return "scaleX(-1)";
+    if (origin.y > target.y) return "scaleY(-1)";
+    if (origin.x > target.x) return "scaleX(-1)";
     return "";
-  }
+  };
 
-  render() {
-    return (
-      <div
-        onMouseDown={(e: any) => {
-          if (e.target.id.split(" ").indexOf(this.props.selectZoneId) !== -1)
-            this.setState({
-              selectionBox: true,
-              selectionBoxOrigin: [
-                e.nativeEvent.offsetX,
-                e.nativeEvent.offsetY
-              ],
-              selectionBoxTarget: [e.nativeEvent.offsetX, e.nativeEvent.offsetY]
-            });
-        }}
-        onMouseLeave={() => this.setState({ selectionBox: false })}
-        onMouseUp={() => this.setState({ selectionBox: false })}
-        onMouseMove={evt => {
-          if (this.state.selectionBox) {
-            this.setState({
-              selectionBoxTarget: [
-                evt.nativeEvent.clientX,
-                evt.nativeEvent.clientY
-              ]
-            });
-
-            this.props.onSelect(
-              evt,
-              this.state.selectionBoxOrigin,
-              this.state.selectionBoxTarget
-            );
-          }
-        }}
-      >
-        {this.state.selectionBox && (
-          <div
-            className="selection-box"
-            style={{
-              zIndex: 7,
-              left: this.state.selectionBoxOrigin[0],
-              top: this.state.selectionBoxOrigin[1],
-              height: Math.abs(
-                this.state.selectionBoxTarget[1] -
-                  this.state.selectionBoxOrigin[1]
-              ),
-              width: Math.abs(
-                this.state.selectionBoxTarget[0] -
-                  this.state.selectionBoxOrigin[0]
-              ),
-              transformOrigin: "top left",
-              transform: this.handleTransformBox()
-            }}
-          />
-        )}
-        {this.props.children}
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      onMouseDown={(e: any) => {
+        if (e.target.id.split(" ").indexOf(props.selectZoneId) !== -1) {
+          toggle(true);
+          setOrigin({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+          setTarget({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+        }
+      }}
+      onMouseLeave={() => toggle(false)}
+      onMouseUp={() => toggle(false)}
+      onMouseMove={evt => {
+        if (isActive) {
+          setTarget({ x: evt.nativeEvent.clientX, y: evt.nativeEvent.clientY });
+          props.onSelect(origin, target);
+        }
+      }}
+    >
+      {isActive && (
+        <div
+          className="selection-box"
+          style={{
+            zIndex: 7,
+            left: origin.x,
+            top: origin.y,
+            height: Math.abs(target.y - origin.y),
+            width: Math.abs(target.x - origin.x),
+            transformOrigin: "top left",
+            transform: handleTransformBox()
+          }}
+        />
+      )}
+      {props.children}
+    </div>
+  );
+};
