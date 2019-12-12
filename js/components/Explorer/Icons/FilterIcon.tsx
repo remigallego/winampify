@@ -7,7 +7,6 @@ interface Props {
 
 const FilterIcon = (props: Props) => (
   <svg
-    class="icon"
     height={props.size}
     width={props.size}
     viewBox="0 0 1024 1024"

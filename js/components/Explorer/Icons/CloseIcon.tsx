@@ -1,70 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import {
-  greyDark,
-  greyLight,
-  greyMedium,
-  redError,
-  redErrorDark
-} from "../../../styles/colors";
+import { redError, redErrorDark } from "../../../styles/colors";
+import styled from "styled-components";
 
 interface Props {
   onClick: () => void | null;
 }
 
-interface State {
-  backgroundColor: string;
-}
+export default (props: Props) => {
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
 
-class CloseIcon extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      backgroundColor: "transparent"
-    };
-  }
+  return (
+    <Container backgroundColor={backgroundColor} onClick={props.onClick}>
+      <FaTimes
+        onMouseEnter={() => setBackgroundColor(redError)}
+        onMouseLeave={() => setBackgroundColor("transparent")}
+        onMouseDown={() => setBackgroundColor(redErrorDark)}
+        onMouseUp={() => setBackgroundColor(redError)}
+        id="disallow-on-top"
+        style={{ cursor: "pointer" }}
+        size={20}
+      />
+    </Container>
+  );
+};
 
-  render() {
-    return (
-      <div
-        className="close-icon"
-        onClick={this.props.onClick}
-        style={{
-          color: "white",
-          backgroundColor: this.state.backgroundColor,
-          transition: "background-color 0.21s",
-          zIndex: 555555
-        }}
-      >
-        <FaTimes
-          onMouseEnter={() =>
-            this.setState({
-              // color: greyMedium,
-              backgroundColor: redError
-            })
-          }
-          onMouseLeave={() =>
-            this.setState({
-              backgroundColor: "transparent"
-            })
-          }
-          onMouseDown={() =>
-            this.setState({
-              backgroundColor: redErrorDark
-            })
-          }
-          onMouseUp={() =>
-            this.setState({
-              backgroundColor: redError
-            })
-          }
-          id="disallow-on-top"
-          style={{ cursor: "pointer" }}
-          size={20}
-        />
-      </div>
-    );
-  }
-}
-
-export default CloseIcon;
+const Container = styled.div<{ backgroundColor: string }>`
+  color: white;
+  background-color: ${props => props.backgroundColor};
+  transition: background-color 0.21s;
+  z-index: 55555;
+`;

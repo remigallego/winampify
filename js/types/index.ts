@@ -34,18 +34,22 @@ export interface File<T> {
   y: number;
   locked: boolean;
   metaData: T;
+  // Used with dataTransfer when moving a file
+  deltaX: number;
+  deltaY: number;
 }
 
 /*
- A file can either be:
-- A track
-- An album
-- An artist
-- An image
-- An action (open Top Artists, open Webamp, ...)
-TODO: - A playlist
-TODO: - A custom folder
-*/
+ * A file is represented either in the view Explorer or in the view Desktop.
+ * A file can either be:
+ * - A track
+ * - An album
+ * - An artist
+ * - An image
+ * - An action (open Top Artists, open Webamp, ...)
+ * TODO: - A playlist
+ * TODO: - A custom folder
+ */
 export type GenericFile = File<
   | SpotifyApi.TrackObjectFull
   | SpotifyApi.AlbumObjectFull
@@ -61,7 +65,6 @@ export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
 
 // Files need to be formatted a certain way before being recognized by Webamp
-
 export type WebampTrackFormat = {
   duration: number;
   metaData: {

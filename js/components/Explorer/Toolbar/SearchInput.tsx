@@ -12,12 +12,11 @@ import FilterPopover from "../FilterPopover";
 import { Provider } from "react-redux";
 import store from "../../../store";
 
-interface OwnProps {
+interface Props {
   onChange: (text: string, e: ChangeEvent<HTMLInputElement>) => void;
   id: string;
 }
 
-type Props = OwnProps;
 const fadeOut = keyframes`0% { opacity: 1; } 100% { opacity: 0; }`;
 const fadeIn = keyframes`0% { opacity: 0; } 100% { opacity: 1; }`;
 

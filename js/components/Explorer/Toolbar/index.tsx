@@ -1,179 +1,128 @@
-// this comment tells babel to convert jsx to calls to a function called jsx instead of React.createElement
 /** @jsx jsx */
 
-import { css, jsx } from "@emotion/core";
+import { jsx } from "@emotion/core";
 import _ from "lodash";
-import React from "react";
 import { Menu, MenuProvider, Item, Submenu } from "react-contexify";
 import { FaChevronLeft, FaSpotify } from "react-icons/fa";
-import { connect } from "react-redux";
-import { Action } from "redux";
-import { ThunkDispatch } from "redux-thunk";
+import { useSelector, useDispatch } from "react-redux";
 import {
   goPreviousState,
   setItems,
   setSearchResults
 } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
-import { blueTitleBar, greenSpotify } from "../../../styles/colors";
+import { blueTitleBar, greenSpotify, greyLight } from "../../../styles/colors";
 import { ACTION_TYPE } from "../../../types";
 import SearchInput from "./SearchInput";
-import styles from "./styles";
-interface OwnProps {
+import styled from "styled-components";
+interface Props {
   id: string;
 }
 
-interface StateProps {
-  previousStatesLength: number;
-}
-
-interface DispatchProps {
-  setSearchResults(query: string): void;
-  setItems(actionType: ACTION_TYPE, uri?: string): void;
-  goPreviousState(): void;
-}
-
-interface State {
-  types: string[];
-}
-
-type Props = DispatchProps & OwnProps & StateProps;
-
 const ICON_SIZE = 20;
 
-class Toolbar extends React.Component<Props, State> {
-  startSearch: ((query: string) => void) & _.Cancelable;
+export default (props: Props) => {
+  const previousStatesLength = useSelector<AppState, number>(
+    state => state.explorer.byId[props.id].previousStates.length
+  );
+  const dispatch = useDispatch();
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      types: ["album", "artist", "track"]
-    };
+  const startSearch = _.debounce((query: string) => search(query), 400);
 
-    this.startSearch = _.debounce((query: string) => this.search(query), 400);
-  }
+  const search = (query: string) => dispatch(setSearchResults(query));
 
-  search(query: string) {
-    this.props.setSearchResults(query);
-  }
+  const dispatchItems = (action: ACTION_TYPE) =>
+    dispatch(setItems(action, null, props.id));
 
-  render() {
-    return (
-      <div
-        key={this.props.id}
-        className="explorer-toolbar"
-        style={styles.container}
-      >
-        <div style={{ flexDirection: "row", display: "flex", paddingTop: 2 }}>
-          <FaChevronLeft
-            size={ICON_SIZE}
-            color={
-              this.props.previousStatesLength > 0 ? "black" : "rgba(0,0,0,0.2)"
-            }
-            css={css`
-              &:hover {
-                color: ${blueTitleBar};
-              }
-              &:active {
-                transform: ${this.props.previousStatesLength > 0
-                  ? "scale(0.8)"
-                  : "scale(1)"};
-              }
-            `}
-            onClick={() => {
-              return this.props.previousStatesLength > 0
-                ? this.props.goPreviousState()
-                : null;
-            }}
-          />
-
-          {this.props.id !== "landing-page" && (
-            <Menu id={`spotify-menu-${this.props.id}`} style={{ zIndex: 9999 }}>
-              <Item onClick={() => this.props.setItems(ACTION_TYPE.TOP)}>
-                Top Artists
+  return (
+    <Container key={props.id}>
+      <FlexRowContainer>
+        <ArrowBack
+          previousStatesLength={previousStatesLength}
+          size={ICON_SIZE}
+          color={previousStatesLength > 0 ? "black" : "rgba(0,0,0,0.2)"}
+          onClick={() =>
+            previousStatesLength > 0 ? dispatch(goPreviousState()) : null
+          }
+        />
+        {props.id !== "landing-page" && (
+          <Menu id={`spotify-menu-${props.id}`} style={{ zIndex: 9999 }}>
+            <Item onClick={() => dispatchItems(ACTION_TYPE.TOP)}>
+              Top Artists
+            </Item>
+            <Item onClick={() => dispatchItems(ACTION_TYPE.FOLLOWING)}>
+              Following
+            </Item>
+            <Item onClick={() => dispatchItems(ACTION_TYPE.RECENTLY_PLAYED)}>
+              Recently Played
+            </Item>
+            <Submenu label="Library">
+              <Item onClick={() => dispatchItems(ACTION_TYPE.LIBRARY_ALBUMS)}>
+                Albums
               </Item>
-              <Item onClick={() => this.props.setItems(ACTION_TYPE.FOLLOWING)}>
-                Following
+              <Item onClick={() => dispatchItems(ACTION_TYPE.LIBRARY_TRACKS)}>
+                Tracks
               </Item>
-              <Item
-                onClick={() => this.props.setItems(ACTION_TYPE.RECENTLY_PLAYED)}
-              >
-                Recently Played
-              </Item>
-              <Submenu label="Library">
-                <Item
-                  onClick={() =>
-                    this.props.setItems(ACTION_TYPE.LIBRARY_ALBUMS)
-                  }
-                >
-                  Albums
-                </Item>
-                <Item
-                  onClick={() =>
-                    this.props.setItems(ACTION_TYPE.LIBRARY_TRACKS)
-                  }
-                >
-                  Tracks
-                </Item>
-              </Submenu>
-            </Menu>
-          )}
-          <MenuProvider id={`spotify-menu-${this.props.id}`} event="onClick">
-            <>
-              <FaSpotify
-                size={ICON_SIZE}
-                css={css`
-                  padding-left: 10px;
-                  &:hover {
-                    fill: ${greenSpotify};
-                  }
-                  &:active {
-                    transform: scale(0.8);
-                  }
-                `}
-              />
-            </>
-          </MenuProvider>
-        </div>
-        <form
-          className="explorer-toolbar-searchbox"
-          style={{
-            margin: 0,
-            width: "auto"
+            </Submenu>
+          </Menu>
+        )}
+        <MenuProvider id={`spotify-menu-${props.id}`} event="onClick">
+          <SpotifyIcon size={ICON_SIZE} />
+        </MenuProvider>
+      </FlexRowContainer>
+      <Form onSubmit={e => e.preventDefault()}>
+        <SearchInput
+          id={props.id}
+          onChange={query => {
+            if (query.length) startSearch(query);
           }}
-          onSubmit={e => e.preventDefault()}
-        >
-          <SearchInput
-            id={this.props.id}
-            onChange={query => {
-              if (query.length) this.startSearch(query);
-            }}
-          />
-        </form>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state: AppState, ownprops: OwnProps) => ({
-  previousStatesLength: state.explorer.byId[ownprops.id].previousStates.length
-});
-
-const mapDispatchToProps = (
-  dispatch: ThunkDispatch<AppState, null, Action>,
-  ownProps: OwnProps
-): DispatchProps => {
-  return {
-    // Using bindActionCreators here always generates an error in the setItems() call.
-    // Let's keep this verbose syntax instead.
-    setSearchResults: (query: string) => dispatch(setSearchResults(query)),
-    goPreviousState: () => dispatch(goPreviousState()),
-    setItems: (actionType: ACTION_TYPE, uri?: string) =>
-      dispatch(setItems(actionType, uri, ownProps.id))
-  };
+        />
+      </Form>
+    </Container>
+  );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Toolbar);
+const Container = styled.div`
+  background-color: ${greyLight};
+  height: 40px;
+  flex: 1;
+  min-height: 40px;
+  max-height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5px;
+  padding-right: 5px;
+`;
+
+const ArrowBack = styled(FaChevronLeft)<{ previousStatesLength: number }>`
+  &:hover {
+    color: ${blueTitleBar};
+  }
+  &:active {
+    transform: ${props =>
+      props.previousStatesLength > 0 ? "scale(0.8)" : "scale(1)"};
+  }
+`;
+
+const FlexRowContainer = styled.div`
+  flex-direction: row;
+  display: flex;
+  padding-top: 2px;
+`;
+
+const SpotifyIcon = styled(FaSpotify)`
+  padding-left: 10px;
+  &:hover {
+    fill: ${greenSpotify};
+  }
+  &:active {
+    transform: scale(0.8);
+  }
+`;
+
+const Form = styled.form`
+  margin: 0;
+  width: "auto";
+`;
