@@ -1,6 +1,6 @@
 import "babel-polyfill";
 import React from "react";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../../css/line-scale.css";
 import { authenticate } from "../actions/auth";
 import { AppState } from "../reducers";
@@ -8,55 +8,31 @@ import { AuthState, LOADING } from "../reducers/auth";
 import App from "./App";
 import LandingPage from "./Landingpage";
 
-interface Props {
-  auth: AuthState;
-}
+export default () => {
+  const dispatch = useDispatch();
 
-interface DispatchProps {
-  authenticate: (accessToken: string, refreshToken: string) => void;
-}
+  const auth = useSelector<AppState, AuthState>(state => state.auth);
 
-class Winampify extends React.Component<Props & DispatchProps> {
-  listener: any;
-  constructor(props: Props & DispatchProps) {
-    super(props);
-    this.state = {
-      open: false
-    };
-    this.listener = (event: MessageEvent) => {
-      if (
-        (event.data && typeof event.data === "string") ||
-        event.data instanceof String
-      )
-        if (event.data.split(":").length === 2) {
-          const tokens = event.data.split(":");
-          window.removeEventListener("message", this.listener);
-          this.props.authenticate(tokens[0], tokens[1]);
-        }
-    };
-    window.addEventListener("message", this.listener, false);
-  }
-  render() {
-    const { loading, logged } = this.props.auth;
-    if (loading !== LOADING.NONE) return <LandingPage loading={loading} />;
-    if (logged) return <App />;
+  const listener = (event: MessageEvent) => {
+    if (
+      (event.data && typeof event.data === "string") ||
+      event.data instanceof String
+    )
+      if (event.data.split(":").length === 2) {
+        const tokens = event.data.split(":");
+        window.removeEventListener("message", listener);
+        dispatch(authenticate(tokens[0], tokens[1]));
+      }
+  };
+  window.addEventListener("message", listener, false);
 
-    if (!window.location.search)
-      return <LandingPage errorMessage={this.props.auth.errorMessage} />;
+  const { loading, logged } = auth;
+  if (loading !== LOADING.NONE) return <LandingPage loading={loading} />;
+  if (logged) return <App />;
+  if (!window.location.search)
+    return <LandingPage errorMessage={auth.errorMessage} />;
 
-    history.pushState(null, "", window.location.href.split("?")[0]);
+  history.pushState(null, "", window.location.href.split("?")[0]);
 
-    return <LandingPage />;
-  }
-}
-
-const mapStateToProps = (state: AppState) => ({
-  auth: state.auth
-});
-
-const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  authenticate: (accessToken, refreshToken) =>
-    dispatch(authenticate(accessToken, refreshToken))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Winampify);
+  return <LandingPage />;
+};

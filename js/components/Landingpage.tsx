@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactGA from "react-ga";
 import { FaExclamationTriangle } from "react-icons/fa";
 import GithubLogo from "../../images/githublogo.png";
@@ -16,13 +16,13 @@ interface Props {
   errorMessage?: string;
 }
 
-class LandingPage extends React.Component<Props> {
-  componentDidMount() {
+export default (props: Props) => {
+  useEffect(() => {
     ReactGA.initialize("UA-101600795-2");
     ReactGA.pageview("/landingpage");
-  }
+  }, []);
 
-  renderLoading() {
+  const renderLoading = () => {
     return (
       <div
         style={{
@@ -46,15 +46,15 @@ class LandingPage extends React.Component<Props> {
           <div />
         </div>
         <div style={{ marginTop: 20, color: "white" }}>
-          {this.props.loading === LOADING.LOGGING_IN && "Logging in..."}
-          {this.props.loading === LOADING.LOGGING_OUT && "Logging out.."}
+          {props.loading === LOADING.LOGGING_IN && "Logging in..."}
+          {props.loading === LOADING.LOGGING_OUT && "Logging out.."}
         </div>
       </div>
     );
-  }
+  };
 
-  renderError() {
-    if (!this.props.errorMessage) return null;
+  const renderError = () => {
+    if (!props.errorMessage) return null;
     return (
       <div
         style={{
@@ -77,157 +77,151 @@ class LandingPage extends React.Component<Props> {
             color: "white",
             fontSize: 13
           }}
-          dangerouslySetInnerHTML={{ __html: this.props.errorMessage }}
+          dangerouslySetInnerHTML={{ __html: props.errorMessage }}
         />
       </div>
     );
-  }
-  render() {
-    return (
-      <div>
-        <div className="landing-page">
-          {this.props.loading ? (
-            this.renderLoading()
-          ) : (
-            <>
+  };
+
+  return (
+    <div>
+      <div className="landing-page">
+        {props.loading ? (
+          renderLoading()
+        ) : (
+          <>
+            <div
+              className="explorer-handle"
+              style={{ position: "absolute", height: "100", width: "100%" }}
+            />
+            <div
+              className={`explorer-wrapper`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 200,
+                width: "100%",
+                boxShadow:
+                  "0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.30)"
+              }}
+            >
+              <TitleBar title={`winampify.io ${pkg.version}`} />
+              {/* <Toolbar id="landing-page" /> */}
               <div
-                className="explorer-handle"
-                style={{ position: "absolute", height: "100", width: "100%" }}
-              />
-              <div
-                className={`explorer-wrapper`}
+                className="explorer-mainview"
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  marginTop: 200,
+                  backgroundColor: "rgba(249,249,249,1)",
+                  height: "100%",
                   width: "100%",
-                  boxShadow:
-                    "0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.30)"
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  overflow: "auto",
+                  borderBottomLeftRadius: "inherit",
+                  borderBottomRightRadius: "inherit"
                 }}
               >
-                <TitleBar title={`winampify.io ${pkg.version}`} />
-                {/* <Toolbar id="landing-page" /> */}
                 <div
-                  className="explorer-mainview"
                   style={{
+                    padding: 30,
+                    paddingTop: 30,
+                    paddingBottom: 30,
                     display: "flex",
-                    backgroundColor: "rgba(249,249,249,1)",
-                    height: "100%",
-                    width: "100%",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    overflow: "auto",
-                    borderBottomLeftRadius: "inherit",
-                    borderBottomRightRadius: "inherit"
+                    flexDirection: "column"
                   }}
                 >
                   <div
                     style={{
-                      padding: 30,
-                      paddingTop: 30,
-                      paddingBottom: 30,
+                      marginBottom: 60,
                       display: "flex",
-                      flexDirection: "column"
+                      flexDirection: "column",
+                      alignItems: "center"
                     }}
                   >
                     <div
                       style={{
-                        marginBottom: 60,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center"
+                        width: 513,
+                        height: 104
                       }}
                     >
-                      <div
-                        style={{
-                          width: 513,
-                          height: 104
-                        }}
-                      >
-                        <img
-                          key="logo"
-                          src={Logo}
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      </div>
-                      <div
-                        className="description"
-                        style={{
-                          marginTop: 10,
-                          color: orangeDark,
-                          fontWeight: 600,
-                          fontFamily: "Doppio One",
-                          fontSize: 14
-                        }}
-                      >
-                        An OS-like interface to listen to, browse and interact
-                        with Spotify in the browser.
-                      </div>
+                      <img
+                        key="logo"
+                        src={Logo}
+                        style={{ width: "100%", height: "100%" }}
+                      />
                     </div>
-                    <Signin />
-                    {this.renderError()}
-
                     <div
+                      className="description"
                       style={{
-                        margin: "0 auto",
-                        display: "inline-block",
-                        marginTop: 10
+                        marginTop: 10,
+                        color: orangeDark,
+                        fontWeight: 600,
+                        fontFamily: "Doppio One",
+                        fontSize: 14
                       }}
                     >
-                      <img
-                        onClick={() =>
-                          window.open(
-                            "https://github.com/remigallego/Winampify",
-                            "_blank"
-                          )
-                        }
-                        src={GithubLogo}
-                        style={{
-                          height: 41,
-                          objectFit: "contain",
-                          cursor: "pointer",
-                          width: 100
-                        }}
-                      />
-                      <img
-                        onClick={() =>
-                          window.open(
-                            "https://twitter.com/remigallego",
-                            "_blank"
-                          )
-                        }
-                        src={TwitterLogo}
-                        style={{
-                          marginLeft: 10,
-                          height: 41,
-                          cursor: "pointer",
-                          width: 40,
-                          objectFit: "contain"
-                        }}
-                      />
+                      An OS-like interface to listen to, browse and interact
+                      with Spotify in the browser.
                     </div>
+                  </div>
+                  <Signin />
+                  {renderError()}
+
+                  <div
+                    style={{
+                      margin: "0 auto",
+                      display: "inline-block",
+                      marginTop: 10
+                    }}
+                  >
+                    <img
+                      onClick={() =>
+                        window.open(
+                          "https://github.com/remigallego/Winampify",
+                          "_blank"
+                        )
+                      }
+                      src={GithubLogo}
+                      style={{
+                        height: 41,
+                        objectFit: "contain",
+                        cursor: "pointer",
+                        width: 100
+                      }}
+                    />
+                    <img
+                      onClick={() =>
+                        window.open("https://twitter.com/remigallego", "_blank")
+                      }
+                      src={TwitterLogo}
+                      style={{
+                        marginLeft: 10,
+                        height: 41,
+                        cursor: "pointer",
+                        width: 40,
+                        objectFit: "contain"
+                      }}
+                    />
                   </div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
-        <div className="footer">
-          {pkg.version} -{" "}
-          <a
-            onClick={() =>
-              window.open(
-                "https://github.com/remigallego/winampify/blob/master/CHANGELOG.md",
-                "_blank"
-              )
-            }
-          >
-            CHANGELOG
-          </a>
-        </div>
+            </div>
+          </>
+        )}
       </div>
-    );
-  }
-}
-
-export default LandingPage;
+      <div className="footer">
+        {pkg.version} -{" "}
+        <a
+          onClick={() =>
+            window.open(
+              "https://github.com/remigallego/winampify/blob/master/CHANGELOG.md",
+              "_blank"
+            )
+          }
+        >
+          CHANGELOG
+        </a>
+      </div>
+    </div>
+  );
+};
