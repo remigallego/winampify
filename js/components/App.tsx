@@ -14,8 +14,6 @@ export default () => {
     target: { x: 0, y: 0 }
   });
 
-  useDispatch()(setWebampInstance());
-
   useEffect(() => {
     ReactGA.pageview("/app");
   }, []);
