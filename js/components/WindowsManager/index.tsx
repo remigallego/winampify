@@ -8,7 +8,6 @@ import { SingleExplorerState } from "../../reducers/explorer";
 import { Window, WINDOW_TYPE } from "../../reducers/windows";
 import { selectExplorers, selectImages } from "../../selectors/explorer";
 import { selectWindows } from "../../selectors/windows";
-import SpotifyMedia from "../../spotifymedia";
 import { ImageDialogType } from "../../types";
 import Explorer from "../Explorer";
 import ImageModal from "../ImageDialog";
@@ -22,9 +21,6 @@ export default () => {
     selectExplorers
   );
   const windows = useSelector<AppState, Window[]>(selectWindows);
-  const dataTransferArray = useSelector<AppState, any>(
-    state => state.dataTransfer.data
-  );
 
   const dispatch = useDispatch();
 
@@ -45,14 +41,13 @@ export default () => {
       }
       case WINDOW_TYPE.Image: {
         const image = images.find(img => img.id === window.id);
-        if (image !== undefined)
-          return (
-            <ImageModal
-              key={window.id}
-              image={image}
-              onDismiss={() => dispatch(closeImage(window.id))}
-            />
-          );
+        image !== undefined && (
+          <ImageModal
+            key={window.id}
+            image={image}
+            onDismiss={() => dispatch(closeImage(window.id))}
+          />
+        );
       }
       default:
         return null;
@@ -60,44 +55,7 @@ export default () => {
   };
 
   useEffect(() => {
-    const Webamp: any = WebampInstance;
-    const webamp: Webamp = new Webamp(
-      {
-        __initialWindowLayout: {
-          main: {
-            position: {
-              x: Math.floor(window.innerWidth / 2 - 125),
-              y: Math.floor(window.innerHeight / 2 - 150)
-            }
-          },
-          playlist: {
-            position: {
-              x: Math.floor(window.innerWidth / 2 - 125),
-              y: Math.floor(window.innerHeight / 2 - 150 + 116)
-            }
-          }
-        },
-        handleTrackDropEvent: () => {
-          if (dataTransferArray?.length > 0) {
-            try {
-              return dataTransferArray;
-            } catch (err) {
-              // tslint:disable-next-line: no-console
-              console.error(err);
-            }
-          }
-          return null;
-        },
-        __customMediaClass: SpotifyMedia
-      },
-      {}
-    );
-
-    // TODO: Save Webamp to redux state
-    webamp.renderWhenReady(document.getElementById("webamp"));
-
     // tslint:disable-next-line: no-console
-    document.addEventListener("load", e => console.log("load:", e));
     document.addEventListener(
       "mousedown",
       (evt: MouseEvent) => {

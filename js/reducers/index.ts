@@ -9,6 +9,7 @@ import searchPagination, {
   SearchPaginationState
 } from "./search-pagination";
 import user, { initialStateUser, UserState } from "./user";
+import webamp, { initialStateWebamp, WebampState } from "./webamp";
 import windowsReducer, { initialStateWindows, WindowsState } from "./windows";
 import dataTransfer, {
   initialStateDataTransfer,
@@ -27,6 +28,7 @@ export interface AppState {
   auth: AuthState;
   searchPagination: SearchPaginationState;
   dataTransfer: DataTransferState;
+  webamp: WebampState;
 }
 
 export const initialStateApp: AppState = {
@@ -38,7 +40,8 @@ export const initialStateApp: AppState = {
   playback: initialStatePlayback,
   auth: initialStateAuth,
   searchPagination: initialStateSearchPagination,
-  dataTransfer: initialStateDataTransfer
+  dataTransfer: initialStateDataTransfer,
+  webamp: initialStateWebamp
 };
 
 const reducer = combineReducers<AppState>({
@@ -50,7 +53,8 @@ const reducer = combineReducers<AppState>({
   playback,
   auth,
   searchPagination,
-  dataTransfer
+  dataTransfer,
+  webamp
 });
 
 export default reducer;

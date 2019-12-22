@@ -1,9 +1,9 @@
-import { applyMiddleware, createStore } from "redux";
+import { applyMiddleware, createStore, Action } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createLogger } from "redux-logger";
 import { createMigrate, createTransform, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import thunk from "redux-thunk";
+import thunk, { ThunkMiddleware, ThunkAction } from "redux-thunk";
 import reducer, { AppState, initialStateApp } from "./reducers";
 
 const transform = createTransform(
@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === "development") {
   middlewares = applyMiddleware(thunk);
 }
 
-const store = createStore<AppState>(
+const store = createStore<AppState, Action, any, any>(
   persistedReducer,
   initialStateApp,
   middlewares

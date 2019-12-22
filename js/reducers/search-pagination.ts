@@ -37,7 +37,7 @@ export const UPDATE_FILTER = "UPDATE_FILTER";
 
 const searchPagination = (
   state: SearchPaginationState = initialStateSearchPagination,
-  action: SearchPaginationActionTypes
+  action: any
 ) => {
   switch (action.type) {
     case LOADING_PAGINATION: {
