@@ -1,12 +1,12 @@
 import { STATUS } from ".";
 
-export const beginningOfTrack = (state: Spotify.PlaybackState) =>
+export const isBeginningOfTrack = (state: Spotify.PlaybackState) =>
   !state.position && !state.paused;
 
-export const pauseTrack = (state: Spotify.PlaybackState) =>
+export const isPauseTrack = (state: Spotify.PlaybackState) =>
   state.position && state.paused;
 
-export const resumeTrack = (
+export const isResumeTrack = (
   state: Spotify.PlaybackState,
   previousPosition: number,
   previousStatus: STATUS
@@ -20,7 +20,7 @@ export const resumeTrack = (
   );
 };
 
-export const seekTrack = (
+export const isSeekTrack = (
   state: Spotify.PlaybackState,
   previousPosition: number,
   previousStatus: STATUS
@@ -28,7 +28,7 @@ export const seekTrack = (
   return previousStatus === STATUS.PLAYING && state.position && !state.paused;
 };
 
-export const endOfTrack = (state: Spotify.PlaybackState) =>
+export const isEndOfTrack = (state: Spotify.PlaybackState) =>
   state.paused &&
   state.position === 0 &&
   state.restrictions.disallow_resuming_reasons &&

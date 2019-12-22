@@ -1,7 +1,12 @@
 import PQueue from "p-queue";
 import Api from "../api";
 import Emitter from "./emitter";
-import { beginningOfTrack, endOfTrack, pauseTrack, resumeTrack } from "./utils";
+import {
+  isBeginningOfTrack,
+  isEndOfTrack,
+  isPauseTrack,
+  isResumeTrack
+} from "./utils";
 
 export enum STATUS {
   PLAYING,
@@ -70,7 +75,7 @@ export default class SpotifyMedia {
     this.player.addListener(
       "player_state_changed",
       (state: Spotify.PlaybackState) => {
-        if (beginningOfTrack(state)) {
+        if (isBeginningOfTrack(state)) {
           this._timeRemaining = Math.floor(state.duration / 1000);
           clearInterval(this.timeElapsedInterval);
           this.timeElapsedInterval = null;
@@ -82,7 +87,7 @@ export default class SpotifyMedia {
           return;
         }
 
-        if (pauseTrack(state)) {
+        if (isPauseTrack(state)) {
           clearInterval(this.timeElapsedInterval);
           this.timeElapsedInterval = null;
           this._timeElapsed = Math.floor(state.position / 1000);
@@ -91,7 +96,7 @@ export default class SpotifyMedia {
           return;
         }
 
-        if (resumeTrack(state, this._timeElapsed * 1000, this.status)) {
+        if (isResumeTrack(state, this._timeElapsed * 1000, this.status)) {
           clearInterval(this.timeElapsedInterval);
           this.timeElapsedInterval = null;
           this._timeElapsed = Math.floor(state.position / 1000);
@@ -101,7 +106,7 @@ export default class SpotifyMedia {
           return;
         }
 
-        if (endOfTrack(state)) {
+        if (isEndOfTrack(state)) {
           if (this.status === STATUS.STOPPED) return;
           this.emitter.trigger("ended");
           this.status = STATUS.STOPPED;
@@ -154,8 +159,9 @@ export default class SpotifyMedia {
   }
 
   stop() {
-    this.pause();
-    this.seekToPercentComplete(0);
+    this.player.pause().then(val => {
+      setTimeout(() => this.seekToPercentComplete(0), 200);
+    });
   }
 
   /* Actions with arguments */
