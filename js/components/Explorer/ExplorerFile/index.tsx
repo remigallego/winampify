@@ -11,8 +11,8 @@ interface Props {
   selected: boolean;
   onClick: () => void;
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  onDrag(e: React.DragEvent<HTMLDivElement>): void;
   children: ReactNode;
+  onDrag(e: React.DragEvent<HTMLDivElement>): void;
 }
 
 export default function(props: Props) {

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
+import { useDispatch } from "react-redux";
+import { setWebampInstance } from "../actions/webamp";
 import Desktop from "./Desktop";
 import DeveloperPanel from "./DeveloperPanel";
 import SelectionBox from "./Reusables/SelectionBox";
-import WindowsManager from "./WindowsManager";
-import { useDispatch } from "react-redux";
-import { setWebampInstance } from "../actions/webamp";
 import Webamp from "./Webamp";
+import WindowsManager from "./WindowsManager";
 
 export default () => {
   const [selectionBox, setSelectionBox] = useState({

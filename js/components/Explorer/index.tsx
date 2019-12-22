@@ -1,10 +1,11 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
+import styled from "styled-components";
 import {
+  closeExplorer,
   updatePosition,
-  updateSize,
-  closeExplorer
+  updateSize
 } from "../../actions/explorer";
 import { SingleExplorerState } from "../../reducers/explorer";
 import "./animations.css";
@@ -12,7 +13,6 @@ import ContentWindow from "./ContentWindow";
 import TitleBar from "./TitleBar";
 import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
-import styled from "styled-components";
 
 interface Props {
   explorer: SingleExplorerState;

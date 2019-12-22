@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Draggable from "react-draggable";
+import styled, { css, keyframes } from "styled-components";
 import { ImageDialogType } from "../../types";
 import TitleBar from "../Explorer/TitleBar";
-import styled, { css, keyframes } from "styled-components";
 
 interface Props {
   image: ImageDialogType;

@@ -1,11 +1,11 @@
 import React from "react";
 import { MenuProvider } from "react-contexify";
+import styled, { keyframes } from "styled-components";
 import { GenericFile } from "../../types";
 import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import folderclosed from "./images/folderclosed.png";
 import InputRenaming from "./InputRenaming";
-import styled, { keyframes } from "styled-components";
 
 interface Props {
   file: GenericFile;

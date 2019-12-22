@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { redError, redErrorDark } from "../../../styles/colors";
 import styled from "styled-components";
+import { redError, redErrorDark } from "../../../styles/colors";
 
 interface Props {
   onClick: () => void | null;

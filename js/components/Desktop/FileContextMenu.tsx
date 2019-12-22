@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Item, Separator } from "react-contexify";
+import { Item, Menu, Separator } from "react-contexify";
 import "react-contexify/dist/ReactContexify.min.css";
 
 interface Props {

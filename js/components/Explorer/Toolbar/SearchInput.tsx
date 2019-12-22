@@ -7,10 +7,9 @@ import { FaSearch } from "react-icons/fa";
 import { GiSettingsKnobs } from "react-icons/gi";
 import Popover from "react-tiny-popover";
 
+import store from "../../../store";
 import { blueTitleBar } from "../../../styles/colors";
 import FilterPopover from "../FilterPopover";
-import { Provider } from "react-redux";
-import store from "../../../store";
 
 interface Props {
   onChange: (text: string, e: ChangeEvent<HTMLInputElement>) => void;

@@ -1,5 +1,9 @@
 import { combineReducers } from "redux";
 import auth, { AuthState, initialStateAuth } from "./auth";
+import dataTransfer, {
+  DataTransferState,
+  initialStateDataTransfer
+} from "./dataTransfer";
 import desktop, { DesktopState, initialStateDesktop } from "./desktop";
 import explorer, { ExplorerState, initialStateExplorerState } from "./explorer";
 import images, { ImagesState, initialStateImages } from "./images";
@@ -11,10 +15,6 @@ import searchPagination, {
 import user, { initialStateUser, UserState } from "./user";
 import webamp, { initialStateWebamp, WebampState } from "./webamp";
 import windowsReducer, { initialStateWindows, WindowsState } from "./windows";
-import dataTransfer, {
-  initialStateDataTransfer,
-  DataTransferState
-} from "./dataTransfer";
 
 export const APPLY_SNAPSHOT = "APPLY_SNAPSHOT";
 

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
+import { setWebampDataTransfer } from "../../../actions/dataTransfer";
 import {
   selectFile,
   setItems,
-  unsetFocusExplorer,
-  setMoreSearchResults
+  setMoreSearchResults,
+  unsetFocusExplorer
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
 import { playTrack } from "../../../actions/playback";
@@ -29,7 +30,6 @@ import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { setWebampDataTransfer } from "../../../actions/dataTransfer";
 
 const { container } = styles;
 

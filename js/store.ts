@@ -1,9 +1,9 @@
-import { applyMiddleware, createStore, Action } from "redux";
+import { Action, applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createLogger } from "redux-logger";
 import { createMigrate, createTransform, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import thunk, { ThunkMiddleware, ThunkAction } from "redux-thunk";
+import thunk from "redux-thunk";
 import reducer, { AppState, initialStateApp } from "./reducers";
 
 const transform = createTransform(

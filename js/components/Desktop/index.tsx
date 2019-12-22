@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MenuProvider } from "../../../node_modules/react-contexify";
+import { setWebampDataTransfer } from "../../actions/dataTransfer";
 import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
 import { AppState } from "../../reducers";
+import { DesktopState } from "../../reducers/desktop";
 import {
   ACTION_TYPE,
   ActionFile,
@@ -31,8 +33,6 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
-import { setWebampDataTransfer } from "../../actions/dataTransfer";
-import { DesktopState } from "../../reducers/desktop";
 
 interface Props {
   selectionBox: any;
@@ -95,8 +95,8 @@ export default (props: Props) => {
     const isNewFile = (file: GenericFile) =>
       desktop.byId[file.id] === undefined || desktop.byId[file.id] === null;
 
-    let offsetX = 0,
-      offsetY = 0;
+    let offsetX = 0;
+    let offsetY = 0;
 
     // Checking if the file already exists on the Desktop. If not, we create it. If yes, we move the existing.
     files.forEach((file: GenericFile) => {
@@ -133,9 +133,9 @@ export default (props: Props) => {
         draggable={!file.isRenaming}
         onDragStart={e => {
           const selectedFilesWithDerivedData = allFiles
-            .filter(file => selectedFilesIds.indexOf(file.id) > -1)
-            .map((file: GenericFile) => {
-              const derivedFile: any = file;
+            .filter(_file => selectedFilesIds.indexOf(_file.id) > -1)
+            .map((_file: GenericFile) => {
+              const derivedFile: any = _file;
               derivedFile.deltaX = derivedFile.x - e.clientX;
               derivedFile.deltaY = derivedFile.y - e.clientY;
               derivedFile.name = derivedFile.title;

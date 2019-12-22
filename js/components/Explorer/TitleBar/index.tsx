@@ -1,8 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 import { blueTitleBar } from "../../../styles/colors";
 import CloseIcon from "../Icons/CloseIcon";
 import { dragHandleClassName } from "../vars";
-import styled from "styled-components";
 
 interface Props {
   onClose?: () => void | null;

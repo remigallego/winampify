@@ -65,14 +65,14 @@ export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
 
 // Files need to be formatted a certain way before being recognized by Webamp
-export type WebampTrackFormat = {
+export interface WebampTrackFormat {
   duration: number;
   metaData: {
     artist: string;
     title: string;
   };
   url: string;
-};
+}
 
 export interface StyleCollection {
   [val: string]: React.CSSProperties | undefined;

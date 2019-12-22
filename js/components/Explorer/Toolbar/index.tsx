@@ -2,9 +2,10 @@
 
 import { jsx } from "@emotion/core";
 import _ from "lodash";
-import { Menu, MenuProvider, Item, Submenu } from "react-contexify";
+import { Item, Menu, MenuProvider, Submenu } from "react-contexify";
 import { FaChevronLeft, FaSpotify } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 import {
   goPreviousState,
   setItems,
@@ -14,7 +15,6 @@ import { AppState } from "../../../reducers";
 import { blueTitleBar, greenSpotify, greyLight } from "../../../styles/colors";
 import { ACTION_TYPE } from "../../../types";
 import SearchInput from "./SearchInput";
-import styled from "styled-components";
 interface Props {
   id: string;
 }
