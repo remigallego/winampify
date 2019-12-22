@@ -41,13 +41,15 @@ export default () => {
       }
       case WINDOW_TYPE.Image: {
         const image = images.find(img => img.id === window.id);
-        image !== undefined && (
-          <ImageModal
-            key={window.id}
-            image={image}
-            onDismiss={() => dispatch(closeImage(window.id))}
-          />
-        );
+        if (image !== undefined) {
+          return (
+            <ImageModal
+              key={window.id}
+              image={image}
+              onDismiss={() => dispatch(closeImage(window.id))}
+            />
+          );
+        }
       }
       default:
         return null;
