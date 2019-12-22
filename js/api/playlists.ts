@@ -1,5 +1,6 @@
 import Api from ".";
 import { TrackFile, SimplifiedTrack } from "../types";
+import { getItemsRecursively } from "./apiFunctions";
 
 /**
  * Get a playlist
@@ -20,12 +21,10 @@ export const getPlaylist = async (playlistId: string) => {
  * GET /v1/me/playlists
  * https://developer.spotify.com/web-api/get-users-saved-tracks/
  */
-export const getMyPlaylists = async () => {
-  const response: SpotifyApi.ListOfCurrentUsersPlaylistsResponse = await Api.get(
-    "me/playlists"
-  );
-  return response.items;
-};
+export const getMyPlaylists = async (
+  offset = 0
+): Promise<SpotifyApi.PlaylistObjectSimplified[]> =>
+  getItemsRecursively("me/playlists");
 
 /**
  * Get tracks from a playlist
@@ -33,12 +32,10 @@ export const getMyPlaylists = async () => {
  * GET /v1/playlists/${playlistId}/tracks
  * https://developer.spotify.com/documentation/web-api/reference/playlists/get-playlists-tracks/
  */
-export const getTracksFromPlaylist = async (playlistId: string) => {
-  const response: SpotifyApi.PlaylistTrackResponse = await Api.get(
-    `playlists/${playlistId}/tracks`
-  );
-  return response.items;
-};
+export const getTracksFromPlaylist = async (
+  playlistId: string
+): Promise<SpotifyApi.PlaylistTrackObject[]> =>
+  getItemsRecursively(`playlists/${playlistId}/tracks`, 100);
 
 /**
  * Add tracks to a playlist

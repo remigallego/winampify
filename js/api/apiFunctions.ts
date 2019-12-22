@@ -48,12 +48,10 @@ export const getAlbumData = async (id: string) => {
  * GET /v1/artists/{id}/albums
  * https://developer.spotify.com/web-api/get-artists-albums/
  */
-export const getAlbumsFromArtist = async (artistId: string) => {
-  const response: SpotifyApi.ArtistsAlbumsResponse = await Api.get(
+export const getAlbumsFromArtist = async (artistId: string) =>
+  getItemsRecursively(
     `artists/${artistId}/albums?include_groups=album&market=${getCountry()}`
   );
-  return response.items;
-};
 
 /**
  * Get an Album’s Tracks
@@ -61,12 +59,8 @@ export const getAlbumsFromArtist = async (artistId: string) => {
  * GET /v1/albums/{id}/tracks
  * https://developer.spotify.com/web-api/get-albums-tracks/
  */
-export const getTracksFromAlbum = async (albumId: string) => {
-  const response: SpotifyApi.AlbumTracksResponse = await Api.get(
-    `albums/${albumId}/tracks?market=${getCountry()}`
-  );
-  return response.items;
-};
+export const getTracksFromAlbum = async (albumId: string) =>
+  getItemsRecursively(`albums/${albumId}/tracks?market=${getCountry()}`);
 
 /**
  * Get a User’s Top Artists and Tracks (Note: This is only Artists)
@@ -95,13 +89,8 @@ export const getFollowedArtistsFromMe = async () => {
   return items;
 };
 
-export const getMyRecentlyPlayed = async () => {
-  const response: SpotifyApi.PagingObject<SpotifyApi.SavedTrackObject> = await Api.get(
-    // TODO: verify is type is correct
-    "me/player/recently-played"
-  );
-  return response.items;
-};
+export const getMyRecentlyPlayed = async () =>
+  getItemsRecursively("me/player/recently-played");
 
 /**
  * Get user's saved albums
@@ -109,12 +98,7 @@ export const getMyRecentlyPlayed = async () => {
  * GET /v1/me/albums
  * https://developer.spotify.com/web-api/get-users-saved-albums/
  */
-export const getMyLibraryAlbums = async () => {
-  const response: SpotifyApi.UsersSavedAlbumsResponse = await Api.get(
-    "me/albums"
-  );
-  return response.items;
-};
+export const getMyLibraryAlbums = async () => getItemsRecursively("me/albums");
 
 /**
  * Get user's saved tracks
@@ -122,12 +106,7 @@ export const getMyLibraryAlbums = async () => {
  * GET /v1/me/tracks
  * https://developer.spotify.com/web-api/get-users-saved-tracks/
  */
-export const getMyLibraryTracks = async () => {
-  const response: SpotifyApi.UsersSavedTracksResponse = await Api.get(
-    "me/tracks"
-  );
-  return response.items;
-};
+export const getMyLibraryTracks = async () => getItemsRecursively("me/tracks");
 
 /**
  * Get Current User’s Profile
@@ -160,4 +139,21 @@ export const searchFor: (
 
   const response = await Promise.all(searchQueries);
   return response;
+};
+
+export const getItemsRecursively = async (
+  endpoint: string,
+  limit = 20,
+  offset = 0
+): Promise<any[]> => {
+  if (endpoint.includes("?")) endpoint = `${endpoint}&offset=${offset}`;
+  else endpoint = `${endpoint}?offset=${offset}`;
+  const response = await Api.get(endpoint);
+  if (offset + limit < response.total) {
+    return [
+      ...response.items,
+      ...(await getItemsRecursively(endpoint, offset + limit, limit))
+    ];
+  }
+  return response.items;
 };
