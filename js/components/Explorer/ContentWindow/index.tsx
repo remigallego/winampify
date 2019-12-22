@@ -19,12 +19,13 @@ import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
 import { blueTitleBar, greenSpotify } from "../../../styles/colors";
-import { ACTION_TYPE, GenericFile } from "../../../types";
+import { OPEN_FOLDER_ACTION, GenericFile } from "../../../types";
 import {
   isAlbum,
   isArtist,
   isImage,
-  isTrack
+  isTrack,
+  isPlaylist
 } from "../../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
@@ -74,10 +75,18 @@ export default function(props: Props) {
   ) => {
     if (isTrack(file)) dispatch(playTrack(file));
     if (isAlbum(file))
-      dispatch(setItems(ACTION_TYPE.ALBUM, file.metaData.id, explorerId));
+      dispatch(
+        setItems(OPEN_FOLDER_ACTION.ALBUM, file.metaData.id, explorerId)
+      );
     if (isArtist(file))
-      dispatch(setItems(ACTION_TYPE.ARTIST, file.metaData.id, explorerId));
+      dispatch(
+        setItems(OPEN_FOLDER_ACTION.ARTIST, file.metaData.id, explorerId)
+      );
     if (isImage(file)) dispatch(openImage(file.metaData.url, e));
+    if (isPlaylist(file))
+      dispatch(
+        setItems(OPEN_FOLDER_ACTION.PLAYLIST, file.metaData.id, explorerId)
+      );
   };
 
   const onDrag = async (e: any, files: GenericFile[]) => {
@@ -131,6 +140,11 @@ export default function(props: Props) {
     e.dataTransfer.setData("dragged_files", JSON.stringify(filesForDesktop)); // for desktop
   };
 
+  const onDrop = e => {
+    console.log("onDrop ContentWindow");
+    console.log(props.explorer.title);
+  };
+
   const renderFile = (file: GenericFile) => {
     const selected = props.explorer.selectedFiles.includes(file.id);
     const getExtension = (type: string) => {
@@ -179,7 +193,10 @@ export default function(props: Props) {
         file={file}
         selected={selected}
         onDrag={(e: any) =>
-          onDrag(e, props.files.filter(item => selectedFiles.includes(item.id)))
+          onDrag(
+            e,
+            props.files.filter(item => selectedFiles.includes(item.id))
+          )
         }
         onClick={() => {
           if (holdShift && selectedFiles.length === 1) {

@@ -1,7 +1,7 @@
-import { WebampTrackFormat } from "../types";
+import { SimplifiedTrack } from "../types";
 
 export interface DataTransferState {
-  data: WebampTrackFormat[];
+  data: SimplifiedTrack[];
 }
 
 export const initialStateDataTransfer: DataTransferState = {

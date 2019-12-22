@@ -108,6 +108,34 @@ class Api {
       });
     });
   }
+
+  public static post(endpoint: string, params: any): Promise<any> {
+    const { accessToken } = store.getState().auth;
+    return new Promise(resolve => {
+      fetch(`${apiendpoint}/${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        ...params
+      }).then(response => {
+        if (!response.ok) {
+          if (response.status === 401) {
+            return this.refreshToken().then(res => {
+              store.dispatch({
+                type: SET_ACCESS_TOKEN,
+                payload: {
+                  accessToken: res.access_token
+                }
+              });
+              resolve(this.put(endpoint, params));
+            });
+          }
+        } else resolve();
+      });
+    });
+  }
 }
 
 export default Api;

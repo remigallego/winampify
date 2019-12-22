@@ -8,18 +8,20 @@ import { playTrack } from "../../actions/playback";
 import { AppState } from "../../reducers";
 import { DesktopState } from "../../reducers/desktop";
 import {
-  ACTION_TYPE,
+  OPEN_FOLDER_ACTION,
   ActionFile,
   ArtistFile,
   GenericFile,
-  ImageFile
+  ImageFile,
+  PlaylistFile
 } from "../../types";
 import {
   isAction,
   isAlbum,
   isArtist,
   isImage,
-  isTrack
+  isTrack,
+  isPlaylist
 } from "../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../utils/dataTransfer";
 import {
@@ -177,7 +179,7 @@ export default (props: Props) => {
     if (isAlbum(file))
       dispatch(
         setItems(
-          ACTION_TYPE.ALBUM,
+          OPEN_FOLDER_ACTION.ALBUM,
           file.metaData.id ?? file.metaData.id,
           undefined,
           e
@@ -186,13 +188,23 @@ export default (props: Props) => {
     if (isArtist(file))
       dispatch(
         setItems(
-          ACTION_TYPE.ARTIST,
+          OPEN_FOLDER_ACTION.ARTIST,
           (file as ArtistFile).metaData.id ?? (file as ArtistFile).metaData.id,
           undefined,
           e
         )
       );
     if (isImage(file)) dispatch(openImage((file as ImageFile).metaData.url, e));
+    if (isPlaylist(file))
+      dispatch(
+        setItems(
+          OPEN_FOLDER_ACTION.PLAYLIST,
+          (file as PlaylistFile).metaData.id ??
+            (file as PlaylistFile).metaData.id,
+          undefined,
+          e
+        )
+      );
     if (isAction(file)) {
       dispatch(
         setItems((file as ActionFile).metaData.action, undefined, undefined, e)
@@ -227,7 +239,7 @@ export default (props: Props) => {
       }}
       id="dropzone"
       className="selectzone"
-      onDrop={e => onDrop(e)}
+      onDrop={onDrop}
       onDragOver={e => {
         e.preventDefault();
       }}

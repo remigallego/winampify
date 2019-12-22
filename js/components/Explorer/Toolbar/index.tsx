@@ -13,7 +13,7 @@ import {
 } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
 import { blueTitleBar, greenSpotify, greyLight } from "../../../styles/colors";
-import { ACTION_TYPE } from "../../../types";
+import { OPEN_FOLDER_ACTION } from "../../../types";
 import SearchInput from "./SearchInput";
 interface Props {
   id: string;
@@ -31,7 +31,7 @@ export default (props: Props) => {
 
   const search = (query: string) => dispatch(setSearchResults(query));
 
-  const dispatchItems = (action: ACTION_TYPE) =>
+  const dispatchItems = (action: OPEN_FOLDER_ACTION) =>
     dispatch(setItems(action, null, props.id));
 
   return (
@@ -47,20 +47,20 @@ export default (props: Props) => {
         />
         {props.id !== "landing-page" && (
           <Menu id={`spotify-menu-${props.id}`} style={{ zIndex: 9999 }}>
-            <Item onClick={() => dispatchItems(ACTION_TYPE.TOP)}>
+            <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.TOP)}>
               Top Artists
             </Item>
-            <Item onClick={() => dispatchItems(ACTION_TYPE.FOLLOWING)}>
+            <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.FOLLOWING)}>
               Following
             </Item>
-            <Item onClick={() => dispatchItems(ACTION_TYPE.RECENTLY_PLAYED)}>
+            <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.RECENTLY_PLAYED)}>
               Recently Played
             </Item>
             <Submenu label="Library">
-              <Item onClick={() => dispatchItems(ACTION_TYPE.LIBRARY_ALBUMS)}>
+              <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.LIBRARY_ALBUMS)}>
                 Albums
               </Item>
-              <Item onClick={() => dispatchItems(ACTION_TYPE.LIBRARY_TRACKS)}>
+              <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.LIBRARY_TRACKS)}>
                 Tracks
               </Item>
             </Submenu>

@@ -1,11 +1,12 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
 import styled from "styled-components";
 import {
   closeExplorer,
   updatePosition,
-  updateSize
+  updateSize,
+  setTracksToPlaylist
 } from "../../actions/explorer";
 import { SingleExplorerState } from "../../reducers/explorer";
 import "./animations.css";
@@ -13,6 +14,8 @@ import ContentWindow from "./ContentWindow";
 import TitleBar from "./TitleBar";
 import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
+import { greenSpotify } from "../../styles/colors";
+import { AppState } from "../../reducers";
 
 interface Props {
   explorer: SingleExplorerState;
@@ -20,6 +23,13 @@ interface Props {
 
 export default (props: Props) => {
   const { explorer } = props;
+  const [backgroundColor, setBackground] = useState("white");
+  const [dragCounter, setDragCounter] = useState(0);
+
+  const dataTransferArray = useSelector(
+    (state: AppState) => state.dataTransfer.data
+  );
+
   const dispatch = useDispatch();
 
   const onDragStop = (data: DraggableData) => {
@@ -92,7 +102,48 @@ export default (props: Props) => {
             onClose={() => explorer.id && dispatch(closeExplorer(explorer.id))}
           />
           <ExplorerToolbar id={explorer.id} />
-          <ContentContainer>
+          <ContentContainer
+            backgroundColor={backgroundColor}
+            onDragOver={e => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            onDrop={() => {
+              if (!explorer.dropEnabled) return;
+              if (dataTransferArray.length > 0) {
+                setDragCounter(0);
+                setBackground("white");
+                // Let some time to end the background color transition
+                setTimeout(
+                  () =>
+                    dispatch(
+                      setTracksToPlaylist(
+                        props.explorer.uri,
+                        dataTransferArray,
+                        explorer.id
+                      )
+                    ),
+                  100
+                );
+              }
+            }}
+            onDragEnter={e => {
+              if (!explorer.dropEnabled) return;
+              e.stopPropagation();
+              e.preventDefault();
+              setDragCounter(dragCounter + 1);
+              if (dataTransferArray.length > 0) {
+                setBackground("rgb(13,256,187)");
+              }
+            }}
+            onDragLeave={e => {
+              if (!explorer.dropEnabled) return;
+              setDragCounter(dragCounter - 1);
+              if (dragCounter === 1) {
+                setBackground("white");
+              }
+            }}
+          >
             <ContentWindow explorer={explorer} files={explorer.files} />
           </ContentContainer>
         </ExplorerWrapper>
@@ -109,10 +160,11 @@ const ExplorerWrapper = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
 `;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div<{ backgroundColor: string }>`
   display: flex;
   overflow: auto;
-  background-color: white;
+  transition: background-color 0.3s;
+  background-color: ${props => props.backgroundColor};
   height: 100%;
   width: 100%;
 `;

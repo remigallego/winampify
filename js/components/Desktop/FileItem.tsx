@@ -25,6 +25,7 @@ const FileItem = (props: Props) => {
       case "album":
       case "action":
       case "artist":
+      case "playlist":
         return folderclosed;
       case "image":
         return file.metaData.url;

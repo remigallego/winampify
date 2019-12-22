@@ -56,6 +56,7 @@ export default function(props: Props) {
     case "track":
       icons.push(winampmp3);
       break;
+    case "playlist":
     case "album":
       icons.push(folderclosed);
       icons.push(metaData.images.length > 0 ? metaData.images[0].url : "");

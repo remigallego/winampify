@@ -1,12 +1,14 @@
 // what kind of folder was clicked on
-export enum ACTION_TYPE {
+export enum OPEN_FOLDER_ACTION {
   ALBUM,
   ARTIST,
+  PLAYLIST,
   TOP,
   FOLLOWING,
   RECENTLY_PLAYED,
   LIBRARY_ALBUMS,
-  LIBRARY_TRACKS
+  LIBRARY_TRACKS,
+  USER_PLAYLISTS
 }
 export interface ImageDialogType {
   id: string;
@@ -22,7 +24,7 @@ export interface ImageData {
 }
 
 export interface ActionData {
-  action: ACTION_TYPE;
+  action: OPEN_FOLDER_ACTION;
   type: "action";
 }
 
@@ -35,8 +37,8 @@ export interface File<T> {
   locked: boolean;
   metaData: T;
   // Used with dataTransfer when moving a file
-  deltaX: number;
-  deltaY: number;
+  deltaX?: number;
+  deltaY?: number;
 }
 
 /*
@@ -54,6 +56,7 @@ export type GenericFile = File<
   | SpotifyApi.TrackObjectFull
   | SpotifyApi.AlbumObjectFull
   | SpotifyApi.ArtistObjectFull
+  | SpotifyApi.PlaylistObjectFull
   | ActionData
   | ImageData
 >;
@@ -61,11 +64,12 @@ export type GenericFile = File<
 export type TrackFile = File<SpotifyApi.TrackObjectFull>;
 export type AlbumFile = File<SpotifyApi.AlbumObjectFull>;
 export type ArtistFile = File<SpotifyApi.ArtistObjectFull>;
+export type PlaylistFile = File<SpotifyApi.PlaylistObjectFull>;
 export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
 
 // Files need to be formatted a certain way before being recognized by Webamp
-export interface WebampTrackFormat {
+export interface SimplifiedTrack {
   duration: number;
   metaData: {
     artist: string;

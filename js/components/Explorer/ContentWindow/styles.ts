@@ -3,7 +3,6 @@ import { StyleCollection } from "../../../types";
 
 const styles: StyleCollection = {
   container: {
-    backgroundColor: "white",
     padding: 2
   },
   resultCategories: {

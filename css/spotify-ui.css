@@ -100,7 +100,6 @@
 }
 .explorer-mainview .explorer-items-container {
   overflow: scroll;
-  background-color: white;
   flex: 1;
 }
 .explorer-mainview .explorer-items-container .explorer-item {

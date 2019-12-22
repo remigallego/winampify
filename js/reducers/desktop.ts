@@ -1,5 +1,5 @@
 import { CREATE_FILE, DELETE_FILE, MOVE_FILE } from "../actionTypes";
-import { ACTION_TYPE, File, GenericFile } from "../types";
+import { OPEN_FOLDER_ACTION, File, GenericFile } from "../types";
 import { APPLY_SNAPSHOT } from "./index";
 
 export interface DesktopState {
@@ -20,7 +20,7 @@ export const initialStateDesktop: DesktopState = {
       y: 40,
       metaData: {
         type: "action",
-        action: ACTION_TYPE.RECENTLY_PLAYED
+        action: OPEN_FOLDER_ACTION.RECENTLY_PLAYED
       }
     },
     top_artists: {
@@ -32,7 +32,7 @@ export const initialStateDesktop: DesktopState = {
       y: 140,
       metaData: {
         type: "action",
-        action: ACTION_TYPE.TOP
+        action: OPEN_FOLDER_ACTION.TOP
       }
     },
     my_albums: {
@@ -44,7 +44,7 @@ export const initialStateDesktop: DesktopState = {
       y: 220,
       metaData: {
         type: "action",
-        action: ACTION_TYPE.LIBRARY_ALBUMS
+        action: OPEN_FOLDER_ACTION.LIBRARY_ALBUMS
       }
     },
     my_tracks: {
@@ -56,11 +56,29 @@ export const initialStateDesktop: DesktopState = {
       y: 300,
       metaData: {
         type: "action",
-        action: ACTION_TYPE.LIBRARY_TRACKS
+        action: OPEN_FOLDER_ACTION.LIBRARY_TRACKS
+      }
+    },
+    my_playlists: {
+      id: "my_playlists",
+      title: "My playlists",
+      isRenaming: false,
+      locked: true,
+      x: 20,
+      y: 380,
+      metaData: {
+        type: "action",
+        action: OPEN_FOLDER_ACTION.USER_PLAYLISTS
       }
     }
   },
-  allIds: ["recently_played", "top_artists", "my_albums", "my_tracks"]
+  allIds: [
+    "recently_played",
+    "top_artists",
+    "my_albums",
+    "my_tracks",
+    "my_playlists"
+  ]
 };
 
 const cancelRenaming = (state: DesktopState) => {

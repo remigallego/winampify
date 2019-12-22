@@ -9,7 +9,6 @@ import {
   UNSET_FOCUS_EXPLORER
 } from "../actionTypes";
 import { GenericFile } from "../types";
-import { APPLY_SNAPSHOT } from "./index";
 
 export interface SingleExplorerState {
   id: string;
@@ -23,6 +22,8 @@ export interface SingleExplorerState {
   x: number;
   y: number;
   files: GenericFile[];
+  dropEnabled: boolean;
+  uri: string;
 }
 
 export interface ExplorerState {
@@ -50,7 +51,11 @@ const initialStateExplorer: SingleExplorerState = {
   width: 400,
   height: 500,
   x: 0,
-  y: 0
+  y: 0,
+
+  // extras
+  dropEnabled: false,
+  uri: ""
 };
 
 export const initialStateExplorerState: ExplorerState = {

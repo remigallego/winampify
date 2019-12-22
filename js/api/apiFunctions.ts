@@ -96,9 +96,10 @@ export const getFollowedArtistsFromMe = async () => {
 };
 
 export const getMyRecentlyPlayed = async () => {
-  const response: SpotifyApi.PagingObject<
-    SpotifyApi.SavedTrackObject // TODO: verify is type is correct
-  > = await Api.get("me/player/recently-played");
+  const response: SpotifyApi.PagingObject<SpotifyApi.SavedTrackObject> = await Api.get(
+    // TODO: verify is type is correct
+    "me/player/recently-played"
+  );
   return response.items;
 };
 
@@ -160,63 +161,3 @@ export const searchFor: (
   const response = await Promise.all(searchQueries);
   return response;
 };
-
-// TODO: Work In Progress
-/* export const getPlaylist = (tracks, user, URI, offset) => {
- fetch(
-    `https://api.spotify.com/v1/users/${user}/playlists/${URI}/tracks?offset=${offset}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  )
-    .then(response => response.res())
-    .then(json => {
-      const items = json.items;
-      if (items[0].track.id !== null) {
-        for (let i = 0; i < items.length; i++) {
-          if (items[i].track !== null)
-            tracks.push({
-              artist: items[i].track.artists[0].name,
-              duration: items[i].track.duration_ms / 1000,
-              name: items[i].track.name,
-              uri: items[i].track.id,
-              index: i + offset
-            });
-        }
-        if (tracks.length === offset + 100)
-          getPlaylist(token, tracks, user, URI, offset + 100, (err, res) =>
-            callback(err, res)
-          );
-        else callback(null, tracks);
-      } else callback(tracks);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-    export const getTracksFromPlaylist = (token, playlist, callback) => {
-  const offset = 0;
-  let user;
-  let URI;
-  let tracks = [];
-  const p = playlist.split(":");
-  if (p.length === 5) {
-    user = p[2];
-    URI = p[4];
-  }
-  if (p.length === 4) {
-    user = p[1];
-    URI = p[3];
-  }
-  if (p.length === 3) {
-    tracks = [];
-    URI = p[2];
-    getTracksFromAlbum(URI).then(res => console.log(res));
-  } else {
-    console.log("Work In Progress Here");
-  } /* TODO: getPlaylist(token, tracks, user, URI, offset, (err, res) =>
-      callback(err, res)
-    ); };
-*/

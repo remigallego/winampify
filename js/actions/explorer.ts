@@ -31,9 +31,15 @@ import {
   SET_SEARCH,
   UPDATE_PAGINATION
 } from "../reducers/search-pagination";
-import { ACTION_TYPE } from "../types";
+import { OPEN_FOLDER_ACTION, TrackFile, SimplifiedTrack } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 import { Filter } from "./search-pagination";
+import {
+  getMyPlaylists,
+  getTracksFromPlaylist,
+  getPlaylist,
+  addTracksToPlaylist
+} from "../api/playlists";
 
 export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
@@ -107,7 +113,7 @@ export function unsetFocusExplorer(explorerId: string) {
 }
 
 export function setItems(
-  actionType: ACTION_TYPE,
+  actionType: OPEN_FOLDER_ACTION,
   uri?: string,
   explorerId?: string,
   e?: any
@@ -129,15 +135,16 @@ export function setItems(
     dispatch({ type: LOADING, id: explorerId });
     let files;
     let title;
-
+    let dropEnabled = false;
     switch (actionType) {
-      case ACTION_TYPE.ARTIST: {
+      case OPEN_FOLDER_ACTION.ARTIST: {
         if (!uri) return;
         files = await getAlbumsFromArtist(uri);
-        title = (await getArtistData(uri)).name;
+        const data = await getArtistData(uri);
+        title = data.name;
         break;
       }
-      case ACTION_TYPE.ALBUM: {
+      case OPEN_FOLDER_ACTION.ALBUM: {
         if (!uri) return;
         const tracks = await getTracksFromAlbum(uri);
         const albumData = await getAlbumData(uri);
@@ -151,32 +158,46 @@ export function setItems(
         title = `${albumData.artists[0].name} - ${albumData.name}`;
         break;
       }
-      case ACTION_TYPE.TOP: {
+      case OPEN_FOLDER_ACTION.PLAYLIST: {
+        if (!uri) return;
+        const items = await getTracksFromPlaylist(uri);
+        const playlist = await getPlaylist(uri);
+        files = items.map(item => item.track);
+        title = playlist.name;
+        dropEnabled = true;
+        break;
+      }
+      case OPEN_FOLDER_ACTION.TOP: {
         files = await getTopArtistsFromMe();
         title = "My Top Artists";
         break;
       }
-      case ACTION_TYPE.FOLLOWING: {
+      case OPEN_FOLDER_ACTION.FOLLOWING: {
         files = await getFollowedArtistsFromMe();
         title = "Following";
         break;
       }
-      case ACTION_TYPE.RECENTLY_PLAYED: {
+      case OPEN_FOLDER_ACTION.RECENTLY_PLAYED: {
         const recentlyPlayed = await getMyRecentlyPlayed();
         files = recentlyPlayed.map(obj => obj.track);
         title = "Recently Played";
         break;
       }
-      case ACTION_TYPE.LIBRARY_TRACKS: {
+      case OPEN_FOLDER_ACTION.LIBRARY_TRACKS: {
         const items = await getMyLibraryTracks();
         files = items.map(item => item.track);
         title = "My Saved Tracks";
         break;
       }
-      case ACTION_TYPE.LIBRARY_ALBUMS: {
+      case OPEN_FOLDER_ACTION.LIBRARY_ALBUMS: {
         const items = await getMyLibraryAlbums();
         files = items.map(item => item.album);
         title = "My Saved Albums";
+        break;
+      }
+      case OPEN_FOLDER_ACTION.USER_PLAYLISTS: {
+        files = await getMyPlaylists();
+        title = "My Playlists";
         break;
       }
     }
@@ -186,7 +207,9 @@ export function setItems(
       payload: {
         id: explorerId,
         title,
-        query: null
+        query: null,
+        dropEnabled,
+        uri
       }
     });
 
@@ -292,6 +315,25 @@ export function setMoreSearchResults(type: "album" | "artist" | "track") {
       payload: {
         id,
         files
+      }
+    });
+  };
+}
+
+export function setTracksToPlaylist(
+  playlistId: string,
+  tracks: SimplifiedTrack[],
+  explorerId: string
+) {
+  return async (dispatch: Dispatch<Action>) => {
+    dispatch({ type: LOADING, id: explorerId });
+    await addTracksToPlaylist(playlistId, tracks);
+    const items = await getTracksFromPlaylist(playlistId);
+    dispatch({
+      type: SET_ITEMS,
+      payload: {
+        id: explorerId,
+        files: items.map(item => item.track)
       }
     });
   };
