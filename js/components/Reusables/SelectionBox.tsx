@@ -24,8 +24,12 @@ export default (props: Props) => {
 
   return (
     <div
-      onMouseDown={(e: any) => {
-        if (e.target.id.split(" ").indexOf(props.selectZoneId) !== -1) {
+      onMouseDown={e => {
+        // Scope it to left click and targeted to the desktop zone
+        if (
+          e.button === 0 &&
+          e.target?.id?.split(" ").indexOf(props.selectZoneId) !== -1
+        ) {
           toggle(true);
           setOrigin({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
           setTarget({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
