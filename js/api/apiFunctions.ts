@@ -146,13 +146,14 @@ export const getItemsRecursively = async (
   limit = 20,
   offset = 0
 ): Promise<any[]> => {
-  if (endpoint.includes("?")) endpoint = `${endpoint}&offset=${offset}`;
-  else endpoint = `${endpoint}?offset=${offset}`;
-  const response = await Api.get(endpoint);
+  let url;
+  if (endpoint.includes("?")) url = `${endpoint}&offset=${offset}`;
+  else url = `${endpoint}?offset=${offset}`;
+  const response = await Api.get(url);
   if (offset + limit < response.total) {
     return [
       ...response.items,
-      ...(await getItemsRecursively(endpoint, offset + limit, limit))
+      ...(await getItemsRecursively(endpoint, limit, offset + limit))
     ];
   }
   return response.items;
