@@ -126,6 +126,7 @@ export default (props: Props) => {
             onClose={() => {
               if (explorer.id) dispatch(closeExplorer(explorer.id));
             }}
+            playlist={explorer.dropEnabled}
           />
           <ExplorerToolbar id={explorer.id} />
           <ContentContainer

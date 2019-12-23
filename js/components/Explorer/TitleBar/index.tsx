@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { blueTitleBar } from "../../../styles/colors";
 import CloseIcon from "../Icons/CloseIcon";
 import { dragHandleClassName } from "../vars";
@@ -7,13 +7,16 @@ import { dragHandleClassName } from "../vars";
 interface Props {
   onClose?: () => void | null;
   title?: string;
+  playlist?: boolean;
 }
 
 const TitleBar = (props: Props) => {
   return (
-    <Bar className={dragHandleClassName}>
+    <Bar className={dragHandleClassName} playlist={props.playlist}>
       <FlexRowContainer>
-        <Title>{props.title || ""}</Title>
+        <Title playlist={props.playlist}>
+          {props.title || ""} {props.playlist && "[Playlist]"}
+        </Title>
         {props.onClose && <CloseIcon onClick={props.onClose} />}
       </FlexRowContainer>
     </Bar>
@@ -22,9 +25,14 @@ const TitleBar = (props: Props) => {
 
 export default TitleBar;
 
-const Bar = styled.div`
+const Bar = styled.div<{ playlist: boolean }>`
   background-color: ${blueTitleBar};
-  background: 'linear-gradient("#026bfe", "#1a6cd0")';
+  transition: all 0.5s;
+  ${props =>
+    props.playlist &&
+    css`
+      background-color: rgb(13, 256, 187);
+    `}
   width: auto;
   height: auto;
   cursor: move;
@@ -40,12 +48,13 @@ const FlexRowContainer = styled.div`
   overflow: hidden;
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ playlist: boolean }>`
   padding: 3px;
   padding-left: 10px;
   font-family: "Open Sans";
   font-size: 16px;
-  color: white;
+  color: ${props => (props.playlist ? "rgb(13, 256, 187)" : "white")};
+  transition: color 1s;
   font-weight: 500;
   white-space: no-wrap;
   user-select: none;
