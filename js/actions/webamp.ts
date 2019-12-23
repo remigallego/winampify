@@ -24,10 +24,10 @@ export function setWebampInstance(): any {
           }
         },
         handleTrackDropEvent: () => {
-          const dataTransferArray = getState().dataTransfer.data;
-          if (dataTransferArray?.length > 0) {
+          const { tracks } = getState().dataTransfer;
+          if (tracks?.length > 0) {
             try {
-              return dataTransferArray;
+              return tracks;
             } catch (err) {
               // tslint:disable-next-line: no-console
               console.error(err);

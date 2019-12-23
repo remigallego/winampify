@@ -13,3 +13,5 @@ export const greenSpotify = "rgb(29, 185, 84)";
 
 export const blueTitleBar = "#0055e5";
 export const blueTitleBarDark = "#002e7c";
+
+export const blueDrop = "rgb(13,256,187)";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import { setWebampDataTransfer } from "../../../actions/dataTransfer";
+import { setDataTransferTracks } from "../../../actions/dataTransfer";
 import {
   selectFile,
   setItems,
@@ -117,7 +117,9 @@ export default function(props: Props) {
             formattedFilesForWebamp.push(formatMetaToWebampMeta(trackItem))
           );
 
-          dispatch(setWebampDataTransfer(formattedFilesForWebamp.flat()));
+          dispatch(
+            setDataTransferTracks(formattedFilesForWebamp.flat(), explorerId)
+          );
         }
       }
       if (isArtist(item)) {
@@ -131,18 +133,15 @@ export default function(props: Props) {
           );
         });
         Promise.all(promises).then(() => {
-          dispatch(setWebampDataTransfer(formattedFilesForWebamp.flat()));
+          dispatch(
+            setDataTransferTracks(formattedFilesForWebamp.flat(), explorerId)
+          );
         });
       }
     });
 
-    dispatch(setWebampDataTransfer(formattedFilesForWebamp.flat()));
+    dispatch(setDataTransferTracks(formattedFilesForWebamp.flat(), explorerId));
     e.dataTransfer.setData("dragged_files", JSON.stringify(filesForDesktop)); // for desktop
-  };
-
-  const onDrop = e => {
-    console.log("onDrop ContentWindow");
-    console.log(props.explorer.title);
   };
 
   const renderFile = (file: GenericFile) => {

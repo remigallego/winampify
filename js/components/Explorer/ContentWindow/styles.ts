@@ -3,7 +3,8 @@ import { StyleCollection } from "../../../types";
 
 const styles: StyleCollection = {
   container: {
-    padding: 2
+    padding: 2,
+    width: "100%"
   },
   resultCategories: {
     fontSize: "18px",

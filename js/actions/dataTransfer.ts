@@ -1,12 +1,15 @@
 import { Action, Dispatch } from "redux";
-import { SET_DATA_TRANSFER_ARRAY } from "../reducers/dataTransfer";
+import { SET_DATA_TRANSFER_TRACKS } from "../reducers/dataTransfer";
 import { SimplifiedTrack } from "../types";
 
-export function setWebampDataTransfer(data: SimplifiedTrack[]): any {
+export function setDataTransferTracks(
+  tracks: SimplifiedTrack[],
+  source?: string
+): any {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
-      type: SET_DATA_TRANSFER_ARRAY,
-      payload: { dataTransferArray: data }
+      type: SET_DATA_TRANSFER_TRACKS,
+      payload: { tracks: tracks, source }
     });
   };
 }

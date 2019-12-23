@@ -1,24 +1,27 @@
 import { SimplifiedTrack } from "../types";
 
 export interface DataTransferState {
-  data: SimplifiedTrack[];
+  tracks: SimplifiedTrack[];
+  source: string;
 }
 
 export const initialStateDataTransfer: DataTransferState = {
-  data: []
+  tracks: [],
+  source: ""
 };
 
-export const SET_DATA_TRANSFER_ARRAY = "SET_DATA_TRANSFER_ARRAY";
+export const SET_DATA_TRANSFER_TRACKS = "SET_DATA_TRANSFER_TRACKS";
 
 const dataTransfer = (
   state: DataTransferState = initialStateDataTransfer,
   action: any
 ) => {
   switch (action.type) {
-    case SET_DATA_TRANSFER_ARRAY:
+    case SET_DATA_TRANSFER_TRACKS:
       return {
         ...state,
-        data: action.payload.dataTransferArray
+        tracks: action.payload.tracks,
+        source: action.payload.source
       };
     default:
       return state;

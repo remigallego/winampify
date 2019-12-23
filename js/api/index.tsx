@@ -63,7 +63,7 @@ class Api {
         .then(response => response.json())
         .then(res => {
           if (res.error && res.error.message) {
-            if (res.error.message === "Invalid access token") {
+            if (res.error.message === "The access token expired") {
               return this.refreshToken().then(response => {
                 store.dispatch({
                   type: SET_ACCESS_TOKEN,

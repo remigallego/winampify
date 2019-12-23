@@ -14,8 +14,8 @@ import ContentWindow from "./ContentWindow";
 import TitleBar from "./TitleBar";
 import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
-import { greenSpotify } from "../../styles/colors";
 import { AppState } from "../../reducers";
+import { blueDrop } from "../../styles/colors";
 
 interface Props {
   explorer: SingleExplorerState;
@@ -27,7 +27,7 @@ export default (props: Props) => {
   const [dragCounter, setDragCounter] = useState(0);
 
   const dataTransferArray = useSelector(
-    (state: AppState) => state.dataTransfer.data
+    (state: AppState) => state.dataTransfer
   );
 
   const dispatch = useDispatch();
@@ -46,6 +46,7 @@ export default (props: Props) => {
     if (bottomMostPoint > clientHeight) y = clientHeight - explorerHeight;
     if (y < 0) y = 0;
 
+    if (x === explorer.x && y === explorer.y) return;
     dispatch(updatePosition(x, y, explorer.id));
   };
 
@@ -60,6 +61,29 @@ export default (props: Props) => {
       );
     }
   };
+
+  const onDrop = () => {
+    if (!allowDrop) return;
+    if (dataTransferArray.tracks.length > 0) {
+      setDragCounter(0);
+      setBackground("white");
+      // Let some time to end the background color transition
+      setTimeout(
+        () =>
+          dispatch(
+            setTracksToPlaylist(
+              props.explorer.uri,
+              dataTransferArray.tracks,
+              explorer.id
+            )
+          ),
+        100
+      );
+    }
+  };
+
+  const allowDrop =
+    explorer.dropEnabled && dataTransferArray.source !== props.explorer.id;
 
   return (
     <div>
@@ -99,7 +123,9 @@ export default (props: Props) => {
         <ExplorerWrapper>
           <TitleBar
             title={explorer.title || "Loading..."}
-            onClose={() => explorer.id && dispatch(closeExplorer(explorer.id))}
+            onClose={() => {
+              if (explorer.id) dispatch(closeExplorer(explorer.id));
+            }}
           />
           <ExplorerToolbar id={explorer.id} />
           <ContentContainer
@@ -108,40 +134,18 @@ export default (props: Props) => {
               e.stopPropagation();
               e.preventDefault();
             }}
-            onDrop={() => {
-              if (!explorer.dropEnabled) return;
-              if (dataTransferArray.length > 0) {
-                setDragCounter(0);
-                setBackground("white");
-                // Let some time to end the background color transition
-                setTimeout(
-                  () =>
-                    dispatch(
-                      setTracksToPlaylist(
-                        props.explorer.uri,
-                        dataTransferArray,
-                        explorer.id
-                      )
-                    ),
-                  100
-                );
-              }
-            }}
+            onDrop={onDrop}
             onDragEnter={e => {
-              if (!explorer.dropEnabled) return;
+              if (!allowDrop) return;
               e.stopPropagation();
               e.preventDefault();
               setDragCounter(dragCounter + 1);
-              if (dataTransferArray.length > 0) {
-                setBackground("rgb(13,256,187)");
-              }
+              if (dataTransferArray.tracks.length > 0) setBackground(blueDrop);
             }}
             onDragLeave={e => {
-              if (!explorer.dropEnabled) return;
+              if (!allowDrop) return;
               setDragCounter(dragCounter - 1);
-              if (dragCounter === 1) {
-                setBackground("white");
-              }
+              if (dragCounter === 1) setBackground("white");
             }}
           >
             <ContentWindow explorer={explorer} files={explorer.files} />

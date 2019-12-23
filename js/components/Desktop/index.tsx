@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuProvider } from "../../../node_modules/react-contexify";
-import { setWebampDataTransfer } from "../../actions/dataTransfer";
+import { setDataTransferTracks } from "../../actions/dataTransfer";
 import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
 import { playTrack } from "../../actions/playback";
@@ -78,11 +78,12 @@ export default (props: Props) => {
     draggedFiles: GenericFile[]
   ) => {
     dispatch(
-      setWebampDataTransfer(
+      setDataTransferTracks(
         draggedFiles
           .filter(isTrack)
           .map(file => formatMetaToWebampMeta(file.metaData))
-          .flat()
+          .flat(),
+        "desktop"
       )
     );
     e.dataTransfer.setData("dragged_files", JSON.stringify(draggedFiles));

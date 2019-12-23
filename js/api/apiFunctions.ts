@@ -68,12 +68,8 @@ export const getTracksFromAlbum = async (albumId: string) =>
  * GET /v1/me/top/{type}
  * https://developer.spotify.com/web-api/get-users-top-artists-and-tracks/
  */
-export const getTopArtistsFromMe = async () => {
-  const response: SpotifyApi.UsersTopArtistsResponse = await Api.get(
-    "me/top/artists"
-  );
-  return response.items;
-};
+export const getTopArtistsFromMe = async () =>
+  getItemsRecursively("me/top/artists");
 
 /**
  * Get User’s Followed Artists
