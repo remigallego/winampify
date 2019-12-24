@@ -57,7 +57,7 @@ export function createNewExplorer(id?: string, x?: number, y?: number): any {
       payload: {
         id: explorerId,
         query: "",
-        types: ["album", "track", "artist"],
+        types: ["album", "track", "artist", "playlist"],
         album: {},
         track: {},
         artist: {}
@@ -240,6 +240,7 @@ export function setSearchResults(inputQuery?: string) {
     const albums = results.find(obj => obj.albums !== undefined);
     const tracks = results.find(obj => obj.tracks !== undefined);
     const artists = results.find(obj => obj.artists !== undefined);
+    const playlists = results.find(obj => obj.playlists !== undefined);
 
     const files = results
       .map(searchResponse =>
@@ -254,7 +255,8 @@ export function setSearchResults(inputQuery?: string) {
       payload: {
         id: explorerId,
         title: `Search: ${query}`,
-        query
+        query,
+        dropEnabled: false
       }
     });
 
@@ -266,7 +268,10 @@ export function setSearchResults(inputQuery?: string) {
         types: filter.types,
         album: albums ? { total: albums.albums.total, current: 20 } : {},
         track: tracks ? { total: tracks.tracks.total, current: 20 } : {},
-        artist: artists ? { total: artists.artists.total, current: 20 } : {}
+        artist: artists ? { total: artists.artists.total, current: 20 } : {},
+        playlist: playlists
+          ? { total: playlists.playlists.total, current: 20 }
+          : {}
       }
     });
 
@@ -280,7 +285,9 @@ export function setSearchResults(inputQuery?: string) {
   };
 }
 
-export function setMoreSearchResults(type: "album" | "artist" | "track") {
+export function setMoreSearchResults(
+  type: "album" | "artist" | "track" | "playlist"
+) {
   return async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const id = getActiveExplorerId(getState());
     const query = getState().explorer.byId[id].query;

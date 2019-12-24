@@ -1,4 +1,3 @@
-import { SearchPaginationActionTypes } from "../actions/search-pagination";
 import { APPLY_SNAPSHOT } from "./index";
 
 export interface QueryState {
@@ -18,6 +17,11 @@ export interface QueryState {
     total: number;
   };
   track: {
+    loading: boolean;
+    current: number;
+    total: number;
+  };
+  playlist: {
     loading: boolean;
     current: number;
     total: number;
@@ -65,7 +69,7 @@ const searchPagination = (
         }
       };
     case SET_SEARCH:
-      const { query, types, album, artist, track } = action.payload;
+      const { query, types, album, artist, track, playlist } = action.payload;
       return {
         ...state,
         [action.payload.id]: {
@@ -83,6 +87,10 @@ const searchPagination = (
           },
           track: {
             ...track,
+            loading: false
+          },
+          playlist: {
+            ...playlist,
             loading: false
           }
         }

@@ -11,7 +11,6 @@ import { Filter, updateFilter } from "../../../actions/search-pagination";
 import { AppState } from "../../../reducers";
 import { selectFilter } from "../../../selectors/search";
 import { blueTitleBar } from "../../../styles/colors";
-import { SEARCH_CATEGORY } from "../../../types";
 
 interface StateProps {
   filter: Filter;
@@ -25,7 +24,8 @@ type Props = DispatchProps & ContentRendererArgs & StateProps;
 const options = [
   { value: "artist", label: "Artists" },
   { value: "album", label: "Albums" },
-  { value: "track", label: "Tracks" }
+  { value: "track", label: "Tracks" },
+  { value: "playlist", label: "Playlists" }
 ];
 
 const FilterPopover = (props: Props) => {
@@ -65,7 +65,7 @@ const FilterPopover = (props: Props) => {
               ...style,
               minWidth: 200
             }),
-            option: (styles, { data, isDisabled, isFocused, isSelected }) => ({
+            option: (styles, { isFocused }) => ({
               ...styles,
               color: isFocused ? "white" : "black"
             })
@@ -95,7 +95,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, null, Action>) =>
   bindActionCreators({ updateFilter }, dispatch);
 
 // Can't refactor this component to Hooks, it throws an out-of-the-store error.
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FilterPopover);
+export default connect(mapStateToProps, mapDispatchToProps)(FilterPopover);

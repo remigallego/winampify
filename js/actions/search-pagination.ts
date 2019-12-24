@@ -1,13 +1,7 @@
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppState } from "../reducers";
-import {
-  LOADING_PAGINATION,
-  SET_SEARCH,
-  UPDATE_FILTER,
-  UPDATE_PAGINATION
-} from "../reducers/search-pagination";
-import { SEARCH_CATEGORY } from "../types";
+import { UPDATE_FILTER } from "../reducers/search-pagination";
 import { getActiveExplorerId } from "../utils/explorer";
 import { setSearchResults } from "./explorer";
 

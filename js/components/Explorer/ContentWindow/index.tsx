@@ -241,12 +241,15 @@ export default function(props: Props) {
     const artists = props.files.filter(isArtist);
     const albums = props.files.filter(isAlbum);
     const tracks = props.files.filter(isTrack);
+    const playlists = props.files.filter(isPlaylist);
     const remainingArtists =
       searchPagination.artist.total - searchPagination.artist.current;
     const remainingAlbums =
       searchPagination.album.total - searchPagination.album.current;
     const remainingTracks =
       searchPagination.track.total - searchPagination.track.current;
+    const remainingPlaylists =
+      searchPagination.playlist.total - searchPagination.playlist.current;
 
     return (
       <div
@@ -308,6 +311,26 @@ export default function(props: Props) {
                   <BeatLoader color={blueTitleBar} size={5} />
                 ) : (
                   `${remainingTracks} more results...`
+                )}
+              </div>
+            )}
+            <div style={{ marginTop: 10 }} />
+          </>
+        )}
+        {searchPagination.filter.types.includes("playlist") && (
+          <>
+            {renderCategoryHeader("Playlists")}
+            {playlists.map(renderFile)}
+            {playlists.length === 0 && renderNoResults()}
+            {remainingPlaylists > 0 && (
+              <div
+                style={styles.moreButton}
+                onClick={() => dispatch(setMoreSearchResults("playlist"))}
+              >
+                {searchPagination.playlist.loading ? (
+                  <BeatLoader color={blueTitleBar} size={5} />
+                ) : (
+                  `${remainingPlaylists} more results...`
                 )}
               </div>
             )}
