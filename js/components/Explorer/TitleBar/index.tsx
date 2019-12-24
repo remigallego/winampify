@@ -49,12 +49,12 @@ const FlexRowContainer = styled.div`
 `;
 
 const Title = styled.div<{ playlist: boolean }>`
+  transition: color 1s;
+  color: ${props => (props.playlist ? "black" : "white")};
   padding: 3px;
   padding-left: 10px;
   font-family: "Open Sans";
   font-size: 16px;
-  color: ${props => (props.playlist ? "rgb(13, 256, 187)" : "white")};
-  transition: color 1s;
   font-weight: 500;
   white-space: no-wrap;
   user-select: none;
