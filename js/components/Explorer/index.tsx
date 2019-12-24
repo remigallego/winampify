@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
 import styled from "styled-components";
@@ -16,6 +16,8 @@ import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
 import { AppState } from "../../reducers";
 import { blueDrop } from "../../styles/colors";
+import { selectWindows } from "../../selectors/windows";
+import { Window } from "../../reducers/windows";
 
 interface Props {
   explorer: SingleExplorerState;
@@ -23,14 +25,29 @@ interface Props {
 
 export default (props: Props) => {
   const { explorer } = props;
+  const [scrollPos, setScrollPos] = useState(0);
+  const [ref, setRef] = useState(null);
   const [backgroundColor, setBackground] = useState("white");
   const [dragCounter, setDragCounter] = useState(0);
-
+  const [scrollUpdated, setScrollUpdated] = useState(false);
+  const windows = useSelector<AppState, Window[]>(selectWindows);
   const dataTransferArray = useSelector(
     (state: AppState) => state.dataTransfer
   );
-
   const dispatch = useDispatch();
+
+  const isExplorerOnFocus =
+    windows.map(w => w.id).indexOf(explorer.id) === windows.length - 1;
+
+  useEffect(() => {
+    const goingOutOfFocus = !isExplorerOnFocus && scrollUpdated;
+    const goingIntoFocus = ref && isExplorerOnFocus && !scrollUpdated;
+    if (goingOutOfFocus) setScrollUpdated(false);
+    if (goingIntoFocus) {
+      ref.scrollTop = scrollPos;
+      setScrollUpdated(true);
+    }
+  });
 
   const onDragStop = (data: DraggableData) => {
     const { clientHeight, clientWidth } = document.documentElement;
@@ -85,19 +102,21 @@ export default (props: Props) => {
   const allowDrop =
     explorer.dropEnabled && dataTransferArray.source !== props.explorer.id;
 
+  const enableResizing = {
+    top: false,
+    right: true,
+    bottom: true,
+    left: false,
+    topRight: false,
+    bottomRight: true,
+    bottomLeft: false,
+    topLeft: false
+  };
+
   return (
     <div>
       <Rnd
-        enableResizing={{
-          top: false,
-          right: true,
-          bottom: true,
-          left: false,
-          topRight: false,
-          bottomRight: true,
-          bottomLeft: false,
-          topLeft: false
-        }}
+        enableResizing={enableResizing}
         width={explorer.width}
         height={explorer.height}
         default={{
@@ -130,6 +149,10 @@ export default (props: Props) => {
           />
           <ExplorerToolbar id={explorer.id} />
           <ContentContainer
+            ref={r => {
+              if (r) setRef(r);
+            }}
+            onScroll={e => setScrollPos((e.target as HTMLDivElement).scrollTop)}
             backgroundColor={backgroundColor}
             onDragOver={e => {
               e.stopPropagation();
