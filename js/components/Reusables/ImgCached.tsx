@@ -12,7 +12,7 @@ const ImgCached = (props: Props) => {
   if (src.startsWith("https://") || src.startsWith("http://")) {
     const cdnUrl = "images.weserv.nl";
     url = `//${cdnUrl}/?url=${props.src}`;
-    if (props.cachedSize.h || props.cachedSize.h)
+    if (props.cachedSize?.h || props.cachedSize?.w)
       url = url.concat(`&h=${props.cachedSize.h}&w=${props.cachedSize.w}`);
   }
 

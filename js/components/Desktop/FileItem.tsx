@@ -6,6 +6,15 @@ import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import folderclosed from "./images/folderclosed.png";
 import InputRenaming from "./InputRenaming";
+import ImgCached from "../Reusables/ImgCached";
+import {
+  isTrack,
+  isPlaylist,
+  isImage,
+  isAlbum,
+  isAction,
+  isArtist
+} from "../../types/typecheckers";
 
 interface Props {
   file: GenericFile;
@@ -19,19 +28,11 @@ const FileItem = (props: Props) => {
   const { file } = props;
 
   const getIcon = () => {
-    switch (file.metaData.type) {
-      case "track":
-        return bigWinampIcon;
-      case "album":
-      case "action":
-      case "artist":
-      case "playlist":
-        return folderclosed;
-      case "image":
-        return file.metaData.url;
-      default:
-        return bigWinampIcon;
-    }
+    if (isTrack(file)) return bigWinampIcon;
+    if (isPlaylist(file) || isAlbum(file) || isArtist(file) || isAction(file))
+      return folderclosed;
+    if (isImage(file)) return file.metaData.url;
+    else return bigWinampIcon;
   };
 
   return (
@@ -42,7 +43,7 @@ const FileItem = (props: Props) => {
         onMouseDown={props.onClick}
         onDoubleClick={props.onDoubleClick}
       >
-        <Image src={getIcon()} />
+        <Image src={getIcon()} cachedSize={{ w: 50, h: 50 }} />
         {file.isRenaming ? (
           <InputRenaming
             initialValue={file.title}
@@ -79,7 +80,7 @@ const Container = styled.div<{ file: GenericFile }>`
   animation-name: ${fadeIn};
 `;
 
-const Image = styled.img`
+const Image = styled(ImgCached)`
   width: 50px;
   height: 50px;
   z-index: -4;
