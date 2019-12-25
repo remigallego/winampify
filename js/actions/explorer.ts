@@ -19,6 +19,12 @@ import {
   getTracksFromAlbum,
   searchFor
 } from "../api/apiFunctions";
+import {
+  addTracksToPlaylist,
+  getMyPlaylists,
+  getPlaylist,
+  getTracksFromPlaylist
+} from "../api/playlists";
 import { AppState } from "../reducers";
 import {
   CLOSE_EXPLORER,
@@ -31,15 +37,9 @@ import {
   SET_SEARCH,
   UPDATE_PAGINATION
 } from "../reducers/search-pagination";
-import { OPEN_FOLDER_ACTION, TrackFile, SimplifiedTrack } from "../types";
+import { OPEN_FOLDER_ACTION, SimplifiedTrack, TrackFile } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 import { Filter } from "./search-pagination";
-import {
-  getMyPlaylists,
-  getTracksFromPlaylist,
-  getPlaylist,
-  addTracksToPlaylist
-} from "../api/playlists";
 
 export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
@@ -164,7 +164,9 @@ export function setItems(
         const playlist = await getPlaylist(uri);
         files = items.map(item => item.track);
         title = playlist.name;
-        dropEnabled = true;
+        if (playlist.owner.id === getState().user.id) {
+          dropEnabled = true;
+        }
         break;
       }
       case OPEN_FOLDER_ACTION.TOP: {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Webamp, * as WebampInstance from "webamp";
 import { closeImage } from "../../actions/images";
 import { setOnTop } from "../../actions/windows";
 import { AppState } from "../../reducers";

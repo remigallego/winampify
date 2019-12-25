@@ -1,5 +1,5 @@
 import { CREATE_FILE, DELETE_FILE, MOVE_FILE } from "../actionTypes";
-import { OPEN_FOLDER_ACTION, File, GenericFile } from "../types";
+import { File, GenericFile, OPEN_FOLDER_ACTION } from "../types";
 import { APPLY_SNAPSHOT } from "./index";
 
 export interface DesktopState {

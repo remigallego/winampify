@@ -9,7 +9,7 @@ export function setDataTransferTracks(
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: SET_DATA_TRANSFER_TRACKS,
-      payload: { tracks: tracks, source }
+      payload: { tracks, source }
     });
   };
 }

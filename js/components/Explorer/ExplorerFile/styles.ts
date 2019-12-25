@@ -7,19 +7,22 @@ const styles: StyleCollection = {
     userSelect: "none",
     boxSizing: "border-box",
     height: "23px",
-    width: "100%",
-    whiteSpace: "nowrap",
+    display: "flex",
+    width: "100%", 
+   /*  overflow: "hidden",
+    whiteSpace: "nowrap", */
     backgroundColor: "transparent",
-    display: "inline-block"
+    border: "1px solid transparent"
   },
   fileName: {
     userSelect: "none",
     position: "relative",
-    display: "inline-block"
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    overflow: "hidden"
   },
   iconWrapper: {
     position: "relative",
-    display: "inline-block",
     marginRight: "5px",
     marginLeft: "2px",
     left: 0,

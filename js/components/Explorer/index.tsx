@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
 import styled from "styled-components";
 import {
   closeExplorer,
+  setTracksToPlaylist,
   updatePosition,
-  updateSize,
-  setTracksToPlaylist
+  updateSize
 } from "../../actions/explorer";
+import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
+import { Window } from "../../reducers/windows";
+import { selectWindows } from "../../selectors/windows";
+import { blueDrop } from "../../styles/colors";
 import "./animations.css";
 import ContentWindow from "./ContentWindow";
+import ExplorerParameters from "./ExplorerParameters";
 import TitleBar from "./TitleBar";
 import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
-import { AppState } from "../../reducers";
-import { blueDrop } from "../../styles/colors";
-import { selectWindows } from "../../selectors/windows";
-import { Window } from "../../reducers/windows";
 
 interface Props {
   explorer: SingleExplorerState;
@@ -67,12 +68,12 @@ export default (props: Props) => {
     dispatch(updatePosition(x, y, explorer.id));
   };
 
-  const dispatchResize = (e: any, d: any, ref: HTMLDivElement) => {
-    if (ref.style.width && ref.style.height) {
+  const dispatchResize = (e: any, d: any, r: HTMLDivElement) => {
+    if (r.style.width && r.style.height) {
       dispatch(
         updateSize(
-          Number(ref.style.width.substring(0, ref.style.width.length - 2)),
-          Number(ref.style.height.substring(0, ref.style.height.length - 2)),
+          Number(r.style.width.substring(0, r.style.width.length - 2)),
+          Number(r.style.height.substring(0, r.style.height.length - 2)),
           explorer.id
         )
       );
@@ -148,6 +149,7 @@ export default (props: Props) => {
             playlist={explorer.dropEnabled}
           />
           <ExplorerToolbar id={explorer.id} />
+          {/* <ExplorerParameters explorer={explorer} /> */}
           <ContentContainer
             ref={r => {
               if (r) setRef(r);

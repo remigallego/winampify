@@ -1,5 +1,5 @@
 import Api from ".";
-import { TrackFile, SimplifiedTrack } from "../types";
+import { SimplifiedTrack, TrackFile } from "../types";
 import { getItemsRecursively } from "./apiFunctions";
 
 /**

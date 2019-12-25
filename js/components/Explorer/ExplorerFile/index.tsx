@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
-import { GenericFile } from "../../../types";
+import { isPlaylistOwned } from "../../../selectors/user";
+import { GenericFile, TrackFile } from "../../../types";
+import { isPlaylist } from "../../../types/typecheckers";
 import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
 import styles from "./styles";
@@ -19,18 +21,18 @@ export default function(props: Props) {
   if (!props.file) return null;
   const { selected, onClick, onDoubleClick, children } = props;
 
-  const renderIcons = (icons: string[]) => {
-    if (icons.length > 1) {
+  const renderIcons = (iconsArr: string[]) => {
+    if (iconsArr.length > 1) {
       return (
         <div className="explorer-item-icon--wrapper" style={iconWrapper}>
           <img
             className="explorer-item-icon--bigger"
-            src={icons[0]}
+            src={iconsArr[0]}
             style={iconBig}
           />
           <img
             className="explorer-item-icon--smaller"
-            src={icons[1]}
+            src={iconsArr[1]}
             style={iconSmall}
           />
         </div>
@@ -40,7 +42,7 @@ export default function(props: Props) {
       <div className="explorer-item-icon--wrapper" style={iconWrapper}>
         <img
           className="explorer-item-icon--bigger"
-          src={icons[0]}
+          src={iconsArr[0]}
           style={iconBig}
         />
       </div>
@@ -78,8 +80,7 @@ export default function(props: Props) {
       backgroundColor: "#3064BD",
       color: "white",
       border: "1px solid white",
-      borderStyle: "dotted",
-      boxSizing: "border-box"
+      borderStyle: "dotted"
     };
     thisClass = "explorer-item selected";
   }
@@ -101,3 +102,13 @@ export default function(props: Props) {
     </div>
   );
 }
+
+/*
+
+  {
+          backgroundColor:
+            isPlaylist(props.file) && isPlaylistOwned(props.file.metaData)
+              ? "green"
+              : "#3064BD"
+        },
+*/

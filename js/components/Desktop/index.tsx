@@ -8,11 +8,11 @@ import { playTrack } from "../../actions/playback";
 import { AppState } from "../../reducers";
 import { DesktopState } from "../../reducers/desktop";
 import {
-  OPEN_FOLDER_ACTION,
   ActionFile,
   ArtistFile,
   GenericFile,
   ImageFile,
+  OPEN_FOLDER_ACTION,
   PlaylistFile
 } from "../../types";
 import {
@@ -20,8 +20,8 @@ import {
   isAlbum,
   isArtist,
   isImage,
-  isTrack,
-  isPlaylist
+  isPlaylist,
+  isTrack
 } from "../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../utils/dataTransfer";
 import {
@@ -136,9 +136,9 @@ export default (props: Props) => {
         draggable={!file.isRenaming}
         onDragStart={e => {
           const selectedFilesWithDerivedData = allFiles
-            .filter(_file => selectedFilesIds.indexOf(_file.id) > -1)
-            .map((_file: GenericFile) => {
-              const derivedFile: any = _file;
+            .filter(f => selectedFilesIds.indexOf(f.id) > -1)
+            .map((f: GenericFile) => {
+              const derivedFile: any = f;
               derivedFile.deltaX = derivedFile.x - e.clientX;
               derivedFile.deltaY = derivedFile.y - e.clientY;
               derivedFile.name = derivedFile.title;

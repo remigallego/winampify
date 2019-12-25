@@ -2,10 +2,6 @@ import { greenSpotify } from "../../../styles/colors";
 import { StyleCollection } from "../../../types";
 
 const styles: StyleCollection = {
-  container: {
-    padding: 2,
-    width: "100%"
-  },
   resultCategories: {
     fontSize: "18px",
     paddingLeft: "2px",

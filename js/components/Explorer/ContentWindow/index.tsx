@@ -19,20 +19,18 @@ import { SingleExplorerState } from "../../../reducers/explorer";
 import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
 import { blueTitleBar, greenSpotify } from "../../../styles/colors";
-import { OPEN_FOLDER_ACTION, GenericFile } from "../../../types";
+import { GenericFile, OPEN_FOLDER_ACTION } from "../../../types";
 import {
   isAlbum,
   isArtist,
   isImage,
-  isTrack,
-  isPlaylist
+  isPlaylist,
+  isTrack
 } from "../../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-
-const { container } = styles;
 
 declare global {
   interface Window {
@@ -231,7 +229,9 @@ export default function(props: Props) {
         <div
           className="explorer-items-container"
           onMouseDown={handleClickOutside}
-          style={container}
+          style={{
+            padding: 2
+          }}
         >
           <div style={styles.noResults}>
             Search filter is empty, please select at least one type.
@@ -255,7 +255,9 @@ export default function(props: Props) {
       <div
         className="explorer-items-container"
         onMouseDown={handleClickOutside}
-        style={container}
+        style={{
+          padding: 2
+        }}
       >
         {searchPagination.filter.types.includes("artist") && (
           <>
@@ -356,7 +358,9 @@ export default function(props: Props) {
     <div
       className="explorer-items-container"
       onMouseDown={handleClickOutside}
-      style={container}
+      style={{
+        padding: 2
+      }}
     >
       {props.files.map(renderFile)}
     </div>

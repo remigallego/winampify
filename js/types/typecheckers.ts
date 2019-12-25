@@ -4,8 +4,8 @@ import {
   ArtistFile,
   GenericFile,
   ImageFile,
-  TrackFile,
-  PlaylistFile
+  PlaylistFile,
+  TrackFile
 } from ".";
 
 // user defined type guards
