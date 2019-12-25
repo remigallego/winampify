@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import Draggable from "react-draggable";
 import styled, { css, keyframes } from "styled-components";
 import { ImageDialogType } from "../../types";
@@ -13,7 +13,7 @@ interface Props {
 export default (props: Props) => {
   const [animation, setAnimation] = useState<"grow" | "shrink" | "">("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setAnimation("grow");
     setTimeout(() => setAnimation(""), 250);
   }, []);
@@ -42,6 +42,7 @@ export default (props: Props) => {
               onMouseDown={e => e.preventDefault()}
               height={400}
               width={400}
+              hidden={animation === "grow"}
             />
           </Animated>
         </Container>
