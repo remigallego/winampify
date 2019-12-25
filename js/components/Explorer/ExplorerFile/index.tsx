@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
 import { isPlaylistOwned } from "../../../selectors/user";
 import { GenericFile, TrackFile } from "../../../types";
-import { isPlaylist } from "../../../types/typecheckers";
+import { isPlaylist, isImage } from "../../../types/typecheckers";
 import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
 import styles from "./styles";
-
+import ImgCached from "../../Reusables/ImgCached";
 const { itemStyle, fileName, iconWrapper, iconBig, iconSmall } = styles;
 
 interface Props {
@@ -30,10 +30,23 @@ export default function(props: Props) {
             src={iconsArr[0]}
             style={iconBig}
           />
-          <img
+          <ImgCached
             className="explorer-item-icon--smaller"
             src={iconsArr[1]}
             style={iconSmall}
+            cachedSize={{ h: 20, w: 20 }}
+          />
+        </div>
+      );
+    }
+    if (isImage(props.file)) {
+      return (
+        <div className="explorer-item-icon--wrapper" style={iconWrapper}>
+          <ImgCached
+            className="explorer-item-icon--bigger"
+            src={iconsArr[0]}
+            style={iconBig}
+            cachedSize={{ h: 20, w: 20 }}
           />
         </div>
       );
@@ -102,13 +115,3 @@ export default function(props: Props) {
     </div>
   );
 }
-
-/*
-
-  {
-          backgroundColor:
-            isPlaylist(props.file) && isPlaylistOwned(props.file.metaData)
-              ? "green"
-              : "#3064BD"
-        },
-*/
