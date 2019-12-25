@@ -1,12 +1,16 @@
 import React, { ReactNode } from "react";
-import { isPlaylistOwned } from "../../../selectors/user";
-import { GenericFile, TrackFile } from "../../../types";
-import { isPlaylist, isImage } from "../../../types/typecheckers";
+import { GenericFile } from "../../../types";
+import {
+  isPlaylist,
+  isImage,
+  isTrack,
+  isAlbum,
+  isArtist
+} from "../../../types/typecheckers";
 import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
-import styles from "./styles";
 import ImgCached from "../../Reusables/ImgCached";
-const { itemStyle, fileName, iconWrapper, iconBig, iconSmall } = styles;
+import styled, { css } from "styled-components";
 
 interface Props {
   file: GenericFile;
@@ -20,98 +24,103 @@ interface Props {
 export default function(props: Props) {
   if (!props.file) return null;
   const { selected, onClick, onDoubleClick, children } = props;
+  const { file } = props;
+  let icons = [];
+
+  if (isPlaylist(file) || isAlbum(file) || isArtist(file)) {
+    icons.push(
+      folderclosed,
+      file.metaData.images.length > 0 ? file.metaData.images[0].url : ""
+    );
+  } else if (isTrack(file)) {
+    icons.push(winampmp3);
+  } else if (isImage(file)) {
+    icons.push(file.metaData.url);
+  }
 
   const renderIcons = (iconsArr: string[]) => {
     if (iconsArr.length > 1) {
       return (
-        <div className="explorer-item-icon--wrapper" style={iconWrapper}>
-          <img
-            className="explorer-item-icon--bigger"
-            src={iconsArr[0]}
-            style={iconBig}
-          />
-          <ImgCached
-            className="explorer-item-icon--smaller"
-            src={iconsArr[1]}
-            style={iconSmall}
-            cachedSize={{ h: 20, w: 20 }}
-          />
-        </div>
+        <IconContainer>
+          <IconBig src={iconsArr[0]} />
+          <IconSmall src={iconsArr[1]} cachedSize={{ h: 20, w: 20 }} />
+        </IconContainer>
       );
     }
     if (isImage(props.file)) {
       return (
-        <div className="explorer-item-icon--wrapper" style={iconWrapper}>
-          <ImgCached
-            className="explorer-item-icon--bigger"
-            src={iconsArr[0]}
-            style={iconBig}
-            cachedSize={{ h: 20, w: 20 }}
-          />
-        </div>
+        <IconContainer>
+          <IconBig src={iconsArr[0]} cachedSize={{ h: 20, w: 20 }} />
+        </IconContainer>
       );
     }
     return (
-      <div className="explorer-item-icon--wrapper" style={iconWrapper}>
-        <img
-          className="explorer-item-icon--bigger"
-          src={iconsArr[0]}
-          style={iconBig}
-        />
-      </div>
+      <IconContainer>
+        <IconBig src={iconsArr[0]} />
+      </IconContainer>
     );
   };
-  let thisStyle = { ...itemStyle };
-  let thisClass = "explorer-item";
-  const icons = [];
-
-  const { metaData } = props.file;
-
-  switch (metaData.type) {
-    case "track":
-      icons.push(winampmp3);
-      break;
-    case "playlist":
-    case "album":
-      icons.push(folderclosed);
-      icons.push(metaData.images.length > 0 ? metaData.images[0].url : "");
-      break;
-    case "artist":
-      icons.push(folderclosed);
-      icons.push(metaData.images.length > 0 ? metaData.images[0].url : "");
-      break;
-    case "image":
-      icons.push(metaData.url);
-      break;
-    default:
-      break;
-  }
-
-  if (selected) {
-    thisStyle = {
-      ...itemStyle,
-      backgroundColor: "#3064BD",
-      color: "white",
-      border: "1px solid white",
-      borderStyle: "dotted"
-    };
-    thisClass = "explorer-item selected";
-  }
 
   return (
-    <div
+    <FileContainer
+      selected={selected}
       onMouseDown={onClick}
       onDoubleClick={onDoubleClick}
-      style={thisStyle}
-      className={thisClass}
       draggable={true}
       onDragStart={e => props.onDrag(e)}
       id={`file-${props.file.id}`}
     >
       {renderIcons(icons)}
-      <div className="explorer-item-filename" style={fileName}>
-        {children}
-      </div>
-    </div>
+      <FileName>{children}</FileName>
+    </FileContainer>
   );
 }
+const FileContainer = styled.div<{ selected: boolean }>`
+  font-family: "Open Sans";
+  cursor: default;
+  user-select: none;
+  box-sizing: border-box;
+  height: 23px;
+  display: flex;
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid transparent;
+  ${props =>
+    props.selected &&
+    css`
+      background-color: #3064bd;
+      color: white;
+      border: 1px solid white;
+      border-style: dotted;
+    `}
+`;
+const FileName = styled.div`
+  user-select: none;
+  position: relative;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
+const IconContainer = styled.div`
+  position: relative;
+  margin-right: 5px;
+  margin-left: 2px;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 14px;
+`;
+
+const IconBig = styled(ImgCached)`
+  position: relative;
+  width: 14px;
+  height: 14px;
+`;
+const IconSmall = styled(ImgCached)`
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 6px;
+  top: 6px;
+`;

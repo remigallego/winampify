@@ -5,11 +5,16 @@ interface Props extends React.ImgHTMLAttributes<HTMLImageElement> {
 }
 
 const ImgCached = (props: Props) => {
-  const { cachedSize, ...imgProps } = props;
-  const cdnUrl = "images.weserv.nl";
-  let url = `//${cdnUrl}/?url=${props.src}`;
-  if (props.cachedSize.h || props.cachedSize.h)
-    url = url.concat(`&h=${props.cachedSize.h}&w=${props.cachedSize.w}`);
+  const { cachedSize, src, ...imgProps } = props;
+  let url = src;
+  // If src is URL, we use weserv.nl for caching.
+  // https://images.weserv.nl/docs/quick-reference.html
+  if (src.startsWith("https://") || src.startsWith("http://")) {
+    const cdnUrl = "images.weserv.nl";
+    url = `//${cdnUrl}/?url=${props.src}`;
+    if (props.cachedSize.h || props.cachedSize.h)
+      url = url.concat(`&h=${props.cachedSize.h}&w=${props.cachedSize.w}`);
+  }
 
   return <img {...imgProps} src={url}></img>;
 };
