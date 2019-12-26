@@ -51,8 +51,11 @@
 html {
   height: 100%;
   width: 100%;
-  background-color: #2973e9d2;
-  /* background-image: url("https://i.redd.it/r0ad288kma8x.jpg"); */
+  background: linear-gradient(
+    184deg,
+    rgba(97, 68, 255, 1) 0%,
+    rgba(6, 46, 120, 1) 100%
+  );
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
