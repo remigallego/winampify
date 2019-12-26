@@ -113,6 +113,11 @@ export default (props: Props) => {
         position={{ x: explorer.x, y: explorer.y }}
         minWidth={290}
         minHeight={95}
+        resizeHandleStyles={{
+          right: {
+            width: 5
+          }
+        }}
         maxWidth={window.innerWidth - explorer.x}
         onResizeStop={dispatchResize}
         onDragStop={(e: any, data: DraggableData) => onDragStop(data)}

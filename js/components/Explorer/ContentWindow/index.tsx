@@ -370,6 +370,7 @@ export default function(props: Props) {
       height={props.explorer.height - 68} // 68 represents the title bar + toolbar
       itemCount={props.files.length}
       itemSize={23}
+      overscanCount={6}
       renderItem={({ index, style }) => (
         <div key={index} style={style}>
           {renderFile(props.files[index])}
