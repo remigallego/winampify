@@ -65,6 +65,10 @@ export default function(props: Props) {
     });
   }, []);
 
+  useEffect(() => {
+    setScrollOffset(0);
+  }, [props.files]);
+
   const doubleClickHandler = (
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -358,7 +362,6 @@ export default function(props: Props) {
   if (explorer.loading) return <ContentLoading color={greenSpotify} />;
   if (!files) return null;
   if (explorer.query) return renderSearchResults();
-
   return (
     <VirtualList
       scrollOffset={scrollOffset}
