@@ -28,7 +28,7 @@ export default () => {
     switch (window.type) {
       case WINDOW_TYPE.Webamp: {
         if (webampNode) {
-          webampNode.style.zIndex = index.toString();
+          webampNode.style.zIndex = window.position;
         }
         return null;
       }

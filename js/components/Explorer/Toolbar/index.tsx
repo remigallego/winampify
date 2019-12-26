@@ -5,7 +5,7 @@ import _ from "lodash";
 import { Item, Menu, MenuProvider, Submenu } from "react-contexify";
 import { FaChevronLeft, FaSpotify, FaPlay, FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   goPreviousState,
   setItems,
@@ -17,6 +17,7 @@ import { OPEN_FOLDER_ACTION } from "../../../types";
 import SearchInput from "./SearchInput";
 import { appendTracks, setTracksToPlay } from "../../../actions/webamp";
 import { isTrack } from "../../../types/typecheckers";
+import { IconType } from "react-icons/lib/cjs";
 interface Props {
   id: string;
 }
@@ -42,8 +43,8 @@ export default (props: Props) => {
   return (
     <Container key={props.id}>
       <FlexRowContainer>
-        <ArrowBack
-          previousStatesLength={previousStatesLength}
+        <ArrowIcon
+          disabled={previousStatesLength === 0}
           size={ICON_SIZE}
           color={previousStatesLength > 0 ? "black" : "rgba(0,0,0,0.2)"}
           onClick={() =>
@@ -78,22 +79,26 @@ export default (props: Props) => {
           </Menu>
         )}
         <MenuProvider id={`spotify-menu-${props.id}`} event="onClick">
-          <SpotifyIcon size={ICON_SIZE} />
+          <SpotifyIcon style={{ paddingLeft: 5 }} size={ICON_SIZE} />
         </MenuProvider>
-        <FaPlay
-          onClick={() =>
-            dispatch(setTracksToPlay(allExplorerFiles.filter(isTrack)))
-          }
+        <PlayIcon
+          style={{ paddingLeft: 5 }}
+          onClick={() => {
+            if (allExplorerFiles.filter(isTrack).length > 0)
+              dispatch(setTracksToPlay(allExplorerFiles.filter(isTrack)));
+          }}
+          disabled={allExplorerFiles.filter(isTrack).length === 0}
           size={ICON_SIZE}
-          style={{ paddingLeft: 10 }}
-        ></FaPlay>
-        <FaPlus
+        ></PlayIcon>
+        <PlusIcon
+          style={{ paddingLeft: 5 }}
           size={ICON_SIZE}
-          onClick={() =>
-            dispatch(appendTracks(allExplorerFiles.filter(isTrack)))
-          }
-          style={{ paddingLeft: 10 }}
-        ></FaPlus>
+          disabled={allExplorerFiles.filter(isTrack).length === 0}
+          onClick={() => {
+            if (allExplorerFiles.filter(isTrack).length > 0)
+              dispatch(appendTracks(allExplorerFiles.filter(isTrack)));
+          }}
+        ></PlusIcon>
       </FlexRowContainer>
       <Form onSubmit={e => e.preventDefault()}>
         <SearchInput
@@ -106,6 +111,19 @@ export default (props: Props) => {
     </Container>
   );
 };
+
+const onHover = () => css`
+  transition: fill 0.1s;
+  &:hover {
+    fill: ${greenSpotify};
+  }
+`;
+
+const onActive = () => css`
+  &:active {
+    transform: scale(0.8);
+  }
+`;
 
 const Container = styled.div`
   background-color: ${greyLight};
@@ -121,33 +139,28 @@ const Container = styled.div`
   padding-right: 5px;
 `;
 
-const ArrowBack = styled(FaChevronLeft)<{ previousStatesLength: number }>`
-  &:hover {
-    color: ${blueTitleBar};
-  }
-  &:active {
-    transform: ${props =>
-      props.previousStatesLength > 0 ? "scale(0.8)" : "scale(1)"};
-  }
-`;
-
 const FlexRowContainer = styled.div`
   flex-direction: row;
   display: flex;
   padding-top: 2px;
-`;
-
-const SpotifyIcon = styled(FaSpotify)`
-  padding-left: 10px;
-  &:hover {
-    fill: ${greenSpotify};
-  }
-  &:active {
-    transform: scale(0.8);
-  }
+  flex: 1;
 `;
 
 const Form = styled.form`
   margin: 0;
   width: "auto";
 `;
+
+const Icon = (icon: IconType) => styled(icon)<{ disabled?: boolean }>`
+  ${props => !props.disabled && onHover()}
+  ${props => !props.disabled && onActive()};
+  ${props =>
+    props.disabled &&
+    css`
+      fill: rgba(0, 0, 0, 0.2);
+    `}
+`;
+const SpotifyIcon = Icon(FaSpotify);
+const ArrowIcon = Icon(FaChevronLeft);
+const PlusIcon = Icon(FaPlus);
+const PlayIcon = Icon(FaPlay);
