@@ -26,29 +26,13 @@ interface Props {
 
 export default (props: Props) => {
   const { explorer } = props;
-  const [scrollPos, setScrollPos] = useState(0);
-  const [ref, setRef] = useState(null);
   const [backgroundColor, setBackground] = useState("white");
   const [dragCounter, setDragCounter] = useState(0);
-  const [scrollUpdated, setScrollUpdated] = useState(false);
   const windows = useSelector<AppState, Window[]>(selectWindows);
   const dataTransferArray = useSelector(
     (state: AppState) => state.dataTransfer
   );
   const dispatch = useDispatch();
-
-  const isExplorerOnFocus =
-    windows.map(w => w.id).indexOf(explorer.id) === windows.length - 1;
-
-  useEffect(() => {
-    const goingOutOfFocus = !isExplorerOnFocus && scrollUpdated;
-    const goingIntoFocus = ref && isExplorerOnFocus && !scrollUpdated;
-    if (goingOutOfFocus) setScrollUpdated(false);
-    if (goingIntoFocus) {
-      ref.scrollTop = scrollPos;
-      setScrollUpdated(true);
-    }
-  });
 
   const onDragStop = (data: DraggableData) => {
     const { clientHeight, clientWidth } = document.documentElement;
@@ -151,10 +135,6 @@ export default (props: Props) => {
           <ExplorerToolbar id={explorer.id} />
           {/* <ExplorerParameters explorer={explorer} /> */}
           <ContentContainer
-            ref={r => {
-              if (r) setRef(r);
-            }}
-            onScroll={e => setScrollPos((e.target as HTMLDivElement).scrollTop)}
             backgroundColor={backgroundColor}
             onDragOver={e => {
               e.stopPropagation();
@@ -192,7 +172,7 @@ const ExplorerWrapper = styled.div`
 
 const ContentContainer = styled.div<{ backgroundColor: string }>`
   display: flex;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   transition: background-color 0.3s;
   background-color: ${props => props.backgroundColor};

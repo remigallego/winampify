@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
-import { APPLY_SNAPSHOT } from "./";
 import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
+import { findHighestPosition } from "../utils/windows";
 
 export enum WINDOW_TYPE {
   Explorer,
@@ -12,10 +12,7 @@ export enum WINDOW_TYPE {
 export interface Window {
   id: string;
   type: WINDOW_TYPE;
-  /*   x: number;
-  y: number;
-  height: number;
-  width: number; */
+  position: number;
 }
 
 export interface WindowsState {
@@ -23,8 +20,10 @@ export interface WindowsState {
 }
 
 export const initialStateWindows: WindowsState = {
-  windows: [{ id: "webamp", type: WINDOW_TYPE.Webamp }]
+  windows: [{ id: "webamp", type: WINDOW_TYPE.Webamp, position: 1 }]
 };
+
+export const SET_ON_TOP = "SET_ON_TOP";
 
 const windowsReducer = (
   state: WindowsState = initialStateWindows,
@@ -35,13 +34,10 @@ const windowsReducer = (
       const { windows } = state;
       windows.push({
         id: action.payload.id,
-        type: WINDOW_TYPE.Explorer
-        /*  x: action.payload.x,
-        y: action.payload.y,
-        height: 500,
-        width: 400 */
+        type: WINDOW_TYPE.Explorer,
+        position: findHighestPosition(windows) + 1
       });
-      return { windows };
+      return { ...state, windows };
     }
     case CLOSE_EXPLORER: {
       const { windows } = state;
@@ -53,11 +49,8 @@ const windowsReducer = (
       const windows = state.windows;
       windows.push({
         id: action.payload.id,
-        type: WINDOW_TYPE.Image
-        /*  x: action.payload.x,
-        y: action.payload.y,
-        height: 200,
-        width: 200 */
+        type: WINDOW_TYPE.Image,
+        position: findHighestPosition(windows) + 1
       });
       return { windows };
     }
@@ -68,34 +61,23 @@ const windowsReducer = (
       );
       return { windows: _.without(state.windows, windowToRemove) };
     }
-    case "SET_ON_TOP": {
+    case SET_ON_TOP: {
+      const { windows } = state;
       const windowToMove = state.windows.find(
         window => window.id === action.id
       );
-      const windows = _.without(state.windows, windowToMove);
-      windows.push(windowToMove);
-      return { windows };
-    }
-    /* case UPDATE_POSITION:
+
       return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.payload.id]: {
-            ...state.byId[action.payload.id]
-          }
-        }
+        windows: windows.map(window => {
+          if (window.id === action.id) {
+            return {
+              ...windowToMove,
+              position: findHighestPosition(windows) + 1
+            };
+          } else return window;
+        })
       };
-    case UPDATE_SIZE:
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [action.id]: {
-            ...state.byId[action.id]
-          }
-        }
-      }; */
+    }
     default:
       return state;
   }

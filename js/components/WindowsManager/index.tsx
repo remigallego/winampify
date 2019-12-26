@@ -11,6 +11,7 @@ import { ImageDialogType } from "../../types";
 import Explorer from "../Explorer";
 import ImageModal from "../ImageDialog";
 import WindowInstance from "./WindowInstance";
+import { findHighestPosition } from "../../utils/windows";
 
 export default () => {
   const [webampNode, setWebampNode] = useState(null);
@@ -36,7 +37,7 @@ export default () => {
           explorerElement => explorerElement.id === window.id
         );
         if (explorer !== undefined)
-          return <Explorer key={window.id} explorer={explorer} />;
+          return <Explorer key={explorer.id} explorer={explorer} />;
       }
       case WINDOW_TYPE.Image: {
         const image = images.find(img => img.id === window.id);
@@ -84,8 +85,9 @@ export default () => {
         return (
           <WindowInstance
             key={window.id}
-            zIndex={index}
-            isOnTop={index === windows.length - 1}
+            id={window.id}
+            zIndex={window.position}
+            isOnTop={window.position === findHighestPosition(windows)}
             setOnTop={() => dispatch(setOnTop(window.id))}
           >
             {getWindow(window, index)}

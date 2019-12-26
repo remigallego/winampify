@@ -31,7 +31,7 @@ import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
 import { setTracksToPlay } from "../../../actions/webamp";
-import { FixedSizeList as List } from "react-window";
+import VirtualList from "react-tiny-virtual-list";
 
 declare global {
   interface Window {
@@ -45,18 +45,15 @@ interface Props {
 }
 
 export default function(props: Props) {
-  const explorerId = props.explorer.id;
-
-  // State
+  const { explorer } = props;
+  const [scrollOffset, setScrollOffset] = useState(0);
   const [holdShift, toggleHoldShift] = useState(false);
-  // Selectors
   const selectedFiles = useSelector<AppState, string[]>(
-    state => state.explorer.byId[explorerId].selectedFiles
+    state => state.explorer.byId[explorer.id].selectedFiles
   );
   const searchPagination = useSelector<AppState, QueryState>(state =>
-    selectSearch(state, explorerId)
+    selectSearch(state, explorer.id)
   );
-  // Dispatch
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -75,16 +72,16 @@ export default function(props: Props) {
     if (isTrack(file)) dispatch(setTracksToPlay([file]));
     if (isAlbum(file))
       dispatch(
-        setItems(OPEN_FOLDER_ACTION.ALBUM, file.metaData.id, explorerId)
+        setItems(OPEN_FOLDER_ACTION.ALBUM, file.metaData.id, explorer.id)
       );
     if (isArtist(file))
       dispatch(
-        setItems(OPEN_FOLDER_ACTION.ARTIST, file.metaData.id, explorerId)
+        setItems(OPEN_FOLDER_ACTION.ARTIST, file.metaData.id, explorer.id)
       );
     if (isImage(file)) dispatch(openImage(file.metaData.url, e));
     if (isPlaylist(file))
       dispatch(
-        setItems(OPEN_FOLDER_ACTION.PLAYLIST, file.metaData.id, explorerId)
+        setItems(OPEN_FOLDER_ACTION.PLAYLIST, file.metaData.id, explorer.id)
       );
   };
 
@@ -117,7 +114,7 @@ export default function(props: Props) {
           );
 
           dispatch(
-            setDataTransferTracks(formattedFilesForWebamp.flat(), explorerId)
+            setDataTransferTracks(formattedFilesForWebamp.flat(), explorer.id)
           );
         }
       }
@@ -133,13 +130,15 @@ export default function(props: Props) {
         });
         Promise.all(promises).then(() => {
           dispatch(
-            setDataTransferTracks(formattedFilesForWebamp.flat(), explorerId)
+            setDataTransferTracks(formattedFilesForWebamp.flat(), explorer.id)
           );
         });
       }
     });
 
-    dispatch(setDataTransferTracks(formattedFilesForWebamp.flat(), explorerId));
+    dispatch(
+      setDataTransferTracks(formattedFilesForWebamp.flat(), explorer.id)
+    );
     e.dataTransfer.setData("dragged_files", JSON.stringify(filesForDesktop)); // for desktop
   };
 
@@ -158,7 +157,7 @@ export default function(props: Props) {
                 index <= indexOfFileSelected
             )
             .map(item => item.id),
-          explorerId
+          explorer.id
         )
       );
     }
@@ -172,13 +171,13 @@ export default function(props: Props) {
                 index <= indexOfFilePreviouslySelected
             )
             .map(item => item.id),
-          explorerId
+          explorer.id
         )
       );
     }
   };
 
-  const renderFile = (file: GenericFile, style: any) => {
+  const renderFile = (file: GenericFile) => {
     const selected = props.explorer.selectedFiles.includes(file.id);
     const getExtension = () => {
       if (isTrack(file)) return ".mp3";
@@ -203,7 +202,7 @@ export default function(props: Props) {
             return;
           } else if (selectedFiles.includes(file.id)) {
             return;
-          } else dispatch(selectFile([file.id], explorerId));
+          } else dispatch(selectFile([file.id], explorer.id));
         }}
         onDoubleClick={e => doubleClickHandler(file, e)}
       >
@@ -354,22 +353,27 @@ export default function(props: Props) {
     </div>
   );
 
-  const { explorer, files } = props;
+  const { files } = props;
 
   if (explorer.loading) return <ContentLoading color={greenSpotify} />;
   if (!files) return null;
   if (explorer.query) return renderSearchResults();
 
+  console.log("scrollOffset ===", scrollOffset);
+
   return (
-    <div
-      className="explorer-items-container"
-      onMouseDown={handleClickOutside}
-      style={{
-        padding: 2,
-        width: "100%"
-      }}
-    >
-      {props.files.map(renderFile)}
-    </div>
+    <VirtualList
+      scrollOffset={scrollOffset}
+      onScroll={offset => setScrollOffset(offset)}
+      width={"100%"}
+      height={props.explorer.height - 68} // 68 represents the title bar + toolbar
+      itemCount={props.files.length}
+      itemSize={23}
+      renderItem={({ index, style }) => (
+        <div key={index} style={style}>
+          {renderFile(props.files[index])}
+        </div>
+      )}
+    />
   );
 }
