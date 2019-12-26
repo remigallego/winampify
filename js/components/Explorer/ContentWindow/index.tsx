@@ -359,8 +359,6 @@ export default function(props: Props) {
   if (!files) return null;
   if (explorer.query) return renderSearchResults();
 
-  console.log("scrollOffset ===", scrollOffset);
-
   return (
     <VirtualList
       scrollOffset={scrollOffset}
