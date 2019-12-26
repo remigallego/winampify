@@ -1,17 +1,17 @@
-import React, { ReactNode, PropsWithChildren } from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
+import { useDispatch } from "react-redux";
+import styled, { css } from "styled-components";
 import { GenericFile, OPEN_FOLDER_ACTION } from "../../../types";
 import {
-  isPlaylist,
-  isImage,
-  isTrack,
   isAlbum,
-  isArtist
+  isArtist,
+  isImage,
+  isPlaylist,
+  isTrack
 } from "../../../types/typecheckers";
+import ImgCached from "../../Reusables/ImgCached";
 import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
-import ImgCached from "../../Reusables/ImgCached";
-import styled, { css } from "styled-components";
-import { useDispatch } from "react-redux";
 
 interface Props {
   file: GenericFile;
@@ -26,7 +26,7 @@ export default function(props: Props) {
   if (!props.file) return null;
   const { selected, onClick, onDoubleClick, children } = props;
   const { file } = props;
-  let icons = [];
+  const icons = [];
 
   if (isPlaylist(file) || isAlbum(file) || isArtist(file)) {
     icons.push(
@@ -93,7 +93,8 @@ const FileContainer = styled.div<{ selected: boolean }>`
       color: white;
       border: 1px solid white;
       border-style: dotted;
-    `}
+    `};
+  color: ${props => props.theme.explorer.file.text};
 `;
 const FileName = styled.div`
   user-select: none;

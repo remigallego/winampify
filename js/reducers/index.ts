@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { defaultTheme } from "../styles/themes";
 import auth, { AuthState, initialStateAuth } from "./auth";
 import dataTransfer, {
   DataTransferState,
@@ -11,6 +12,7 @@ import searchPagination, {
   initialStateSearchPagination,
   SearchPaginationState
 } from "./search-pagination";
+import theme, { ThemeState } from "./theme";
 import user, { initialStateUser, UserState } from "./user";
 import webamp, { initialStateWebamp, WebampState } from "./webamp";
 import windowsReducer, { initialStateWindows, WindowsState } from "./windows";
@@ -27,6 +29,7 @@ export interface AppState {
   searchPagination: SearchPaginationState;
   dataTransfer: DataTransferState;
   webamp: WebampState;
+  theme: ThemeState;
 }
 
 export const initialStateApp: AppState = {
@@ -38,7 +41,8 @@ export const initialStateApp: AppState = {
   auth: initialStateAuth,
   searchPagination: initialStateSearchPagination,
   dataTransfer: initialStateDataTransfer,
-  webamp: initialStateWebamp
+  webamp: initialStateWebamp,
+  theme: defaultTheme
 };
 
 const reducer = combineReducers<AppState>({
@@ -50,7 +54,8 @@ const reducer = combineReducers<AppState>({
   auth,
   searchPagination,
   dataTransfer,
-  webamp
+  webamp,
+  theme
 });
 
 export default reducer;

@@ -2,19 +2,19 @@ import React from "react";
 import { MenuProvider } from "react-contexify";
 import styled, { keyframes } from "styled-components";
 import { GenericFile } from "../../types";
+import {
+  isAction,
+  isAlbum,
+  isArtist,
+  isImage,
+  isPlaylist,
+  isTrack
+} from "../../types/typecheckers";
+import ImgCached from "../Reusables/ImgCached";
 import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import folderclosed from "./images/folderclosed.png";
 import InputRenaming from "./InputRenaming";
-import ImgCached from "../Reusables/ImgCached";
-import {
-  isTrack,
-  isPlaylist,
-  isImage,
-  isAlbum,
-  isAction,
-  isArtist
-} from "../../types/typecheckers";
 
 interface Props {
   file: GenericFile;

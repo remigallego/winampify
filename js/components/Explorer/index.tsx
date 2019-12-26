@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
 import styled from "styled-components";
@@ -10,9 +10,6 @@ import {
 } from "../../actions/explorer";
 import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
-import { Window } from "../../reducers/windows";
-import { selectWindows } from "../../selectors/windows";
-import { blueDrop } from "../../styles/colors";
 import "./animations.css";
 import ContentWindow from "./ContentWindow";
 import ExplorerParameters from "./ExplorerParameters";
@@ -26,9 +23,8 @@ interface Props {
 
 export default (props: Props) => {
   const { explorer } = props;
-  const [backgroundColor, setBackground] = useState("white");
+  const [isDropping, setDropping] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
-  const windows = useSelector<AppState, Window[]>(selectWindows);
   const dataTransferArray = useSelector(
     (state: AppState) => state.dataTransfer
   );
@@ -68,7 +64,7 @@ export default (props: Props) => {
     if (!allowDrop) return;
     if (dataTransferArray.tracks.length > 0) {
       setDragCounter(0);
-      setBackground("white");
+      setDropping(false);
       // Let some time to end the background color transition
       setTimeout(
         () =>
@@ -140,7 +136,7 @@ export default (props: Props) => {
           <ExplorerToolbar id={explorer.id} />
           {/* <ExplorerParameters explorer={explorer} /> */}
           <ContentContainer
-            backgroundColor={backgroundColor}
+            isDropping={isDropping}
             onDragOver={e => {
               e.stopPropagation();
               e.preventDefault();
@@ -151,12 +147,12 @@ export default (props: Props) => {
               e.stopPropagation();
               e.preventDefault();
               setDragCounter(dragCounter + 1);
-              if (dataTransferArray.tracks.length > 0) setBackground(blueDrop);
+              if (dataTransferArray.tracks.length > 0) setDropping(true);
             }}
             onDragLeave={e => {
               if (!allowDrop) return;
               setDragCounter(dragCounter - 1);
-              if (dragCounter === 1) setBackground("white");
+              if (dragCounter === 1) setDropping(false);
             }}
           >
             <ContentWindow explorer={explorer} files={explorer.files} />
@@ -175,12 +171,13 @@ const ExplorerWrapper = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
 `;
 
-const ContentContainer = styled.div<{ backgroundColor: string }>`
+const ContentContainer = styled.div<{ isDropping: boolean }>`
   display: flex;
   overflow-y: hidden;
   overflow-x: hidden;
   transition: background-color 0.3s;
-  background-color: ${props => props.backgroundColor};
+  background-color: ${props =>
+    props.isDropping ? props.theme.explorer.bgDrop : props.theme.explorer.bg};
   height: 100%;
   width: 100%;
 `;

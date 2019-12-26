@@ -1,12 +1,16 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setTheme } from "../../actions/theme";
 import { SET_ACCESS_TOKEN } from "../../reducers/auth";
 import { APPLY_SNAPSHOT, initialStateApp } from "../../reducers/index";
 import store from "../../store";
+import { darkTheme, defaultTheme } from "../../styles/themes";
 import snapshotOne from "./0.2.2/desktop-files.json";
 import reset from "./0.2.2/reset-state.json";
 import snapshotTwo from "./0.2.2/snapshotTwo.json";
 
 const DeveloperPanel = () => {
+  const dispatch = useDispatch();
   return (
     <div
       style={{
@@ -20,10 +24,17 @@ const DeveloperPanel = () => {
     >
       <button
         onClick={() => {
-          // TODO:
+          dispatch(setTheme(defaultTheme));
         }}
       >
-        Print state to console
+        Light mode
+      </button>
+      <button
+        onClick={() => {
+          dispatch(setTheme(darkTheme));
+        }}
+      >
+        Dark mode
       </button>
       <button
         onClick={() =>

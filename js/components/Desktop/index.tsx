@@ -4,6 +4,7 @@ import { MenuProvider } from "../../../node_modules/react-contexify";
 import { setDataTransferTracks } from "../../actions/dataTransfer";
 import { setItems } from "../../actions/explorer";
 import { openImage } from "../../actions/images";
+import { setTracksToPlay } from "../../actions/webamp";
 import { AppState } from "../../reducers";
 import { DesktopState } from "../../reducers/desktop";
 import {
@@ -34,7 +35,6 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
-import { setTracksToPlay } from "../../actions/webamp";
 
 interface Props {
   selectionBox: any;

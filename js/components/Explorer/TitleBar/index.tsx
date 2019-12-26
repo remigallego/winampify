@@ -26,8 +26,8 @@ const TitleBar = (props: Props) => {
 export default TitleBar;
 
 const Bar = styled.div<{ playlist: boolean }>`
-  background-color: ${blueTitleBar};
-  transition: all 0.5s;
+  background-color: ${props => props.theme.explorer.title.bg};
+  transition: background-color 0.3s;
   ${props =>
     props.playlist &&
     css`
@@ -50,7 +50,6 @@ const FlexRowContainer = styled.div`
 
 const Title = styled.div<{ playlist: boolean }>`
   transition: color 1s;
-
   color: ${props => (props.playlist ? "black" : "white")};
   padding: 3px;
   padding-left: 10px;

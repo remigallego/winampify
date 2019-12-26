@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import styled, { css } from "styled-components";
 import { useSelector } from "react-redux";
+import styled, { css } from "styled-components";
 import { AppState } from "../../reducers";
 
 interface Props {

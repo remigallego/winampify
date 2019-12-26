@@ -9,6 +9,7 @@ import "../css/line-scale.css";
 import { authenticate } from "./actions/auth";
 import Winampify from "./components";
 import store from "./store";
+import ThemeWrapper from "./ThemeWrapper";
 import { getParams } from "./utils/common";
 
 export const persistor = persistStore(store, null, () => {
@@ -48,7 +49,9 @@ if (window.name === "PopupWindow") {
   render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Winampify />
+        <ThemeWrapper>
+          <Winampify />
+        </ThemeWrapper>
       </PersistGate>
     </Provider>,
     document.getElementById("app")

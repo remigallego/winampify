@@ -8,10 +8,10 @@ import { Window, WINDOW_TYPE } from "../../reducers/windows";
 import { selectExplorers, selectImages } from "../../selectors/explorer";
 import { selectWindows } from "../../selectors/windows";
 import { ImageDialogType } from "../../types";
+import { findHighestPosition } from "../../utils/windows";
 import Explorer from "../Explorer";
 import ImageModal from "../ImageDialog";
 import WindowInstance from "./WindowInstance";
-import { findHighestPosition } from "../../utils/windows";
 
 export default () => {
   const [webampNode, setWebampNode] = useState(null);

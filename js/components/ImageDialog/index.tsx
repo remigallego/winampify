@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import Draggable from "react-draggable";
 import styled, { css, keyframes } from "styled-components";
 import { ImageDialogType } from "../../types";

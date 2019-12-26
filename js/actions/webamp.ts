@@ -1,10 +1,11 @@
+import { toast } from "react-toastify";
 import { Action, Dispatch } from "redux";
 import Webamp, * as WebampInstance from "webamp";
 import { AppState } from "../reducers";
-import { SET_WEBAMP, PLAY } from "../reducers/webamp";
+import { PLAY, SET_WEBAMP } from "../reducers/webamp";
 import SpotifyMedia from "../spotifymedia";
-import { formatMetaToWebampMeta } from "../utils/dataTransfer";
 import { TrackFile } from "../types";
+import { formatMetaToWebampMeta } from "../utils/dataTransfer";
 
 export function setWebampInstance(): any {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {

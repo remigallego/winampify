@@ -3,7 +3,8 @@
 import { jsx } from "@emotion/core";
 import _ from "lodash";
 import { Item, Menu, MenuProvider, Submenu } from "react-contexify";
-import { FaChevronLeft, FaSpotify, FaPlay, FaPlus } from "react-icons/fa";
+import { FaChevronLeft, FaPlay, FaPlus, FaSpotify } from "react-icons/fa";
+import { IconType } from "react-icons/lib/cjs";
 import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import {
@@ -11,13 +12,12 @@ import {
   setItems,
   setSearchResults
 } from "../../../actions/explorer";
+import { appendTracks, setTracksToPlay } from "../../../actions/webamp";
 import { AppState } from "../../../reducers";
 import { blueTitleBar, greenSpotify, greyLight } from "../../../styles/colors";
 import { OPEN_FOLDER_ACTION } from "../../../types";
-import SearchInput from "./SearchInput";
-import { appendTracks, setTracksToPlay } from "../../../actions/webamp";
 import { isTrack } from "../../../types/typecheckers";
-import { IconType } from "react-icons/lib/cjs";
+import SearchInput from "./SearchInput";
 interface Props {
   id: string;
 }
@@ -126,7 +126,8 @@ const onActive = () => css`
 `;
 
 const Container = styled.div`
-  background-color: ${greyLight};
+  transition: background-color 0.3s;
+  background-color: ${props => props.theme.explorer.toolbar.bg};
   height: 40px;
   flex: 1;
   min-height: 40px;
@@ -154,11 +155,10 @@ const Form = styled.form`
 const Icon = (icon: IconType) => styled(icon)<{ disabled?: boolean }>`
   ${props => !props.disabled && onHover()}
   ${props => !props.disabled && onActive()};
-  ${props =>
-    props.disabled &&
-    css`
-      fill: rgba(0, 0, 0, 0.2);
-    `}
+  fill: ${props =>
+    props.disabled
+      ? props.theme.explorer.toolbar.iconDisabled
+      : props.theme.explorer.toolbar.icon};
 `;
 const SpotifyIcon = Icon(FaSpotify);
 const ArrowIcon = Icon(FaChevronLeft);

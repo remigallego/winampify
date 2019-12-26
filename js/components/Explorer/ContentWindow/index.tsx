@@ -1,6 +1,7 @@
-import React, { useEffect, useState, PureComponent } from "react";
+import React, { PureComponent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
+import VirtualList from "react-tiny-virtual-list";
 import { setDataTransferTracks } from "../../../actions/dataTransfer";
 import {
   selectFile,
@@ -9,6 +10,7 @@ import {
   unsetFocusExplorer
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
+import { setTracksToPlay } from "../../../actions/webamp";
 import {
   getAlbumsFromArtist,
   getTracksFromAlbum
@@ -30,8 +32,6 @@ import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
-import { setTracksToPlay } from "../../../actions/webamp";
-import VirtualList from "react-tiny-virtual-list";
 
 declare global {
   interface Window {
@@ -89,7 +89,7 @@ export default function(props: Props) {
       );
   };
 
-  const onDrag = async (e: any, files: GenericFile[]) => {
+  const onDrag = async (e: any, draggedFiles: GenericFile[]) => {
     e.persist();
     const dataTransferObject = e.dataTransfer;
     const emptyImage = document.createElement("img");
@@ -99,7 +99,7 @@ export default function(props: Props) {
 
     const formattedFilesForWebamp: any[] = [];
     const filesForDesktop: any[] = [];
-    files.forEach(async item => {
+    draggedFiles.forEach(async item => {
       filesForDesktop.push(item);
       if (isTrack(item)) {
         formattedFilesForWebamp.push(formatMetaToWebampMeta(item.metaData));

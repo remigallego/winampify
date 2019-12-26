@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
-import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
 import { findHighestPosition } from "../utils/windows";
+import { CLOSE_EXPLORER, OPEN_EXPLORER } from "./explorer";
 
 export enum WINDOW_TYPE {
   Explorer,
