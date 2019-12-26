@@ -3,7 +3,7 @@
 import { jsx } from "@emotion/core";
 import _ from "lodash";
 import { Item, Menu, MenuProvider, Submenu } from "react-contexify";
-import { FaChevronLeft, FaSpotify } from "react-icons/fa";
+import { FaChevronLeft, FaSpotify, FaPlay, FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
@@ -15,6 +15,8 @@ import { AppState } from "../../../reducers";
 import { blueTitleBar, greenSpotify, greyLight } from "../../../styles/colors";
 import { OPEN_FOLDER_ACTION } from "../../../types";
 import SearchInput from "./SearchInput";
+import { appendTracks, setTracksToPlay } from "../../../actions/webamp";
+import { isTrack } from "../../../types/typecheckers";
 interface Props {
   id: string;
 }
@@ -24,6 +26,9 @@ const ICON_SIZE = 20;
 export default (props: Props) => {
   const previousStatesLength = useSelector<AppState, number>(
     state => state.explorer.byId[props.id].previousStates.length
+  );
+  const allExplorerFiles = useSelector(
+    (state: AppState) => state.explorer.byId[props.id].files
   );
   const dispatch = useDispatch();
 
@@ -53,14 +58,20 @@ export default (props: Props) => {
             <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.FOLLOWING)}>
               Following
             </Item>
-            <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.RECENTLY_PLAYED)}>
+            <Item
+              onClick={() => dispatchItems(OPEN_FOLDER_ACTION.RECENTLY_PLAYED)}
+            >
               Recently Played
             </Item>
             <Submenu label="Library">
-              <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.LIBRARY_ALBUMS)}>
+              <Item
+                onClick={() => dispatchItems(OPEN_FOLDER_ACTION.LIBRARY_ALBUMS)}
+              >
                 Albums
               </Item>
-              <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.LIBRARY_TRACKS)}>
+              <Item
+                onClick={() => dispatchItems(OPEN_FOLDER_ACTION.LIBRARY_TRACKS)}
+              >
                 Tracks
               </Item>
             </Submenu>
@@ -69,6 +80,20 @@ export default (props: Props) => {
         <MenuProvider id={`spotify-menu-${props.id}`} event="onClick">
           <SpotifyIcon size={ICON_SIZE} />
         </MenuProvider>
+        <FaPlay
+          onClick={() =>
+            dispatch(setTracksToPlay(allExplorerFiles.filter(isTrack)))
+          }
+          size={ICON_SIZE}
+          style={{ paddingLeft: 10 }}
+        ></FaPlay>
+        <FaPlus
+          size={ICON_SIZE}
+          onClick={() =>
+            dispatch(appendTracks(allExplorerFiles.filter(isTrack)))
+          }
+          style={{ paddingLeft: 10 }}
+        ></FaPlus>
       </FlexRowContainer>
       <Form onSubmit={e => e.preventDefault()}>
         <SearchInput

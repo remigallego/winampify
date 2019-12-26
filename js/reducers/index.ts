@@ -7,7 +7,6 @@ import dataTransfer, {
 import desktop, { DesktopState, initialStateDesktop } from "./desktop";
 import explorer, { ExplorerState, initialStateExplorerState } from "./explorer";
 import images, { ImagesState, initialStateImages } from "./images";
-import playback, { initialStatePlayback, PlaybackState } from "./playback";
 import searchPagination, {
   initialStateSearchPagination,
   SearchPaginationState
@@ -24,7 +23,6 @@ export interface AppState {
   user: UserState;
   windows: WindowsState;
   images: ImagesState;
-  playback: PlaybackState;
   auth: AuthState;
   searchPagination: SearchPaginationState;
   dataTransfer: DataTransferState;
@@ -37,7 +35,6 @@ export const initialStateApp: AppState = {
   user: initialStateUser,
   windows: initialStateWindows,
   images: initialStateImages,
-  playback: initialStatePlayback,
   auth: initialStateAuth,
   searchPagination: initialStateSearchPagination,
   dataTransfer: initialStateDataTransfer,
@@ -50,7 +47,6 @@ const reducer = combineReducers<AppState>({
   windows: windowsReducer,
   desktop,
   user,
-  playback,
   auth,
   searchPagination,
   dataTransfer,

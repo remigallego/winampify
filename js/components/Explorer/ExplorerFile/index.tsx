@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { GenericFile } from "../../../types";
+import React, { ReactNode, PropsWithChildren } from "react";
+import { GenericFile, OPEN_FOLDER_ACTION } from "../../../types";
 import {
   isPlaylist,
   isImage,
@@ -11,6 +11,7 @@ import folderclosed from "../images/folder-closed.ico";
 import winampmp3 from "../images/winamp-mp3.png";
 import ImgCached from "../../Reusables/ImgCached";
 import styled, { css } from "styled-components";
+import { useDispatch } from "react-redux";
 
 interface Props {
   file: GenericFile;

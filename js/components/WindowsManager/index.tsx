@@ -85,6 +85,7 @@ export default () => {
           <WindowInstance
             key={window.id}
             zIndex={index}
+            isOnTop={index === windows.length - 1}
             setOnTop={() => dispatch(setOnTop(window.id))}
           >
             {getWindow(window, index)}

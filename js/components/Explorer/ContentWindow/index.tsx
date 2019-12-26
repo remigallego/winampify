@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, PureComponent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import { setDataTransferTracks } from "../../../actions/dataTransfer";
@@ -9,7 +9,6 @@ import {
   unsetFocusExplorer
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
-import { playTrack } from "../../../actions/playback";
 import {
   getAlbumsFromArtist,
   getTracksFromAlbum
@@ -31,6 +30,8 @@ import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
 import ExplorerFile from "../ExplorerFile";
 import styles from "./styles";
+import { setTracksToPlay } from "../../../actions/webamp";
+import { FixedSizeList as List } from "react-window";
 
 declare global {
   interface Window {
@@ -71,7 +72,7 @@ export default function(props: Props) {
     file: GenericFile,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (isTrack(file)) dispatch(playTrack(file));
+    if (isTrack(file)) dispatch(setTracksToPlay([file]));
     if (isAlbum(file))
       dispatch(
         setItems(OPEN_FOLDER_ACTION.ALBUM, file.metaData.id, explorerId)
@@ -142,48 +143,49 @@ export default function(props: Props) {
     e.dataTransfer.setData("dragged_files", JSON.stringify(filesForDesktop)); // for desktop
   };
 
-  const renderFile = (file: GenericFile) => {
+  const handleShiftSelect = (f: GenericFile) => {
+    const indexOfFileSelected = props.files.indexOf(f);
+    const indexOfFilePreviouslySelected = props.files.indexOf(
+      props.files.find(item => selectedFiles[0] === item.id)
+    );
+    if (indexOfFileSelected >= indexOfFilePreviouslySelected) {
+      dispatch(
+        selectFile(
+          props.files
+            .filter(
+              (omit, index) =>
+                index >= indexOfFilePreviouslySelected &&
+                index <= indexOfFileSelected
+            )
+            .map(item => item.id),
+          explorerId
+        )
+      );
+    }
+    if (indexOfFileSelected <= indexOfFilePreviouslySelected) {
+      dispatch(
+        selectFile(
+          props.files
+            .filter(
+              (omit, index) =>
+                index >= indexOfFileSelected &&
+                index <= indexOfFilePreviouslySelected
+            )
+            .map(item => item.id),
+          explorerId
+        )
+      );
+    }
+  };
+
+  const renderFile = (file: GenericFile, style: any) => {
     const selected = props.explorer.selectedFiles.includes(file.id);
-    const getExtension = (type: string) => {
-      if (type === "track") return ".mp3";
-      if (type === "image") return ".jpg";
+    const getExtension = () => {
+      if (isTrack(file)) return ".mp3";
+      if (isImage(file)) return ".jpg";
       return null;
     };
 
-    const handleShiftSelect = () => {
-      const indexOfFileSelected = props.files.indexOf(file);
-      const indexOfFilePreviouslySelected = props.files.indexOf(
-        props.files.find(item => selectedFiles[0] === item.id)
-      );
-      if (indexOfFileSelected >= indexOfFilePreviouslySelected) {
-        dispatch(
-          selectFile(
-            props.files
-              .filter(
-                (omit, index) =>
-                  index >= indexOfFilePreviouslySelected &&
-                  index <= indexOfFileSelected
-              )
-              .map(item => item.id),
-            explorerId
-          )
-        );
-      }
-      if (indexOfFileSelected <= indexOfFilePreviouslySelected) {
-        dispatch(
-          selectFile(
-            props.files
-              .filter(
-                (omit, index) =>
-                  index >= indexOfFileSelected &&
-                  index <= indexOfFilePreviouslySelected
-              )
-              .map(item => item.id),
-            explorerId
-          )
-        );
-      }
-    };
     return (
       <ExplorerFile
         key={file.id}
@@ -197,7 +199,7 @@ export default function(props: Props) {
         }
         onClick={() => {
           if (holdShift && selectedFiles.length === 1) {
-            handleShiftSelect();
+            handleShiftSelect(file);
             return;
           } else if (selectedFiles.includes(file.id)) {
             return;
@@ -206,7 +208,7 @@ export default function(props: Props) {
         onDoubleClick={e => doubleClickHandler(file, e)}
       >
         {file.title}
-        {getExtension(file.metaData.type)}
+        {getExtension()}
       </ExplorerFile>
     );
   };
@@ -230,7 +232,8 @@ export default function(props: Props) {
           className="explorer-items-container"
           onMouseDown={handleClickOutside}
           style={{
-            padding: 2
+            padding: 2,
+            width: "100%"
           }}
         >
           <div style={styles.noResults}>
@@ -256,7 +259,8 @@ export default function(props: Props) {
         className="explorer-items-container"
         onMouseDown={handleClickOutside}
         style={{
-          padding: 2
+          padding: 2,
+          width: "100%"
         }}
       >
         {searchPagination.filter.types.includes("artist") && (
@@ -350,16 +354,19 @@ export default function(props: Props) {
     </div>
   );
 
-  if (props.explorer.loading) return <ContentLoading color={greenSpotify} />;
-  if (!props.files) return null;
-  if (props.explorer.query) return renderSearchResults();
+  const { explorer, files } = props;
+
+  if (explorer.loading) return <ContentLoading color={greenSpotify} />;
+  if (!files) return null;
+  if (explorer.query) return renderSearchResults();
 
   return (
     <div
       className="explorer-items-container"
       onMouseDown={handleClickOutside}
       style={{
-        padding: 2
+        padding: 2,
+        width: "100%"
       }}
     >
       {props.files.map(renderFile)}

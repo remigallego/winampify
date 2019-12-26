@@ -192,7 +192,8 @@ const ExplorerWrapper = styled.div`
 
 const ContentContainer = styled.div<{ backgroundColor: string }>`
   display: flex;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   transition: background-color 0.3s;
   background-color: ${props => props.backgroundColor};
   height: 100%;

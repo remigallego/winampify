@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 
 interface Props {
   zIndex: number;
+  isOnTop: boolean;
   setOnTop: () => void;
   children: ReactNode;
 }
@@ -16,7 +17,8 @@ export default (props: Props) => {
         position: "absolute"
       }}
       onMouseDown={(e: any) => {
-        if (e.target.id !== "disallow-on-top") props.setOnTop();
+        if (!props.isOnTop && e.target.id !== "disallow-on-top")
+          props.setOnTop();
       }}
     >
       {props.children}

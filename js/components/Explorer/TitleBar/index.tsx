@@ -50,14 +50,15 @@ const FlexRowContainer = styled.div`
 
 const Title = styled.div<{ playlist: boolean }>`
   transition: color 1s;
+
   color: ${props => (props.playlist ? "black" : "white")};
   padding: 3px;
   padding-left: 10px;
   font-family: "Open Sans";
   font-size: 16px;
   font-weight: 500;
-  white-space: no-wrap;
   user-select: none;
   overflow: hidden;
-  text-overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;

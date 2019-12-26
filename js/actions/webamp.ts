@@ -1,13 +1,15 @@
 import { Action, Dispatch } from "redux";
 import Webamp, * as WebampInstance from "webamp";
 import { AppState } from "../reducers";
-import { SET_WEBAMP } from "../reducers/webamp";
+import { SET_WEBAMP, PLAY } from "../reducers/webamp";
 import SpotifyMedia from "../spotifymedia";
+import { formatMetaToWebampMeta } from "../utils/dataTransfer";
+import { TrackFile } from "../types";
 
 export function setWebampInstance(): any {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const WebampConstructor: any = WebampInstance;
-    const newWebamp: Webamp = new WebampConstructor(
+    const webampObject: Webamp = new WebampConstructor(
       {
         __initialWindowLayout: {
           main: {
@@ -40,13 +42,32 @@ export function setWebampInstance(): any {
       {}
     );
 
-    dispatch({ type: SET_WEBAMP, payload: { webamp: newWebamp } });
+    dispatch({ type: SET_WEBAMP, payload: { webampObject } });
   };
 }
 
 export function openWebamp() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const { instance } = getState().webamp;
-    instance.renderWhenReady(document.getElementById("webamp"));
+    const { webampObject } = getState().webamp;
+    webampObject.renderWhenReady(document.getElementById("webamp"));
+  };
+}
+
+export function appendTracks(file: TrackFile[]) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const { webampObject } = getState().webamp;
+    const webampMetadata = file.map(f => formatMetaToWebampMeta(f.metaData));
+    webampObject.appendTracks(webampMetadata);
+  };
+}
+
+export function setTracksToPlay(file: TrackFile[]) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const { webampObject } = getState().webamp;
+    const webampMetadata = file.map(f => formatMetaToWebampMeta(f.metaData));
+    webampObject.setTracksToPlay(webampMetadata);
+    dispatch({
+      type: PLAY
+    });
   };
 }
