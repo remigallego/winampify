@@ -45,7 +45,8 @@ const Container = styled.div<{ zIndex: number; isOnTop: boolean }>`
   ${props =>
     !props.isOnTop &&
     css`
-      -webkit-filter: grayscale(70%) brightness(84%); /* Safari 6.0 - 9.0 */
-      filter: grayscale(70%) brightness(84%) opacity(92%);
+      -webkit-filter: ${props =>
+        props.theme.windows.bgOutFocus}; /* Safari 6.0 - 9.0 */
+      filter: ${props => props.theme.windows.bgOutFocus};
     `}
 `;

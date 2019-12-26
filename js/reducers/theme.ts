@@ -1,23 +1,7 @@
 import { defaultTheme } from "../styles/themes";
+import { Theme } from "../styles/themes";
 
-export interface ThemeState {
-  explorer: {
-    bg: string;
-    bgDrop: string;
-    title: {
-      bg: string;
-    };
-    file: {
-      text: string;
-    };
-    toolbar: {
-      bg: string;
-      icon: string;
-      iconDisabled: string;
-    };
-    scroll: string;
-  };
-}
+interface ThemeState extends Theme {}
 
 export const initialStateTheme: ThemeState = defaultTheme;
 

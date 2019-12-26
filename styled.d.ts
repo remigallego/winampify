@@ -1,8 +1,8 @@
 // import original module declarations
 import "styled-components";
-import { ThemeState } from "./js/reducers/theme";
+import { Theme } from "./js/styles/themes";
 
 // and extend them!
 declare module "styled-components" {
-  export interface DefaultTheme extends ThemeState {}
+  export interface DefaultTheme extends Theme {}
 }

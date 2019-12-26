@@ -1,8 +1,26 @@
-import { ThemeState } from "../reducers/theme";
+export interface Theme {
+  explorer: {
+    bg: string;
+    bgDrop: string;
+    title: {
+      bg: string;
+    };
+    file: {
+      text: string;
+    };
+    toolbar: {
+      bg: string;
+      icon: string;
+      iconDisabled: string;
+    };
+    scroll: string;
+  };
+  windows: {
+    bgOutFocus: string;
+  };
+}
 
-/* Pre-configured Themes: */
-
-export const defaultTheme: ThemeState = {
+export const defaultTheme: Theme = {
   explorer: {
     bg: "white",
     bgDrop: "rgb(13,256,187)",
@@ -18,10 +36,13 @@ export const defaultTheme: ThemeState = {
       iconDisabled: "rgba(0, 0, 0, 0.2)"
     },
     scroll: "rgba(0,0,0,.5)"
+  },
+  windows: {
+    bgOutFocus: "grayscale(70%) brightness(84%) opacity(92%)"
   }
 };
 
-export const darkTheme: ThemeState = {
+export const darkTheme: Theme = {
   explorer: {
     bg: "black",
     bgDrop: "rgb(13,256,187)",
@@ -37,5 +58,8 @@ export const darkTheme: ThemeState = {
       iconDisabled: "rgba(255,255,255,0.3)"
     },
     scroll: "white"
+  },
+  windows: {
+    bgOutFocus: "grayscale(70%) brightness(34%) opacity(92%)"
   }
 };
