@@ -70,6 +70,18 @@ export const initialStateDesktop: DesktopState = {
         type: "action",
         action: OPEN_FOLDER_ACTION.USER_PLAYLISTS
       }
+    },
+    settings: {
+      id: "settings",
+      title: "Settings",
+      isRenaming: false,
+      locked: true,
+      x: 20,
+      y: 540,
+      metaData: {
+        type: "action",
+        action: OPEN_FOLDER_ACTION.SETTINGS
+      }
     }
   },
   allIds: [
@@ -77,7 +89,8 @@ export const initialStateDesktop: DesktopState = {
     "top_artists",
     "my_albums",
     "my_tracks",
-    "my_playlists"
+    "my_playlists",
+    "settings"
   ]
 };
 

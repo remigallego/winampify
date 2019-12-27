@@ -8,7 +8,8 @@ export enum OPEN_FOLDER_ACTION {
   RECENTLY_PLAYED,
   LIBRARY_ALBUMS,
   LIBRARY_TRACKS,
-  USER_PLAYLISTS
+  USER_PLAYLISTS,
+  SETTINGS
 }
 export interface ImageDialogType {
   id: string;

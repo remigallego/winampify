@@ -12,6 +12,7 @@ import {
 } from "../reducers/auth";
 import { initPlayer } from "../spotifymedia/initPlayer";
 import { setUserInfos } from "./user";
+import Webamp from "webamp";
 
 // Just because the loading animation is so nice :P
 const FAKE_LOADING_TIME = 1600;
@@ -89,10 +90,10 @@ export const authenticate: any = (
 };
 
 export function logOut() {
-  return (dispatch: Dispatch<Action>) => {
-    const webamp: HTMLElement | null = document.getElementById("webamp");
-    if (webamp) {
-      webamp.remove();
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const webampObject: Webamp = getState().webamp.webampObject;
+    if (webampObject) {
+      webampObject.dispose();
     }
 
     dispatch({

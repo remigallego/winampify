@@ -16,6 +16,7 @@ import theme, { ThemeState } from "./theme";
 import user, { initialStateUser, UserState } from "./user";
 import webamp, { initialStateWebamp, WebampState } from "./webamp";
 import windowsReducer, { initialStateWindows, WindowsState } from "./windows";
+import settings, { initialSettingsState } from "./settings";
 
 export const APPLY_SNAPSHOT = "APPLY_SNAPSHOT";
 
@@ -30,6 +31,7 @@ export interface AppState {
   dataTransfer: DataTransferState;
   webamp: WebampState;
   theme: ThemeState;
+  settings: SettingsState;
 }
 
 export const initialStateApp: AppState = {
@@ -42,7 +44,8 @@ export const initialStateApp: AppState = {
   searchPagination: initialStateSearchPagination,
   dataTransfer: initialStateDataTransfer,
   webamp: initialStateWebamp,
-  theme: defaultTheme
+  theme: defaultTheme,
+  settings: initialSettingsState
 };
 
 const reducer = combineReducers<AppState>({
@@ -55,7 +58,8 @@ const reducer = combineReducers<AppState>({
   searchPagination,
   dataTransfer,
   webamp,
-  theme
+  theme,
+  settings
 });
 
 export default reducer;

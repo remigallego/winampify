@@ -35,6 +35,7 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
+import { toggleSettingsMenu } from "../../actions/settings";
 
 interface Props {
   selectionBox: any;
@@ -207,9 +208,17 @@ export default (props: Props) => {
         )
       );
     if (isAction(file)) {
-      dispatch(
-        setItems((file as ActionFile).metaData.action, undefined, undefined, e)
-      );
+      if (file.metaData.action === OPEN_FOLDER_ACTION.SETTINGS) {
+        dispatch(toggleSettingsMenu());
+      } else
+        dispatch(
+          setItems(
+            (file as ActionFile).metaData.action,
+            undefined,
+            undefined,
+            e
+          )
+        );
     }
   };
 

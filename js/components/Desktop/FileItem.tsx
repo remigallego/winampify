@@ -1,7 +1,7 @@
 import React from "react";
 import { MenuProvider } from "react-contexify";
 import styled, { keyframes } from "styled-components";
-import { GenericFile } from "../../types";
+import { GenericFile, OPEN_FOLDER_ACTION } from "../../types";
 import {
   isAction,
   isAlbum,
@@ -14,7 +14,7 @@ import ImgCached from "../Reusables/ImgCached";
 import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import InputRenaming from "./InputRenaming";
-import { FaFolder } from "react-icons/fa";
+import { FaFolder, FaCog } from "react-icons/fa";
 
 interface Props {
   file: GenericFile;
@@ -28,13 +28,20 @@ const FileItem = (props: Props) => {
   const { file } = props;
 
   const getIcon = () => {
+    if (
+      isAction(file) &&
+      file.metaData.action === OPEN_FOLDER_ACTION.SETTINGS
+    ) {
+      return <IconSettings />;
+    }
     if (isTrack(file))
       return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
     if (isPlaylist(file) || isAlbum(file) || isArtist(file) || isAction(file))
       return <IconFolder />;
     if (isImage(file))
       return <Image src={file.metaData.url} cachedSize={{ w: 50, h: 50 }} />;
-    else return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
+
+    return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
   };
 
   return (
@@ -92,6 +99,12 @@ const IconFolder = styled(FaFolder)`
   width: 50px;
   height: 50px;
   fill: ${props => props.theme.folder.color};
+`;
+
+const IconSettings = styled(FaCog)`
+  width: 50px;
+  height: 50px;
+  fill: gray;
 `;
 
 const Title = styled.div<{ selected: boolean }>`
