@@ -5,10 +5,7 @@ import VirtualList from "react-tiny-virtual-list";
 import { setMoreSearchResults } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
-import {
-  QueryState,
-  SearchPaginationState
-} from "../../../reducers/search-pagination";
+import { QueryState } from "../../../reducers/search-pagination";
 import { selectSearch } from "../../../selectors/search";
 import { blueTitleBar } from "../../../styles/colors";
 import { GenericFile } from "../../../types";
@@ -18,7 +15,7 @@ import {
   isPlaylist,
   isTrack
 } from "../../../types/typecheckers";
-import styles from "./styles";
+import styled from "styled-components";
 
 interface Props {
   handleClickOutside: (e: any) => void;
@@ -53,38 +50,29 @@ export default (props: Props) => {
   const getRemaining = (type: "track" | "artist" | "album" | "playlist") =>
     searchPagination[type].total - searchPagination[type].current;
 
-  const getFilesOfType = (type: "track" | "artist" | "album" | "playlist") => {
-    if (type === "artist") return props.files.filter(isArtist);
-    if (type === "track") return props.files.filter(isTrack);
-    if (type === "album") return props.files.filter(isAlbum);
-    if (type === "playlist") return props.files.filter(isPlaylist);
-    return [];
-  };
+  const getFilesOfType = (type: "track" | "artist" | "album" | "playlist") =>
+    (type === "artist" && props.files.filter(isArtist)) ||
+    (type === "track" && props.files.filter(isTrack)) ||
+    (type === "album" && props.files.filter(isAlbum)) ||
+    (type === "playlist" && props.files.filter(isPlaylist));
 
   const renderCategoryHeader = (text: string) => (
-    <div style={styles.searchCategory}>
+    <SearchCategory>
       {`${text[0].toUpperCase()}${text.slice(1)}s`}
-      <div style={styles.searchSeparator} />
-    </div>
+      <Separator />
+    </SearchCategory>
   );
-
-  const renderNoResults = () => {
-    return <div style={styles.noResults}>No results found</div>;
-  };
 
   if (!searchPagination.filter.types.length)
     return (
       <div
-        className="explorer-items-container"
         onMouseDown={handleClickOutside}
         style={{
           padding: 2,
           width: "100%"
         }}
       >
-        <div style={styles.noResults}>
-          Search filter is empty, please select at least one type.
-        </div>
+        <Text>Search filter is empty, please select at least one type.</Text>
       </div>
     );
 
@@ -96,18 +84,15 @@ export default (props: Props) => {
         <>
           {renderCategoryHeader(type)}
           {(getFilesOfType(type) as GenericFile[]).map(renderFile)}
-          {getFilesOfType(type).length === 0 && renderNoResults()}
+          {getFilesOfType(type).length === 0 && <Text>No results found</Text>}
           {getRemaining(type) > 0 && (
-            <div
-              style={styles.moreButton}
-              onClick={() => dispatch(setMoreSearchResults(type))}
-            >
+            <MoreButton onClick={() => dispatch(setMoreSearchResults(type))}>
               {searchPagination[type].loading ? (
                 <BeatLoader color={blueTitleBar} size={5} />
               ) : (
                 `${getRemaining(type)} more results...`
               )}
-            </div>
+            </MoreButton>
           )}
           <div style={{ marginTop: 20 }} />
         </>
@@ -138,3 +123,40 @@ export default (props: Props) => {
     />
   );
 };
+
+const SearchCategory = styled.div`
+  user-select: none;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 95%;
+  font-weight: 300;
+  font-size: 18px;
+  margin-left: 20px;
+  color: ${props => props.theme.explorer.file.text};
+`;
+
+const Separator = styled.div`
+  background-color: ${props => props.theme.explorer.file.text};
+  height: 1px;
+  opacity: 0.4;
+  width: 100%;
+`;
+
+const Text = styled.div`
+  margin-left: 20px;
+  color: ${props => props.theme.explorer.file.text};
+  margin-left: 20px;
+  opacity: 0.7;
+  text-align: center;
+  font-size: 14px;
+`;
+
+const MoreButton = styled.div`
+  font-size: 14px;
+  cursor: pointer;
+  background-color: aliceblue;
+  padding-left: 22px;
+  margin-top: 2px;
+`;
