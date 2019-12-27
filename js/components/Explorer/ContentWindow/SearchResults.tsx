@@ -63,7 +63,7 @@ export default (props: Props) => {
 
   const renderCategoryHeader = (text: string) => (
     <div style={styles.searchCategory}>
-      {text}
+      {`${text[0].toUpperCase()}${text.slice(1)}s`}
       <div style={styles.searchSeparator} />
     </div>
   );
@@ -124,7 +124,7 @@ export default (props: Props) => {
       itemCount={searchPagination.filter.types.length}
       itemSize={index => {
         if (getFilesOfType(searchPagination.filter.types[index]).length === 0)
-          return 0;
+          return 25 + 19;
         return (
           23 * getFilesOfType(searchPagination.filter.types[index]).length +
           (25 + 19 + 20)
