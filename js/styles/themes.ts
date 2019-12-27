@@ -18,6 +18,9 @@ export interface Theme {
   windows: {
     bgOutFocus: string;
   };
+  folder: {
+    color: string;
+  };
 }
 
 export const defaultTheme: Theme = {
@@ -39,6 +42,9 @@ export const defaultTheme: Theme = {
   },
   windows: {
     bgOutFocus: "grayscale(70%) brightness(84%) opacity(92%)"
+  },
+  folder: {
+    color: "#d4be57"
   }
 };
 
@@ -61,5 +67,8 @@ export const darkTheme: Theme = {
   },
   windows: {
     bgOutFocus: "grayscale(70%) brightness(34%) opacity(92%)"
+  },
+  folder: {
+    color: "#d4be57"
   }
 };

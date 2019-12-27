@@ -11,6 +11,7 @@ import {
 import ImgCached from "../../../Reusables/ImgCached";
 import folderclosed from "../../images/folder-closed.ico";
 import winampmp3 from "../../images/winamp-mp3.png";
+import { FaFolder } from "react-icons/fa";
 
 interface Props {
   file: GenericFile;
@@ -42,7 +43,7 @@ export default function(props: Props) {
     if (iconsArr.length > 1) {
       return (
         <IconContainer>
-          <IconBig src={iconsArr[0]} />
+          <IconFolder size={14} />
           <IconSmall src={iconsArr[1]} cachedSize={{ h: 20, w: 20 }} />
         </IconContainer>
       );
@@ -124,4 +125,10 @@ const IconSmall = styled(ImgCached)`
   height: 8px;
   left: 6px;
   top: 6px;
+`;
+
+const IconFolder = styled(FaFolder)`
+  width: 14px;
+  height: 14px;
+  fill: ${props => props.theme.folder.color};
 `;

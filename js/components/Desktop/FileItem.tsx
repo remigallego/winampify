@@ -13,8 +13,8 @@ import {
 import ImgCached from "../Reusables/ImgCached";
 import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
-import folderclosed from "./images/folderclosed.png";
 import InputRenaming from "./InputRenaming";
+import { FaFolder } from "react-icons/fa";
 
 interface Props {
   file: GenericFile;
@@ -28,11 +28,13 @@ const FileItem = (props: Props) => {
   const { file } = props;
 
   const getIcon = () => {
-    if (isTrack(file)) return bigWinampIcon;
+    if (isTrack(file))
+      return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
     if (isPlaylist(file) || isAlbum(file) || isArtist(file) || isAction(file))
-      return folderclosed;
-    if (isImage(file)) return file.metaData.url;
-    else return bigWinampIcon;
+      return <IconFolder />;
+    if (isImage(file))
+      return <Image src={file.metaData.url} cachedSize={{ w: 50, h: 50 }} />;
+    else return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
   };
 
   return (
@@ -43,7 +45,7 @@ const FileItem = (props: Props) => {
         onMouseDown={props.onClick}
         onDoubleClick={props.onDoubleClick}
       >
-        <Image src={getIcon()} cachedSize={{ w: 50, h: 50 }} />
+        {getIcon()}
         {file.isRenaming ? (
           <InputRenaming
             initialValue={file.title}
@@ -84,6 +86,12 @@ const Image = styled(ImgCached)`
   width: 50px;
   height: 50px;
   z-index: -4;
+`;
+
+const IconFolder = styled(FaFolder)`
+  width: 50px;
+  height: 50px;
+  fill: ${props => props.theme.folder.color};
 `;
 
 const Title = styled.div<{ selected: boolean }>`
