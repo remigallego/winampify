@@ -21,6 +21,7 @@ export interface SingleExplorerState {
   height: number;
   x: number;
   y: number;
+  scrollOffset: number;
   files: GenericFile[];
   dropEnabled: boolean;
   uri: string;
@@ -52,6 +53,7 @@ const initialStateExplorer: SingleExplorerState = {
   height: 500,
   x: 0,
   y: 0,
+  scrollOffset: 0,
 
   // extras
   dropEnabled: false,
@@ -69,6 +71,8 @@ export const UPDATE_POSITION = "UPDATE_POSITION";
 export const UPDATE_SIZE = "UPDATE_SIZE";
 export const SET_MORE_ITEMS = "SET_MORE_ITEMS";
 export const SET_SEARCH_METADATA = "SET_SEARCH_METADATA";
+export const SET_SCROLL_OFFSET = "SET_SCROLL_OFFSET";
+export const RESET_SCROLL_OFFSET = "RESET_SCROLL_OFFSET";
 
 const setItems = (
   state: ExplorerState,
@@ -261,6 +265,28 @@ const explorer = (state = initialStateExplorerState, action: any) => {
       return setMoreItems(state, action.payload);
     case SET_EXPLORER_METADATA:
       return setExplorerMetadata(state, action.payload);
+    case SET_SCROLL_OFFSET:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            scrollOffset: action.payload.scrollOffset
+          }
+        }
+      };
+    case RESET_SCROLL_OFFSET:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            scrollOffset: 0
+          }
+        }
+      };
     default:
       return state;
   }

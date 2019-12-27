@@ -6,6 +6,7 @@ import { Item, Menu, MenuProvider, Submenu } from "react-contexify";
 import { FaChevronLeft, FaPlay, FaPlus, FaSpotify } from "react-icons/fa";
 import { IconType } from "react-icons/lib/cjs";
 import { useDispatch, useSelector } from "react-redux";
+import { Tooltip } from "react-tippy";
 import styled, { css } from "styled-components";
 import {
   goPreviousState,
@@ -18,6 +19,7 @@ import { blueTitleBar, greenSpotify, greyLight } from "../../../styles/colors";
 import { OPEN_FOLDER_ACTION } from "../../../types";
 import { isTrack } from "../../../types/typecheckers";
 import SearchInput from "./SearchInput";
+
 interface Props {
   id: string;
 }
@@ -43,14 +45,23 @@ export default (props: Props) => {
   return (
     <Container key={props.id}>
       <FlexRowContainer>
-        <ArrowIcon
-          disabled={previousStatesLength === 0}
-          size={ICON_SIZE}
-          color={previousStatesLength > 0 ? "black" : "rgba(0,0,0,0.2)"}
-          onClick={() =>
-            previousStatesLength > 0 ? dispatch(goPreviousState()) : null
-          }
-        />
+        <Tooltip
+          title="Go back"
+          position="bottom"
+          trigger={"mouseenter"}
+          delay={600}
+          size={"small"}
+          animation={"none"}
+        >
+          <ArrowIcon
+            disabled={previousStatesLength === 0}
+            size={ICON_SIZE}
+            color={previousStatesLength > 0 ? "black" : "rgba(0,0,0,0.2)"}
+            onClick={() =>
+              previousStatesLength > 0 ? dispatch(goPreviousState()) : null
+            }
+          />
+        </Tooltip>
         {props.id !== "landing-page" && (
           <Menu id={`spotify-menu-${props.id}`} style={{ zIndex: 9999 }}>
             <Item onClick={() => dispatchItems(OPEN_FOLDER_ACTION.TOP)}>
@@ -78,27 +89,55 @@ export default (props: Props) => {
             </Submenu>
           </Menu>
         )}
+
         <MenuProvider id={`spotify-menu-${props.id}`} event="onClick">
-          <SpotifyIcon style={{ paddingLeft: 5 }} size={ICON_SIZE} />
+          <Tooltip
+            title="Spotify"
+            position="bottom"
+            trigger={"mouseenter"}
+            delay={600}
+            size={"small"}
+            animation={"none"}
+          >
+            <SpotifyIcon style={{ paddingLeft: 5 }} size={ICON_SIZE} />
+          </Tooltip>
         </MenuProvider>
-        <PlayIcon
-          style={{ paddingLeft: 5 }}
-          onClick={() => {
-            if (allExplorerFiles.filter(isTrack).length > 0)
-              dispatch(setTracksToPlay(allExplorerFiles.filter(isTrack)));
-          }}
-          disabled={allExplorerFiles.filter(isTrack).length === 0}
-          size={ICON_SIZE}
-        ></PlayIcon>
-        <PlusIcon
-          style={{ paddingLeft: 5 }}
-          size={ICON_SIZE}
-          disabled={allExplorerFiles.filter(isTrack).length === 0}
-          onClick={() => {
-            if (allExplorerFiles.filter(isTrack).length > 0)
-              dispatch(appendTracks(allExplorerFiles.filter(isTrack)));
-          }}
-        ></PlusIcon>
+        <Tooltip
+          title="Play tracks on Winamp"
+          position="bottom"
+          trigger={"mouseenter"}
+          delay={600}
+          size={"small"}
+          animation={"none"}
+        >
+          <PlayIcon
+            style={{ paddingLeft: 5 }}
+            onClick={() => {
+              if (allExplorerFiles.filter(isTrack).length > 0)
+                dispatch(setTracksToPlay(allExplorerFiles.filter(isTrack)));
+            }}
+            disabled={allExplorerFiles.filter(isTrack).length === 0}
+            size={ICON_SIZE}
+          ></PlayIcon>
+        </Tooltip>
+        <Tooltip
+          title="Queue tracks on Winamp"
+          position="bottom"
+          size={"small"}
+          trigger={"mouseenter"}
+          delay={600}
+          animation={"none"}
+        >
+          <PlusIcon
+            style={{ paddingLeft: 5 }}
+            size={ICON_SIZE}
+            disabled={allExplorerFiles.filter(isTrack).length === 0}
+            onClick={() => {
+              if (allExplorerFiles.filter(isTrack).length > 0)
+                dispatch(appendTracks(allExplorerFiles.filter(isTrack)));
+            }}
+          ></PlusIcon>
+        </Tooltip>
       </FlexRowContainer>
       <Form onSubmit={e => e.preventDefault()}>
         <SearchInput

@@ -45,8 +45,8 @@ const Container = styled.div<{ zIndex: number; isOnTop: boolean }>`
   ${props =>
     !props.isOnTop &&
     css`
-      -webkit-filter: ${props =>
-        props.theme.windows.bgOutFocus}; /* Safari 6.0 - 9.0 */
-      filter: ${props => props.theme.windows.bgOutFocus};
+      -webkit-filter: ${secondProps =>
+        secondProps.theme.windows.bgOutFocus}; /* Safari 6.0 - 9.0 */
+      filter: ${secondProps => secondProps.theme.windows.bgOutFocus};
     `}
 `;

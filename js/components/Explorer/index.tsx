@@ -115,7 +115,8 @@ export default (props: Props) => {
           }
         }}
         maxWidth={window.innerWidth - explorer.x}
-        onResizeStop={dispatchResize}
+        // @ts-ignore
+        onResize={dispatchResize}
         onDragStop={(e: any, data: DraggableData) => onDragStop(data)}
         // @ts-ignore
         enableUserSelectHack

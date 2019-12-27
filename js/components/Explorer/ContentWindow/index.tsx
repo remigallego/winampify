@@ -1,12 +1,11 @@
-import React, { PureComponent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BeatLoader } from "react-spinners";
 import VirtualList from "react-tiny-virtual-list";
 import { setDataTransferTracks } from "../../../actions/dataTransfer";
 import {
   selectFile,
   setItems,
-  setMoreSearchResults,
+  setScrollOffset,
   unsetFocusExplorer
 } from "../../../actions/explorer";
 import { openImage } from "../../../actions/images";
@@ -17,9 +16,7 @@ import {
 } from "../../../api/apiFunctions";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
-import { QueryState } from "../../../reducers/search-pagination";
-import { selectSearch } from "../../../selectors/search";
-import { blueTitleBar, greenSpotify } from "../../../styles/colors";
+import { greenSpotify } from "../../../styles/colors";
 import { GenericFile, OPEN_FOLDER_ACTION } from "../../../types";
 import {
   isAlbum,
@@ -30,8 +27,8 @@ import {
 } from "../../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
-import ExplorerFile from "../ExplorerFile";
-import styles from "./styles";
+import ExplorerFile from "./ExplorerFile";
+import SearchResults from "./SearchResults";
 
 declare global {
   interface Window {
@@ -45,15 +42,16 @@ interface Props {
 }
 
 export default function(props: Props) {
-  const { explorer } = props;
-  const [scrollOffset, setScrollOffset] = useState(0);
+  const { explorer, files } = props;
+  /*  const [scrollOffset, setScrollOffset] = useState(0); */
   const [holdShift, toggleHoldShift] = useState(false);
   const selectedFiles = useSelector<AppState, string[]>(
     state => state.explorer.byId[explorer.id].selectedFiles
   );
-  const searchPagination = useSelector<AppState, QueryState>(state =>
-    selectSearch(state, explorer.id)
+  const scrollOffset = useSelector(
+    (state: AppState) => state.explorer.byId[explorer.id].scrollOffset
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -64,10 +62,6 @@ export default function(props: Props) {
       if (e.keyCode === 16) toggleHoldShift(false);
     });
   }, []);
-
-  useEffect(() => {
-    setScrollOffset(0);
-  }, [props.files]);
 
   const doubleClickHandler = (
     file: GenericFile,
@@ -224,148 +218,23 @@ export default function(props: Props) {
     }
   };
 
-  const renderNoResults = () => {
-    return <div style={styles.noResults}>No results found</div>;
-  };
-
-  const renderSearchResults = () => {
-    if (!searchPagination.filter.types.length)
-      return (
-        <div
-          className="explorer-items-container"
-          onMouseDown={handleClickOutside}
-          style={{
-            padding: 2,
-            width: "100%"
-          }}
-        >
-          <div style={styles.noResults}>
-            Search filter is empty, please select at least one type.
-          </div>
-        </div>
-      );
-    const artists = props.files.filter(isArtist);
-    const albums = props.files.filter(isAlbum);
-    const tracks = props.files.filter(isTrack);
-    const playlists = props.files.filter(isPlaylist);
-    const remainingArtists =
-      searchPagination.artist.total - searchPagination.artist.current;
-    const remainingAlbums =
-      searchPagination.album.total - searchPagination.album.current;
-    const remainingTracks =
-      searchPagination.track.total - searchPagination.track.current;
-    const remainingPlaylists =
-      searchPagination.playlist.total - searchPagination.playlist.current;
-
-    return (
-      <div
-        className="explorer-items-container"
-        onMouseDown={handleClickOutside}
-        style={{
-          padding: 2,
-          width: "100%"
-        }}
-      >
-        {searchPagination.filter.types.includes("artist") && (
-          <>
-            {renderCategoryHeader("Artists")}
-            {artists.map(renderFile)}
-            {artists.length === 0 && renderNoResults()}
-            {remainingArtists > 0 && (
-              <div
-                style={styles.moreButton}
-                onClick={() => dispatch(setMoreSearchResults("artist"))}
-              >
-                {searchPagination.artist.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
-                ) : (
-                  `${remainingArtists} more results...`
-                )}
-              </div>
-            )}
-            <div style={{ marginTop: 20 }} />
-          </>
-        )}
-        {searchPagination.filter.types.includes("album") && (
-          <>
-            {renderCategoryHeader("Albums")}
-            {albums.map(renderFile)}
-            {albums.length === 0 && renderNoResults()}
-            {remainingAlbums > 0 && (
-              <div
-                style={styles.moreButton}
-                onClick={() => dispatch(setMoreSearchResults("album"))}
-              >
-                {searchPagination.album.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
-                ) : (
-                  `${remainingAlbums} more results...`
-                )}
-              </div>
-            )}
-            <div style={{ marginTop: 20 }} />
-          </>
-        )}
-        {searchPagination.filter.types.includes("track") && (
-          <>
-            {renderCategoryHeader("Tracks")}
-            {tracks.map(renderFile)}
-            {tracks.length === 0 && renderNoResults()}
-            {remainingTracks > 0 && (
-              <div
-                style={styles.moreButton}
-                onClick={() => dispatch(setMoreSearchResults("track"))}
-              >
-                {searchPagination.track.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
-                ) : (
-                  `${remainingTracks} more results...`
-                )}
-              </div>
-            )}
-            <div style={{ marginTop: 10 }} />
-          </>
-        )}
-        {searchPagination.filter.types.includes("playlist") && (
-          <>
-            {renderCategoryHeader("Playlists")}
-            {playlists.map(renderFile)}
-            {playlists.length === 0 && renderNoResults()}
-            {remainingPlaylists > 0 && (
-              <div
-                style={styles.moreButton}
-                onClick={() => dispatch(setMoreSearchResults("playlist"))}
-              >
-                {searchPagination.playlist.loading ? (
-                  <BeatLoader color={blueTitleBar} size={5} />
-                ) : (
-                  `${remainingPlaylists} more results...`
-                )}
-              </div>
-            )}
-            <div style={{ marginTop: 10 }} />
-          </>
-        )}
-      </div>
-    );
-  };
-
-  const renderCategoryHeader = (text: string) => (
-    <div style={styles.searchCategory}>
-      {text}
-      <div style={styles.searchSeparator} />
-    </div>
-  );
-
-  const { files } = props;
-
   if (explorer.loading) return <ContentLoading color={greenSpotify} />;
   if (!files) return null;
-  if (explorer.query) return renderSearchResults();
+  if (explorer.query)
+    return (
+      <SearchResults
+        explorer={explorer}
+        files={files}
+        handleClickOutside={handleClickOutside}
+        setScrollOffset={o => dispatch(setScrollOffset(o, explorer.id))}
+        scrollOffset={scrollOffset}
+        renderFile={renderFile}
+      />
+    );
   return (
     <VirtualList
       scrollOffset={scrollOffset}
-      onScroll={offset => setScrollOffset(offset)}
+      onScroll={o => dispatch(setScrollOffset(o, explorer.id))}
       width={"100%"}
       height={props.explorer.height - 68} // 68 represents the title bar + toolbar
       itemCount={props.files.length}

@@ -3,8 +3,7 @@ import { APPLY_SNAPSHOT } from "./index";
 export interface QueryState {
   query: string;
   filter: {
-    types: string[];
-    // TODO: To be extended
+    types: Array<"track" | "artist" | "album" | "playlist">;
   };
   album: {
     loading: boolean;
@@ -50,6 +49,7 @@ const searchPagination = (
         [action.payload.id]: {
           ...state[action.payload.id],
           [action.payload.type]: {
+            // @ts-ignore
             ...state[action.payload.id][action.payload.type],
             loading: true
           }
@@ -62,6 +62,7 @@ const searchPagination = (
         [action.payload.id]: {
           ...state[action.payload.id],
           [action.payload.type]: {
+            // @ts-ignore
             ...state[action.payload.id][action.payload.type],
             current: action.payload.current,
             loading: false

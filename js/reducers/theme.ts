@@ -1,7 +1,7 @@
 import { defaultTheme } from "../styles/themes";
 import { Theme } from "../styles/themes";
 
-interface ThemeState extends Theme {}
+type ThemeState = Theme;
 
 export const initialStateTheme: ThemeState = defaultTheme;
 

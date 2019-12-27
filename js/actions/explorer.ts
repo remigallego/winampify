@@ -29,7 +29,9 @@ import { AppState } from "../reducers";
 import {
   CLOSE_EXPLORER,
   OPEN_EXPLORER,
+  RESET_SCROLL_OFFSET,
   SET_MORE_ITEMS,
+  SET_SCROLL_OFFSET,
   UPDATE_POSITION
 } from "../reducers/explorer";
 import {
@@ -216,6 +218,13 @@ export function setItems(
     });
 
     dispatch({
+      type: RESET_SCROLL_OFFSET,
+      payload: {
+        id: explorerId
+      }
+    });
+
+    dispatch({
       type: SET_ITEMS,
       payload: {
         id: explorerId,
@@ -274,6 +283,13 @@ export function setSearchResults(inputQuery?: string) {
         playlist: playlists
           ? { total: playlists.playlists.total, current: 20 }
           : {}
+      }
+    });
+
+    dispatch({
+      type: RESET_SCROLL_OFFSET,
+      payload: {
+        id: explorerId
       }
     });
 
@@ -370,5 +386,12 @@ export function goPreviousState() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const explorerId = getActiveExplorerId(getState());
     dispatch({ type: GO_PREVIOUS_STATE, payload: { id: explorerId } });
+  };
+}
+
+export function setScrollOffset(scrollOffset: number, id: string) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    const explorerId = getActiveExplorerId(getState());
+    dispatch({ type: SET_SCROLL_OFFSET, payload: { id, scrollOffset } });
   };
 }
