@@ -41,7 +41,7 @@ export const defaultTheme: Theme = {
     scroll: "rgba(0,0,0,.5)"
   },
   windows: {
-    bgOutFocus: "grayscale(70%) brightness(84%) opacity(92%)"
+    bgOutFocus: "grayscale(40%) brightness(84%) opacity(97%)"
   },
   folder: {
     color: "#d4be57"
@@ -66,7 +66,7 @@ export const darkTheme: Theme = {
     scroll: "white"
   },
   windows: {
-    bgOutFocus: "grayscale(70%) brightness(34%) opacity(92%)"
+    bgOutFocus: "grayscale(40%) brightness(34%) opacity(97%)"
   },
   folder: {
     color: "#d4be57"
