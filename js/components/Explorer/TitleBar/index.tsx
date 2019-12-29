@@ -17,7 +17,9 @@ const TitleBar = (props: Props) => {
         <Title playlist={props.playlist}>
           {props.title || ""} {props.playlist && "[Playlist]"}
         </Title>
-        {props.onClose && <CloseIcon onClick={props.onClose} />}
+        <div style={{ display: "flex", height: "100%" }}>
+          {props.onClose && <CloseIcon onClick={props.onClose} />}
+        </div>
       </FlexRowContainer>
     </Bar>
   );
@@ -44,14 +46,14 @@ const FlexRowContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   overflow: hidden;
+  height: 26px;
 `;
 
 const Title = styled.div<{ playlist: boolean }>`
   transition: color 1s;
   color: ${props => (props.playlist ? "black" : "white")};
-  padding: 3px;
   padding-left: 10px;
   font-family: "Open Sans";
   font-size: 16px;

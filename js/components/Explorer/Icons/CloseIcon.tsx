@@ -30,4 +30,7 @@ const Container = styled.div<{ backgroundColor: string }>`
   background-color: ${props => props.backgroundColor};
   transition: background-color 0.21s;
   z-index: 55555;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
