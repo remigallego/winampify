@@ -10,17 +10,6 @@
 
 Artists, albums and tracks are all rendered as files and folders and can easily be manipulated and played in the Winamp re-implementation <a href="https://github.com/captbaritone/webamp">Webamp</a>.
 
-TODO:
-
-- [x] Fix search feature
-- [x] Implement better login logic
-- [x] Hide URL params after tokens are consumed
-- [x] Error middleware
-- [ ] Extends explorer content with track details
-- [ ] Implement popover with track details
-- [ ] Improve windows manager
-- [ ] Playlist discovery and playlist creation
-
 ## Motivation
 
 Building softwares should stay fun. This project is mostly a sandbox for me to try and improve my knowledge of React and TypeScript. It is also the first large-scale project that I'm undertaking on my own, and is in constant need of refactoring.
