@@ -2,7 +2,7 @@
   <img width="534" src="./images/winampifylogo.png">
 </p>
 
-<center><a href="http://winampify.io"><img src="./images/screenshot.png" /></a></center>
+<center><a href="http://winampify.io"><img src="./images/screenshot-a.png" /></a></center>
 
 ## Overview
 
