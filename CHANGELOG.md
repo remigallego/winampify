@@ -4,7 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.2] - 29th May 2019
+## 0.3.0 - 29th December 2019
+### Added
+- Add playlist discovery + Adding tracks
+- Add settings menu
+- Add theme and dark mode
+- Improve explorer UI
+- Improve explorer performance with virtual lists
+- Use Webamp NPM package
+- Implement refresh token logic
+
+### Changed
+- Change icons
+- Refactor api functions to keep fetching recursively
+- Data transfer now goes through Redux
+- Refactor class-based components to functions, and refactor to Hooks
+- Refactor styles to styled-components
+- Change background color
+
+### Fixed
+- Fix scroll issues on Explorer
+
+### Removed
+- Remove persisted state because this was limiting scalability and refactoring of the architecture. Will be re-implemented in the future, hopefully.
+
+## 0.2.2 - 29th May 2019
 ### Added
 - Error tracking with [Sentry](sentry.io)
 - Login window opens as popup
@@ -13,7 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 - Check valid url query params
 
-## [0.2.1] - 28th May 2019
+## 0.2.1 - 28th May 2019
 ### Added
 - Text on empty filter types search
 - Changelog
