@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.3.1 - 10th January 2020
+### Added
+- Add Inspectlet
+- Add Login logic and screen on Explorer
+
+### Changed
+- Reduce grayscale effect on background explorers
+
+### Removed
+- Removed Landing Page
+
+
 ## 0.3.0 - 29th December 2019
 ### Added
 - Add playlist discovery + Adding tracks
