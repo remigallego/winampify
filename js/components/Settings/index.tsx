@@ -1,18 +1,13 @@
-import styled from "styled-components";
 import React from "react";
-import CheckButton from "../Explorer/FilterPopover/CheckButton";
-import { FaSquare, FaSignOutAlt, FaTrash, FaCheck } from "react-icons/fa";
-import TitleBar from "../Explorer/TitleBar";
+import { FaCheck, FaSquare } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 import { toggleSettingsMenu } from "../../actions/settings";
-import { AppState, APPLY_SNAPSHOT } from "../../reducers";
 import { toggleDarkMode as toggleDarkModeAction } from "../../actions/settings";
-import { initialStateDesktop } from "../../reducers/desktop";
-import { logOut } from "../../actions/auth";
+import { AppState } from "../../reducers";
+import TitleBar from "../Explorer/TitleBar";
 
-interface Props {}
-
-export default (props: Props) => {
+export default () => {
   const isDarkMode = useSelector(
     (state: AppState) => state.settings.isDarkMode
   );
@@ -44,13 +39,13 @@ export default (props: Props) => {
             )}
             <Text>Enable Dark Mode</Text>
           </HorizontalContainer>
-          <HorizontalContainer onClick={() => dispatch(logOut())}>
+          {/*  <HorizontalContainer onClick={() => dispatch(logOut())}>
             <FaSignOutAlt
               color={isDarkMode ? "white" : "black"}
               style={{ paddingRight: 5 }}
             />
             <Text>Logout</Text>
-          </HorizontalContainer>
+          </HorizontalContainer> */}
           <div style={{ color: "grey", paddingTop: 15, opacity: 0.8 }}>
             Work In Progress: More to come. ;)
           </div>
@@ -99,7 +94,4 @@ const Text = styled.div`
   font-weight: 500;
 `;
 
-const TextBold = styled(Text)`
-  font-weight: 600;
-  font-size: 18px;
-`;
+

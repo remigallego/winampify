@@ -8,7 +8,7 @@ import {
   SET_SELECTED_EXPLORER,
   UNSET_FOCUS_EXPLORER
 } from "../actionTypes";
-import { GenericFile } from "../types";
+import { GenericFile, OPEN_FOLDER_ACTION } from "../types";
 
 export interface SingleExplorerState {
   id: string;
@@ -25,6 +25,7 @@ export interface SingleExplorerState {
   files: GenericFile[];
   dropEnabled: boolean;
   uri: string;
+  action: OPEN_FOLDER_ACTION;
 }
 
 export interface ExplorerState {
@@ -49,7 +50,7 @@ const initialStateExplorer: SingleExplorerState = {
   loading: false,
 
   // position
-  width: 400,
+  width: 500,
   height: 500,
   x: 0,
   y: 0,
@@ -57,7 +58,9 @@ const initialStateExplorer: SingleExplorerState = {
 
   // extras
   dropEnabled: false,
-  uri: ""
+  uri: "",
+
+  action: null
 };
 
 export const initialStateExplorerState: ExplorerState = {

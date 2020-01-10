@@ -1,5 +1,6 @@
 import { Action, Dispatch } from "redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import Webamp from "webamp";
 import Api from "../api";
 import { AppState } from "../reducers";
 import {
@@ -12,7 +13,7 @@ import {
 } from "../reducers/auth";
 import { initPlayer } from "../spotifymedia/initPlayer";
 import { setUserInfos } from "./user";
-import Webamp from "webamp";
+import { setOfflineWebamp } from "./webamp";
 
 // Just because the loading animation is so nice :P
 const FAKE_LOADING_TIME = 1600;
@@ -43,8 +44,7 @@ export const authenticate: any = (
             });
           if (result.product !== "premium") {
             return Promise.reject({
-              message:
-                "<b>Oh no! You don't have a Spotify Premium account. :(</b>"
+              message: "Oh no! You don't have a Spotify Premium account. :("
             });
           } else {
             return Promise.resolve(result.accessToken);
@@ -58,8 +58,7 @@ export const authenticate: any = (
         (): Promise<void> => {
           if (abort) {
             return Promise.reject({
-              message:
-                "<b>Oops, something went wrong! Please try again. (timeout)</b>"
+              message: "Oops, something went wrong! Please try again. (timeout)"
             });
           } else {
             setTimeout(() => {
@@ -94,6 +93,7 @@ export function logOut() {
     const webampObject: Webamp = getState().webamp.webampObject;
     if (webampObject) {
       webampObject.dispose();
+      dispatch(setOfflineWebamp());
     }
 
     dispatch({

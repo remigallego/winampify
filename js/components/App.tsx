@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
+import { useSelector } from "react-redux";
 import { createGlobalStyle } from "styled-components";
+import { AppState } from "../reducers";
 import Desktop from "./Desktop";
 import DeveloperPanel from "./DeveloperPanel";
 import SelectionBox from "./Reusables/SelectionBox";
+import Settings from "./Settings";
 import Webamp from "./Webamp";
 import WindowsManager from "./WindowsManager";
-import Settings from "./Settings";
-import { AppState } from "../reducers";
-import { useSelector } from "react-redux";
 
 export default () => {
   const [selectionBox, setSelectionBox] = useState({

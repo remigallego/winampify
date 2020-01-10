@@ -1,12 +1,5 @@
 {
   "version": 2,
   "name": "winampify-dev",
-  "alias": "winampify.io",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@now/static-build",
-      "config": { "distDir": "built" }
-    }
-  ]
+  "alias": "winampify.io"
 }

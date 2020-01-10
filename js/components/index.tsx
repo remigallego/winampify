@@ -6,7 +6,6 @@ import { authenticate } from "../actions/auth";
 import { AppState } from "../reducers";
 import { AuthState, LOADING } from "../reducers/auth";
 import App from "./App";
-import LandingPage from "./Landingpage";
 
 export default () => {
   const dispatch = useDispatch();
@@ -27,12 +26,5 @@ export default () => {
   window.addEventListener("message", listener, false);
 
   const { loading, logged } = auth;
-  if (loading !== LOADING.NONE) return <LandingPage loading={loading} />;
-  if (logged) return <App />;
-  if (!window.location.search)
-    return <LandingPage errorMessage={auth.errorMessage} />;
-
-  history.pushState(null, "", window.location.href.split("?")[0]);
-
-  return <LandingPage />;
+  return <App />;
 };

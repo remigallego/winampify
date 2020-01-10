@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { FaFolder } from "react-icons/fa";
 import styled, { css } from "styled-components";
 import { GenericFile } from "../../../../types";
 import {
@@ -11,7 +12,6 @@ import {
 import ImgCached from "../../../Reusables/ImgCached";
 import folderclosed from "../../images/folder-closed.ico";
 import winampmp3 from "../../images/winamp-mp3.png";
-import { FaFolder } from "react-icons/fa";
 
 interface Props {
   file: GenericFile;

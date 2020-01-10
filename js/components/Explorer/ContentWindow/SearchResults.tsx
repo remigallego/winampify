@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import VirtualList from "react-tiny-virtual-list";
+import styled from "styled-components";
 import { setMoreSearchResults } from "../../../actions/explorer";
 import { AppState } from "../../../reducers";
 import { SingleExplorerState } from "../../../reducers/explorer";
@@ -15,7 +16,6 @@ import {
   isPlaylist,
   isTrack
 } from "../../../types/typecheckers";
-import styled from "styled-components";
 
 interface Props {
   handleClickOutside: (e: any) => void;

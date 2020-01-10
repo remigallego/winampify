@@ -1,5 +1,6 @@
 import React from "react";
 import { MenuProvider } from "react-contexify";
+import { FaCog, FaFolder } from "react-icons/fa";
 import styled, { keyframes } from "styled-components";
 import { GenericFile, OPEN_FOLDER_ACTION } from "../../types";
 import {
@@ -14,7 +15,6 @@ import ImgCached from "../Reusables/ImgCached";
 import "./file.css";
 import bigWinampIcon from "./images/bigWinampIcon.png";
 import InputRenaming from "./InputRenaming";
-import { FaFolder, FaCog } from "react-icons/fa";
 
 interface Props {
   file: GenericFile;

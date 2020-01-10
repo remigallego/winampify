@@ -12,11 +12,11 @@ import searchPagination, {
   initialStateSearchPagination,
   SearchPaginationState
 } from "./search-pagination";
+import settings, { initialSettingsState } from "./settings";
 import theme, { ThemeState } from "./theme";
 import user, { initialStateUser, UserState } from "./user";
 import webamp, { initialStateWebamp, WebampState } from "./webamp";
 import windowsReducer, { initialStateWindows, WindowsState } from "./windows";
-import settings, { initialSettingsState } from "./settings";
 
 export const APPLY_SNAPSHOT = "APPLY_SNAPSHOT";
 

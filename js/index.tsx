@@ -9,17 +9,20 @@ import { PersistGate } from "redux-persist/integration/react";
 import "../css/line-scale.css";
 import { authenticate } from "./actions/auth";
 import Winampify from "./components";
+import { AppState } from "./reducers";
 import store from "./store";
 import ThemeWrapper from "./ThemeWrapper";
 import { getParams } from "./utils/common";
 
 export const persistor = persistStore(store, null, () => {
-  if (store.getState().auth.accessToken && store.getState().auth.refreshToken) {
+  const { getState }: { getState: () => AppState } = store;
+  if (
+    getState().auth.accessToken &&
+    getState().auth.refreshToken &&
+    getState().auth.logged
+  ) {
     store.dispatch(
-      authenticate(
-        store.getState().auth.accessToken,
-        store.getState().auth.refreshToken
-      )
+      authenticate(getState().auth.accessToken, getState().auth.refreshToken)
     );
   }
 });

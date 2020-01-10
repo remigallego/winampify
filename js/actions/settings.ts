@@ -1,8 +1,8 @@
 import { Action, Dispatch } from "redux";
-import { TOGGLE_SETTINGS_MENU, TOGGLE_DARK_MODE } from "../reducers/settings";
 import { AppState } from "../reducers";
+import { TOGGLE_DARK_MODE, TOGGLE_SETTINGS_MENU } from "../reducers/settings";
 import { SET_THEME } from "../reducers/theme";
-import { defaultTheme, darkTheme } from "../styles/themes";
+import { darkTheme, defaultTheme } from "../styles/themes";
 
 export function toggleSettingsMenu() {
   return (dispatch: Dispatch<Action>) => {

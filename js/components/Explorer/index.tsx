@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Rnd, { DraggableData } from "react-rnd";
 import styled from "styled-components";
 import {
   closeExplorer,
+  setItems,
   setTracksToPlaylist,
   updatePosition,
   updateSize
 } from "../../actions/explorer";
 import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
+import { redError } from "../../styles/colors";
+import Signin from "../Reusables/SigninButton";
 import "./animations.css";
 import ContentWindow from "./ContentWindow";
 import ExplorerParameters from "./ExplorerParameters";
@@ -28,7 +32,16 @@ export default (props: Props) => {
   const dataTransferArray = useSelector(
     (state: AppState) => state.dataTransfer
   );
+  const isLogged = useSelector((state: AppState) => state.auth.logged);
   const dispatch = useDispatch();
+
+  const errorMessage = useSelector(
+    (state: AppState) => state.auth.errorMessage
+  );
+
+  useEffect(() => {
+    dispatch(setItems(explorer.action, explorer.uri, explorer.id));
+  }, [isLogged]);
 
   const onDragStop = (data: DraggableData) => {
     const { clientHeight, clientWidth } = document.documentElement;
@@ -94,6 +107,43 @@ export default (props: Props) => {
     topLeft: false
   };
 
+  const getTitle = () => {
+    if (!isLogged) return "Sign In";
+    if (explorer.title) {
+      return explorer.title;
+    }
+    return "Loading...";
+  };
+
+  const renderError = () => {
+    return (
+      <div
+        style={{
+          backgroundColor: redError,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          paddingLeft: 12,
+          paddingRight: 12,
+          paddingTop: 4,
+          paddingBottom: 4,
+          borderRadius: 8,
+          marginBottom: 15
+        }}
+      >
+        <FaExclamationTriangle size={30} color={"white"} />
+        <p
+          style={{
+            marginLeft: 12,
+            color: "white",
+            fontSize: 13
+          }}
+          dangerouslySetInnerHTML={{ __html: errorMessage }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div>
       <Rnd
@@ -128,7 +178,7 @@ export default (props: Props) => {
         />
         <ExplorerWrapper>
           <TitleBar
-            title={explorer.title || "Loading..."}
+            title={getTitle()}
             onClose={() => {
               if (explorer.id) dispatch(closeExplorer(explorer.id));
             }}
@@ -136,28 +186,51 @@ export default (props: Props) => {
           />
           <ExplorerToolbar id={explorer.id} />
           {/* <ExplorerParameters explorer={explorer} /> */}
-          <ContentContainer
-            isDropping={isDropping}
-            onDragOver={e => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            onDrop={onDrop}
-            onDragEnter={e => {
-              if (!allowDrop) return;
-              e.stopPropagation();
-              e.preventDefault();
-              setDragCounter(dragCounter + 1);
-              if (dataTransferArray.tracks.length > 0) setDropping(true);
-            }}
-            onDragLeave={e => {
-              if (!allowDrop) return;
-              setDragCounter(dragCounter - 1);
-              if (dragCounter === 1) setDropping(false);
-            }}
-          >
-            <ContentWindow explorer={explorer} files={explorer.files} />
-          </ContentContainer>
+          {isLogged ? (
+            <ContentContainer
+              isDropping={isDropping}
+              onDragOver={e => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+              onDrop={onDrop}
+              onDragEnter={e => {
+                if (!allowDrop) return;
+                e.stopPropagation();
+                e.preventDefault();
+                setDragCounter(dragCounter + 1);
+                if (dataTransferArray.tracks.length > 0) setDropping(true);
+              }}
+              onDragLeave={e => {
+                if (!allowDrop) return;
+                setDragCounter(dragCounter - 1);
+                if (dragCounter === 1) setDropping(false);
+              }}
+            >
+              <ContentWindow explorer={explorer} files={explorer.files} />
+            </ContentContainer>
+          ) : (
+            <ContentContainer>
+              <div
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center"
+                }}
+              >
+                <Text>
+                  You need to be signed in to a Premium account to access
+                  Spotify's library.
+                </Text>
+                {errorMessage && renderError()}
+                <Signin />
+              </div>
+            </ContentContainer>
+          )}
         </ExplorerWrapper>
       </Rnd>
     </div>
@@ -181,4 +254,10 @@ const ContentContainer = styled.div<{ isDropping: boolean }>`
     props.isDropping ? props.theme.explorer.bgDrop : props.theme.explorer.bg};
   height: 100%;
   width: 100%;
+`;
+
+const Text = styled.div`
+  margin-bottom: 10px;
+  text-align: center;
+  color: ${props => props.theme.explorer.file.text};
 `;

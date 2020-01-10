@@ -4,7 +4,7 @@
   "description": "Winampify is a Web Client for Spotify using Winamp 2 skins",
   "main": "built/winampify.bundle.js",
   "scripts": {
-    "deploy": "ENV=production && npm run build && cd built/ && now -e ENV=production && now alias",
+    "deploy": "now built/ --prod",
     "lint": "tslint js/**/*.ts{,x}",
     "format": "prettier --write \"**/*.{js,ts,tsx,d.ts,css}\"",
     "build": "webpack --config=config/webpack.prod.js",

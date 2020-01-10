@@ -135,6 +135,16 @@ export function setItems(
     } else dispatch({ type: SAVE_PREVIOUS_STATE, payload: { id: explorerId } });
 
     dispatch({ type: LOADING, id: explorerId });
+    dispatch({
+      type: SET_EXPLORER_METADATA,
+      payload: {
+        id: explorerId,
+        query: null,
+        uri,
+        action: actionType
+      }
+    });
+
     let files;
     let title;
     let dropEnabled = false;
@@ -211,9 +221,7 @@ export function setItems(
       payload: {
         id: explorerId,
         title,
-        query: null,
-        dropEnabled,
-        uri
+        dropEnabled
       }
     });
 
