@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import { useSelector } from "react-redux";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { AppState } from "../reducers";
 import Desktop from "./Desktop";
 import DeveloperPanel from "./DeveloperPanel";
@@ -9,6 +9,7 @@ import SelectionBox from "./Reusables/SelectionBox";
 import Settings from "./Settings";
 import Webamp from "./Webamp";
 import WindowsManager from "./WindowsManager";
+import packageJson from "../../package.json";
 
 export default () => {
   const [selectionBox, setSelectionBox] = useState({
@@ -47,8 +48,28 @@ export default () => {
         <Desktop selectionBox={selectionBox} />
         <WindowsManager />
         <Webamp />
-        {process.env.NODE_ENV === "development" && <DeveloperPanel />}
+        {/* {process.env.NODE_ENV === "development" && <DeveloperPanel />} */}
       </SelectionBox>
+      <AbsoluteBottom>
+        <a
+          onClick={() =>
+            window.open(
+              "https://github.com/remigallego/winampify/blob/master/CHANGELOG.md"
+            )
+          }
+        >
+          CHANGELOG - {packageJson.version}
+        </a>
+      </AbsoluteBottom>
     </div>
   );
 };
+
+const AbsoluteBottom = styled.div`
+  position: absolute;
+  color: white;
+  bottom: 0;
+  margin-bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
