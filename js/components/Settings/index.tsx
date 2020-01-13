@@ -2,8 +2,10 @@ import React from "react";
 import { FaCheck, FaSquare } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { toggleSettingsMenu } from "../../actions/settings";
-import { toggleDarkMode as toggleDarkModeAction } from "../../actions/settings";
+import {
+  toggleDarkMode as toggleDarkModeAction,
+  toggleSettingsMenu
+} from "../../actions/settings";
 import { AppState } from "../../reducers";
 import TitleBar from "../Explorer/TitleBar";
 
@@ -16,13 +18,14 @@ export default () => {
   const toggleDarkMode = () => {
     dispatch(toggleDarkModeAction());
   };
+
   return (
     <BackgroundModal>
       <Container>
         <TitleBar
           title={"Settings"}
           onClose={() => dispatch(toggleSettingsMenu())}
-        ></TitleBar>
+        />
         <WithPadding>
           <HorizontalContainer onClick={toggleDarkMode}>
             {!isDarkMode && (
@@ -93,5 +96,3 @@ const HorizontalContainer = styled.div`
 const Text = styled.div`
   font-weight: 500;
 `;
-
-
