@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga";
 import { useSelector } from "react-redux";
 import styled, { createGlobalStyle } from "styled-components";
+import packageJson from "../../package.json";
 import { AppState } from "../reducers";
 import Desktop from "./Desktop";
-import DeveloperPanel from "./DeveloperPanel";
 import SelectionBox from "./Reusables/SelectionBox";
 import Settings from "./Settings";
 import Webamp from "./Webamp";
 import WindowsManager from "./WindowsManager";
-import packageJson from "../../package.json";
 
 export default () => {
   const [selectionBox, setSelectionBox] = useState({
@@ -44,7 +43,7 @@ export default () => {
         onSelect={(origin, target) => setSelectionBox({ origin, target })}
       >
         {settingsMenu && <Settings />}
-        <GlobalStyle></GlobalStyle>
+        <GlobalStyle />
         <Desktop selectionBox={selectionBox} />
         <WindowsManager />
         <Webamp />
