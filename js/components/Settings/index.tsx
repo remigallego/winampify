@@ -93,5 +93,3 @@ const HorizontalContainer = styled.div`
 const Text = styled.div`
   font-weight: 500;
 `;
-
-
