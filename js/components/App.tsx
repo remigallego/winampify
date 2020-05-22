@@ -21,6 +21,7 @@ export default () => {
   );
 
   useEffect(() => {
+    ReactGA.initialize("UA-101600795-2")
     ReactGA.pageview("/app");
   }, []);
 
