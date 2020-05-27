@@ -9,7 +9,8 @@ export enum OPEN_FOLDER_ACTION {
   LIBRARY_ALBUMS,
   LIBRARY_TRACKS,
   USER_PLAYLISTS,
-  SETTINGS
+  SETTINGS,
+  OPEN_WEBAMP
 }
 export interface ImageDialogType {
   id: string;

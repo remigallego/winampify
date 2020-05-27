@@ -9,6 +9,35 @@ export interface DesktopState {
   allIds: string[];
 }
 
+interface Point {
+  x: number;
+  y: number;
+}
+
+const generateGrid: () => Point[] = () => {
+  let grid: Point[] = [];
+  let minX = 20;
+  let minY = 40;
+
+  let maxX = window.innerWidth;
+  let maxY = window.innerHeight;
+
+  console.log(maxX, maxY);
+
+  for (let row = 0; minX + row * 100 < maxX; row++) {
+    let x = minX + row * 100;
+    for (let col = 0; minY + col * 100 < maxY; col++) {
+      let y = minY + col * 100;
+      grid.push({ x, y });
+    }
+  }
+
+  return grid;
+};
+
+const GRID = generateGrid();
+console.log(GRID);
+
 export const initialStateDesktop: DesktopState = {
   byId: {
     recently_played: {
@@ -16,8 +45,8 @@ export const initialStateDesktop: DesktopState = {
       title: "Recently Played",
       isRenaming: false,
       locked: true,
-      x: 20,
-      y: 40,
+      x: GRID[0].x,
+      y: GRID[0].y,
       metaData: {
         type: "action",
         action: OPEN_FOLDER_ACTION.RECENTLY_PLAYED
@@ -28,8 +57,8 @@ export const initialStateDesktop: DesktopState = {
       title: "Top Artists",
       isRenaming: false,
       locked: true,
-      x: 20,
-      y: 140,
+      x: GRID[1].x,
+      y: GRID[1].y,
       metaData: {
         type: "action",
         action: OPEN_FOLDER_ACTION.TOP
@@ -40,8 +69,8 @@ export const initialStateDesktop: DesktopState = {
       title: "My albums",
       isRenaming: false,
       locked: true,
-      x: 20,
-      y: 220,
+      x: GRID[2].x,
+      y: GRID[2].y,
       metaData: {
         type: "action",
         action: OPEN_FOLDER_ACTION.LIBRARY_ALBUMS
@@ -52,8 +81,8 @@ export const initialStateDesktop: DesktopState = {
       title: "My tracks",
       isRenaming: false,
       locked: true,
-      x: 20,
-      y: 300,
+      x: GRID[3].x,
+      y: GRID[3].y,
       metaData: {
         type: "action",
         action: OPEN_FOLDER_ACTION.LIBRARY_TRACKS
@@ -64,11 +93,23 @@ export const initialStateDesktop: DesktopState = {
       title: "My playlists",
       isRenaming: false,
       locked: true,
-      x: 20,
-      y: 380,
+      x: GRID[4].x,
+      y: GRID[4].y,
       metaData: {
         type: "action",
         action: OPEN_FOLDER_ACTION.USER_PLAYLISTS
+      }
+    },
+    winamp: {
+      id: "winamp",
+      title: "Winamp",
+      isRenaming: false,
+      locked: true,
+      x: GRID[11].x,
+      y: GRID[11].y,
+      metaData: {
+        type: "action",
+        action: OPEN_FOLDER_ACTION.OPEN_WEBAMP
       }
     },
     settings: {
@@ -76,8 +117,8 @@ export const initialStateDesktop: DesktopState = {
       title: "Settings",
       isRenaming: false,
       locked: true,
-      x: 20,
-      y: 540,
+      x: GRID[9].x,
+      y: GRID[9].y,
       metaData: {
         type: "action",
         action: OPEN_FOLDER_ACTION.SETTINGS
@@ -90,6 +131,7 @@ export const initialStateDesktop: DesktopState = {
     "my_albums",
     "my_tracks",
     "my_playlists",
+    "winamp",
     "settings"
   ]
 };

@@ -13,7 +13,8 @@ import {
 } from "../../types/typecheckers";
 import ImgCached from "../Reusables/ImgCached";
 import "./file.css";
-import bigWinampIcon from "./images/bigWinampIcon.png";
+import winampSoundFile from "./images/bigWinampIcon.png";
+import winampInstance from "./images/winamp-icon.png";
 import InputRenaming from "./InputRenaming";
 
 interface Props {
@@ -28,20 +29,20 @@ const FileItem = (props: Props) => {
   const { file } = props;
 
   const getIcon = () => {
-    if (
-      isAction(file) &&
-      file.metaData.action === OPEN_FOLDER_ACTION.SETTINGS
-    ) {
+    if (isAction(file) && file.id === "settings") {
       return <IconSettings />;
     }
+    if (isAction(file) && file.id === "winamp") {
+      return <Image src={winampInstance} cachedSize={{ w: 50, h: 50 }} />;
+    }
     if (isTrack(file))
-      return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
+      return <Image src={winampSoundFile} cachedSize={{ w: 50, h: 50 }} />;
     if (isPlaylist(file) || isAlbum(file) || isArtist(file) || isAction(file))
       return <IconFolder />;
     if (isImage(file))
       return <Image src={file.metaData.url} cachedSize={{ w: 50, h: 50 }} />;
 
-    return <Image src={bigWinampIcon} cachedSize={{ w: 50, h: 50 }} />;
+    return <Image src={winampSoundFile} cachedSize={{ w: 50, h: 50 }} />;
   };
 
   return (

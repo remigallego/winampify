@@ -53,6 +53,7 @@ const Desktop = (props: Props) => {
   const [clipboard, setClipboard] = useState(null);
   const desktop = useSelector<AppState, DesktopState>(state => state.desktop);
   const allFiles = useSelector(selectFiles);
+  const webamp = useSelector((state: AppState) => state.webamp.webampObject);
   const dispatch = useDispatch();
 
   useEventListener<KeyboardEvent>("keydown", e => {
@@ -111,6 +112,7 @@ const Desktop = (props: Props) => {
 
     // Checking if the file already exists on the Desktop. If not, we create it. If yes, we move the existing.
     files.forEach((file: GenericFile) => {
+      console.log(file.id);
       if (isNewFile(file)) {
         dispatch(
           createFile({
@@ -216,16 +218,15 @@ const Desktop = (props: Props) => {
       );
     if (isAction(file)) {
       if (file.metaData.action === OPEN_FOLDER_ACTION.SETTINGS) {
-        dispatch(toggleSettingsMenu());
-      } else
-        dispatch(
-          setItems(
-            (file as ActionFile).metaData.action,
-            undefined,
-            undefined,
-            e
-          )
-        );
+        return dispatch(toggleSettingsMenu());
+      }
+      if (file.metaData.action === OPEN_FOLDER_ACTION.OPEN_WEBAMP) {
+        webamp.reopen();
+        return console.log("open webanp");
+      }
+      dispatch(
+        setItems((file as ActionFile).metaData.action, undefined, undefined, e)
+      );
     }
   };
 
