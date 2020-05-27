@@ -83,7 +83,7 @@ class Api {
 
   public static put(endpoint: string, params: any): Promise<any> {
     const { accessToken } = store.getState().auth;
-    return new Promise(resolve => {
+    return new Promise(resolveGlobalPromise => {
       fetch(`${apiendpoint}/${endpoint}`, {
         method: "PUT",
         headers: {
@@ -101,10 +101,10 @@ class Api {
                   accessToken: res.access_token
                 }
               });
-              resolve(this.put(endpoint, params));
+              resolveGlobalPromise(this.put(endpoint, params));
             });
           }
-        } else Promise.resolve();
+        } else return resolveGlobalPromise(response);
       });
     });
   }
