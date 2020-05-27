@@ -10,7 +10,7 @@
     "build": "webpack --hot --config=config/webpack.prod.js",
     "build-webamp": "rm -rf webamp && git clone https://github.com/captbaritone/webamp/ && cd webamp && npm i && npm run build-library",
     "start": "webpack-dev-server --hot --config=config/webpack.dev.js --port 8888",
-    "now-build": "webpack --hot --config=config/webpack.prod.js"
+    "now-build": "NODE_ENV=production webpack --config=config/webpack.prod.js"
   },
   "repository": {
     "type": "git",
