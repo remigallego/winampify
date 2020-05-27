@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  SyntheticEvent,
+  Key,
+  KeyboardEvent
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuProvider } from "../../../node_modules/react-contexify";
 import { setDataTransferTracks } from "../../actions/dataTransfer";
@@ -36,27 +42,28 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
+import useEventListener from "@use-it/event-listener";
 
 interface Props {
   selectionBox: any;
 }
 
-export default (props: Props) => {
+const Desktop = (props: Props) => {
   const [selectedFilesIds, setSelectedFiles] = useState<string[]>([]);
   const [clipboard, setClipboard] = useState(null);
   const desktop = useSelector<AppState, DesktopState>(state => state.desktop);
   const allFiles = useSelector(selectFiles);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    addEventListener("contextmenu", e => e.preventDefault());
-    addEventListener("keydown", e => {
-      if (e.keyCode === 46) {
-        if (!allFiles.some(file => file.isRenaming))
-          selectedFilesIds.map(fileId => dispatch(deleteFile(fileId)));
-      }
-    });
-  }, []);
+  useEventListener<KeyboardEvent>("keydown", e => {
+    console.log(e.keyCode);
+    if (e.keyCode === 8) {
+      selectedFilesIds.forEach(id => dispatch(deleteFile(id)));
+      setSelectedFiles([]);
+    }
+  });
+
+  useEventListener("contextmenu", e => e.preventDefault());
 
   // Handles changing the selected files based on the selection box.
   useEffect(() => {
@@ -296,3 +303,5 @@ export default (props: Props) => {
     </div>
   );
 };
+
+export default Desktop;

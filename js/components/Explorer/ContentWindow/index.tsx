@@ -41,7 +41,7 @@ interface Props {
   files: GenericFile[] | null;
 }
 
-export default function(props: Props) {
+const ContentWindow = (props: Props) => {
   const { explorer, files } = props;
   /*  const [scrollOffset, setScrollOffset] = useState(0); */
   const [holdShift, toggleHoldShift] = useState(false);
@@ -247,4 +247,6 @@ export default function(props: Props) {
       )}
     />
   );
-}
+};
+
+export default ContentWindow;

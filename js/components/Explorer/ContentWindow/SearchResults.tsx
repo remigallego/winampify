@@ -41,6 +41,9 @@ export default (props: Props) => {
     explorer
   } = props;
 
+  const isDarkMode = useSelector(
+    (state: AppState) => state.settings.isDarkMode
+  );
   const searchPagination = useSelector<AppState, QueryState>(state =>
     selectSearch(state, explorer.id)
   );
@@ -86,7 +89,10 @@ export default (props: Props) => {
           {(getFilesOfType(type) as GenericFile[]).map(renderFile)}
           {getFilesOfType(type).length === 0 && <Text>No results found</Text>}
           {getRemaining(type) > 0 && (
-            <MoreButton onClick={() => dispatch(setMoreSearchResults(type))}>
+            <MoreButton
+              onClick={() => dispatch(setMoreSearchResults(type))}
+              isDarkMode={isDarkMode}
+            >
               {searchPagination[type].loading ? (
                 <BeatLoader color={blueTitleBar} size={5} />
               ) : (
@@ -153,10 +159,11 @@ const Text = styled.div`
   font-size: 14px;
 `;
 
-const MoreButton = styled.div`
+const MoreButton = styled.div<{ isDarkMode: boolean }>`
   font-size: 14px;
   cursor: pointer;
-  background-color: aliceblue;
+  background-color: ${props => (props.isDarkMode ? "#232323" : "aliceblue")};
+  color: ${props => (props.isDarkMode ? "white" : "black")};
   padding-left: 22px;
   margin-top: 2px;
 `;

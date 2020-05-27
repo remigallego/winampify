@@ -128,7 +128,7 @@ const desktop = (state: DesktopState = initialStateDesktop, action: any) => {
     case CREATE_FILE:
       return createFile(state, action.payload);
     case DELETE_FILE: {
-      if (state.byId[action.payload.id].locked) return;
+      if (state.byId[action.payload.id]?.locked) return state;
       const { [action.payload.id]: omit, ...byId } = state.byId;
       const allIds = state.allIds.filter(id => id !== action.payload.id);
       return {

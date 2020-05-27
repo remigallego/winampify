@@ -1,7 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const isDevelopment = process.env.NODE_ENV !== "production";
 
+console.log(isDevelopment);
 module.exports = {
+  mode: isDevelopment ? "development" : "production",
   resolve: {
     extensions: [".js", ".ts", ".tsx"]
   },
@@ -17,7 +21,10 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            envName: "library"
+            envName: "library",
+            plugins: [
+              isDevelopment && require.resolve("react-refresh/babel")
+            ].filter(Boolean)
           }
         }
       },
@@ -37,12 +44,16 @@ module.exports = {
     noParse: [/jszip\.js$/]
   },
   plugins: [
+    isDevelopment && new ReactRefreshWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: "./index.html"
     })
-  ],
+  ].filter(Boolean),
   entry: {
     winampify: ["./js/index.tsx"]
+  },
+  devServer: {
+    hot: true
   },
   output: {
     filename: "[name]-[hash].js",
