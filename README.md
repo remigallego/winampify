@@ -10,6 +10,11 @@
 
 Artists, albums and tracks are all rendered as files and folders and can easily be manipulated and played in the Winamp re-implementation <a href="https://github.com/captbaritone/webamp">Webamp</a>.
 
+
+## Live environments
+<a href="https://winampify-dev.remigallego.now.sh">Staging</a>  
+<a href="https://winampify.io">Production</a>
+
 ## Motivation
 
 Building softwares should stay fun. This project is mostly a sandbox for me to try and improve my knowledge of React and TypeScript. It is also the first large-scale project that I'm undertaking on my own, and is in constant need of refactoring.
