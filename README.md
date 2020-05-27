@@ -27,6 +27,6 @@ You need a Spotify Premium Account to access Winampify.
 
 Winamp's reimplementation is the work of <a href="https://github.com/captbaritone">captbaritone-js</a>.
 
-## License
+## License 
 
 This project is released under the [MIT License](LICENSE.txt).
