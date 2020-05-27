@@ -10,7 +10,7 @@
     "build": "webpack --config=config/webpack.prod.js",
     "build-webamp": "rm -rf webamp && git clone https://github.com/captbaritone/webamp/ && cd webamp && npm i && npm run build-library",
     "start": "webpack-dev-server --config=config/webpack.dev.js --port 8888",
-    "now-build": "webpack --config=config/webpack.dev.js"
+    "now-build": "npm run build && now -n winampify-dev built"
   },
   "repository": {
     "type": "git",
@@ -44,6 +44,7 @@
     "jszip": "^3.1.3",
     "loadjs": "^3.6.1",
     "lodash": "^4.17.13",
+    "moment": "^2.24.0",
     "p-queue": "^5.0.0",
     "prettier": "^1.19.1",
     "qs": "^6.5.1",
