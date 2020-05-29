@@ -27,18 +27,31 @@ const TaskBar: FunctionComponent = props => {
 
   const renderExplorer = (w: Window) => {
     const exp = explorers.find(_exp => _exp.id === w.id);
+    const otherWindowOnTop = windows
+      .filter(win => win.id !== w.id)
+      .find(
+        win =>
+          win.position ===
+          findHighestPosition(windows.filter(win => win.id !== w.id))
+      );
+
     return (
       <Item
         minimized={w.minimized}
         onClick={() => {
-          if (windowOnTop.id === w.id) {
-            dispatch(toggleMinimize(w.id));
-          } else {
-            if (w.minimized) {
-              dispatch(toggleMinimize(w.id));
+          dispatch(toggleMinimize(w.id));
+
+          // TODO: This needs to go in the minimize action!
+
+          if (!w.minimized) {
+            if (windowOnTop.id === w.id) {
+              if (otherWindowOnTop) {
+                dispatch(setOnTop(otherWindowOnTop.id));
+              }
             }
+          } else {
+            dispatch(setOnTop(w.id));
           }
-          dispatch(setOnTop(w.id));
         }}
       >
         <IconFolder></IconFolder>
@@ -48,18 +61,28 @@ const TaskBar: FunctionComponent = props => {
   };
 
   const renderWinamp = (w: Window) => {
+    const otherWindowOnTop = windows
+      .filter(win => win.id !== w.id)
+      .find(
+        win =>
+          win.position ===
+          findHighestPosition(windows.filter(win => win.id !== w.id))
+      );
     return (
       <Item
         minimized={w.minimized}
         onClick={() => {
-          if (windowOnTop.id === w.id) {
-            dispatch(toggleMinimize(w.id));
-          } else {
-            if (w.minimized) {
-              dispatch(toggleMinimize(w.id));
+          dispatch(toggleMinimize(w.id));
+
+          if (!w.minimized) {
+            if (windowOnTop.id === w.id) {
+              if (otherWindowOnTop) {
+                dispatch(setOnTop(otherWindowOnTop.id));
+              }
             }
+          } else {
+            dispatch(setOnTop(w.id));
           }
-          dispatch(setOnTop(w.id));
         }}
       >
         <ImgCached
@@ -76,19 +99,29 @@ const TaskBar: FunctionComponent = props => {
   };
 
   const renderImage = (w: Window) => {
+    const otherWindowOnTop = windows
+      .filter(win => win.id !== w.id)
+      .find(
+        win =>
+          win.position ===
+          findHighestPosition(windows.filter(win => win.id !== w.id))
+      );
     const image = images.find(img => img.id === w.id);
     return (
       <Item
         minimized={w.minimized}
         onClick={() => {
-          if (windowOnTop.id === w.id) {
-            dispatch(toggleMinimize(w.id));
-          } else {
-            if (w.minimized) {
-              dispatch(toggleMinimize(w.id));
+          dispatch(toggleMinimize(w.id));
+
+          if (!w.minimized) {
+            if (windowOnTop.id === w.id) {
+              if (otherWindowOnTop) {
+                dispatch(setOnTop(otherWindowOnTop.id));
+              }
             }
+          } else {
+            dispatch(setOnTop(w.id));
           }
-          dispatch(setOnTop(w.id));
         }}
       >
         <ImgCached
