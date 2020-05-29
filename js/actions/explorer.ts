@@ -42,6 +42,7 @@ import {
 import { OPEN_FOLDER_ACTION, SimplifiedTrack, TrackFile } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
 import { Filter } from "./search-pagination";
+import { getSkins } from "./../api/skins";
 
 export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {
@@ -212,6 +213,11 @@ export function setItems(
       case OPEN_FOLDER_ACTION.USER_PLAYLISTS: {
         files = await getMyPlaylists();
         title = "My Playlists";
+        break;
+      }
+      case OPEN_FOLDER_ACTION.OPEN_SKINS: {
+        files = await getSkins();
+        title = "Winamp Skins";
         break;
       }
     }

@@ -34,7 +34,8 @@ const openImage = (state: ImagesState, action: any) => {
         id: action.payload.id,
         source: action.payload.source,
         x: action.payload.x,
-        y: action.payload.y
+        y: action.payload.y,
+        title: action.payload.title
       }
     },
     allIds: [...new Set([...state.allIds, action.payload.id])]

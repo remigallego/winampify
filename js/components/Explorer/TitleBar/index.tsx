@@ -3,9 +3,11 @@ import styled, { css } from "styled-components";
 import { blueTitleBar } from "../../../styles/colors";
 import CloseIcon from "../Icons/CloseIcon";
 import { dragHandleClassName } from "../vars";
+import MinimizeIcon from "../Icons/MinimizeIcon";
 
 interface Props {
   onClose?: () => void | null;
+  onMinimize?: () => void | null;
   title?: string;
   playlist?: boolean;
 }
@@ -17,7 +19,9 @@ const TitleBar = (props: Props) => {
         <Title playlist={props.playlist}>
           {props.title || ""} {props.playlist && "[Playlist]"}
         </Title>
+
         <div style={{ display: "flex", height: "100%" }}>
+          {props.onMinimize && <MinimizeIcon onClick={props.onMinimize} />}
           {props.onClose && <CloseIcon onClick={props.onClose} />}
         </div>
       </FlexRowContainer>

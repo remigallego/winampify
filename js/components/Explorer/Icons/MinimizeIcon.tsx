@@ -1,20 +1,24 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaMinus } from "react-icons/fa";
 import styled from "styled-components";
-import { redError, redErrorDark } from "../../../styles/colors";
+import {
+  redError,
+  redErrorDark,
+  blueTitleBarDark
+} from "../../../styles/colors";
 
 interface Props {
   onClick: () => void | null;
 }
 
 export default (props: Props) => {
-  const [backgroundColor, setBackgroundColor] = useState("red");
+  const [backgroundColor, setBackgroundColor] = useState("transparent");
 
   return (
     <Container backgroundColor={backgroundColor} onClick={props.onClick}>
-      <FaTimes
-        onMouseEnter={() => setBackgroundColor(redErrorDark)}
-        onMouseLeave={() => setBackgroundColor("red")}
+      <FaMinus
+        onMouseEnter={() => setBackgroundColor(blueTitleBarDark)}
+        onMouseLeave={() => setBackgroundColor("transparent")}
         onMouseDown={() => setBackgroundColor(redErrorDark)}
         onMouseUp={() => setBackgroundColor(redError)}
         id="disallow-on-top"

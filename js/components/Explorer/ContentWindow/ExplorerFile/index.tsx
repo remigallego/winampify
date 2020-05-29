@@ -7,11 +7,13 @@ import {
   isArtist,
   isImage,
   isPlaylist,
-  isTrack
+  isTrack,
+  isSkin
 } from "../../../../types/typecheckers";
 import ImgCached from "../../../Reusables/ImgCached";
 import folderclosed from "../../images/folder-closed.ico";
 import winampmp3 from "../../images/winamp-mp3.png";
+import winampInstanceIcon from "./winamp-icon.png";
 
 interface Props {
   file: GenericFile;
@@ -45,6 +47,13 @@ export default function(props: Props) {
         <IconContainer>
           <IconFolder size={14} />
           <IconSmall src={iconsArr[1]} cachedSize={{ h: 20, w: 20 }} />
+        </IconContainer>
+      );
+    }
+    if (isSkin(props.file)) {
+      return (
+        <IconContainer>
+          <Image src={winampInstanceIcon} cachedSize={{ w: 20, h: 20 }} />
         </IconContainer>
       );
     }
@@ -131,4 +140,10 @@ const IconFolder = styled(FaFolder)`
   width: 14px;
   height: 14px;
   fill: ${props => props.theme.folder.color};
+`;
+
+const Image = styled(ImgCached)`
+  width: 14px;
+  height: 14px;
+  z-index: -4;
 `;

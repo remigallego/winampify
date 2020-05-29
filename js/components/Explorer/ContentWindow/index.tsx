@@ -23,7 +23,8 @@ import {
   isArtist,
   isImage,
   isPlaylist,
-  isTrack
+  isTrack,
+  isSkin
 } from "../../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";
@@ -47,6 +48,9 @@ const ContentWindow = (props: Props) => {
   const [holdShift, toggleHoldShift] = useState(false);
   const selectedFiles = useSelector<AppState, string[]>(
     state => state.explorer.byId[explorer.id].selectedFiles
+  );
+  const webampInstance = useSelector(
+    (state: AppState) => state.webamp.webampObject
   );
   const scrollOffset = useSelector(
     (state: AppState) => state.explorer.byId[explorer.id].scrollOffset
@@ -76,11 +80,22 @@ const ContentWindow = (props: Props) => {
       dispatch(
         setItems(OPEN_FOLDER_ACTION.ARTIST, file.metaData.id, explorer.id)
       );
-    if (isImage(file)) dispatch(openImage(file.metaData.url, e));
+    if (isImage(file)) dispatch(openImage(file, e));
     if (isPlaylist(file))
       dispatch(
         setItems(OPEN_FOLDER_ACTION.PLAYLIST, file.metaData.id, explorer.id)
       );
+    if (isSkin(file)) {
+      webampInstance.setSkinFromUrl(
+        "https://s3.amazonaws.com/webamp-uploaded-skins/skins/6c755ae8df5d6aabbac040d1b6bcb0ec.wsz"
+      );
+      webampInstance
+        .skinIsLoaded()
+        .then(() => {
+          console.log("loaded");
+        })
+        .catch(e => console.log(e));
+    }
   };
 
   const onDrag = async (e: any, draggedFiles: GenericFile[]) => {
@@ -218,7 +233,8 @@ const ContentWindow = (props: Props) => {
     }
   };
 
-  if (explorer.loading) return <ContentLoading color={greenSpotify} />;
+  if (files.length === 0 && explorer.loading)
+    return <ContentLoading color={greenSpotify} />;
   if (!files) return null;
   if (explorer.query)
     return (

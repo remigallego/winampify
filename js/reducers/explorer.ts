@@ -22,6 +22,7 @@ export interface SingleExplorerState {
   x: number;
   y: number;
   scrollOffset: number;
+  minimized: boolean;
   files: GenericFile[];
   dropEnabled: boolean;
   uri: string;
@@ -55,6 +56,7 @@ const initialStateExplorer: SingleExplorerState = {
   x: 0,
   y: 0,
   scrollOffset: 0,
+  minimized: false,
 
   // extras
   dropEnabled: false,
@@ -76,6 +78,7 @@ export const SET_MORE_ITEMS = "SET_MORE_ITEMS";
 export const SET_SEARCH_METADATA = "SET_SEARCH_METADATA";
 export const SET_SCROLL_OFFSET = "SET_SCROLL_OFFSET";
 export const RESET_SCROLL_OFFSET = "RESET_SCROLL_OFFSET";
+export const MINIMIZE_EXPLORER = "MINIMIZE_EXPLORER";
 
 const setItems = (
   state: ExplorerState,

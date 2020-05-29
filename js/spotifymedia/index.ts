@@ -33,7 +33,6 @@ export default class SpotifyMedia {
   Logger: SpotifyMediaLogger;
 
   constructor() {
-    console.log("Creating Spotify Media Class...");
     this.init();
     // @ts-ignore Typescript does not know about webkitAudioContext
     this.context = new (window.AudioContext || window.webkitAudioContext)();
@@ -90,7 +89,6 @@ export default class SpotifyMedia {
   }
 
   stopTimer() {
-    console.log("> Clear Interval");
     clearInterval(this.timeElapsedInterval);
     this.timeElapsedInterval = null;
   }
@@ -100,7 +98,6 @@ export default class SpotifyMedia {
       if (this.timeElapsedInterval) {
         return;
       }
-      console.log("Create Interval");
       this.timeElapsedInterval = setInterval(() => {
         this._timeElapsed = this._timeElapsed + 1;
         this.emitter.trigger("timeupdate");

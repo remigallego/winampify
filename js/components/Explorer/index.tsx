@@ -20,6 +20,7 @@ import ExplorerParameters from "./ExplorerParameters";
 import TitleBar from "./TitleBar";
 import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
+import { toggleMinimize } from "../../actions/windows";
 
 interface Props {
   explorer: SingleExplorerState;
@@ -176,9 +177,12 @@ export default (props: Props) => {
           className="explorer-handle"
           style={{ position: "absolute", height: "100", width: "100%" }}
         />
-        <ExplorerWrapper>
+        <ExplorerWrapper minimized={explorer.minimized}>
           <TitleBar
             title={getTitle()}
+            onMinimize={() => {
+              if (explorer.id) dispatch(toggleMinimize(explorer.id));
+            }}
             onClose={() => {
               if (explorer.id) dispatch(closeExplorer(explorer.id));
             }}
@@ -237,7 +241,9 @@ export default (props: Props) => {
   );
 };
 
-const ExplorerWrapper = styled.div`
+const ExplorerWrapper = styled.div<{
+  minimized: boolean;
+}>`
   display: flex;
   flex-direction: column;
   height: 100%;

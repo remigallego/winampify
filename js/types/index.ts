@@ -10,13 +10,15 @@ export enum OPEN_FOLDER_ACTION {
   LIBRARY_TRACKS,
   USER_PLAYLISTS,
   SETTINGS,
-  OPEN_WEBAMP
+  OPEN_WEBAMP,
+  OPEN_SKINS
 }
 export interface ImageDialogType {
   id: string;
   source: string;
   x: number;
   y: number;
+  title: string;
 }
 
 export interface ImageData {
@@ -28,6 +30,12 @@ export interface ImageData {
 export interface ActionData {
   action: OPEN_FOLDER_ACTION;
   type: "action";
+}
+
+export interface SkinData {
+  name: string;
+  url: string;
+  type: "skin";
 }
 
 export interface File<T> {
@@ -61,6 +69,7 @@ export type GenericFile = File<
   | SpotifyApi.PlaylistObjectFull
   | ActionData
   | ImageData
+  | SkinData
 >;
 
 export type TrackFile = File<SpotifyApi.TrackObjectFull>;
@@ -69,6 +78,7 @@ export type ArtistFile = File<SpotifyApi.ArtistObjectFull>;
 export type PlaylistFile = File<SpotifyApi.PlaylistObjectFull>;
 export type ImageFile = File<ImageData>;
 export type ActionFile = File<ActionData>;
+export type SkinFile = File<SkinData>;
 
 // Files need to be formatted a certain way before being recognized by Webamp
 export interface SimplifiedTrack {

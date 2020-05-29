@@ -14,7 +14,9 @@ import ImageModal from "../ImageDialog";
 import WindowInstance from "./WindowInstance";
 
 export default () => {
-  const [webampNode, setWebampNode] = useState(null);
+  const webampObject = useSelector(
+    (state: AppState) => state.webamp.webampObject
+  );
 
   const images = useSelector<AppState, ImageDialogType[]>(selectImages);
   const explorers = useSelector<AppState, SingleExplorerState[]>(
@@ -25,14 +27,20 @@ export default () => {
   const dispatch = useDispatch();
 
   const getWindow = (window: Window, index: number) => {
+    const webampNode = document.getElementById("webamp");
     switch (window.type) {
       case WINDOW_TYPE.Webamp: {
-        if (webampNode) {
-          webampNode.style.zIndex = window.position;
+        if (!webampNode) return;
+        if (window.minimized) {
+          webampNode.style.overflow = "hidden";
+        } else {
+          webampNode.style.overflow = "visible";
         }
+        webampNode.style.zIndex = window.position.toString();
         return null;
       }
       case WINDOW_TYPE.Explorer: {
+        if (window.minimized) return;
         const explorer = explorers.find(
           explorerElement => explorerElement.id === window.id
         );
@@ -40,6 +48,7 @@ export default () => {
           return <Explorer key={explorer.id} explorer={explorer} />;
       }
       case WINDOW_TYPE.Image: {
+        if (window.minimized) return;
         const image = images.find(img => img.id === window.id);
         if (image !== undefined) {
           return (
@@ -63,14 +72,7 @@ export default () => {
       (evt: MouseEvent) => {
         // @ts-ignore
         const path = evt.path || (evt.composedPath && evt.composedPath());
-
         if (path.some((el: HTMLDivElement) => el.id === "webamp")) {
-          if (!webampNode) {
-            const newNode: HTMLDivElement = path.find(
-              (el: HTMLDivElement) => el.id === "webamp"
-            );
-            setWebampNode(newNode);
-          }
           dispatch(setOnTop("webamp"));
         }
       },

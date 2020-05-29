@@ -89,7 +89,7 @@ export function setConnectedWebamp(): any {
 export function openWebamp() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const { webampObject } = getState().webamp;
-    webampObject.renderWhenReady(document.getElementById("webamp"));
+    webampObject.renderWhenReady(document.getElementById("webamp-container"));
   };
 }
 

@@ -24,5 +24,5 @@ export default () => {
 
     dispatch(openWebamp());
   }, [isLogged]);
-  return <div id={"webamp"}></div>;
+  return <div id={"webamp-container"}></div>;
 };

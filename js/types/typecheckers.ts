@@ -5,7 +5,8 @@ import {
   GenericFile,
   ImageFile,
   PlaylistFile,
-  TrackFile
+  TrackFile,
+  SkinFile
 } from ".";
 
 // user defined type guards
@@ -26,4 +27,7 @@ export const isPlaylist = (file: GenericFile): file is PlaylistFile => {
 };
 export const isAction = (file: GenericFile): file is ActionFile => {
   return file.metaData.type === "action";
+};
+export const isSkin = (file: GenericFile): file is SkinFile => {
+  return file.metaData.type === "skin";
 };

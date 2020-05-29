@@ -9,6 +9,7 @@ import SelectionBox from "./Reusables/SelectionBox";
 import Settings from "./Settings";
 import Webamp from "./Webamp";
 import WindowsManager from "./WindowsManager";
+import TaskBar from "./TaskBar";
 
 export default () => {
   const [selectionBox, setSelectionBox] = useState({
@@ -21,7 +22,7 @@ export default () => {
   );
 
   useEffect(() => {
-    ReactGA.initialize("UA-101600795-2")
+    ReactGA.initialize("UA-101600795-2");
     ReactGA.pageview("/app");
   }, []);
 
@@ -51,7 +52,9 @@ export default () => {
         {/* {process.env.NODE_ENV === "development" && <DeveloperPanel />} */}
       </SelectionBox>
       <AbsoluteBottom>
-        <a
+        <TaskBar />
+
+        {/*    <a
           onClick={() =>
             window.open(
               "https://github.com/remigallego/winampify/blob/master/CHANGELOG.md"
@@ -59,7 +62,7 @@ export default () => {
           }
         >
           CHANGELOG - {packageJson.version}
-        </a>
+        </a> */}
       </AbsoluteBottom>
     </div>
   );
@@ -67,9 +70,7 @@ export default () => {
 
 const AbsoluteBottom = styled.div`
   position: absolute;
-  color: white;
   bottom: 0;
-  margin-bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 100%;
+  z-index: 9999;
 `;

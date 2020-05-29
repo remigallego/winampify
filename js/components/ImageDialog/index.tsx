@@ -30,11 +30,12 @@ export default (props: Props) => {
         <Container enableShadow={animation.length === 0}>
           <Animated animation={animation}>
             <TitleBar
+              title={props.image.title}
               onClose={() => {
                 setAnimation("shrink");
                 setTimeout(() => props.onDismiss(), 250);
               }}
-            />
+            ></TitleBar>
             <Image
               draggable={false}
               src={props.image.source}

@@ -57,7 +57,6 @@ const Desktop = (props: Props) => {
   const dispatch = useDispatch();
 
   useEventListener<KeyboardEvent>("keydown", e => {
-    console.log(e.keyCode);
     if (e.keyCode === 8) {
       selectedFilesIds.forEach(id => dispatch(deleteFile(id)));
       setSelectedFiles([]);
@@ -112,7 +111,6 @@ const Desktop = (props: Props) => {
 
     // Checking if the file already exists on the Desktop. If not, we create it. If yes, we move the existing.
     files.forEach((file: GenericFile) => {
-      console.log(file.id);
       if (isNewFile(file)) {
         dispatch(
           createFile({
@@ -205,7 +203,7 @@ const Desktop = (props: Props) => {
           e
         )
       );
-    if (isImage(file)) dispatch(openImage((file as ImageFile).metaData.url, e));
+    if (isImage(file)) dispatch(openImage(file as ImageFile, e));
     if (isPlaylist(file))
       dispatch(
         setItems(
@@ -221,8 +219,7 @@ const Desktop = (props: Props) => {
         return dispatch(toggleSettingsMenu());
       }
       if (file.metaData.action === OPEN_FOLDER_ACTION.OPEN_WEBAMP) {
-        webamp.reopen();
-        return console.log("open webanp");
+        return webamp.reopen();
       }
       dispatch(
         setItems((file as ActionFile).metaData.action, undefined, undefined, e)
