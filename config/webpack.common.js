@@ -20,13 +20,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            envName: "library",
-            plugins: [
-              isDevelopment && require.resolve("react-refresh/babel"),
-              {
-                skipEnvCheck: true
-              }
-            ].filter(Boolean)
+            envName: "library"
           }
         }
       },
@@ -46,11 +40,6 @@ module.exports = {
     noParse: [/jszip\.js$/]
   },
   plugins: [
-    isDevelopment &&
-      (() => {
-        const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-        return new ReactRefreshWebpackPlugin();
-      })(),
     new HtmlWebpackPlugin({
       template: "./index.html"
     })
