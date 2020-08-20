@@ -1,8 +1,15 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 console.log(isDevelopment ? "DEV" : "PROD");
+
+const getPlugins = () => {
+  if (isDevelopment) return [require.resolve("react-refresh/babel")];
+  return [];
+};
+
 module.exports = {
   mode: isDevelopment ? "development" : "production",
   resolve: {
@@ -20,10 +27,8 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            envName: "library"
-            /*   plugins: [
-              isDevelopment && require.resolve("react-refresh/babel")
-            ].filter(Boolean) */
+            envName: "library",
+            plugins: getPlugins()
           }
         }
       },
