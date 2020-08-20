@@ -1,6 +1,5 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 console.log(isDevelopment ? "DEV" : "PROD");
@@ -23,7 +22,10 @@ module.exports = {
           options: {
             envName: "library",
             plugins: [
-              isDevelopment && require.resolve("react-refresh/babel")
+              isDevelopment && require.resolve("react-refresh/babel"),
+              {
+                skipEnvCheck: true
+              }
             ].filter(Boolean)
           }
         }
@@ -44,7 +46,11 @@ module.exports = {
     noParse: [/jszip\.js$/]
   },
   plugins: [
-    isDevelopment && new ReactRefreshWebpackPlugin(),
+    isDevelopment &&
+      (() => {
+        const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+        return new ReactRefreshWebpackPlugin();
+      })(),
     new HtmlWebpackPlugin({
       template: "./index.html"
     })
