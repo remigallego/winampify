@@ -139,8 +139,6 @@ const TaskBar: FunctionComponent = props => {
     );
   };
 
-  console.log(windows);
-
   return (
     <Container>
       {windows.map(window => {
