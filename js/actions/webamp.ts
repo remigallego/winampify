@@ -5,6 +5,7 @@ import { PLAY, SET_WEBAMP } from "../reducers/webamp";
 import SpotifyMedia from "../spotifymedia";
 import { TrackFile } from "../types";
 import { formatMetaToWebampMeta } from "../utils/dataTransfer";
+import { CLOSE_WEBAMP, OPEN_WEBAMP } from "../reducers/windows";
 
 export function setOfflineWebamp(): any {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
@@ -90,6 +91,9 @@ export function openWebamp() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const { webampObject } = getState().webamp;
     webampObject.renderWhenReady(document.getElementById("webamp-container"));
+    dispatch({
+      type: OPEN_WEBAMP
+    });
   };
 }
 
@@ -97,6 +101,14 @@ export function removeWebamp() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const { webampObject } = getState().webamp;
     webampObject.dispose();
+  };
+}
+
+export function closeWebamp() {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    dispatch({
+      type: CLOSE_WEBAMP
+    });
   };
 }
 

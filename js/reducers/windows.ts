@@ -20,14 +20,21 @@ export interface WindowsState {
   windows: Window[];
 }
 
+const WEBAMP_WINDOW_OBJECT = {
+  id: "webamp",
+  type: WINDOW_TYPE.Webamp,
+  position: 1,
+  minimized: false
+};
+
 export const initialStateWindows: WindowsState = {
-  windows: [
-    { id: "webamp", type: WINDOW_TYPE.Webamp, position: 1, minimized: false }
-  ]
+  windows: []
 };
 
 export const SET_ON_TOP = "SET_ON_TOP";
 export const TOGGLE_MINIMIZE = "TOGGLE_MINIMIZE";
+export const OPEN_WEBAMP = "OPEN_WEBAMP";
+export const CLOSE_WEBAMP = "CLOSE_WEBAMP";
 
 const windowsReducer = (
   state: WindowsState = initialStateWindows,
@@ -53,6 +60,18 @@ const windowsReducer = (
       const { windows } = state;
       return {
         windows: windows.filter(window => window.id !== action.payload.id)
+      };
+    }
+    case OPEN_WEBAMP: {
+      const { windows } = state;
+      return {
+        windows: [...new Set([WEBAMP_WINDOW_OBJECT, ...windows])]
+      };
+    }
+    case CLOSE_WEBAMP: {
+      const { windows } = state;
+      return {
+        windows: windows.filter(window => window.id !== "webamp")
       };
     }
     case TOGGLE_MINIMIZE: {

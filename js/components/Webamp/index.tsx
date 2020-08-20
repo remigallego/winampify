@@ -4,7 +4,8 @@ import {
   openWebamp,
   removeWebamp,
   setConnectedWebamp,
-  setOfflineWebamp
+  setOfflineWebamp,
+  closeWebamp
 } from "../../actions/webamp";
 import { AppState } from "../../reducers";
 
@@ -14,6 +15,9 @@ export default () => {
     (state: AppState) => state.webamp.webampObject
   );
   const dispatch = useDispatch();
+
+  webampObject?.onClose(() => dispatch(closeWebamp()));
+
   useEffect(() => {
     if (isLogged) {
       if (webampObject) {
@@ -23,6 +27,8 @@ export default () => {
     } else dispatch(setOfflineWebamp());
 
     dispatch(openWebamp());
+
+    return () => {};
   }, [isLogged]);
   return <div id={"webamp-container"}></div>;
 };

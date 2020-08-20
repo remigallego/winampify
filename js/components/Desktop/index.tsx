@@ -43,6 +43,7 @@ import {
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
 import useEventListener from "@use-it/event-listener";
+import { OPEN_WEBAMP } from "../../reducers/windows";
 
 interface Props {
   selectionBox: any;
@@ -219,7 +220,10 @@ const Desktop = (props: Props) => {
         return dispatch(toggleSettingsMenu());
       }
       if (file.metaData.action === OPEN_FOLDER_ACTION.OPEN_WEBAMP) {
-        return webamp.reopen();
+        webamp.reopen();
+        return dispatch({
+          type: OPEN_WEBAMP
+        });
       }
       dispatch(
         setItems((file as ActionFile).metaData.action, undefined, undefined, e)
