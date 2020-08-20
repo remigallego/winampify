@@ -20,13 +20,10 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            envName: "library",
-            plugins: [
-              isDevelopment && require.resolve("react-refresh/babel"),
-              {
-                skipEnvCheck: true
-              }
-            ].filter(Boolean)
+            envName: "library"
+            /*   plugins: [
+              isDevelopment && require.resolve("react-refresh/babel")
+            ].filter(Boolean) */
           }
         }
       },
