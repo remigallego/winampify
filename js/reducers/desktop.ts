@@ -108,7 +108,7 @@ export const initialStateDesktop: DesktopState = {
         action: OPEN_FOLDER_ACTION.OPEN_WEBAMP
       }
     },
-    winamp_skins: {
+    /*     winamp_skins: {
       id: "winamp_skins",
       title: "Winamp Skins",
       isRenaming: false,
@@ -119,7 +119,7 @@ export const initialStateDesktop: DesktopState = {
         type: "action",
         action: OPEN_FOLDER_ACTION.OPEN_SKINS
       }
-    },
+    }, */
     settings: {
       id: "settings",
       title: "Settings",
@@ -140,8 +140,8 @@ export const initialStateDesktop: DesktopState = {
     "my_tracks",
     "my_playlists",
     "winamp",
-    "settings",
-    "winamp_skins"
+    "settings"
+    /*     "winamp_skins" */
   ]
 };
 
