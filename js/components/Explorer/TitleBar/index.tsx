@@ -2,8 +2,8 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { blueTitleBar } from "../../../styles/colors";
 import CloseIcon from "../Icons/CloseIcon";
-import { dragHandleClassName } from "../vars";
 import MinimizeIcon from "../Icons/MinimizeIcon";
+import { dragHandleClassName } from "../vars";
 
 interface Props {
   onClose?: () => void | null;
@@ -53,6 +53,8 @@ const FlexRowContainer = styled.div`
   align-items: center;
   overflow: hidden;
   height: 26px;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
 `;
 
 const Title = styled.div<{ playlist: boolean }>`

@@ -55,6 +55,7 @@ export default (props: Props) => {
 const Container = styled.div<{ enableShadow: boolean }>`
   position: absolute;
   width: 400px;
+  border-top-left-radius: 4px;
   resize: both;
   overflow: auto;
   ${props =>

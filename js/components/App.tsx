@@ -7,9 +7,9 @@ import { AppState } from "../reducers";
 import Desktop from "./Desktop";
 import SelectionBox from "./Reusables/SelectionBox";
 import Settings from "./Settings";
+import TaskBar from "./TaskBar";
 import Webamp from "./Webamp";
 import WindowsManager from "./WindowsManager";
-import TaskBar from "./TaskBar";
 
 export default () => {
   const [selectionBox, setSelectionBox] = useState({

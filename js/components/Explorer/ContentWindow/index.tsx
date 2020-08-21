@@ -23,8 +23,8 @@ import {
   isArtist,
   isImage,
   isPlaylist,
-  isTrack,
-  isSkin
+  isSkin,
+  isTrack
 } from "../../../types/typecheckers";
 import { formatMetaToWebampMeta } from "../../../utils/dataTransfer";
 import ContentLoading from "../../Reusables/ContentLoading";

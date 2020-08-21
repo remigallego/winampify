@@ -7,8 +7,8 @@ import {
   isArtist,
   isImage,
   isPlaylist,
-  isTrack,
-  isSkin
+  isSkin,
+  isTrack
 } from "../../../../types/typecheckers";
 import ImgCached from "../../../Reusables/ImgCached";
 import folderclosed from "../../images/folder-closed.ico";

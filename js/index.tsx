@@ -27,10 +27,10 @@ export const persistor = persistStore(store, null, () => {
   }
 });
 
-if (process.env.NODE_ENV === "production")
-  Sentry.init({
-    dsn: "https://6ee628e2853b493ca3872c3b9daf766d@sentry.io/1469964"
-  });
+Sentry.init({
+  dsn: "https://6ee628e2853b493ca3872c3b9daf766d@sentry.io/1469964",
+  environment: process.env.NODE_ENV
+});
 
 if (window.name === "PopupWindow") {
   // If we're here, it means we came back from the server. Let's pass tokens to parent.

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { FaTimes, FaMinus } from "react-icons/fa";
+import { FaMinus, FaTimes } from "react-icons/fa";
 import styled from "styled-components";
 import {
+  blueTitleBarDark,
   redError,
-  redErrorDark,
-  blueTitleBarDark
+  redErrorDark
 } from "../../../styles/colors";
 
 interface Props {

@@ -15,17 +15,17 @@ interface Point {
 }
 
 const generateGrid: () => Point[] = () => {
-  let grid: Point[] = [];
-  let minX = 20;
-  let minY = 140;
+  const grid: Point[] = [];
+  const minX = 20;
+  const minY = 140;
 
-  let maxX = window.innerWidth;
-  let maxY = window.innerHeight;
+  const maxX = window.innerWidth;
+  const maxY = window.innerHeight;
 
   for (let col = 0; minY + col * 80 < maxY; col++) {
-    let y = minY + col * 80;
+    const y = minY + col * 80;
     for (let row = 0; minX + row * 80 <= maxX; row++) {
-      let x = minX + row * 80;
+      const x = minX + row * 80;
       grid.push({ x, y });
     }
   }

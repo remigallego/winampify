@@ -1,9 +1,10 @@
+import useEventListener from "@use-it/event-listener";
 import React, {
-  useEffect,
-  useState,
-  SyntheticEvent,
   Key,
-  KeyboardEvent
+  KeyboardEvent,
+  SyntheticEvent,
+  useEffect,
+  useState
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuProvider } from "../../../node_modules/react-contexify";
@@ -14,6 +15,7 @@ import { toggleSettingsMenu } from "../../actions/settings";
 import { setTracksToPlay } from "../../actions/webamp";
 import { AppState } from "../../reducers";
 import { DesktopState } from "../../reducers/desktop";
+import { OPEN_WEBAMP } from "../../reducers/windows";
 import {
   ActionFile,
   ArtistFile,
@@ -42,8 +44,6 @@ import {
 } from "./../../actions/desktop";
 import FileContextMenu from "./FileContextMenu";
 import FileItem from "./FileItem";
-import useEventListener from "@use-it/event-listener";
-import { OPEN_WEBAMP } from "../../reducers/windows";
 
 interface Props {
   selectionBox: any;

@@ -64,8 +64,9 @@ const windowsReducer = (
     }
     case OPEN_WEBAMP: {
       const { windows } = state;
+      const withoutWebamp = windows.filter(window => window.id !== "webamp");
       return {
-        windows: [...new Set([WEBAMP_WINDOW_OBJECT, ...windows])]
+        windows: [...new Set([WEBAMP_WINDOW_OBJECT, ...withoutWebamp])]
       };
     }
     case CLOSE_WEBAMP: {

@@ -5,8 +5,8 @@ import {
   GenericFile,
   ImageFile,
   PlaylistFile,
-  TrackFile,
-  SkinFile
+  SkinFile,
+  TrackFile
 } from ".";
 
 // user defined type guards

@@ -2,10 +2,10 @@ import { Action, Dispatch } from "redux";
 import Webamp, * as WebampInstance from "webamp";
 import { AppState } from "../reducers";
 import { PLAY, SET_WEBAMP } from "../reducers/webamp";
+import { CLOSE_WEBAMP, OPEN_WEBAMP } from "../reducers/windows";
 import SpotifyMedia from "../spotifymedia";
 import { TrackFile } from "../types";
 import { formatMetaToWebampMeta } from "../utils/dataTransfer";
-import { CLOSE_WEBAMP, OPEN_WEBAMP } from "../reducers/windows";
 
 export function setOfflineWebamp(): any {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {

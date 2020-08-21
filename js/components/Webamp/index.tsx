@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  closeWebamp,
   openWebamp,
   removeWebamp,
   setConnectedWebamp,
-  setOfflineWebamp,
-  closeWebamp
+  setOfflineWebamp
 } from "../../actions/webamp";
 import { AppState } from "../../reducers";
 

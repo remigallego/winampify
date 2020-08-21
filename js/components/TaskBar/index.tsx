@@ -1,14 +1,14 @@
 import React, { FunctionComponent } from "react";
-import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { SingleExplorerState } from "../../reducers/explorer";
-import { selectExplorers, selectImages } from "../../selectors/explorer";
-import { AppState } from "../../reducers";
-import { blueTitleBarDark, blueDrop, blueTitleBar } from "../../styles/colors";
 import { FaFolder, FaImage } from "react-icons/fa";
-import { WINDOW_TYPE, Window } from "../../reducers/windows";
-import { findHighestPosition } from "../../utils/windows";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
 import { setOnTop, toggleMinimize } from "../../actions/windows";
+import { AppState } from "../../reducers";
+import { SingleExplorerState } from "../../reducers/explorer";
+import { Window, WINDOW_TYPE } from "../../reducers/windows";
+import { selectExplorers, selectImages } from "../../selectors/explorer";
+import { blueDrop, blueTitleBar, blueTitleBarDark } from "../../styles/colors";
+import { findHighestPosition } from "../../utils/windows";
 import ImgCached from "../Reusables/ImgCached";
 import winampIcon from "./winamp-icon.png";
 

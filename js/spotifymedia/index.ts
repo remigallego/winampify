@@ -1,13 +1,13 @@
 import PQueue from "p-queue";
 import Api from "../api";
 import Emitter from "./emitter";
+import SpotifyMediaLogger from "./logger";
 import {
   isBeginningOfTrack,
   isEndOfTrack,
   isPauseTrack,
   isResumeTrack
 } from "./utils";
-import SpotifyMediaLogger from "./logger";
 
 export enum STATUS {
   PLAYING,

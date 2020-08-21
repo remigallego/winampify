@@ -1,27 +1,27 @@
-import { getArtistName, getTrackName, getTrackDuration } from "./utils";
+import { getArtistName, getTrackDuration, getTrackName } from "./utils";
 
 export default class SpotifyMediaLogger {
-  private customConsole = (str: string) =>
-    console.log(
-      `%c${str}`,
-      "background: #222; color: #bada55; font-size: 14px;"
-    );
 
   ready = (id: string) => this.customConsole(`Ready with Device ID ${id}`);
   notReady = (id: string) =>
-    this.customConsole(`Device ID has gone offline ${id}`);
+    this.customConsole(`Device ID has gone offline ${id}`)
 
   getTrackDetails = (state: Spotify.PlaybackState) =>
     `${getArtistName(state)} - ${getTrackName(
       state
-    )}\nDuration: ${getTrackDuration(state)}`;
+    )}\nDuration: ${getTrackDuration(state)}`
 
   play = (state: Spotify.PlaybackState) =>
-    this.customConsole(`► Playing: ${this.getTrackDetails(state)}}`);
+    this.customConsole(`► Playing: ${this.getTrackDetails(state)}}`)
   pause = (state: Spotify.PlaybackState) =>
-    this.customConsole(`▌▌ Pause: ${this.getTrackDetails(state)}`);
+    this.customConsole(`▌▌ Pause: ${this.getTrackDetails(state)}`)
   resume = (state: Spotify.PlaybackState) =>
-    this.customConsole(`► ▌▌ Resume: ${this.getTrackDetails(state)}`);
+    this.customConsole(`► ▌▌ Resume: ${this.getTrackDetails(state)}`)
   stop = (state: Spotify.PlaybackState) =>
-    this.customConsole(`■ Stop: ${this.getTrackDetails(state)}`);
+    this.customConsole(`■ Stop: ${this.getTrackDetails(state)}`)
+  private customConsole = (str: string) =>
+    console.log(
+      `%c${str}`,
+      "background: #222; color: #bada55; font-size: 14px;"
+    )
 }

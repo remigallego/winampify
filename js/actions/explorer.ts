@@ -41,8 +41,8 @@ import {
 } from "../reducers/search-pagination";
 import { OPEN_FOLDER_ACTION, SimplifiedTrack, TrackFile } from "../types";
 import { generateExplorerId, getActiveExplorerId } from "../utils/explorer";
-import { Filter } from "./search-pagination";
 import { getSkins } from "./../api/skins";
+import { Filter } from "./search-pagination";
 
 export function createNewExplorer(id?: string, x?: number, y?: number): any {
   return (dispatch: Dispatch<Action>) => {

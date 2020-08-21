@@ -10,6 +10,7 @@ import {
   updatePosition,
   updateSize
 } from "../../actions/explorer";
+import { toggleMinimize } from "../../actions/windows";
 import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
 import { redError } from "../../styles/colors";
@@ -20,7 +21,6 @@ import ExplorerParameters from "./ExplorerParameters";
 import TitleBar from "./TitleBar";
 import ExplorerToolbar from "./Toolbar";
 import { dragHandleClassName } from "./vars";
-import { toggleMinimize } from "../../actions/windows";
 
 interface Props {
   explorer: SingleExplorerState;
@@ -241,11 +241,11 @@ export default (props: Props) => {
   );
 };
 
-const ExplorerWrapper = styled.div<{
-  minimized: boolean;
-}>`
+const ExplorerWrapper = styled.div<{ minimized: boolean }>`
   display: flex;
   flex-direction: column;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   height: 100%;
   width: 100%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
