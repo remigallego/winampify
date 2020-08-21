@@ -131,7 +131,20 @@ export const initialStateDesktop: DesktopState = {
         type: "action",
         action: OPEN_FOLDER_ACTION.SETTINGS
       }
-    }
+    },
+    github: {
+      id: "github",
+      title: "GitHub",
+      isRenaming: false,
+      locked: true,
+      x: 120,
+      y: 140,
+      metaData: {
+        type: "action",
+        action: OPEN_FOLDER_ACTION.LINK
+      }
+    },
+    
   },
   allIds: [
     "recently_played",
@@ -140,7 +153,8 @@ export const initialStateDesktop: DesktopState = {
     "my_tracks",
     "my_playlists",
     "winamp",
-    "settings"
+    "settings",
+    "github"
     /*     "winamp_skins" */
   ]
 };

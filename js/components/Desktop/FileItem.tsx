@@ -14,7 +14,8 @@ import {
 import ImgCached from "../Reusables/ImgCached";
 import "./file.css";
 import winampSoundFile from "./images/bigWinampIcon.png";
-import winampInstance from "./images/winamp-icon.png";
+import winampLogo from "./images/winamp-icon.png";
+import githubIcon from "./images/githubIcon.png";
 import InputRenaming from "./InputRenaming";
 
 interface Props {
@@ -33,7 +34,10 @@ const FileItem = (props: Props) => {
       return <IconSettings />;
     }
     if (isAction(file) && file.id === "winamp") {
-      return <Image src={winampInstance} cachedSize={{ w: 50, h: 50 }} />;
+      return <Image src={winampLogo} cachedSize={{ w: 50, h: 50 }} />;
+    }
+    if (isAction(file) && file.id === "github") {
+      return <Image src={githubIcon} cachedSize={{ w: 50, h: 50 }} />;
     }
     if (isTrack(file))
       return <Image src={winampSoundFile} cachedSize={{ w: 50, h: 50 }} />;

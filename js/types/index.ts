@@ -11,7 +11,8 @@ export enum OPEN_FOLDER_ACTION {
   USER_PLAYLISTS,
   SETTINGS,
   OPEN_WEBAMP,
-  OPEN_SKINS
+  OPEN_SKINS,
+  LINK
 }
 export interface ImageDialogType {
   id: string;

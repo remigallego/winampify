@@ -225,6 +225,12 @@ const Desktop = (props: Props) => {
           type: OPEN_WEBAMP
         });
       }
+      if (file.metaData.action === OPEN_FOLDER_ACTION.LINK) {
+        if (file.id === "github") {
+          window.open("https://github.com/remigallego/winampify");
+          return;
+        }
+      }
       dispatch(
         setItems((file as ActionFile).metaData.action, undefined, undefined, e)
       );
