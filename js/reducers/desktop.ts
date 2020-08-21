@@ -144,7 +144,18 @@ export const initialStateDesktop: DesktopState = {
         action: OPEN_FOLDER_ACTION.LINK
       }
     },
-    
+    twitter: {
+      id: "twitter",
+      title: "Twitter",
+      isRenaming: false,
+      locked: true,
+      x: 120,
+      y: 220,
+      metaData: {
+        type: "action",
+        action: OPEN_FOLDER_ACTION.LINK
+      }
+    }
   },
   allIds: [
     "recently_played",
@@ -154,7 +165,8 @@ export const initialStateDesktop: DesktopState = {
     "my_playlists",
     "winamp",
     "settings",
-    "github"
+    "github",
+    "twitter"
     /*     "winamp_skins" */
   ]
 };

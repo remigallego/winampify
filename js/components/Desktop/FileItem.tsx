@@ -16,6 +16,7 @@ import "./file.css";
 import winampSoundFile from "./images/bigWinampIcon.png";
 import winampLogo from "./images/winamp-icon.png";
 import githubIcon from "./images/githubIcon.png";
+import twitterIcon from "./images/twitterIcon.png";
 import InputRenaming from "./InputRenaming";
 
 interface Props {
@@ -36,9 +37,11 @@ const FileItem = (props: Props) => {
     if (isAction(file) && file.id === "winamp") {
       return <Image src={winampLogo} cachedSize={{ w: 50, h: 50 }} />;
     }
-    if (isAction(file) && file.id === "github") {
+    if (isAction(file) && file.id === "github")
       return <Image src={githubIcon} cachedSize={{ w: 50, h: 50 }} />;
-    }
+    if (isAction(file) && file.id === "twitter")
+      return <Image src={twitterIcon} cachedSize={{ w: 80, h: 80 }} />;
+
     if (isTrack(file))
       return <Image src={winampSoundFile} cachedSize={{ w: 50, h: 50 }} />;
     if (isPlaylist(file) || isAlbum(file) || isArtist(file) || isAction(file))

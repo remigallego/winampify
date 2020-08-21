@@ -226,10 +226,10 @@ const Desktop = (props: Props) => {
         });
       }
       if (file.metaData.action === OPEN_FOLDER_ACTION.LINK) {
-        if (file.id === "github") {
-          window.open("https://github.com/remigallego/winampify");
-          return;
-        }
+        if (file.id === "github")
+          return window.open("https://github.com/remigallego/winampify");
+        if (file.id === "twitter")
+          return window.open("http://twitter.com/remigallego/");
       }
       dispatch(
         setItems((file as ActionFile).metaData.action, undefined, undefined, e)
