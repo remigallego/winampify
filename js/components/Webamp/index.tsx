@@ -5,7 +5,9 @@ import {
   openWebamp,
   removeWebamp,
   setConnectedWebamp,
-  setOfflineWebamp
+  setCurrentPlayedTrack,
+  setOfflineWebamp,
+  setOnTrackChangedCallback
 } from "../../actions/webamp";
 import { AppState } from "../../reducers";
 
@@ -23,6 +25,9 @@ export default () => {
       if (webampObject) {
         dispatch(removeWebamp());
         dispatch(setConnectedWebamp());
+        dispatch(
+          setOnTrackChangedCallback(x => dispatch(setCurrentPlayedTrack(x)))
+        );
       }
     } else dispatch(setOfflineWebamp());
 

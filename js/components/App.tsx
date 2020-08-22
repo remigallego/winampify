@@ -5,6 +5,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import packageJson from "../../package.json";
 import { AppState } from "../reducers";
 import Desktop from "./Desktop";
+import { MetaServices } from "./MetaServices";
 import SelectionBox from "./Reusables/SelectionBox";
 import Settings from "./Settings";
 import TaskBar from "./TaskBar";
@@ -64,6 +65,7 @@ export default () => {
           CHANGELOG - {packageJson.version}
         </a> */}
       </AbsoluteBottom>
+      <MetaServices />
     </div>
   );
 };

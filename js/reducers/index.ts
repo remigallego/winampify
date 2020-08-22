@@ -12,7 +12,7 @@ import searchPagination, {
   initialStateSearchPagination,
   SearchPaginationState
 } from "./search-pagination";
-import settings, { initialSettingsState } from "./settings";
+import settings, { initialSettingsState, SettingsState } from "./settings";
 import theme, { ThemeState } from "./theme";
 import user, { initialStateUser, UserState } from "./user";
 import webamp, { initialStateWebamp, WebampState } from "./webamp";
