@@ -2,6 +2,7 @@ import React, { FunctionComponent } from "react";
 import { FaFolder, FaImage } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { TrackInfo } from "webamp";
 import { setOnTop, toggleMinimize } from "../../actions/windows";
 import { AppState } from "../../reducers";
 import { SingleExplorerState } from "../../reducers/explorer";
@@ -18,6 +19,7 @@ const TaskBar: FunctionComponent = props => {
   );
   const images = useSelector(selectImages);
   const windows = useSelector((state: AppState) => state.windows.windows);
+  const trackInfo = useSelector((x: AppState) => x.webamp.currentTrack);
 
   const windowOnTop = windows.find(
     w => w.position === findHighestPosition(windows)
@@ -60,7 +62,7 @@ const TaskBar: FunctionComponent = props => {
     );
   };
 
-  const renderWinamp = (w: Window) => {
+  const renderWinamp = (w: Window, t: TrackInfo) => {
     const otherWindowOnTop = windows
       .filter(win => win.id !== w.id)
       .find(
@@ -68,6 +70,9 @@ const TaskBar: FunctionComponent = props => {
           win.position ===
           findHighestPosition(windows.filter(win => win.id !== w.id))
       );
+    const titleString = t
+      ? `${t.metaData.artist} - ${t.metaData.title}`
+      : "Winamp";
     return (
       <Item
         minimized={w.minimized}
@@ -93,7 +98,7 @@ const TaskBar: FunctionComponent = props => {
             marginRight: 4
           }}
         />
-        <Text>{"Winamp"}</Text>
+        <Text id="winamp-title">{titleString}</Text>
       </Item>
     );
   };
@@ -146,13 +151,12 @@ const TaskBar: FunctionComponent = props => {
           return renderExplorer(window);
         }
         if (window.type === WINDOW_TYPE.Webamp) {
-          return renderWinamp(window);
+          return renderWinamp(window, trackInfo);
         }
         if (window.type === WINDOW_TYPE.Image) {
           return renderImage(window);
         }
       })}
-      F
     </Container>
   );
 };

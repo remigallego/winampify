@@ -1,11 +1,15 @@
 import { Action, Dispatch } from "redux";
 import Webamp, * as WebampInstance from "webamp";
 import { AppState } from "../reducers";
-import { PLAY, SET_WEBAMP } from "../reducers/webamp";
+import { PLAY, SET_CURRENT_TRACK, SET_WEBAMP } from "../reducers/webamp";
 import { CLOSE_WEBAMP, OPEN_WEBAMP } from "../reducers/windows";
 import SpotifyMedia from "../spotifymedia";
 import { TrackFile } from "../types";
 import { formatMetaToWebampMeta } from "../utils/dataTransfer";
+
+export type SetTrackCallback = (
+  trackInfo: WebampInstance.LoadedURLTrack | null
+) => void;
 
 export function setOfflineWebamp(): any {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
@@ -86,6 +90,26 @@ export function setConnectedWebamp(): any {
     dispatch({ type: SET_WEBAMP, payload: { webampObject } });
   };
 }
+
+export const setOnTrackChangedCallback = (callback: SetTrackCallback) => (
+  dispatch: Dispatch<Action>,
+  getState: () => AppState
+) => {
+  const {
+    webamp: { webampObject }
+  } = getState();
+  if (!webampObject) return;
+  webampObject.onTrackDidChange(callback);
+};
+
+export const setCurrentPlayedTrack = (track: WebampInstance.TrackInfo) => (
+  dispatch: Dispatch<Action>
+) => {
+  dispatch({
+    type: SET_CURRENT_TRACK,
+    payload: { track }
+  });
+};
 
 export function openWebamp() {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
