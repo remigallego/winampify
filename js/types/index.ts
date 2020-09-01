@@ -20,6 +20,7 @@ export interface ImageDialogType {
   x: number;
   y: number;
   title: string;
+  isDragging: boolean;
 }
 
 export interface ImageData {

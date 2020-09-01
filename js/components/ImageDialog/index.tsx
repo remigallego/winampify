@@ -1,8 +1,11 @@
 import React, { useLayoutEffect, useState } from "react";
-import Draggable from "react-draggable";
 import styled, { css, keyframes } from "styled-components";
 import { ImageDialogType } from "../../types";
 import TitleBar from "../Explorer/TitleBar";
+import { toggleMinimize } from "../../actions/windows";
+import { useDispatch } from "react-redux";
+import { onDragStop, onDragStart } from "../../actions/images";
+import Rnd, { DraggableData } from "react-rnd";
 
 interface Props {
   image: ImageDialogType;
@@ -13,24 +16,54 @@ interface Props {
 export default (props: Props) => {
   const [animation, setAnimation] = useState<"grow" | "shrink" | "">("");
 
-  useLayoutEffect(() => {
+  /*   useLayoutEffect(() => {
     setAnimation("grow");
     setTimeout(() => setAnimation(""), 250);
   }, []);
+ */
+  const dispatch = useDispatch();
+
+  const handleDragStop = (data: DraggableData) => {
+    const { clientHeight, clientWidth } = document.documentElement;
+    const width = 400;
+    const height = 400;
+    const rightMostPoint = data.x + width;
+    const bottomMostPoint = data.y + height;
+
+    let x = data.x;
+    let y = data.y;
+
+    if (rightMostPoint > clientWidth) x = clientWidth - width;
+    if (x < 0) x = 0;
+    if (bottomMostPoint > clientHeight) y = clientHeight - height;
+    if (y < 0) y = 0;
+
+    /*     if (x === explorer.x && y === explorer.y) return; */
+    dispatch(onDragStop(props.image.id, x, y));
+  };
+
+  console.log(props.image.x);
 
   return (
     <>
-      <Draggable
+      <Rnd
         key={props.key}
-        defaultPosition={{
-          x: props.image.x - 200,
-          y: props.image.y - 200
+        position={{
+          x: props.image.x,
+          y: props.image.y
         }}
+        onDragStart={e => {
+          dispatch(onDragStart(props.image.id));
+        }}
+        onDragStop={(e: any, data: DraggableData) => handleDragStop(data)}
       >
         <Container enableShadow={animation.length === 0}>
           <Animated animation={animation}>
             <TitleBar
               title={props.image.title}
+              onMinimize={() => {
+                dispatch(toggleMinimize(props.image.id));
+              }}
               onClose={() => {
                 setAnimation("shrink");
                 setTimeout(() => props.onDismiss(), 250);
@@ -47,7 +80,7 @@ export default (props: Props) => {
             />
           </Animated>
         </Container>
-      </Draggable>
+      </Rnd>
     </>
   );
 };

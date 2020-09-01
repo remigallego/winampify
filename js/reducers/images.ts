@@ -1,5 +1,10 @@
 import _ from "lodash";
-import { CLOSE_IMAGE, OPEN_IMAGE } from "../actions/images";
+import {
+  CLOSE_IMAGE,
+  OPEN_IMAGE,
+  ON_DRAG_STOP,
+  ON_DRAG_START
+} from "../actions/images";
 import { ImageDialogType } from "../types";
 
 export interface ImagesState {
@@ -20,6 +25,30 @@ const images = (state: ImagesState = initialStateImages, action: any) => {
       return openImage(state, action);
     case CLOSE_IMAGE:
       return closeImage(state, action);
+    case ON_DRAG_START:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            isDragging: true
+          }
+        }
+      };
+    case ON_DRAG_STOP:
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.payload.id]: {
+            ...state.byId[action.payload.id],
+            x: action.payload.x,
+            y: action.payload.y,
+            isDragging: false
+          }
+        }
+      };
     default:
       return state;
   }
