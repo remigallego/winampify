@@ -192,6 +192,7 @@ const Form = styled.form`
 `;
 
 const Icon = (icon: IconType) => styled(icon)<{ disabled?: boolean }>`
+  padding-right: 3px;
   ${props => !props.disabled && onHover()}
   ${props => !props.disabled && onActive()};
   fill: ${props =>
