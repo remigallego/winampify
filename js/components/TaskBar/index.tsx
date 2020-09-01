@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { FaFolder, FaImage } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -12,8 +12,10 @@ import { blueDrop, blueTitleBar, blueTitleBarDark } from "../../styles/colors";
 import { findHighestPosition } from "../../utils/windows";
 import ImgCached from "../Reusables/ImgCached";
 import winampIcon from "./winamp-icon.png";
+import useInterval from "@use-it/interval";
 
 const TaskBar: FunctionComponent = props => {
+  const [currentTime, setCurrentTime] = useState(new Date());
   const explorers = useSelector<AppState, SingleExplorerState[]>(
     selectExplorers
   );
@@ -26,6 +28,10 @@ const TaskBar: FunctionComponent = props => {
   );
 
   const dispatch = useDispatch();
+
+  useInterval(() => {
+    setCurrentTime(new Date());
+  }, 1000);
 
   const renderExplorer = (w: Window) => {
     const exp = explorers.find(_exp => _exp.id === w.id);
@@ -146,17 +152,22 @@ const TaskBar: FunctionComponent = props => {
 
   return (
     <Container>
-      {windows.map(window => {
-        if (window.type === WINDOW_TYPE.Explorer) {
-          return renderExplorer(window);
-        }
-        if (window.type === WINDOW_TYPE.Webamp) {
-          return renderWinamp(window, trackInfo);
-        }
-        if (window.type === WINDOW_TYPE.Image) {
-          return renderImage(window);
-        }
-      })}
+      <WindowsContainer>
+        {windows.map(window => {
+          if (window.type === WINDOW_TYPE.Explorer) {
+            return renderExplorer(window);
+          }
+          if (window.type === WINDOW_TYPE.Webamp) {
+            return renderWinamp(window, trackInfo);
+          }
+          if (window.type === WINDOW_TYPE.Image) {
+            return renderImage(window);
+          }
+        })}
+      </WindowsContainer>
+      <InfosContainer>
+        <DateText>{currentTime.toLocaleString()}</DateText>
+      </InfosContainer>
     </Container>
   );
 };
@@ -164,11 +175,35 @@ const TaskBar: FunctionComponent = props => {
 export default TaskBar;
 
 const Container = styled.div`
+  border-top: 1px solid grey;
   background-color: #0d0a29;
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 40px;
+`;
+
+const WindowsContainer = styled.div`
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const InfosContainer = styled.div`
+  height: 100%;
+  width: 200;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 14px;
+`;
+
+const DateText = styled.h1`
+  font-size: 12px;
+  color: white;
 `;
 
 const Item = styled.div<{
