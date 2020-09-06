@@ -85,6 +85,7 @@ const ContentWindow = (props: Props) => {
       dispatch(
         setItems(OPEN_FOLDER_ACTION.PLAYLIST, file.metaData.id, explorer.id)
       );
+    // TODO: Skins are currently supported but we're waiting on a list of URLs we can use.
     if (isSkin(file)) {
       webampInstance.setSkinFromUrl(
         "https://s3.amazonaws.com/webamp-uploaded-skins/skins/6c755ae8df5d6aabbac040d1b6bcb0ec.wsz"
