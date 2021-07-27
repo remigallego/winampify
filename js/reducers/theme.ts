@@ -1,7 +1,7 @@
 import { defaultTheme } from "../styles/themes";
 import { Theme } from "../styles/themes";
 
-type ThemeState = Theme;
+export type ThemeState = Theme;
 
 export const initialStateTheme: ThemeState = defaultTheme;
 

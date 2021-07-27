@@ -219,6 +219,7 @@ const ContentWindow = (props: Props) => {
           } else dispatch(selectFile([file.id], explorer.id));
         }}
         onDoubleClick={e => doubleClickHandler(file, e)}
+        toolbarParams={props.explorer.toolbarParams}
       >
         {file.title}
         {getExtension()}

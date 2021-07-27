@@ -32,7 +32,9 @@ import {
   RESET_SCROLL_OFFSET,
   SET_MORE_ITEMS,
   SET_SCROLL_OFFSET,
-  UPDATE_POSITION
+  UPDATE_POSITION,
+  UPDATE_OFFSET_PARAMETER,
+  COMMIT_OFFSET_PARAMETER
 } from "../reducers/explorer";
 import {
   LOADING_PAGINATION,
@@ -407,5 +409,20 @@ export function setScrollOffset(scrollOffset: number, id: string) {
   return (dispatch: Dispatch<Action>, getState: () => AppState) => {
     const explorerId = getActiveExplorerId(getState());
     dispatch({ type: SET_SCROLL_OFFSET, payload: { id, scrollOffset } });
+  };
+}
+
+export function updateOffsetParameter(
+  id: string,
+  title: string,
+  offset: number
+) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    dispatch({ type: UPDATE_OFFSET_PARAMETER, payload: { id, title, offset } });
+  };
+}
+export function commitOffsetParameter(id: string, title: string) {
+  return (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    dispatch({ type: COMMIT_OFFSET_PARAMETER, payload: { id, title } });
   };
 }

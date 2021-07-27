@@ -14,6 +14,8 @@ import ImgCached from "../../../Reusables/ImgCached";
 import folderclosed from "../../images/folder-closed.ico";
 import winampmp3 from "../../images/winamp-mp3.png";
 import winampInstanceIcon from "./winamp-icon.png";
+import { formatMillisecondsToMmSs } from "../../../../utils/time";
+import { ToolbarParams } from "../../../../reducers/explorer";
 
 interface Props {
   file: GenericFile;
@@ -22,6 +24,7 @@ interface Props {
   onDoubleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   children: ReactNode;
   onDrag(e: React.DragEvent<HTMLDivElement>): void;
+  toolbarParams: ToolbarParams;
 }
 
 export default function(props: Props) {
@@ -81,7 +84,32 @@ export default function(props: Props) {
       id={`file-${props.file.id}`}
     >
       {renderIcons(icons)}
-      <FileName>{children}</FileName>
+      {Object.values(props.toolbarParams).map(param => {
+        if (param.title === "Name")
+          return (
+            <TextContent width={param.width + param.offset}>
+              {children}
+            </TextContent>
+          );
+        if (param.title === "Duration") {
+          return (
+            <TextContent width={param.width + param.offset}>
+              {isTrack(props.file) &&
+                props.file.metaData.duration_ms &&
+                formatMillisecondsToMmSs(props.file.metaData.duration_ms)}
+            </TextContent>
+          );
+        }
+        if (param.title === "Artist") {
+          return (
+            <TextContent width={param.width + param.offset}>
+              {props.file.metaData?.artists &&
+                props.file.metaData?.artists[0] &&
+                props.file.metaData?.artists[0]?.name}
+            </TextContent>
+          );
+        }
+      })}
     </FileContainer>
   );
 }
@@ -105,12 +133,14 @@ const FileContainer = styled.div<{ selected: boolean }>`
       border-style: dotted;
     `};
 `;
-const FileName = styled.div`
+const TextContent = styled.div<{ width: number }>`
   user-select: none;
+  padding-left: 3px;
   position: relative;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  width: ${props => `${props.width}px`};
 `;
 
 const IconContainer = styled.div`

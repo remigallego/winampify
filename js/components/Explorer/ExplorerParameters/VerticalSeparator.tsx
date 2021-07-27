@@ -1,23 +1,29 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import Rnd from "react-rnd";
 
 const VerticalSeparator = () => {
+  return <div />;
   return (
-    <Container>
-      <Bar />
-    </Container>
+    <Rnd
+      default={{
+        x: 0,
+        y: 0,
+        width: 2,
+        height: "100%"
+      }}
+      /*     enableResizing={{
+        left: false,
+        right: false
+      }} */
+      style={{
+        backgroundColor: "black",
+        cursor: "col-resize"
+      }}
+    ></Rnd>
   );
 };
 
-const Bar = styled.div`
-  background-color: black;
-  height: 20px;
-  width: 1px;
-`;
+const Bar = styled.div``;
 
-const Container = styled.div`
-  cursor: col-resize;
-  padding-right: 5px;
-  padding-left: 5px;
-`;
 export default VerticalSeparator;

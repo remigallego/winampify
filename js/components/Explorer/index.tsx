@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import Rnd, { DraggableData } from "react-rnd";
+import Rnd from "react-rnd";
 import styled from "styled-components";
 import {
   closeExplorer,
@@ -26,6 +26,16 @@ interface Props {
   explorer: SingleExplorerState;
 }
 
+interface DraggableData {
+  node: HTMLElement;
+  x: number;
+  y: number;
+  deltaX: number;
+  deltaY: number;
+  lastX: number;
+  lastY: number;
+}
+
 export default (props: Props) => {
   const { explorer } = props;
   const [isDropping, setDropping] = useState(false);
@@ -39,6 +49,9 @@ export default (props: Props) => {
   const errorMessage = useSelector(
     (state: AppState) => state.auth.errorMessage
   );
+
+  const allowDrop =
+    explorer.dropEnabled && dataTransferArray.source !== props.explorer.id;
 
   useEffect(() => {
     dispatch(setItems(explorer.action, explorer.uri, explorer.id));
@@ -93,9 +106,6 @@ export default (props: Props) => {
       );
     }
   };
-
-  const allowDrop =
-    explorer.dropEnabled && dataTransferArray.source !== props.explorer.id;
 
   const enableResizing = {
     top: false,
@@ -189,7 +199,7 @@ export default (props: Props) => {
             playlist={explorer.dropEnabled}
           />
           <ExplorerToolbar id={explorer.id} />
-          {/* <ExplorerParameters explorer={explorer} /> */}
+          <ExplorerParameters explorer={explorer} />
           {isLogged ? (
             <ContentContainer
               isDropping={isDropping}
@@ -251,7 +261,7 @@ const ExplorerWrapper = styled.div<{ minimized: boolean }>`
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
 `;
 
-const ContentContainer = styled.div<{ isDropping: boolean }>`
+const ContentContainer = styled.div<{ isDropping?: boolean }>`
   display: flex;
   overflow-y: hidden;
   overflow-x: hidden;
