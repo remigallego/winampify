@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import Rnd from "react-rnd";
+import { Rnd, DraggableData } from "react-rnd";
 import styled from "styled-components";
 import {
   closeExplorer,
@@ -24,16 +24,6 @@ import { dragHandleClassName } from "./vars";
 
 interface Props {
   explorer: SingleExplorerState;
-}
-
-interface DraggableData {
-  node: HTMLElement;
-  x: number;
-  y: number;
-  deltaX: number;
-  deltaY: number;
-  lastX: number;
-  lastY: number;
 }
 
 export default (props: Props) => {
@@ -73,18 +63,6 @@ export default (props: Props) => {
 
     if (x === explorer.x && y === explorer.y) return;
     dispatch(updatePosition(x, y, explorer.id));
-  };
-
-  const dispatchResize = (e: any, d: any, r: HTMLDivElement) => {
-    if (r.style.width && r.style.height) {
-      dispatch(
-        updateSize(
-          Number(r.style.width.substring(0, r.style.width.length - 2)),
-          Number(r.style.height.substring(0, r.style.height.length - 2)),
-          explorer.id
-        )
-      );
-    }
   };
 
   const onDrop = () => {
@@ -176,12 +154,24 @@ export default (props: Props) => {
           }
         }}
         maxWidth={window.innerWidth - explorer.x}
-        // @ts-ignore
-        onResize={dispatchResize}
+        onResize={(e, dir, ref) => {
+          if (ref.style.width && ref.style.height) {
+            dispatch(
+              updateSize(
+                Number(
+                  ref.style.width.substring(0, ref.style.width.length - 2)
+                ),
+                Number(
+                  ref.style.height.substring(0, ref.style.height.length - 2)
+                ),
+                explorer.id
+              )
+            );
+          }
+        }}
         onDragStop={(e: any, data: DraggableData) => onDragStop(data)}
-        // @ts-ignore
         enableUserSelectHack
-        dragHandleClassName={`.${dragHandleClassName}`}
+        dragHandleClassName={`${dragHandleClassName}`}
       >
         <div
           className="explorer-handle"

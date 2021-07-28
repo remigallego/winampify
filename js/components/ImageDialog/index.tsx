@@ -5,7 +5,7 @@ import TitleBar from "../Explorer/TitleBar";
 import { toggleMinimize } from "../../actions/windows";
 import { useDispatch } from "react-redux";
 import { onDragStop, onDragStart } from "../../actions/images";
-import Rnd, { DraggableData } from "react-rnd";
+import { Rnd, DraggableData } from "react-rnd";
 
 interface Props {
   image: ImageDialogType;
@@ -16,11 +16,6 @@ interface Props {
 export default (props: Props) => {
   const [animation, setAnimation] = useState<"grow" | "shrink" | "">("");
 
-  /*   useLayoutEffect(() => {
-    setAnimation("grow");
-    setTimeout(() => setAnimation(""), 250);
-  }, []);
- */
   const dispatch = useDispatch();
 
   const handleDragStop = (data: DraggableData) => {

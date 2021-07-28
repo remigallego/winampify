@@ -13,6 +13,7 @@ import { GenericFile, OPEN_FOLDER_ACTION } from "../types";
 export interface ToolbarParameter {
   title: string;
   width: number;
+  position: number;
   offset: number;
 }
 
@@ -79,12 +80,14 @@ const initialStateExplorer: SingleExplorerState = {
   toolbarParams: {
     Name: {
       title: "Name",
-      width: 180,
+      width: 200,
+      position: 0,
       offset: 0
     },
     Duration: {
       title: "Duration",
-      width: 120,
+      width: 90,
+      position: 1,
       offset: 0
     },
     /*  Album: {
@@ -95,6 +98,7 @@ const initialStateExplorer: SingleExplorerState = {
     Artist: {
       title: "Artist",
       width: 140,
+      position: 2,
       offset: 0
     }
     /*   Track: {
