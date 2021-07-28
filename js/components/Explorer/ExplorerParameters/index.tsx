@@ -1,81 +1,132 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { SingleExplorerState } from "../../../reducers/explorer";
+import {
+  SingleExplorerState,
+  ToolbarParameter
+} from "../../../reducers/explorer";
 import { useDispatch } from "react-redux";
-import Rnd from "react-rnd";
-import { commitOffsetParameter } from "../../../actions/explorer";
+import { Rnd } from "react-rnd";
+import {
+  commitOffsetParameter,
+  updateOffsetParameter
+} from "../../../actions/explorer";
 
 interface Props {
   explorer: SingleExplorerState;
 }
 
+const RESIZER_WIDTH = 5;
+
 const ExplorerParameters = (props: Props) => {
+  const [isResizing, setIsResizing] = useState<string>();
   const parameters = props.explorer.toolbarParams;
   const dispatch = useDispatch();
 
+  const explorerWidth = props.explorer.width;
+  let toolbarWidth = (() => {
+    let width = 0;
+    Object.values(parameters).forEach(par => {
+      width += par.width + par.offset;
+    });
+    return width + 22;
+  })();
+
   return (
-    <Bar>
-      <FlexRowContainer>
-        {Object.values(parameters).map(param => {
+    <Bar
+      onMouseUp={e => {
+        if (isResizing) {
+          dispatch(commitOffsetParameter(props.explorer.id, isResizing));
+          setIsResizing(null);
+        }
+      }}
+      onMouseMove={e => {
+        if (!isResizing) return;
+        const positionOfParameter = parameters[isResizing].position;
+        let widthToSubstract = 0;
+        if (positionOfParameter === 0) {
+        } else {
+          for (let i = 0; i < positionOfParameter; i++) {
+            widthToSubstract +=
+              Object.values(parameters).find(val => val.position === i).width +
+              Object.values(parameters).find(val => val.position === i).offset +
+              RESIZER_WIDTH * 2;
+          }
+        }
+
+        if (
+          toolbarWidth +
+            e.clientX -
+            parameters[isResizing].width -
+            parameters[isResizing].offset -
+            widthToSubstract >=
+          explorerWidth
+        )
+          return;
+
+        const newOffset =
+          e.clientX - parameters[isResizing].width - widthToSubstract;
+        if (parameters[isResizing].width + newOffset < 80) return;
+        dispatch(
+          updateOffsetParameter(
+            props.explorer.id,
+            isResizing,
+            e.clientX - parameters[isResizing].width - widthToSubstract - 11
+          )
+        );
+      }}
+    >
+      <ParameterContainer>
+        {Object.values(parameters).map((param: ToolbarParameter) => {
           return (
-            <div
+            <InlineBlock
               style={{
-                height: 20,
-                width: param.width + param.offset,
-                border: "1px solid #adadad",
-                borderBottomWidth: 0,
-                borderTopWidth: 0,
-                borderLeftWidth: 0,
-                borderRightWidth: 1.2
+                width: param.width + param.offset
               }}
             >
-              <Rnd
-                width={param.width + param.offset}
-                default={{
-                  x: 0,
-                  y: 0,
-                  width: param.width + param.offset,
-                  height: 100
-                }}
-                minWidth={60}
+              <div
                 style={{
-                  zIndex: param.title === "Name" ? 2222 : 1
+                  flexDirection: "row",
+                  display: "flex"
                 }}
-                onResize={() => {
-                  /*  dispatch(
-                    updateOffsetParameter(
-                      props.explorer.id,
-                      param.title,
-                      d.width
-                    )
-                  ); */
-                }}
-                onResizeStop={() => {
-                  dispatch(
-                    commitOffsetParameter(props.explorer.id, param.title)
-                  );
-                }}
-                enableResizing={{
-                  right: true
-                }}
-                disableDragging={true}
               >
-                <Parameter width={param.width + param.offset}>
+                <div
+                  id={"title-parameter"}
+                  style={{
+                    height: 20,
+                    backgroundColor: isResizing
+                      ? "rgba(0,0,0,0.2)"
+                      : "transparent",
+                    //  width: param.width + param.offset,
+                    width: param.width + param.offset - RESIZER_WIDTH
+                  }}
+                >
+                  {param.title}
+                </div>
+                <InlineBlock
+                  onMouseOver={e => {}}
+                  onMouseDown={e => {
+                    setIsResizing(param.title);
+                  }}
+                  id={"resizer-parameter"}
+                  style={{
+                    height: 20,
+                    width: RESIZER_WIDTH,
+                    cursor: "col-resize"
+                  }}
+                >
                   <div
                     style={{
-                      paddingLeft: 5,
-                      overflow: "auto",
-                      textOverflow: "ellipsis"
+                      height: 20,
+                      width: 3,
+                      backgroundColor: "rgba(0,0,0,0.3)"
                     }}
-                  >
-                    {param.title}
-                  </div>
-                </Parameter>
-              </Rnd>
-            </div>
+                  />
+                </InlineBlock>
+              </div>
+            </InlineBlock>
           );
         })}
-      </FlexRowContainer>
+      </ParameterContainer>
     </Bar>
   );
 };
@@ -86,18 +137,20 @@ const Bar = styled.div`
   background-color: ${props => props.theme.explorer.toolbar.bg};
   border-top: 0.5px solid rgba(0, 0, 0, 0.1);
   transition: all 0.5s;
-  width: auto;
+  width: 100%;
   height: auto;
-  padding: 5px 0px 5px 22px;
 `;
 
-const FlexRowContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-end;
-  overflow: hidden;
+const ParameterContainer = styled.div`
+  padding: 5px 0px 5px 22px;
+  display: inline-block;
 `;
+
+const InlineBlock = styled.div`
+  display: inline-block;
+`;
+
+const FlexRowContainer = styled.div``;
 
 const Parameter = styled.div<{ width: number }>`
   color: black;
